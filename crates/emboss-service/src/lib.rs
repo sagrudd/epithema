@@ -8,6 +8,8 @@
 pub mod acquisition;
 pub mod context;
 pub mod error;
+pub mod input;
+pub mod input_resolution;
 pub mod registry;
 pub mod request;
 pub mod response;
@@ -24,10 +26,12 @@ pub use emboss_diagnostics::{
 pub use emboss_providers::{
     AcquisitionRequest, DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
     DocumentationAcquisitionRequest, DocumentationAcquisitionRoute, DocumentationAssetRequest,
-    InputReference, InputReferenceKind, MetadataLookupRequest, ProviderCapability,
-    ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent, SequenceRequest,
+    InputReference as ProviderInputReference, InputReferenceKind, MetadataLookupRequest,
+    ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent,
+    SequenceRequest,
 };
 pub use error::ServiceError;
+pub use input::{ToolInputKind, ToolInputReference, ToolInputResolution, ToolInputResolver};
 pub use registry::{ServiceRegistry, ToolCatalog};
 pub use request::InvocationRequest;
 pub use response::{InvocationResponse, InvocationStatus};

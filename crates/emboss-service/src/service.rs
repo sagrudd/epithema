@@ -9,6 +9,7 @@ use emboss_tools::ToolDescriptor;
 use crate::ServiceDocumentationAcquisition;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
+use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
 use crate::response::InvocationResponse;
@@ -121,6 +122,23 @@ impl EmbossService {
     pub fn default_context(&self) -> ExecutionContext {
         ExecutionContext::cli()
     }
+
+    /// Classifies a raw tool input token using the shared service input model.
+    pub fn classify_input(
+        &self,
+        raw: impl Into<String>,
+    ) -> Result<ToolInputReference, ServiceError> {
+        ToolInputResolver::new().classify(raw)
+    }
+
+    /// Resolves a typed tool input reference for a given provider-resolution intent.
+    pub fn resolve_input(
+        &self,
+        reference: ToolInputReference,
+        intent: emboss_providers::ResolutionIntent,
+    ) -> Result<ToolInputResolution, ServiceError> {
+        ToolInputResolver::new().resolve(reference, intent)
+    }
 }
 
 #[cfg(test)]
@@ -130,7 +148,7 @@ mod tests {
     use super::EmbossService;
     use crate::{
         ExecutionContext, InvocationOrigin, InvocationRequest, OutcomeStatus, ServiceRegistry,
-        ToolName,
+        ToolInputKind, ToolInputResolution, ToolName,
     };
 
     #[test]
@@ -171,5 +189,30 @@ mod tests {
         let service = EmbossService::empty();
         assert!(service.providers().is_empty());
         assert!(service.config().acquisition.allow_remote_acquisition);
+    }
+
+    #[test]
+    fn classifies_provider_qualified_inputs_through_service() {
+        let service = EmbossService::empty();
+        let reference = service
+            .classify_input("ena:AB000263")
+            .expect("input should classify");
+        assert_eq!(reference.kind(), ToolInputKind::ProviderQualified);
+    }
+
+    #[test]
+    fn resolves_accessions_through_shared_service_seam() {
+        let service = EmbossService::empty();
+        let reference = service
+            .classify_input("AB000263")
+            .expect("input should classify");
+
+        let resolution = service
+            .resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)
+            .expect("resolution should succeed");
+        assert!(matches!(
+            resolution,
+            ToolInputResolution::ProviderRouted { .. }
+        ));
     }
 }
