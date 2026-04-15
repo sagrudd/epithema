@@ -2,6 +2,7 @@
 
 use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
+pub mod codon_tools;
 pub mod feature_tools;
 pub mod pattern_tools;
 pub mod sequence_edit;
@@ -72,6 +73,10 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         feature_tools::MASKFEAT_DESCRIPTOR,
         feature_tools::EXTRACTFEAT_DESCRIPTOR,
         feature_tools::FEATCOPY_DESCRIPTOR,
+        codon_tools::CAI_DESCRIPTOR,
+        codon_tools::CHIPS_DESCRIPTOR,
+        codon_tools::CODCMP_DESCRIPTOR,
+        codon_tools::CODCOPY_DESCRIPTOR,
         pattern_tools::FUZZNUC_DESCRIPTOR,
         pattern_tools::FUZZPRO_DESCRIPTOR,
         pattern_tools::FUZZTRAN_DESCRIPTOR,
@@ -120,6 +125,10 @@ mod tests {
                 "maskfeat",
                 "extractfeat",
                 "featcopy",
+                "cai",
+                "chips",
+                "codcmp",
+                "codcopy",
                 "fuzznuc",
                 "fuzzpro",
                 "fuzztran",

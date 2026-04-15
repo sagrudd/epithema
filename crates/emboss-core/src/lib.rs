@@ -12,6 +12,7 @@
 
 pub mod alignment;
 pub mod alphabet;
+pub mod codon_usage;
 pub mod composition;
 pub mod error;
 pub mod feature;
@@ -29,6 +30,11 @@ pub mod translation;
 
 pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alphabet::Alphabet;
+pub use codon_usage::{
+    CodingSequenceSummary, CodonUsageError, CodonUsageProfile, amino_acid_for_sense_codon,
+    cai_for_profile, derive_cai_weights, sense_codons, summarize_coding_sequence,
+    total_variation_distance,
+};
 pub use composition::{CompositionError, GcSummary, ResidueComposition, protein_molecular_weight};
 pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};

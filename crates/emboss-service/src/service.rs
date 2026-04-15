@@ -1,5 +1,6 @@
 //! Shared service façade for front-end-neutral tool discovery and invocation.
 
+use std::path::PathBuf;
 use std::str::FromStr;
 
 use emboss_config::PlatformConfig;
@@ -13,6 +14,10 @@ use emboss_diagnostics::{
 };
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
+use emboss_tools::codon_tools::{
+    CaiParams, ChipsParams, CodcmpParams, CodcopyParams, cai_help, chips_help, codcmp_help,
+    codcopy_help, render_profile_rows, run_cai, run_chips, run_codcmp, run_codcopy,
+};
 use emboss_tools::feature_tools::{
     ExtractfeatParams, FeatcopyParams, MaskfeatParams, MaskseqParams, extractfeat_help,
     featcopy_help, maskfeat_help, maskseq_help, run_extractfeat, run_featcopy, run_maskfeat,
@@ -155,6 +160,10 @@ impl EmbossService {
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
             "featcopy" => self.invoke_featcopy(request, descriptor),
+            "cai" => self.invoke_cai(request, descriptor),
+            "chips" => self.invoke_chips(request, descriptor),
+            "codcmp" => self.invoke_codcmp(request, descriptor),
+            "codcopy" => self.invoke_codcopy(request, descriptor),
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
             "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
             "fuzztran" => self.invoke_fuzztran(request, descriptor),
@@ -1350,6 +1359,329 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_chips(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, chips_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("chips", chips_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_chips(ChipsParams { input })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            for codon in emboss_core::sense_codons() {
+                let count = record.profile.count_for(codon);
+                if count == 0 {
+                    continue;
+                }
+                rows.push(vec![
+                    "record".to_owned(),
+                    record.record_id.clone(),
+                    codon.to_owned(),
+                    emboss_core::amino_acid_for_sense_codon(codon)
+                        .expect("sense codon should have amino acid")
+                        .to_string(),
+                    count.to_string(),
+                    format!("{:.6}", record.profile.frequency_for(codon)),
+                    record
+                        .terminal_stop
+                        .clone()
+                        .unwrap_or_else(|| "-".to_owned()),
+                ]);
+            }
+        }
+        for codon in emboss_core::sense_codons() {
+            let count = outcome.aggregate.count_for(codon);
+            if count == 0 {
+                continue;
+            }
+            rows.push(vec![
+                "aggregate".to_owned(),
+                "ALL".to_owned(),
+                codon.to_owned(),
+                emboss_core::amino_acid_for_sense_codon(codon)
+                    .expect("sense codon should have amino acid")
+                    .to_string(),
+                count.to_string(),
+                format!("{:.6}", outcome.aggregate.frequency_for(codon)),
+                "-".to_owned(),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported codon usage for {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "codon".to_owned(),
+                    "amino_acid".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                    "terminal_stop".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Codon usage reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Scope: per-record plus aggregate summary")
+                .with_line("Coding policy: strict in-frame coding sequences only")
+                .with_line("Stop policy: one terminal stop allowed and excluded from profile")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_codcopy(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, codcopy_help()));
+        }
+
+        let params = parse_codcopy_params(request.arguments())?;
+        let (source, source_provenance, source_diagnostics) =
+            self.resolve_local_file_input(&params.source.display().to_string())?;
+        let outcome = run_codcopy(CodcopyParams {
+            source,
+            profile_out: params.profile_out.clone(),
+        })?;
+
+        let mut provenance = vec![source_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "codon".to_owned(),
+                    "amino_acid".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                    "weight".to_owned(),
+                ],
+                render_profile_rows(&outcome.profile),
+            )),
+            ResultSummary::new("Codon profile normalized")
+                .with_line(format!("Source: {}", outcome.source.display()))
+                .with_line("Profile format: tab-separated codon/amino_acid/count/frequency/weight")
+                .with_line("Weight convention: count / max synonymous count in reference")
+                .with_line(format!(
+                    "Profile output: {}",
+                    outcome
+                        .profile_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "stdout only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                "normalized codon profile".to_owned(),
+                source_diagnostics,
+                Vec::new(),
+            ),
+        );
+
+        if let Some(path) = &outcome.profile_out {
+            let profile_provenance =
+                ArtifactProvenance::generated_output(path.display().to_string())
+                    .with_description("normalized codon profile");
+            provenance.push(profile_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("codon-profile", ArtifactKind::Table)
+                    .with_label("Codon profile")
+                    .with_local_path(path)
+                    .with_provenance(profile_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            "normalized codon profile".to_owned(),
+            Vec::new(),
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_cai(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, cai_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("cai", cai_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let (reference, reference_provenance, reference_diagnostics) =
+            self.resolve_local_file_input(&arguments[1])?;
+        let outcome = run_cai(CaiParams { input, reference })?;
+
+        let mut diagnostics = input_diagnostics;
+        diagnostics.extend(reference_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            format!("reported CAI for {} records", outcome.cases.len()),
+            diagnostics,
+            vec![input_provenance, reference_provenance],
+        );
+        let rows = outcome
+            .cases
+            .iter()
+            .map(|case| {
+                vec![
+                    case.record_id.clone(),
+                    case.sense_codon_count.to_string(),
+                    case.terminal_stop.clone().unwrap_or_else(|| "-".to_owned()),
+                    format!("{:.6}", case.cai),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "sense_codons".to_owned(),
+                    "terminal_stop".to_owned(),
+                    "cai".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("CAI reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Reference: {}", outcome.reference.display()))
+                .with_line("CAI convention: geometric mean of codon weights")
+                .with_line("Weight convention: codon_count / max_synonymous_count")
+                .with_line("Zero-weight codons yield CAI 0.0"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_codcmp(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, codcmp_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("codcmp", codcmp_help()))?;
+        let (left, left_provenance, left_diagnostics) =
+            self.resolve_local_file_input(&arguments[0])?;
+        let (right, right_provenance, right_diagnostics) =
+            self.resolve_local_file_input(&arguments[1])?;
+        let outcome = run_codcmp(CodcmpParams { left, right })?;
+
+        let mut diagnostics = left_diagnostics;
+        diagnostics.extend(right_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            "reported codon-usage comparison".to_owned(),
+            diagnostics,
+            vec![left_provenance, right_provenance],
+        );
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.codon.clone(),
+                    row.amino_acid.to_string(),
+                    row.left_count.to_string(),
+                    format!("{:.6}", row.left_frequency),
+                    row.right_count.to_string(),
+                    format!("{:.6}", row.right_frequency),
+                    format!("{:.6}", row.delta_frequency),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "codon".to_owned(),
+                    "amino_acid".to_owned(),
+                    "left_count".to_owned(),
+                    "left_frequency".to_owned(),
+                    "right_count".to_owned(),
+                    "right_frequency".to_owned(),
+                    "delta_frequency".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Codon-usage comparison reported")
+                .with_line(format!("Left: {}", outcome.left.display()))
+                .with_line(format!("Right: {}", outcome.right.display()))
+                .with_line(format!(
+                    "Total variation distance: {:.6}",
+                    outcome.total_variation_distance
+                ))
+                .with_line("Comparison scope: 61 sense codons"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_geecee(
         &self,
         request: InvocationRequest,
@@ -1957,6 +2289,47 @@ impl EmbossService {
 
         Ok((inputs, provenance, diagnostics))
     }
+
+    fn resolve_local_file_input(
+        &self,
+        raw: &str,
+    ) -> Result<(PathBuf, ArtifactProvenance, Vec<Diagnostic>), ServiceError> {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)? {
+            ToolInputResolution::LocalFile {
+                canonical_path,
+                provenance,
+                diagnostics,
+                ..
+            } => Ok((canonical_path, provenance, diagnostics)),
+            ToolInputResolution::ProviderRouted { provenance, .. } => Err(PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "provider-backed file acquisition is not implemented for this tool cohort yet",
+            )
+            .with_code("service.tool.input.provider_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "inline sequence literals are not accepted for file-backed inputs",
+            )
+            .with_code("service.tool.input.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve tool input '{}'", reference.raw()),
+            )
+            .with_code("service.tool.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
 }
 
 fn help_requested(arguments: &[String]) -> bool {
@@ -2081,6 +2454,46 @@ fn parse_nucleotide_pattern(tool: &str, value: &str) -> Result<NucleotidePattern
 
 fn parse_protein_pattern(tool: &str, value: &str) -> Result<ProteinPattern, ServiceError> {
     ProteinPattern::parse(value).map_err(|error| map_pattern_error(tool, error))
+}
+
+fn parse_codcopy_params(arguments: &[String]) -> Result<CodcopyParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("codcopy", codcopy_help()));
+    }
+
+    let source = PathBuf::from(arguments[0].clone());
+    let mut profile_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--profile-out=") {
+            profile_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--profile-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --profile-out")
+                    .with_code("service.tool.codcopy.profile_out_missing")
+            })?;
+            profile_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown codcopy argument '{argument}'"),
+        )
+        .with_code("service.tool.codcopy.argument_unknown")
+        .with_detail(codcopy_help()));
+    }
+
+    Ok(CodcopyParams {
+        source,
+        profile_out,
+    })
 }
 
 fn map_pattern_error(tool: &str, error: PatternError) -> ServiceError {
@@ -2580,6 +2993,10 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "compseq" => compseq_help(),
         "geecee" => geecee_help(),
         "pepstats" => pepstats_help(),
+        "chips" => chips_help(),
+        "codcopy" => codcopy_help(),
+        "cai" => cai_help(),
+        "codcmp" => codcmp_help(),
         _ => "",
     }
 }
@@ -2708,6 +3125,21 @@ mod tests {
     fn protein_stats_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/protein_stats_records.fasta")
+    }
+
+    fn codon_reference_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/codon_reference.fasta")
+    }
+
+    fn codon_query_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/codon_query.fasta")
+    }
+
+    fn codon_compare_right_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/codon_compare_right.fasta")
     }
 
     fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
@@ -3423,5 +3855,118 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_chips_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("chips").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![codon_reference_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("chips should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" })
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_cai_against_reference_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cai").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            codon_query_fixture().display().to_string(),
+            codon_reference_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("cai should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                let preferred = table
+                    .rows
+                    .iter()
+                    .find(|row| row[0] == "query_pref")
+                    .unwrap();
+                let rare = table
+                    .rows
+                    .iter()
+                    .find(|row| row[0] == "query_rare")
+                    .unwrap();
+                assert!(preferred[3].parse::<f64>().unwrap() > rare[3].parse::<f64>().unwrap());
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_codcmp_between_two_coding_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("codcmp").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            codon_reference_fixture().display().to_string(),
+            codon_compare_right_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("codcmp should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "CTT" && row[2] == "5" && row[4] == "0" })
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn codcopy_writes_reusable_profile_for_cai() {
+        let service = implemented_service();
+        let profile_path = std::env::temp_dir().join("emboss-rs-codon-profile.tsv");
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("codcopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            codon_reference_fixture().display().to_string(),
+            "--profile-out".to_owned(),
+            profile_path.display().to_string(),
+        ]);
+        service.invoke(request).expect("codcopy should execute");
+
+        let cai_request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cai").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            codon_query_fixture().display().to_string(),
+            profile_path.display().to_string(),
+        ]);
+        let response = service.invoke(cai_request).expect("cai should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => assert_eq!(table.rows.len(), 2),
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+
+        let _ = std::fs::remove_file(profile_path);
     }
 }

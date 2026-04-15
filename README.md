@@ -102,6 +102,17 @@ operations:
   residue length, and molecular-weight estimates. pI estimation is deferred in
   v1.
 
+The next shipped cohort now covers codon-usage and coding-bias operations:
+
+- `emboss-rs chips <coding-input>` reports per-record and aggregate codon counts
+  and frequencies for strict in-frame coding-sequence inputs.
+- `emboss-rs codcopy <coding-or-profile-input> [--profile-out <path>]`
+  normalizes codon usage into a reusable tab-separated profile.
+- `emboss-rs cai <coding-input> <reference-input>` reports deterministic
+  CAI-like values against a coding-sequence or normalized-profile reference.
+- `emboss-rs codcmp <left-input> <right-input>` compares codon counts and
+  frequencies across two coding-sequence or normalized-profile sources.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
