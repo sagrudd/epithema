@@ -4,12 +4,17 @@
 //! built around the strengthened `emboss-core` biological model. FASTA records
 //! map directly to `SequenceRecord`. FASTQ records use an IO-local
 //! `FastqRecord`, which couples a `SequenceRecord` with decoded Phred+33
-//! quality scores.
+//! quality scores. EMBL and GenBank support a practical annotated-record subset
+//! with top-level metadata, simple feature tables, and stable writing.
 
+pub mod embl;
 pub mod error;
 pub mod fasta;
 pub mod fastq;
+pub mod flatfile;
+pub mod genbank;
 
+pub use embl::{parse_embl_reader, parse_embl_str, write_embl_string, write_embl_writer};
 pub use error::IoError;
 pub use fasta::{
     DEFAULT_FASTA_LINE_WIDTH, parse_fasta_reader, parse_fasta_reader_with_molecule,
@@ -19,6 +24,9 @@ pub use fasta::{
 pub use fastq::{
     FastqRecord, QualityScores, parse_fastq_reader, parse_fastq_reader_with_molecule,
     parse_fastq_str, parse_fastq_str_with_molecule, write_fastq_string, write_fastq_writer,
+};
+pub use genbank::{
+    parse_genbank_reader, parse_genbank_str, write_genbank_string, write_genbank_writer,
 };
 
 /// Minimal description of a supported data format.
@@ -48,6 +56,14 @@ impl Default for FormatCatalog {
                     name: "fastq",
                     summary: "FASTQ sequence-plus-quality parsing and writing",
                 },
+                DataFormat {
+                    name: "embl",
+                    summary: "EMBL flat-file parsing and writing for annotated sequence records",
+                },
+                DataFormat {
+                    name: "genbank",
+                    summary: "GenBank flat-file parsing and writing for annotated sequence records",
+                },
             ],
         }
     }
@@ -74,8 +90,10 @@ mod tests {
     #[test]
     fn lists_supported_sequence_formats() {
         let catalog = FormatCatalog::new();
-        assert_eq!(catalog.formats().len(), 2);
+        assert_eq!(catalog.formats().len(), 4);
         assert_eq!(catalog.formats()[0].name, "fasta");
         assert_eq!(catalog.formats()[1].name, "fastq");
+        assert_eq!(catalog.formats()[2].name, "embl");
+        assert_eq!(catalog.formats()[3].name, "genbank");
     }
 }
