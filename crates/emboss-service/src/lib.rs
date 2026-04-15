@@ -14,9 +14,15 @@ pub mod service;
 pub mod tool;
 
 pub use context::{ExecutionContext, InvocationOrigin};
+pub use emboss_config::{AcquisitionPolicy, AutodocPolicy, ConfigEnvironment, PlatformConfig};
 pub use emboss_diagnostics::{
     Diagnostic, DiagnosticLocation, ErrorCategory, ExecutionMetadata, ExecutionOutcome,
     ExecutionReport, OutcomeStatus, PlatformError, RunId, Severity,
+};
+pub use emboss_providers::{
+    AcquisitionRequest, DocumentationAssetRequest, InputReference, InputReferenceKind,
+    MetadataLookupRequest, ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry,
+    ResolutionIntent, SequenceRequest,
 };
 pub use error::ServiceError;
 pub use registry::{ServiceRegistry, ToolCatalog};

@@ -1,19 +1,15 @@
 [package]
-name = "emboss-service"
+name = "emboss-config"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
 rust-version.workspace = true
-description = "Execution and service-layer scaffolding for EMBOSS-RS."
+description = "Typed platform configuration defaults and policy overrides for EMBOSS-RS."
 
 [dependencies]
-emboss-config.workspace = true
-emboss-core.workspace = true
-emboss-diagnostics.workspace = true
 emboss-providers.workspace = true
-emboss-tools.workspace = true
 
 [lints]
 workspace = true

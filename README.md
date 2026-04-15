@@ -7,7 +7,7 @@ A reboot of the EMBOSS package of bioinformatics tools in Rust.
 The Rust workspace is organized under `crates/` with a single CLI binary named
 `emboss-rs` and domain-oriented library crates for core primitives, IO, tools,
 service/runtime, diagnostics/provenance, plot contracts, R bridging, fixtures,
-validation, and doc generation.
+validation, doc generation, configuration, and provider abstraction.
 
 The current top-level command surface is intentionally small: `emboss-rs list`
 provides service-backed discovery, `emboss-rs autodoc` reserves the governed

@@ -108,6 +108,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "emboss-config"
+version = "0.1.0"
+dependencies = [
+ "emboss-providers",
+]
+
+[[package]]
 name = "emboss-core"
 version = "0.1.0"
 dependencies = [
@@ -139,6 +146,13 @@ name = "emboss-plot-contract"
 version = "0.1.0"
 
 [[package]]
+name = "emboss-providers"
+version = "0.1.0"
+dependencies = [
+ "emboss-diagnostics",
+]
+
+[[package]]
 name = "emboss-r-bridge"
 version = "0.1.0"
 dependencies = [
@@ -150,8 +164,10 @@ dependencies = [
 name = "emboss-service"
 version = "0.1.0"
 dependencies = [
+ "emboss-config",
  "emboss-core",
  "emboss-diagnostics",
+ "emboss-providers",
  "emboss-tools",
 ]
 

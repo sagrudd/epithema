@@ -1,12 +1,14 @@
 [workspace]
 members = [
     "crates/emboss-cli",
+    "crates/emboss-config",
     "crates/emboss-core",
     "crates/emboss-diagnostics",
     "crates/emboss-docgen",
     "crates/emboss-fixtures",
     "crates/emboss-io",
     "crates/emboss-plot-contract",
+    "crates/emboss-providers",
     "crates/emboss-r-bridge",
     "crates/emboss-service",
     "crates/emboss-testkit",
@@ -23,12 +25,14 @@ authors = ["Mnemosyne Biosciences Ltd"]
 rust-version = "1.85"
 
 [workspace.dependencies]
+emboss-config = { path = "crates/emboss-config", version = "0.1.0" }
 emboss-core = { path = "crates/emboss-core", version = "0.1.0" }
 emboss-diagnostics = { path = "crates/emboss-diagnostics", version = "0.1.0" }
 emboss-docgen = { path = "crates/emboss-docgen", version = "0.1.0" }
 emboss-fixtures = { path = "crates/emboss-fixtures", version = "0.1.0" }
 emboss-io = { path = "crates/emboss-io", version = "0.1.0" }
 emboss-plot-contract = { path = "crates/emboss-plot-contract", version = "0.1.0" }
+emboss-providers = { path = "crates/emboss-providers", version = "0.1.0" }
 emboss-r-bridge = { path = "crates/emboss-r-bridge", version = "0.1.0" }
 emboss-service = { path = "crates/emboss-service", version = "0.1.0" }
 emboss-testkit = { path = "crates/emboss-testkit", version = "0.1.0" }

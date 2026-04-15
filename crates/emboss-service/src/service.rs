@@ -1,7 +1,9 @@
 //! Shared service façade for front-end-neutral tool discovery and invocation.
 
+use emboss_config::PlatformConfig;
 use emboss_core::PLATFORM_IDENTITY;
 use emboss_diagnostics::{ExecutionOutcome, ExecutionReport, OutcomeStatus};
+use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
 
 use crate::context::ExecutionContext;
@@ -14,13 +16,29 @@ use crate::response::InvocationResponse;
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct EmbossService {
     registry: ServiceRegistry,
+    config: PlatformConfig,
+    providers: ProviderRegistry,
 }
 
 impl EmbossService {
     /// Creates a service façade for the supplied registry.
     #[must_use]
     pub fn new(registry: ServiceRegistry) -> Self {
-        Self { registry }
+        Self::with_platform(registry, PlatformConfig::default(), ProviderRegistry::new())
+    }
+
+    /// Creates a service façade with explicit platform configuration and providers.
+    #[must_use]
+    pub fn with_platform(
+        registry: ServiceRegistry,
+        config: PlatformConfig,
+        providers: ProviderRegistry,
+    ) -> Self {
+        Self {
+            registry,
+            config,
+            providers,
+        }
     }
 
     /// Creates an empty service façade.
@@ -35,13 +53,26 @@ impl EmbossService {
         &self.registry
     }
 
+    /// Returns the active platform configuration.
+    #[must_use]
+    pub fn config(&self) -> &PlatformConfig {
+        &self.config
+    }
+
+    /// Returns the active provider registry.
+    #[must_use]
+    pub fn providers(&self) -> &ProviderRegistry {
+        &self.providers
+    }
+
     /// Returns a human-readable status line for front ends.
     #[must_use]
     pub fn status_line(&self) -> String {
         format!(
-            "{} service ready; {} tools registered",
+            "{} service ready; {} tools registered; {} providers configured",
             PLATFORM_IDENTITY.invocation_pattern(),
-            self.registry.len()
+            self.registry.len(),
+            self.providers.len()
         )
     }
 
@@ -126,5 +157,12 @@ mod tests {
         );
 
         assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn starts_with_default_platform_configuration_and_no_providers() {
+        let service = EmbossService::empty();
+        assert!(service.providers().is_empty());
+        assert!(service.config().acquisition.allow_remote_acquisition);
     }
 }
