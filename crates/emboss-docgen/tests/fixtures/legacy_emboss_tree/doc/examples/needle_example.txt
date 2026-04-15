@@ -1,0 +1,5 @@
+needle example documentation
+
+Example files:
+- needle.simple.fa
+- needle.report.out

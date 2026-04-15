@@ -21,6 +21,8 @@ The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
 prints a normalized summary, while harvesting and rendering remain deferred.
+The same crate now also contains a legacy EMBOSS artefact discovery layer for
+tool-focused harvesting from a local historical source tree.
 
 ## Documentation
 
