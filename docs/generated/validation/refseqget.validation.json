@@ -1,0 +1,26 @@
+{
+  "document_id": "refseqget-minimal",
+  "tool_name": "refseqget",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "refseqget-provider-qualified-retrieval",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Retrieve one provider-qualified accession-addressable sequence through the governed provider seam and emit normalized FASTA with provider provenance."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

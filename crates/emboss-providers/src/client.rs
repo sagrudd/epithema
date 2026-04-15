@@ -77,6 +77,12 @@ pub trait ProviderHttpClient {
     fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError>;
 }
 
+impl<T: ProviderHttpClient + ?Sized> ProviderHttpClient for &T {
+    fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError> {
+        (**self).get_text(request)
+    }
+}
+
 /// `reqwest`-backed blocking HTTP client for provider retrieval.
 #[derive(Clone, Debug)]
 pub struct ReqwestHttpClient {

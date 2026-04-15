@@ -189,4 +189,20 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("needle"));
     }
+
+    #[test]
+    fn routes_seqret_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "seqret", "ena:AB000263"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("seqret"));
+    }
+
+    #[test]
+    fn routes_refseqget_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "refseqget", "ncbi:protein:NP_000537.3"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("refseqget"));
+    }
 }

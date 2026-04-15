@@ -12,7 +12,9 @@ use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
     OutcomeStatus, PlatformError,
 };
-use emboss_providers::{ProviderRegistry, RetrievedSequence};
+use emboss_providers::{
+    AcquisitionRequest, ProviderHttpClient, ProviderRegistry, RetrievedSequence,
+};
 use emboss_tools::ToolDescriptor;
 use emboss_tools::alignment_analysis::{
     ConsParams, ConsambigParams, DistmatParams, MatcherParams, cons_help, consambig_help,
@@ -39,6 +41,10 @@ use emboss_tools::pattern_tools::{
     FuzznucParams, FuzzproParams, FuzztranParams, fuzznuc_help, fuzzpro_help, fuzztran_help,
     run_fuzznuc, run_fuzzpro, run_fuzztran,
 };
+use emboss_tools::retrieval_tools::{
+    RefseqgetParams, SeqretParams, SeqretSource, refseqget_help, run_refseqget, run_seqret,
+    seqret_help,
+};
 use emboss_tools::sequence_edit::{
     DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
@@ -49,8 +55,8 @@ use emboss_tools::sequence_stats::{
 };
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
-    newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq, run_nthseq, run_seqcount,
-    run_skipseq, seqcount_help, skipseq_help,
+    load_sequence_records, newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq,
+    run_nthseq, run_seqcount, run_skipseq, seqcount_help, skipseq_help,
 };
 use emboss_tools::sequence_transform::{
     CutseqParams, ExtractseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
@@ -223,6 +229,8 @@ impl EmbossService {
             "consambig" => self.invoke_consambig(request, descriptor),
             "needle" => self.invoke_needle(request, descriptor),
             "needleall" => self.invoke_needleall(request, descriptor),
+            "seqret" => self.invoke_seqret(request, descriptor),
+            "refseqget" => self.invoke_refseqget(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
             "skipseq" => self.invoke_skipseq(request, descriptor),
@@ -927,6 +935,157 @@ impl EmbossService {
                 ))
                 .with_line("Alignment outputs: summary table only in v1"),
             report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_seqret(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_seqret_inner::<emboss_providers::ReqwestHttpClient>(request, descriptor, None)
+    }
+
+    fn invoke_seqret_inner<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, seqret_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("seqret", seqret_help()))?;
+        let (source, records, provenance, diagnostics) =
+            self.resolve_seqret_records_with_client(&input, client)?;
+        let outcome = run_seqret(SeqretParams { source, records })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("normalized FASTA output");
+        let mut report_provenance = provenance;
+        report_provenance.push(output_provenance.clone());
+        let report = self.success_report(
+            &request.context,
+            format!("normalized {} sequence record(s)", outcome.records.len()),
+            diagnostics,
+            report_provenance,
+        );
+        let input_label = match &outcome.source {
+            SeqretSource::LocalPath(path) => path.display().to_string(),
+            SeqretSource::Retrieved {
+                provider,
+                accession,
+            } => format!("{provider}:{accession}"),
+        };
+        let retrieval_mode = match &outcome.source {
+            SeqretSource::LocalPath(_) => "local normalization".to_owned(),
+            SeqretSource::Retrieved {
+                provider,
+                accession,
+            } => {
+                format!("provider-backed retrieval via {provider} for {accession}")
+            }
+        };
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence retrieval and normalization completed")
+                .with_line(format!("Input: {input_label}"))
+                .with_line(format!("Mode: {retrieval_mode}"))
+                .with_line("Output format: FASTA")
+                .with_line(
+                    "Record policy: local inputs may emit multiple records; retrieved inputs emit one record",
+                ),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("stdout", ArtifactKind::Sequence)
+                .with_label("normalized FASTA")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_refseqget(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_refseqget_inner::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
+    }
+
+    fn invoke_refseqget_inner<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, refseqget_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("refseqget", refseqget_help()))?;
+        let (route_provenance, retrieved, diagnostics) =
+            self.resolve_refseqget_record_with_client(&input, client)?;
+        let outcome = run_refseqget(RefseqgetParams {
+            provider: retrieved.provider.as_str().to_owned(),
+            accession: retrieved.requested_accession.clone(),
+            record: retrieved.record.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("normalized FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("retrieved one sequence record from {}", outcome.provider),
+            diagnostics,
+            vec![
+                route_provenance,
+                retrieved.provenance.clone(),
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.record),
+            ResultSummary::new("Reference sequence retrieved")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Accession: {}", outcome.accession))
+                .with_line(format!("Route: {}", retrieved.route.endpoint))
+                .with_line("Output format: FASTA")
+                .with_line("Input policy: provider-qualified accession retrieval only"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("stdout", ArtifactKind::Sequence)
+                .with_label("normalized FASTA")
+                .with_provenance(output_provenance),
         );
 
         Ok(InvocationResponse::completed(
@@ -3051,6 +3210,137 @@ impl EmbossService {
         report
     }
 
+    fn resolve_seqret_records_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            SeqretSource,
+            Vec<emboss_core::SequenceRecord>,
+            Vec<ArtifactProvenance>,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)? {
+            ToolInputResolution::LocalFile {
+                canonical_path,
+                provenance,
+                diagnostics,
+                ..
+            } => {
+                let input = SequenceInput::new(canonical_path.clone());
+                let records = load_sequence_records(&input)?;
+                Ok((
+                    SeqretSource::LocalPath(canonical_path),
+                    records,
+                    vec![provenance],
+                    diagnostics,
+                ))
+            }
+            ToolInputResolution::ProviderRouted {
+                request,
+                provenance,
+                diagnostics,
+                ..
+            } => {
+                let retrieved =
+                    self.retrieve_routed_sequence_request_with_client(&request, client)?;
+                Ok((
+                    SeqretSource::Retrieved {
+                        provider: retrieved.provider.as_str().to_owned(),
+                        accession: retrieved.requested_accession.clone(),
+                    },
+                    vec![retrieved.record.clone()],
+                    vec![provenance, retrieved.provenance.clone()],
+                    diagnostics,
+                ))
+            }
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "seqret does not accept inline sequence literals in v1",
+            )
+            .with_code("service.seqret.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve seqret input '{}'", reference.raw()),
+            )
+            .with_code("service.seqret.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
+
+    fn resolve_refseqget_record_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<(ArtifactProvenance, RetrievedSequence, Vec<Diagnostic>), ServiceError> {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)? {
+            ToolInputResolution::ProviderRouted {
+                request,
+                provenance,
+                diagnostics,
+                ..
+            } => Ok((
+                provenance,
+                self.retrieve_routed_sequence_request_with_client(&request, client)?,
+                diagnostics,
+            )),
+            ToolInputResolution::LocalFile { provenance, .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "refseqget is restricted to accession-oriented provider retrieval in v1",
+            )
+            .with_code("service.refseqget.local_input_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "refseqget does not accept inline sequence literals",
+            )
+            .with_code("service.refseqget.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve refseqget input '{}'", reference.raw()),
+            )
+            .with_code("service.refseqget.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
+
+    fn retrieve_routed_sequence_request_with_client<C: ProviderHttpClient>(
+        &self,
+        request: &AcquisitionRequest,
+        client: Option<&C>,
+    ) -> Result<RetrievedSequence, ServiceError> {
+        match client {
+            Some(client) => {
+                ServiceSequenceRetrieval::with_client(&self.config, &self.providers, client)
+                    .retrieve_single_sequence(request)
+            }
+            None => self.sequence_retrieval()?.retrieve_single_sequence(request),
+        }
+    }
+
     fn resolve_local_sequence_input(
         &self,
         raw: &str,
@@ -4159,6 +4449,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "consambig" => consambig_help(),
         "needle" => needle_help(),
         "needleall" => needleall_help(),
+        "seqret" => seqret_help(),
+        "refseqget" => refseqget_help(),
         "aligncopy" => aligncopy_help(),
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
@@ -4183,14 +4475,43 @@ fn feature_tool_help(tool: &str) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use emboss_core::MoleculeKind;
+    use emboss_diagnostics::PlatformError;
+    use emboss_providers::{HttpRequest, HttpResponse, ProviderHttpClient};
     use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
 
     use super::EmbossService;
     use crate::{
         ExecutionContext, InvocationOrigin, InvocationRequest, OutcomeStatus, ResultPayload,
-        ServiceRegistry, ToolInputKind, ToolInputResolution, ToolName,
+        ServiceRegistry, ToolCatalog, ToolInputKind, ToolInputResolution, ToolName,
     };
+
+    #[derive(Clone, Debug, Default)]
+    struct MockHttpClient {
+        responses: HashMap<String, HttpResponse>,
+    }
+
+    impl MockHttpClient {
+        fn with_response(mut self, url: impl Into<String>, response: HttpResponse) -> Self {
+            self.responses.insert(url.into(), response);
+            self
+        }
+    }
+
+    impl ProviderHttpClient for MockHttpClient {
+        fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError> {
+            self.responses.get(&request.url).cloned().ok_or_else(|| {
+                PlatformError::new(
+                    emboss_diagnostics::ErrorCategory::Invocation,
+                    "mock response was not configured for provider request",
+                )
+                .with_code("service.seqret.test.missing_response")
+                .with_detail(request.url.clone())
+            })
+        }
+    }
 
     #[test]
     fn resolves_registered_tool_to_placeholder_response() {
@@ -4401,6 +4722,119 @@ mod tests {
                 .expect("tool registration should succeed");
         }
         EmbossService::new(registry)
+    }
+
+    #[test]
+    fn executes_seqret_against_local_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqret").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("seqret should execute");
+        assert_eq!(response.status, crate::InvocationStatus::Completed);
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 3);
+                assert_eq!(records[0].identifier().accession(), "alpha");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn seqret_rejects_ambiguous_bare_accession() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqret").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["AB000263".to_owned()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("bare accession should be rejected");
+        assert_eq!(
+            error.code(),
+            Some("providers.sequence.ambiguous_bare_accession")
+        );
+    }
+
+    #[test]
+    fn executes_seqret_against_provider_qualified_accession_with_mocked_retrieval() {
+        let service = implemented_service();
+        let tool = ToolName::new("seqret").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("seqret should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["ena:AB000263".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/browser/api/fasta/AB000263",
+            HttpResponse::new(200, ">AB000263 example\nACGT\n"),
+        );
+
+        let response = service
+            .invoke_seqret_inner(request, descriptor, Some(&client))
+            .expect("seqret should execute with mocked retrieval");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "AB000263");
+                assert_eq!(records[0].metadata().source.as_deref(), Some("ena"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_refseqget_against_provider_qualified_accession_with_mocked_retrieval() {
+        let service = implemented_service();
+        let tool = ToolName::new("refseqget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("refseqget should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["ncbi:protein:NP_000537.3".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=NP_000537.3&rettype=fasta&retmode=text",
+            HttpResponse::new(200, ">NP_000537.3 TP53\nMEEPQSDPSV\n"),
+        );
+
+        let response = service
+            .invoke_refseqget_inner(request, descriptor, Some(&client))
+            .expect("refseqget should execute with mocked retrieval");
+        match &response.result.payload {
+            ResultPayload::Sequence(record) => {
+                assert_eq!(record.identifier().accession(), "NP_000537.3");
+                assert_eq!(record.metadata().source.as_deref(), Some("ncbi"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn refseqget_rejects_local_file_input() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("refseqget").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("refseqget should reject local file inputs");
+        assert_eq!(
+            error.code(),
+            Some("service.refseqget.local_input_not_supported")
+        );
     }
 
     #[test]

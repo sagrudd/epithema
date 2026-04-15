@@ -134,6 +134,15 @@ The next shipped cohort now covers global pairwise alignment operations:
   performs deterministic many-vs-many global pairwise alignments in query-major
   order and reports a structured comparison table.
 
+The next shipped cohort now covers modernized sequence retrieval operations:
+
+- `emboss-rs seqret <input>` normalizes a local sequence file or resolves a
+  provider-qualified accession through the governed acquisition seam and emits
+  normalized FASTA.
+- `emboss-rs refseqget <provider-qualified-accession>` retrieves a single
+  provider-backed accession-addressable sequence through the governed
+  acquisition seam and emits normalized FASTA.
+
 The next shipped cohort now covers alignment-summary and similarity operations:
 
 - `emboss-rs matcher <query-input> <target-input>` compares exactly one query

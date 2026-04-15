@@ -1,0 +1,26 @@
+{
+  "document_id": "seqret-minimal",
+  "tool_name": "seqret",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "seqret-local-and-provider-normalization",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Normalize a local sequence input or resolve a provider-qualified accession through the governed acquisition seam and emit normalized FASTA."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}
