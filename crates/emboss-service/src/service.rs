@@ -10,6 +10,10 @@ use emboss_diagnostics::{
 };
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
+use emboss_tools::sequence_edit::{
+    DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
+    revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
+};
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
     newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq, run_nthseq, run_seqcount,
@@ -123,6 +127,10 @@ impl EmbossService {
             "skipseq" => self.invoke_skipseq(request, descriptor),
             "notseq" => self.invoke_notseq(request, descriptor),
             "newseq" => self.invoke_newseq(request, descriptor),
+            "degapseq" => self.invoke_degapseq(request, descriptor),
+            "revseq" => self.invoke_revseq(request, descriptor),
+            "trimseq" => self.invoke_trimseq(request, descriptor),
+            "descseq" => self.invoke_descseq(request, descriptor),
             "extractseq" => self.invoke_extractseq(request, descriptor),
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
@@ -479,6 +487,220 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("extracted-sequences", ArtifactKind::Sequence)
                 .with_label("Extracted sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_degapseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, degapseq_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("degapseq", degapseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_degapseq(DegapseqParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("degapped FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "removed gap characters from {} records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence gaps removed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Removed characters: '-' and '.'")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("degapped-sequences", ArtifactKind::Sequence)
+                .with_label("Degapped sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_revseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, revseq_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("revseq", revseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_revseq(RevseqParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("reversed FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("reversed {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence reversal completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Behavior: plain reversal only")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("reversed-sequences", ArtifactKind::Sequence)
+                .with_label("Reversed sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_trimseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, trimseq_help()));
+        }
+
+        let params = parse_trimseq_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_trimseq(TrimseqParams {
+            input,
+            left_trim: params.left_trim,
+            right_trim: params.right_trim,
+        })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("trimmed FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("trimmed {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence trimming completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Left trim: {}", outcome.left_trim))
+                .with_line(format!("Right trim: {}", outcome.right_trim))
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("trimmed-sequences", ArtifactKind::Sequence)
+                .with_label("Trimmed sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_descseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, descseq_help()));
+        }
+
+        let params = parse_descseq_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_descseq(DescseqParams {
+            input,
+            description: params.description.clone(),
+            clear: params.clear,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("description-updated FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("updated descriptions for {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let description_line = if params.clear {
+            "Description mode: cleared".to_owned()
+        } else {
+            format!(
+                "Description mode: replaced with '{}'",
+                params.description.as_deref().unwrap_or_default()
+            )
+        };
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence descriptions updated")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(description_line)
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("described-sequences", ArtifactKind::Sequence)
+                .with_label("Description-updated sequences")
                 .with_provenance(output_provenance),
         );
 
@@ -876,6 +1098,118 @@ fn parse_molecule(value: &str) -> Result<MoleculeKind, ServiceError> {
     })
 }
 
+fn parse_trimseq_params(arguments: &[String]) -> Result<TrimseqParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("trimseq", trimseq_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut left_trim = 0usize;
+    let mut right_trim = 0usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--left=") {
+            left_trim = parse_non_negative_count("trimseq", value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--left" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --left")
+                    .with_code("service.tool.trimseq.left_missing")
+            })?;
+            left_trim = parse_non_negative_count("trimseq", value)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--right=") {
+            right_trim = parse_non_negative_count("trimseq", value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--right" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --right")
+                    .with_code("service.tool.trimseq.right_missing")
+            })?;
+            right_trim = parse_non_negative_count("trimseq", value)?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown trimseq argument '{argument}'"),
+        )
+        .with_code("service.tool.trimseq.argument_unknown")
+        .with_detail(trimseq_help()));
+    }
+
+    Ok(TrimseqParams {
+        input,
+        left_trim,
+        right_trim,
+    })
+}
+
+fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("descseq", descseq_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut description = None;
+    let mut clear = false;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--description=") {
+            description = Some(value.to_owned());
+            index += 1;
+            continue;
+        }
+        if argument == "--description" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --description")
+                    .with_code("service.tool.descseq.description_missing")
+            })?;
+            description = Some(value.clone());
+            index += 2;
+            continue;
+        }
+        if argument == "--clear" {
+            clear = true;
+            index += 1;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown descseq argument '{argument}'"),
+        )
+        .with_code("service.tool.descseq.argument_unknown")
+        .with_detail(descseq_help()));
+    }
+
+    if clear == description.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "descseq requires exactly one of --description or --clear",
+        )
+        .with_code("service.tool.descseq.mode_invalid")
+        .with_detail(descseq_help()));
+    }
+
+    Ok(DescseqParams {
+        input,
+        description,
+        clear,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
@@ -959,6 +1293,11 @@ mod tests {
     fn second_sequence_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/two_records.fasta")
+    }
+
+    fn gapped_sequence_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/gapped_records.fasta")
     }
 
     fn implemented_service() -> EmbossService {
@@ -1174,6 +1513,95 @@ mod tests {
                 assert_eq!(partitions.len(), 2);
                 assert_eq!(partitions[0].len(), 2);
                 assert_eq!(partitions[1].len(), 1);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_degapseq_against_gapped_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("degapseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![gapped_sequence_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("degapseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ACGT");
+                assert_eq!(records[1].residues(), "TTA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_revseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("revseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("revseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "TGCA");
+                assert_eq!(records[2].residues(), "CCGG");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_trimseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("trimseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--left".to_owned(),
+            "1".to_owned(),
+            "--right".to_owned(),
+            "1".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("trimseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "CG");
+                assert_eq!(records[1].residues(), "TT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_descseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("descseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--description".to_owned(),
+            "updated description".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("descseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(
+                    records[0].metadata().description.as_deref(),
+                    Some("updated description")
+                );
+                assert_eq!(records[0].identifier().accession(), "alpha");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

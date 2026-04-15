@@ -2,6 +2,7 @@
 
 use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
+pub mod sequence_edit;
 pub mod sequence_stream;
 pub mod sequence_transform;
 
@@ -59,6 +60,10 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         sequence_stream::NOTSEQ_DESCRIPTOR,
         sequence_stream::NTHSEQ_DESCRIPTOR,
         sequence_stream::SKIPSEQ_DESCRIPTOR,
+        sequence_edit::DEGAPSEQ_DESCRIPTOR,
+        sequence_edit::REVSEQ_DESCRIPTOR,
+        sequence_edit::TRIMSEQ_DESCRIPTOR,
+        sequence_edit::DESCSEQ_DESCRIPTOR,
         sequence_transform::EXTRACTSEQ_DESCRIPTOR,
         sequence_transform::CUTSEQ_DESCRIPTOR,
         sequence_transform::UNION_DESCRIPTOR,
@@ -90,6 +95,10 @@ mod tests {
                 "notseq",
                 "nthseq",
                 "skipseq",
+                "degapseq",
+                "revseq",
+                "trimseq",
+                "descseq",
                 "extractseq",
                 "cutseq",
                 "union",

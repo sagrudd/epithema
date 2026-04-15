@@ -43,6 +43,18 @@ The next shipped cohort now covers extraction and partitioning operations:
 - `emboss-rs splitter <input> <chunk-size>` partitions a sequence stream into
   fixed-size record chunks and emits deterministic FASTA partitions.
 
+The next shipped cohort now covers simple cleanup and editing operations:
+
+- `emboss-rs degapseq <input>` removes `-` and `.` gap characters from each
+  input record and emits FASTA.
+- `emboss-rs revseq <input>` reverses each input record and emits FASTA. This
+  v1 implementation performs plain reversal only.
+- `emboss-rs trimseq <input> [--left <count>] [--right <count>]` trims explicit
+  residue counts from the ends of each record and emits FASTA.
+- `emboss-rs descseq <input> --description <text>` or
+  `emboss-rs descseq <input> --clear` replaces or clears sequence descriptions
+  while preserving identifiers and sequence content.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
