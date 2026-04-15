@@ -7,7 +7,9 @@
 //! - sequence intervals are zero-based and half-open: `[start, end)`
 //! - feature locations are one or more ordered, non-overlapping spans
 //! - sequence records own normalized uppercase residue content and attached features
+//! - alignment coordinates refer to aligned columns, with `-` as the canonical gap
 
+pub mod alignment;
 pub mod alphabet;
 pub mod error;
 pub mod feature;
@@ -19,6 +21,7 @@ pub mod platform;
 pub mod sequence;
 pub mod strand;
 
+pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alphabet::Alphabet;
 pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};

@@ -63,6 +63,24 @@ pub enum DomainError {
         /// Length of the associated sequence.
         sequence_length: usize,
     },
+    /// An alignment contained no rows.
+    EmptyAlignment,
+    /// An aligned row contained no symbols after normalization.
+    EmptyAlignmentRow,
+    /// Alignment rows did not all share the same aligned length.
+    InconsistentAlignmentRowLength {
+        /// Expected aligned length.
+        expected: usize,
+        /// Observed row length.
+        observed: usize,
+        /// Identifier of the offending row.
+        row_identifier: String,
+    },
+    /// Alignment rows reused the same identifier.
+    DuplicateAlignmentRowIdentifier {
+        /// Duplicate identifier.
+        identifier: String,
+    },
 }
 
 impl Display for DomainError {
@@ -113,6 +131,21 @@ impl Display for DomainError {
                 f,
                 "requested interval end ({interval_end}) exceeds sequence length ({sequence_length})"
             ),
+            Self::EmptyAlignment => write!(f, "alignment must contain at least one row"),
+            Self::EmptyAlignmentRow => {
+                write!(f, "alignment row must contain at least one aligned symbol")
+            }
+            Self::InconsistentAlignmentRowLength {
+                expected,
+                observed,
+                row_identifier,
+            } => write!(
+                f,
+                "alignment rows must all have the same aligned length: expected {expected}, observed {observed} for row '{row_identifier}'"
+            ),
+            Self::DuplicateAlignmentRowIdentifier { identifier } => {
+                write!(f, "alignment row identifier '{identifier}' is duplicated")
+            }
         }
     }
 }
@@ -157,6 +190,22 @@ impl From<DomainError> for PlatformError {
             DomainError::SequenceIntervalOutOfBounds { .. } => {
                 PlatformError::new(ErrorCategory::Validation, value.to_string())
                     .with_code("core.sequence.interval_out_of_bounds")
+            }
+            DomainError::EmptyAlignment => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.alignment.empty")
+            }
+            DomainError::EmptyAlignmentRow => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.alignment.row_empty")
+            }
+            DomainError::InconsistentAlignmentRowLength { .. } => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.alignment.row_length_mismatch")
+            }
+            DomainError::DuplicateAlignmentRowIdentifier { .. } => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.alignment.duplicate_identifier")
             }
         }
     }

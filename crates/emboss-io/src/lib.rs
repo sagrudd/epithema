@@ -5,15 +5,24 @@
 //! map directly to `SequenceRecord`. FASTQ records use an IO-local
 //! `FastqRecord`, which couples a `SequenceRecord` with decoded Phred+33
 //! quality scores. EMBL and GenBank support a practical annotated-record subset
-//! with top-level metadata, simple feature tables, and stable writing.
+//! with top-level metadata, simple feature tables, and stable writing. Aligned
+//! FASTA and Stockholm support map directly to the shared `Alignment` model.
 
+pub mod aligned_fasta;
 pub mod embl;
 pub mod error;
 pub mod fasta;
 pub mod fastq;
 pub mod flatfile;
 pub mod genbank;
+pub mod stockholm;
 
+pub use aligned_fasta::{
+    DEFAULT_ALIGNED_FASTA_LINE_WIDTH, parse_aligned_fasta_reader,
+    parse_aligned_fasta_reader_with_molecule, parse_aligned_fasta_str,
+    parse_aligned_fasta_str_with_molecule, write_aligned_fasta_string, write_aligned_fasta_writer,
+    write_aligned_fasta_writer_wrapped,
+};
 pub use embl::{parse_embl_reader, parse_embl_str, write_embl_string, write_embl_writer};
 pub use error::IoError;
 pub use fasta::{
@@ -27,6 +36,9 @@ pub use fastq::{
 };
 pub use genbank::{
     parse_genbank_reader, parse_genbank_str, write_genbank_string, write_genbank_writer,
+};
+pub use stockholm::{
+    parse_stockholm_reader, parse_stockholm_str, write_stockholm_string, write_stockholm_writer,
 };
 
 /// Minimal description of a supported data format.
@@ -64,6 +76,14 @@ impl Default for FormatCatalog {
                     name: "genbank",
                     summary: "GenBank flat-file parsing and writing for annotated sequence records",
                 },
+                DataFormat {
+                    name: "aligned-fasta",
+                    summary: "Aligned FASTA parsing and writing for sequence alignments",
+                },
+                DataFormat {
+                    name: "stockholm",
+                    summary: "Stockholm alignment parsing and writing for a practical subset",
+                },
             ],
         }
     }
@@ -90,10 +110,12 @@ mod tests {
     #[test]
     fn lists_supported_sequence_formats() {
         let catalog = FormatCatalog::new();
-        assert_eq!(catalog.formats().len(), 4);
+        assert_eq!(catalog.formats().len(), 6);
         assert_eq!(catalog.formats()[0].name, "fasta");
         assert_eq!(catalog.formats()[1].name, "fastq");
         assert_eq!(catalog.formats()[2].name, "embl");
         assert_eq!(catalog.formats()[3].name, "genbank");
+        assert_eq!(catalog.formats()[4].name, "aligned-fasta");
+        assert_eq!(catalog.formats()[5].name, "stockholm");
     }
 }
