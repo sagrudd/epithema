@@ -78,6 +78,19 @@ The next shipped cohort now covers translation-adjacent operations:
   frame-1 DNA coding sequences with the standard genetic code and compares them
   against expected protein records paired by input order.
 
+The next shipped cohort now covers simple deterministic pattern-search
+operations:
+
+- `emboss-rs fuzznuc <nucleotide-input> <pattern>` scans forward nucleotide
+  sequences for exact or IUPAC-ambiguous patterns and reports 1-based inclusive
+  hit coordinates.
+- `emboss-rs fuzzpro <protein-input> <pattern>` scans protein sequences for
+  exact patterns with `X` wildcard support and reports 1-based inclusive hit
+  coordinates.
+- `emboss-rs fuzztran <nucleotide-input> <protein-pattern>` translates all
+  three forward frames and reports translated-protein hits mapped back to
+  1-based inclusive nucleotide coordinates.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

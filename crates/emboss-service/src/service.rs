@@ -4,7 +4,8 @@ use std::str::FromStr;
 
 use emboss_config::PlatformConfig;
 use emboss_core::{
-    FeatureKind, FeatureSelector, Interval, MoleculeKind, PLATFORM_IDENTITY, Strand,
+    FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PLATFORM_IDENTITY,
+    PatternError, ProteinPattern, Strand,
 };
 use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
@@ -16,6 +17,10 @@ use emboss_tools::feature_tools::{
     ExtractfeatParams, FeatcopyParams, MaskfeatParams, MaskseqParams, extractfeat_help,
     featcopy_help, maskfeat_help, maskseq_help, run_extractfeat, run_featcopy, run_maskfeat,
     run_maskseq,
+};
+use emboss_tools::pattern_tools::{
+    FuzznucParams, FuzzproParams, FuzztranParams, fuzznuc_help, fuzzpro_help, fuzztran_help,
+    run_fuzznuc, run_fuzzpro, run_fuzztran,
 };
 use emboss_tools::sequence_edit::{
     DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
@@ -146,6 +151,9 @@ impl EmbossService {
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
             "featcopy" => self.invoke_featcopy(request, descriptor),
+            "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
+            "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
+            "fuzztran" => self.invoke_fuzztran(request, descriptor),
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
             "backtranambig" => self.invoke_backtranambig(request, descriptor),
             "checktrans" => self.invoke_checktrans(request, descriptor),
@@ -1041,6 +1049,218 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_fuzznuc(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, fuzznuc_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("fuzznuc", fuzznuc_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let pattern = parse_nucleotide_pattern("fuzznuc", &arguments[1])?;
+        let outcome = run_fuzznuc(FuzznucParams { input, pattern })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} nucleotide pattern hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.pattern.clone(),
+                    hit.strand.clone(),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "pattern".to_owned(),
+                    "strand".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Nucleotide pattern search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Pattern: {}", outcome.pattern))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Strand policy: forward only")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_fuzzpro(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, fuzzpro_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("fuzzpro", fuzzpro_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let pattern = parse_protein_pattern("fuzzpro", &arguments[1])?;
+        let outcome = run_fuzzpro(FuzzproParams { input, pattern })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} protein pattern hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.pattern.clone(),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "pattern".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein pattern search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Pattern: {}", outcome.pattern))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Pattern syntax: exact residues with X wildcard")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_fuzztran(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, fuzztran_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("fuzztran", fuzztran_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let pattern = parse_protein_pattern("fuzztran", &arguments[1])?;
+        let outcome = run_fuzztran(FuzztranParams { input, pattern })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} translated pattern hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.pattern.clone(),
+                    hit.frame.to_string(),
+                    (hit.amino_start + 1).to_string(),
+                    hit.amino_end.to_string(),
+                    (hit.nucleotide_start + 1).to_string(),
+                    hit.nucleotide_end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "pattern".to_owned(),
+                    "frame".to_owned(),
+                    "aa_start".to_owned(),
+                    "aa_end".to_owned(),
+                    "nt_start".to_owned(),
+                    "nt_end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Translated pattern search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Pattern: {}", outcome.pattern))
+                .with_line("Frame policy: forward frames 1-3")
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_backtranambig(
         &self,
         request: InvocationRequest,
@@ -1581,6 +1801,27 @@ fn parse_molecule(value: &str) -> Result<MoleculeKind, ServiceError> {
     })
 }
 
+fn parse_nucleotide_pattern(tool: &str, value: &str) -> Result<NucleotidePattern, ServiceError> {
+    NucleotidePattern::parse(value).map_err(|error| map_pattern_error(tool, error))
+}
+
+fn parse_protein_pattern(tool: &str, value: &str) -> Result<ProteinPattern, ServiceError> {
+    ProteinPattern::parse(value).map_err(|error| map_pattern_error(tool, error))
+}
+
+fn map_pattern_error(tool: &str, error: PatternError) -> ServiceError {
+    let code = match error {
+        PatternError::EmptyPattern => format!("service.tool.{tool}.pattern.empty"),
+        PatternError::InvalidNucleotideSymbol(_) => {
+            format!("service.tool.{tool}.pattern.nucleotide_invalid")
+        }
+        PatternError::InvalidProteinSymbol(_) => {
+            format!("service.tool.{tool}.pattern.protein_invalid")
+        }
+    };
+    PlatformError::new(ErrorCategory::Validation, error.to_string()).with_code(code)
+}
+
 fn parse_trimseq_params(arguments: &[String]) -> Result<TrimseqParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("trimseq", trimseq_help()));
@@ -2059,6 +2300,9 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "maskfeat" => maskfeat_help(),
         "extractfeat" => extractfeat_help(),
         "featcopy" => featcopy_help(),
+        "fuzznuc" => fuzznuc_help(),
+        "fuzzpro" => fuzzpro_help(),
+        "fuzztran" => fuzztran_help(),
         _ => "",
     }
 }
@@ -2177,6 +2421,11 @@ mod tests {
     fn protein_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/protein_records.fasta")
+    }
+
+    fn nucleotide_pattern_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
     }
 
     fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
@@ -2726,6 +2975,93 @@ mod tests {
         .with_arguments(vec![
             checktrans_invalid_codon_fixture().display().to_string(),
             checktrans_protein_fixture().display().to_string(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_fuzznuc_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzznuc").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            nucleotide_pattern_fixture().display().to_string(),
+            "ACGN".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("fuzznuc should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "nucA");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[1][5], "ACGT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_fuzzpro_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzzpro").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "MX".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("fuzzpro should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "protA");
+                assert_eq!(table.rows[0][4], "MA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_fuzztran_against_matching_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzztran").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            "MA".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("fuzztran should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "cdsA");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][5], "1");
+                assert_eq!(table.rows[0][7], "MA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn rejects_invalid_fuzznuc_pattern() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzznuc").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            nucleotide_pattern_fixture().display().to_string(),
+            "AC?".to_owned(),
         ]);
 
         assert!(service.invoke(request).is_err());

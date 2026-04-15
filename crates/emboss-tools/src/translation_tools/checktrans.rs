@@ -111,6 +111,9 @@ fn compare_pair(
                 "tools.checktrans.nucleotide.non_coding_length"
             }
             emboss_core::TranslationError::InvalidCodon(_) => "tools.checktrans.codon.invalid",
+            emboss_core::TranslationError::InvalidFrameOffset { .. } => {
+                "tools.checktrans.translation.frame_invalid"
+            }
             emboss_core::TranslationError::UnsupportedResidue(_) => {
                 "tools.checktrans.translation.unsupported"
             }

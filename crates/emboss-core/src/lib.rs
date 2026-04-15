@@ -20,6 +20,7 @@ pub mod identifier;
 pub mod interval;
 pub mod metadata;
 pub mod molecule;
+pub mod pattern;
 pub mod platform;
 pub mod sequence;
 pub mod strand;
@@ -39,10 +40,11 @@ pub use identifier::SequenceIdentifier;
 pub use interval::Interval;
 pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
+pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern};
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
 pub use sequence::SequenceRecord;
 pub use strand::Strand;
 pub use translation::{
     TranslationError, ambiguous_codon, backtranslate_ambiguous, backtranslate_representative,
-    representative_codon, translate_dna_strict,
+    representative_codon, translate_dna_frame, translate_dna_strict,
 };

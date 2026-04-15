@@ -21,6 +21,11 @@ pub enum TranslationError {
         /// Observed nucleotide sequence length.
         length: usize,
     },
+    /// Translation frame offset was outside the supported range.
+    InvalidFrameOffset {
+        /// Requested zero-based frame offset.
+        offset: usize,
+    },
 }
 
 impl Display for TranslationError {
@@ -35,6 +40,9 @@ impl Display for TranslationError {
                     f,
                     "nucleotide sequence length {length} is not divisible by three"
                 )
+            }
+            Self::InvalidFrameOffset { offset } => {
+                write!(f, "translation frame offset {offset} must be 0, 1, or 2")
             }
         }
     }
@@ -70,6 +78,36 @@ pub fn translate_dna_strict(coding_sequence: &str) -> Result<String, Translation
 
     coding_sequence
         .as_bytes()
+        .chunks(3)
+        .map(|chunk| {
+            let codon = std::str::from_utf8(chunk)
+                .expect("sequence records are normalized ASCII residues")
+                .to_ascii_uppercase();
+            amino_acid_for_codon(&codon)
+        })
+        .collect()
+}
+
+/// Strictly translates a forward DNA frame, ignoring any trailing partial codon.
+pub fn translate_dna_frame(
+    nucleotide_sequence: &str,
+    frame_offset: usize,
+) -> Result<String, TranslationError> {
+    if frame_offset > 2 {
+        return Err(TranslationError::InvalidFrameOffset {
+            offset: frame_offset,
+        });
+    }
+
+    let sequence = nucleotide_sequence.to_ascii_uppercase();
+    let bytes = sequence.as_bytes();
+    if bytes.len() <= frame_offset {
+        return Ok(String::new());
+    }
+    let usable_len = bytes.len().saturating_sub(frame_offset);
+    let coding_len = usable_len - (usable_len % 3);
+
+    bytes[frame_offset..frame_offset + coding_len]
         .chunks(3)
         .map(|chunk| {
             let codon = std::str::from_utf8(chunk)
@@ -181,7 +219,7 @@ fn amino_acid_for_codon(codon: &str) -> Result<char, TranslationError> {
 mod tests {
     use super::{
         TranslationError, backtranslate_ambiguous, backtranslate_representative,
-        translate_dna_strict,
+        translate_dna_frame, translate_dna_strict,
     };
 
     #[test]
@@ -207,5 +245,11 @@ mod tests {
     fn rejects_invalid_length() {
         let error = translate_dna_strict("ATGG").expect_err("length should fail");
         assert_eq!(error, TranslationError::NonCodingLength { length: 4 });
+    }
+
+    #[test]
+    fn translates_forward_frames_with_trailing_remainder_ignored() {
+        let protein = translate_dna_frame("AATGGCTTAA", 1).expect("frame translation");
+        assert_eq!(protein, "MA*");
     }
 }
