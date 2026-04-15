@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "gc_profile",
+    "title": "GC profile",
+    "subtitle": "Windowed summary",
+    "provenance": {
+      "tool": "geecee",
+      "method": "windowed_gc",
+      "source_artifact_ids": [
+        "table:gc"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "GC proportion",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "sample_a",
+      "label": "Sample A",
+      "legend_label": "Sample A",
+      "semantic_group": "sample",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          5.0,
+          9.0
+        ]
+      },
+      "y": [
+        0.42,
+        0.55,
+        0.47
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    },
+    {
+      "id": "sample_b",
+      "label": "Sample B",
+      "legend_label": "Sample B",
+      "semantic_group": "sample",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          5.0,
+          9.0
+        ]
+      },
+      "y": [
+        0.38,
+        0.44,
+        0.41
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "secondary"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "label": "target",
+      "reference_line": {
+        "axis": "y",
+        "value": 0.5
+      }
+    }
+  ]
+}

@@ -145,3 +145,25 @@ pub struct BridgeTableSummary {
     /// Cached row count.
     pub row_count: usize,
 }
+
+/// Bridge-safe summary of a typed Rust plot contract.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgePlotSummary {
+    /// Stable plot identifier.
+    pub id: String,
+    /// Human-readable title.
+    pub title: String,
+    /// Stable plot kind label.
+    pub kind: String,
+    /// Number of series.
+    pub series_count: usize,
+}
+
+/// Bridge-safe JSON handoff payload for the R plotting backend.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgePlotContract {
+    /// Stable plot summary.
+    pub summary: BridgePlotSummary,
+    /// Serialized JSON contract.
+    pub json: String,
+}

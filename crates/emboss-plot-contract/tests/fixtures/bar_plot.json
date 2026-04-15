@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "kind": "bar",
+  "metadata": {
+    "id": "codon_counts",
+    "title": "Codon counts"
+  },
+  "x_axis": {
+    "label": "Codon",
+    "scale_hint": "categorical"
+  },
+  "y_axis": {
+    "label": "Count",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "counts",
+      "label": "Counts",
+      "x": {
+        "type": "text",
+        "values": [
+          "ATG",
+          "GCT",
+          "TAA"
+        ]
+      },
+      "y": [
+        12.0,
+        8.0,
+        1.0
+      ],
+      "style": {
+        "geometry_hint": "bar",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

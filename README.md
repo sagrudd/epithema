@@ -17,6 +17,11 @@ documentation command path, and future governed tools will execute as
 The Rust workspace also includes `emboss-r-bridge`, which provides the typed
 Rust-side contract seam for the first-class sister package `emboss-r`.
 
+Plot-ready analytical outputs should target the typed JSON-serializable
+`emboss-plot-contract` crate. Rendering remains owned by the sister `emboss-r`
+package, which consumes that contract for governed plot families such as line,
+scatter, and bar plots.
+
 The first shipped tool cohort now covers sequence-stream and sequence-selection
 operations through the governed single-binary surface:
 

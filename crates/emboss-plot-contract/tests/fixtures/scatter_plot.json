@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "kind": "scatter",
+  "metadata": {
+    "id": "point_quality",
+    "title": "Point quality"
+  },
+  "x_axis": {
+    "label": "Read length",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Mean quality",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "reads",
+      "label": "Reads",
+      "x": {
+        "type": "numeric",
+        "values": [
+          75.0,
+          100.0,
+          150.0
+        ]
+      },
+      "y": [
+        31.2,
+        33.8,
+        35.1
+      ],
+      "style": {
+        "geometry_hint": "point",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

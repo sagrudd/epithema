@@ -13,14 +13,15 @@ pub mod types;
 pub mod version;
 
 pub use api::{
-    bridge_version, health_check, health_check_with_service, list_tools, summarize_alignment,
-    summarize_features, summarize_sequence, summarize_table_result, supports_plot_payload,
+    bridge_version, health_check, health_check_with_service, list_tools, serialize_plot_contract,
+    summarize_alignment, summarize_features, summarize_plot_contract, summarize_sequence,
+    summarize_table_result, supports_plot_payload,
 };
 pub use error::BridgeErrorSummary;
 pub use health::BridgeHealth;
 pub use types::{
     BridgeAlignmentSummary, BridgeArtifactSummary, BridgeDiagnosticSummary, BridgeFeatureSummary,
-    BridgeOperationStatus, BridgeProvenanceSummary, BridgeResultSummary, BridgeSequenceSummary,
-    BridgeTableSummary, BridgeToolSummary,
+    BridgeOperationStatus, BridgePlotContract, BridgePlotSummary, BridgeProvenanceSummary,
+    BridgeResultSummary, BridgeSequenceSummary, BridgeTableSummary, BridgeToolSummary,
 };
 pub use version::BridgeVersion;

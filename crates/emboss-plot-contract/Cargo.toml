@@ -8,5 +8,9 @@ authors.workspace = true
 rust-version.workspace = true
 description = "Plot payload contracts for Rust-to-R graphical handoff."
 
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
 [lints]
 workspace = true

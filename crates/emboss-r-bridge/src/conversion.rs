@@ -2,6 +2,7 @@
 
 use emboss_core::{Alignment, Feature, PLATFORM_IDENTITY, SequenceRecord};
 use emboss_diagnostics::{Diagnostic, PlatformError};
+use emboss_plot_contract::PlotSpec;
 use emboss_service::{ArtifactReference, EmbossService, MethodResult, ResultPayload, TableReport};
 use emboss_tools::ToolDescriptor;
 
@@ -9,8 +10,8 @@ use crate::error::BridgeErrorSummary;
 use crate::health::BridgeHealth;
 use crate::types::{
     BridgeAlignmentSummary, BridgeArtifactSummary, BridgeDiagnosticSummary, BridgeFeatureSummary,
-    BridgeOperationStatus, BridgeProvenanceSummary, BridgeResultSummary, BridgeSequenceSummary,
-    BridgeTableSummary, BridgeToolSummary,
+    BridgeOperationStatus, BridgePlotContract, BridgePlotSummary, BridgeProvenanceSummary,
+    BridgeResultSummary, BridgeSequenceSummary, BridgeTableSummary, BridgeToolSummary,
 };
 use crate::version::BridgeVersion;
 
@@ -137,6 +138,33 @@ impl From<&TableReport> for BridgeTableSummary {
     }
 }
 
+impl From<&PlotSpec> for BridgePlotSummary {
+    fn from(value: &PlotSpec) -> Self {
+        Self {
+            id: value.metadata.id.clone(),
+            title: value.metadata.title.clone(),
+            kind: value.kind.as_str().to_owned(),
+            series_count: value.series.len(),
+        }
+    }
+}
+
+/// Serializes a typed plot contract into a bridge-safe JSON handoff payload.
+pub fn project_plot_contract(spec: &PlotSpec) -> Result<BridgePlotContract, PlatformError> {
+    let json = spec.to_json_pretty().map_err(|error| {
+        PlatformError::new(
+            emboss_diagnostics::ErrorCategory::Validation,
+            error.to_string(),
+        )
+        .with_code("bridge.plot_contract.invalid")
+    })?;
+
+    Ok(BridgePlotContract {
+        summary: BridgePlotSummary::from(spec),
+        json,
+    })
+}
+
 /// Projects a compact table summary when the method result payload is tabular.
 #[must_use]
 pub fn project_table_summary(result: &MethodResult) -> Option<BridgeTableSummary> {
@@ -212,6 +240,10 @@ mod tests {
         Diagnostic, DiagnosticLocation, ErrorCategory, ExecutionContext, ExecutionOutcome,
         ExecutionReport, InvocationOrigin, OutcomeStatus, PlatformError, Severity,
     };
+    use emboss_plot_contract::{
+        AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotSeries,
+        PlotSpec, SeriesStyle,
+    };
     use emboss_service::{
         ArtifactKind, ArtifactReference, EmbossService, MethodResult, ResultPayload, ResultSummary,
         TableReport, ToolName,
@@ -220,11 +252,11 @@ mod tests {
 
     use super::{
         project_alignment_summary, project_feature_summaries, project_health,
-        project_table_summary, project_version,
+        project_plot_contract, project_table_summary, project_version,
     };
     use crate::types::{
-        BridgeDiagnosticSummary, BridgeFeatureSummary, BridgeResultSummary, BridgeSequenceSummary,
-        BridgeToolSummary,
+        BridgeDiagnosticSummary, BridgeFeatureSummary, BridgePlotSummary, BridgeResultSummary,
+        BridgeSequenceSummary, BridgeToolSummary,
     };
 
     #[test]
@@ -395,5 +427,36 @@ mod tests {
         assert_eq!(summary.row_count, 1);
         assert_eq!(summary.columns, vec!["name", "length"]);
         assert_eq!(result_summary.artifact_count, 1);
+    }
+
+    #[test]
+    fn projects_plot_contract_into_bridge_json() {
+        let plot = PlotSpec::new(
+            PlotKind::Line,
+            PlotMetadata::new("gc_profile", "GC profile"),
+            PlotAxis::new("Window").with_scale_hint(AxisScaleHint::Linear),
+            PlotAxis::new("GC").with_scale_hint(AxisScaleHint::Linear),
+            vec![
+                PlotSeries::new(
+                    "sample",
+                    "Sample",
+                    DataVector::Numeric(vec![1.0, 2.0, 3.0]),
+                    vec![0.4, 0.5, 0.45],
+                )
+                .with_style(SeriesStyle::empty().with_geometry_hint(GeometryHint::Line)),
+            ],
+        );
+
+        let handoff = project_plot_contract(&plot).expect("plot contract should serialize");
+        assert_eq!(
+            handoff.summary,
+            BridgePlotSummary {
+                id: "gc_profile".to_owned(),
+                title: "GC profile".to_owned(),
+                kind: "line".to_owned(),
+                series_count: 1,
+            }
+        );
+        assert!(handoff.json.contains("\"kind\": \"line\""));
     }
 }

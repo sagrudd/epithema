@@ -1,40 +1,30 @@
-//! Plot payload contracts for handing graphical data from Rust to the R surface.
+//! Typed plot-contract layer for handing plot-ready analytical payloads from
+//! Rust to the R-owned rendering backend in the sister `emboss-r` project.
+//!
+//! Rendering does not happen in Rust. Rust owns scientific computation and the
+//! generation of plot-ready semantic structures; R owns rendering choices and
+//! graphics backends. This crate defines the stable JSON-serializable contract
+//! between those two layers.
 
-/// A named numeric series in a plot payload.
-#[derive(Clone, Debug, PartialEq)]
-pub struct PlotSeries {
-    /// Series label.
-    pub name: String,
-    /// Y values for the series.
-    pub values: Vec<f64>,
-}
+/// Axis metadata and scale hints.
+pub mod axis;
+/// Validation and serialization errors.
+pub mod error;
+/// Optional faceting metadata.
+pub mod facet;
+/// Plot display metadata and provenance.
+pub mod metadata;
+/// Data-series and style hint types.
+pub mod series;
+/// Top-level plot specification and validation.
+pub mod spec;
 
-/// Plot-ready payload emitted by Rust for rendering elsewhere.
-#[derive(Clone, Debug, PartialEq)]
-pub struct PlotPayload {
-    /// Plot title.
-    pub title: String,
-    /// Included numeric series.
-    pub series: Vec<PlotSeries>,
-}
+pub use axis::{AxisScaleHint, PlotAxis};
+pub use error::PlotContractError;
+pub use facet::{FacetScaleMode, PlotFacet};
+pub use metadata::{PlotMetadata, PlotProvenance};
+pub use series::{DataVector, GeometryHint, PlotSeries, SeriesStyle};
+pub use spec::{PlotAnnotation, PlotKind, PlotReferenceAxis, PlotReferenceLine, PlotSpec};
 
-impl PlotPayload {
-    /// Creates an empty payload with the supplied title.
-    #[must_use]
-    pub fn empty(title: impl Into<String>) -> Self {
-        Self {
-            title: title.into(),
-            series: Vec::new(),
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::PlotPayload;
-
-    #[test]
-    fn creates_empty_payload() {
-        assert!(PlotPayload::empty("example").series.is_empty());
-    }
-}
+/// Backwards-compatible alias for the governed plot payload type.
+pub type PlotPayload = PlotSpec;

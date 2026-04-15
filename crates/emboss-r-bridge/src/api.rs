@@ -5,13 +5,13 @@ use emboss_plot_contract::PlotPayload;
 use emboss_service::{EmbossService, MethodResult};
 
 use crate::conversion::{
-    project_alignment_summary, project_feature_summaries, project_health, project_sequence_summary,
-    project_table_summary, project_version,
+    project_alignment_summary, project_feature_summaries, project_health, project_plot_contract,
+    project_sequence_summary, project_table_summary, project_version,
 };
 use crate::health::BridgeHealth;
 use crate::types::{
-    BridgeAlignmentSummary, BridgeFeatureSummary, BridgeSequenceSummary, BridgeTableSummary,
-    BridgeToolSummary,
+    BridgeAlignmentSummary, BridgeFeatureSummary, BridgePlotContract, BridgePlotSummary,
+    BridgeSequenceSummary, BridgeTableSummary, BridgeToolSummary,
 };
 use crate::version::BridgeVersion;
 
@@ -48,6 +48,19 @@ pub fn list_tools(service: &EmbossService) -> Vec<BridgeToolSummary> {
 #[must_use]
 pub fn supports_plot_payload(_payload: &PlotPayload) -> bool {
     true
+}
+
+/// Projects a plot contract into bridge-safe JSON for the R plotting backend.
+pub fn serialize_plot_contract(
+    payload: &PlotPayload,
+) -> Result<BridgePlotContract, emboss_diagnostics::PlatformError> {
+    project_plot_contract(payload)
+}
+
+/// Projects a small summary of a plot contract.
+#[must_use]
+pub fn summarize_plot_contract(payload: &PlotPayload) -> BridgePlotSummary {
+    BridgePlotSummary::from(payload)
 }
 
 /// Projects a sequence record into a bridge-safe summary.
@@ -90,7 +103,7 @@ mod tests {
 
     use super::{
         bridge_version, health_check, list_tools, summarize_alignment, summarize_features,
-        summarize_sequence, summarize_table_result, supports_plot_payload,
+        summarize_plot_contract, summarize_sequence, summarize_table_result, supports_plot_payload,
     };
 
     #[test]
@@ -123,6 +136,14 @@ mod tests {
     fn accepts_plot_payload_contracts() {
         let payload = PlotPayload::empty("example");
         assert!(supports_plot_payload(&payload));
+    }
+
+    #[test]
+    fn summarizes_plot_payload_contracts() {
+        let payload = PlotPayload::empty("example");
+        let summary = summarize_plot_contract(&payload);
+        assert_eq!(summary.title, "example");
+        assert_eq!(summary.kind, "line");
     }
 
     #[test]
