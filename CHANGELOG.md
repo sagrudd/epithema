@@ -8,21 +8,7 @@ package. Until that cutover, changes accumulate under `Unreleased`.
 
 ## [Unreleased]
 
-### Added
-- Release-process documentation, release checklist, and coordinated release
-  policy for the `emboss-rs` / `emboss-r` `v1.0.0` cutover.
-- Tag-driven release automation, Linux release artefact packaging, and GHCR
-  container build/publish automation scaffolding.
-
-### Changed
-- Release validation is now explicitly gated on Rust tests, Sphinx docs, and
-  release-oriented Make targets.
-
-### Documentation
-- Added formal cross-repo release guidance and container-release usage notes.
-
-### Infrastructure
-- Added GitHub release-note scaffolding and local release-check Make targets.
+- Post-`1.0.0` changes will be recorded here after the coordinated stable cut.
 
 ## [1.0.0] - Planned
 
@@ -31,6 +17,23 @@ package. Until that cutover, changes accumulate under `Unreleased`.
   v1 tool cohort.
 - First-class documentation, autodoc generation, validation stubs, provider
   seams, plot contract, R bridge support, and cross-surface validation.
+- Sequence-stream, sequence-editing, feature-aware, translation, pattern,
+  composition/statistics, codon-usage, alignment-utility, alignment-summary,
+  retrieval, archive-metadata, complexity, and charge-profile tool families.
+- Coordinated `1.0.0` release automation with Linux binary packaging, docs
+  gating, and GHCR container publication.
+
+### Changed
+- Workspace and release metadata now target the coordinated stable `1.0.0`
+  release rather than pre-release development versions.
+
+### Documentation
+- Added formal v1 scope, RC readiness, and draft release-note material under
+  `docs/release/`.
+
+### Infrastructure
+- Added tag-driven GitHub release automation, release-note scaffolding, and
+  local release-check targets.
 
 ### Notes
 - `1.0.0` is reserved for the coordinated release with `emboss-r` `1.0.0`.

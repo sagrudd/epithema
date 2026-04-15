@@ -10,10 +10,16 @@ sister `emboss-r` package.
 - The intended first coordinated public release is:
   - `emboss-rs` `1.0.0`
   - `emboss-r` `1.0.0`
-- Development versions may differ before cutover, but a stable coordinated
+- Development versions may differ before cutover, but the coordinated stable
   release requires exact version alignment at tag time.
-- Release-candidate tags may use `v1.0.0-rc.N` while versions inside both repos
-  are set to the same candidate string.
+- For the final stabilization pass, both repositories now carry `1.0.0` as the
+  intended release version. The remaining cutover step is tag-and-release, not
+  another version bump.
+- Manual release-candidate verification should use branch heads or
+  `workflow_dispatch` against the checked-in target version. The process does
+  not require prerelease tags with identical version syntax across both repos,
+  because the R package and Cargo ecosystems do not express prerelease versions
+  in the same way.
 
 ## Compatibility rule
 
@@ -92,5 +98,5 @@ The workflows automate build, packaging, and release staging. Humans still own:
 
 - final changelog editing
 - final release-note review
-- final version bump and tag creation
+- final tag creation
 - final go/no-go decision after stabilization audit

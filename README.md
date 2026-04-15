@@ -37,9 +37,10 @@ scatter, and bar plots.
 
 Release engineering guidance now lives under
 [docs/release/](./docs/release/index.md). The coordinated first stable release
-target is `emboss-rs` `1.0.0` paired with `emboss-r` `1.0.0`, with tag-driven
-release automation, Linux binary packaging, Sphinx docs gating, and a GHCR
-container image path in place ahead of the final stabilization audit.
+target is `emboss-rs` `1.0.0` paired with `emboss-r` `1.0.0`, with checked-in
+`1.0.0` version metadata, tag-driven release automation, Linux binary
+packaging, Sphinx docs gating, and a GHCR container image path in place for the
+final cutover.
 
 The first shipped tool cohort now covers sequence-stream and sequence-selection
 operations through the governed single-binary surface:

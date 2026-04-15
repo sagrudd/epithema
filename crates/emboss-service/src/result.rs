@@ -262,7 +262,7 @@ mod tests {
         let mut report = ExecutionReport::from_context(
             &context,
             "emboss-rs",
-            "0.1.0",
+            env!("CARGO_PKG_VERSION"),
             ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("completed"),
         );
         report.push_diagnostic(

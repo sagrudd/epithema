@@ -4,8 +4,8 @@ Use this checklist before cutting a coordinated stable tag.
 
 ## Coordinated gates
 
-- [ ] `emboss-rs` and `emboss-r` versions are aligned exactly for the target
-      release.
+- [ ] `emboss-rs` and `emboss-r` are both set to the coordinated target
+      version `1.0.0`.
 - [ ] Stable compatibility statement for the paired versions is prepared.
 - [ ] Changelogs in both repos have been reviewed and updated.
 - [ ] Release notes in both repos are drafted and reviewed.
@@ -39,6 +39,6 @@ Use this checklist before cutting a coordinated stable tag.
 
 ## Cutover
 
-- [ ] final version bump commit is prepared in both repos.
+- [ ] target version metadata is already checked in and reviewed in both repos.
 - [ ] release tags are prepared in the documented order.
 - [ ] GitHub Releases are ready to publish with attached artefacts.

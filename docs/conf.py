@@ -3,7 +3,7 @@ from __future__ import annotations
 project = "EMBOSS-RS"
 author = "Mnemosyne Biosciences Ltd"
 copyright = "2026, Mnemosyne Biosciences Ltd"
-release = "0.1.0"
+release = "1.0.0"
 
 extensions = [
     "myst_parser",
@@ -30,4 +30,3 @@ myst_heading_anchors = 3
 html_theme = "sphinx_rtd_theme"
 html_title = "EMBOSS-RS Documentation"
 html_static_path = []
-

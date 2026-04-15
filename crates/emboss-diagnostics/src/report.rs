@@ -124,7 +124,12 @@ mod tests {
     fn report_aggregates_diagnostics_and_provenance() {
         let context = ExecutionContext::for_origin(InvocationOrigin::Autodoc);
         let outcome = ExecutionOutcome::new(OutcomeStatus::Failed).with_summary("input mismatch");
-        let mut report = ExecutionReport::from_context(&context, "emboss-rs", "0.1.0", outcome);
+        let mut report = ExecutionReport::from_context(
+            &context,
+            "emboss-rs",
+            env!("CARGO_PKG_VERSION"),
+            outcome,
+        );
 
         report.push_diagnostic(
             Diagnostic::new(Severity::Warning, "historical metadata was incomplete")

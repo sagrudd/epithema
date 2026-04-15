@@ -184,7 +184,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-cli"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "clap",
  "emboss-core",
@@ -198,25 +198,25 @@ dependencies = [
 
 [[package]]
 name = "emboss-config"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-providers",
 ]
 
 [[package]]
 name = "emboss-core"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-diagnostics",
 ]
 
 [[package]]
 name = "emboss-diagnostics"
-version = "0.1.0"
+version = "1.0.0"
 
 [[package]]
 name = "emboss-docgen"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-config",
  "emboss-diagnostics",
@@ -229,18 +229,18 @@ dependencies = [
 
 [[package]]
 name = "emboss-fixtures"
-version = "0.1.0"
+version = "1.0.0"
 
 [[package]]
 name = "emboss-io"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-core",
 ]
 
 [[package]]
 name = "emboss-plot-contract"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -248,7 +248,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-providers"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "csv",
  "emboss-core",
@@ -259,7 +259,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-r-bridge"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-core",
  "emboss-diagnostics",
@@ -272,7 +272,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-service"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-config",
  "emboss-core",
@@ -284,7 +284,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-testkit"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-diagnostics",
  "emboss-docgen",
@@ -296,7 +296,7 @@ dependencies = [
 
 [[package]]
 name = "emboss-tools"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "emboss-core",
  "emboss-diagnostics",

@@ -17,7 +17,7 @@ members = [
 resolver = "3"
 
 [workspace.package]
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
 license = "MPL-2.0"
 repository = "https://github.com/sagrudd/emboss-rs"
@@ -25,18 +25,18 @@ authors = ["Mnemosyne Biosciences Ltd"]
 rust-version = "1.85"
 
 [workspace.dependencies]
-emboss-config = { path = "crates/emboss-config", version = "0.1.0" }
-emboss-core = { path = "crates/emboss-core", version = "0.1.0" }
-emboss-diagnostics = { path = "crates/emboss-diagnostics", version = "0.1.0" }
-emboss-docgen = { path = "crates/emboss-docgen", version = "0.1.0" }
-emboss-fixtures = { path = "crates/emboss-fixtures", version = "0.1.0" }
-emboss-io = { path = "crates/emboss-io", version = "0.1.0" }
-emboss-plot-contract = { path = "crates/emboss-plot-contract", version = "0.1.0" }
-emboss-providers = { path = "crates/emboss-providers", version = "0.1.0" }
-emboss-r-bridge = { path = "crates/emboss-r-bridge", version = "0.1.0" }
-emboss-service = { path = "crates/emboss-service", version = "0.1.0" }
-emboss-testkit = { path = "crates/emboss-testkit", version = "0.1.0" }
-emboss-tools = { path = "crates/emboss-tools", version = "0.1.0" }
+emboss-config = { path = "crates/emboss-config", version = "1.0.0" }
+emboss-core = { path = "crates/emboss-core", version = "1.0.0" }
+emboss-diagnostics = { path = "crates/emboss-diagnostics", version = "1.0.0" }
+emboss-docgen = { path = "crates/emboss-docgen", version = "1.0.0" }
+emboss-fixtures = { path = "crates/emboss-fixtures", version = "1.0.0" }
+emboss-io = { path = "crates/emboss-io", version = "1.0.0" }
+emboss-plot-contract = { path = "crates/emboss-plot-contract", version = "1.0.0" }
+emboss-providers = { path = "crates/emboss-providers", version = "1.0.0" }
+emboss-r-bridge = { path = "crates/emboss-r-bridge", version = "1.0.0" }
+emboss-service = { path = "crates/emboss-service", version = "1.0.0" }
+emboss-testkit = { path = "crates/emboss-testkit", version = "1.0.0" }
+emboss-tools = { path = "crates/emboss-tools", version = "1.0.0" }
 
 [workspace.lints.rust]
 missing_docs = "warn"

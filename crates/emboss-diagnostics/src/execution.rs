@@ -174,7 +174,8 @@ mod tests {
         let context = ExecutionContext::for_origin(InvocationOrigin::Validation)
             .with_request_label("smoke-check")
             .with_dry_run(true);
-        let metadata = ExecutionMetadata::from_context(&context, "emboss-rs", "0.1.0");
+        let metadata =
+            ExecutionMetadata::from_context(&context, "emboss-rs", env!("CARGO_PKG_VERSION"));
 
         assert_eq!(metadata.origin, InvocationOrigin::Validation);
         assert_eq!(metadata.request_label.as_deref(), Some("smoke-check"));

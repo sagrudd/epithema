@@ -22,7 +22,7 @@ impl HttpRequest {
         Self {
             url: url.into(),
             accept: None,
-            user_agent: String::from("emboss-rs/0.1.0"),
+            user_agent: format!("emboss-rs/{}", env!("CARGO_PKG_VERSION")),
         }
     }
 

@@ -320,7 +320,7 @@ mod tests {
         let report = ExecutionReport::from_context(
             &context,
             "emboss-rs",
-            "0.1.0",
+            env!("CARGO_PKG_VERSION"),
             ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("ok"),
         );
         let result = MethodResult::new(
@@ -406,7 +406,7 @@ mod tests {
         let report = ExecutionReport::from_context(
             &context,
             "emboss-rs",
-            "0.1.0",
+            env!("CARGO_PKG_VERSION"),
             ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("ok"),
         );
         let table = TableReport::new(

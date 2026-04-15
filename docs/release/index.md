@@ -7,4 +7,7 @@ Release engineering for `emboss-rs` is intentionally explicit and Linux-first.
 
 release_process
 release_checklist
+v1_0_0_scope
+v1_0_0_rc_readiness
+v1_0_0_release_notes
 ```
