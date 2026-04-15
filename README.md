@@ -21,6 +21,15 @@ emulation and currently covers the early in-memory analytical surface for
 sequence construction/editing, translation, pattern scanning, statistics,
 alignment summaries, and the plotted `charge` profile path.
 
+Cross-surface validation fixtures for the first-class R interface now live
+under
+`crates/emboss-testkit/tests/fixtures/cross_surface/curated_methods.json`.
+`emboss-rs` owns that canonical semantic fixture catalogue, and `emboss-r`
+consumes it to verify that its public wrappers agree with Rust-native method
+behavior for a curated subset of sequence, table/report, alignment-summary,
+and charge-profile outputs. This compares normalized structured semantics, not
+CLI formatting or pixel output.
+
 Plot-ready analytical outputs should target the typed JSON-serializable
 `emboss-plot-contract` crate. Rendering remains owned by the sister `emboss-r`
 package, which consumes that contract for governed plot families such as line,

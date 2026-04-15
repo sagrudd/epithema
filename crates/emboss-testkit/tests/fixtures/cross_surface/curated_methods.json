@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "canonical_owner": "emboss-rs",
+  "numeric_tolerance": 1e-9,
+  "cases": [
+    {
+      "id": "newseq_basic",
+      "method": "newseq",
+      "family": "sequence_record",
+      "request": {
+        "method": "new_sequence",
+        "params": {
+          "record": {
+            "identifier": "seq.alpha",
+            "sequence": "ACGT",
+            "description": "alpha description",
+            "molecule": "dna"
+          }
+        }
+      },
+      "expected": {
+        "kind": "sequence_record",
+        "record": {
+          "identifier": "seq.alpha",
+          "sequence": "ACGT",
+          "description": "alpha description",
+          "molecule": "dna",
+          "alphabet": "dna",
+          "length": 4
+        }
+      }
+    },
+    {
+      "id": "seqcount_basic",
+      "method": "seqcount",
+      "family": "count",
+      "request": {
+        "method": "sequence_count",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "count",
+        "count": 2
+      }
+    },
+    {
+      "id": "nthseq_basic",
+      "method": "nthseq",
+      "family": "sequence_record",
+      "request": {
+        "method": "nth_sequence",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ],
+          "index": 2
+        }
+      },
+      "expected": {
+        "kind": "sequence_record",
+        "record": {
+          "identifier": "dna.b",
+          "sequence": "AAGT",
+          "description": "second dna",
+          "molecule": "dna",
+          "alphabet": "dna",
+          "length": 4
+        }
+      }
+    },
+    {
+      "id": "skipseq_basic",
+      "method": "skipseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "skip_sequences",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ],
+          "count": 1
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "dna.b",
+            "sequence": "AAGT",
+            "description": "second dna",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "notseq_basic",
+      "method": "notseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "not_sequence",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "dna.b",
+            "sequence": "AAGT",
+            "description": "second dna",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "extractseq_basic",
+      "method": "extractseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "extract_sequences",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ],
+          "start": 2,
+          "end": 4
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "dna.a",
+            "sequence": "CGT",
+            "description": "first dna",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 3
+          },
+          {
+            "identifier": "dna.b",
+            "sequence": "AGT",
+            "description": "second dna",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "degapseq_basic",
+      "method": "degapseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "degap_sequences",
+        "params": {
+          "records": [
+            {
+              "identifier": "gap.a",
+              "sequence": "A-C-GT",
+              "description": null,
+              "molecule": "dna"
+            },
+            {
+              "identifier": "gap.b",
+              "sequence": "AC-GT-",
+              "description": "with gaps",
+              "molecule": "dna"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "gap.a",
+            "sequence": "ACGT",
+            "description": null,
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          },
+          {
+            "identifier": "gap.b",
+            "sequence": "ACGT",
+            "description": "with gaps",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "trimseq_basic",
+      "method": "trimseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "trim_sequences",
+        "params": {
+          "records": [
+            {
+              "identifier": "trim.a",
+              "sequence": "ACGTAC",
+              "description": null,
+              "molecule": "dna"
+            }
+          ],
+          "left_trim": 1,
+          "right_trim": 1
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "trim.a",
+            "sequence": "CGTA",
+            "description": null,
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "descseq_basic",
+      "method": "descseq",
+      "family": "sequence_set",
+      "request": {
+        "method": "update_descriptions",
+        "params": {
+          "records": [
+            {
+              "identifier": "desc.a",
+              "sequence": "ACGT",
+              "description": "old one",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "desc.b",
+              "sequence": "AAGT",
+              "description": null,
+              "molecule": "dna"
+            }
+          ],
+          "description": "updated description",
+          "clear": false
+        }
+      },
+      "expected": {
+        "kind": "sequence_set",
+        "records": [
+          {
+            "identifier": "desc.a",
+            "sequence": "ACGT",
+            "description": "updated description",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          },
+          {
+            "identifier": "desc.b",
+            "sequence": "AAGT",
+            "description": "updated description",
+            "molecule": "dna",
+            "alphabet": "dna",
+            "length": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "compseq_basic",
+      "method": "compseq",
+      "family": "table",
+      "request": {
+        "method": "composition_summary",
+        "params": {
+          "records": [
+            {
+              "identifier": "dna.a",
+              "sequence": "ACGT",
+              "description": "first dna",
+              "molecule": "dna"
+            },
+            {
+              "identifier": "dna.b",
+              "sequence": "AAGT",
+              "description": "second dna",
+              "molecule": "dna"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "composition_rows",
+        "rows": [
+          {
+            "scope": "record",
+            "identifier": "dna.a",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "A",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.a",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "C",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.a",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "G",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.a",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "T",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.b",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "A",
+            "count": 2,
+            "frequency": 0.5
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.b",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "G",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "dna.b",
+            "molecule": "dna",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "T",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "aggregate",
+            "identifier": null,
+            "molecule": null,
+            "sequence_length": null,
+            "counted_symbols": 8,
+            "ignored_gap_symbols": 0,
+            "residue": "A",
+            "count": 3,
+            "frequency": 0.375
+          },
+          {
+            "scope": "aggregate",
+            "identifier": null,
+            "molecule": null,
+            "sequence_length": null,
+            "counted_symbols": 8,
+            "ignored_gap_symbols": 0,
+            "residue": "C",
+            "count": 1,
+            "frequency": 0.125
+          },
+          {
+            "scope": "aggregate",
+            "identifier": null,
+            "molecule": null,
+            "sequence_length": null,
+            "counted_symbols": 8,
+            "ignored_gap_symbols": 0,
+            "residue": "G",
+            "count": 2,
+            "frequency": 0.25
+          },
+          {
+            "scope": "aggregate",
+            "identifier": null,
+            "molecule": null,
+            "sequence_length": null,
+            "counted_symbols": 8,
+            "ignored_gap_symbols": 0,
+            "residue": "T",
+            "count": 2,
+            "frequency": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "geecee_basic",
+      "method": "geecee",
+      "family": "table",
+      "request": {
+        "method": "count_gc_content",
+        "params": {
+          "records": [
+            {
+              "identifier": "gc.a",
+              "sequence": "ACGT",
+              "description": null,
+              "molecule": "dna"
+            },
+            {
+              "identifier": "gc.b",
+              "sequence": "GGCC",
+              "description": null,
+              "molecule": "dna"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "gc_rows",
+        "rows": [
+          {
+            "scope": "record",
+            "identifier": "gc.a",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "canonical_symbols": 4,
+            "gc_symbols": 2,
+            "ambiguous_symbols": 0,
+            "ignored_gap_symbols": 0,
+            "gc_percent": 50.0
+          },
+          {
+            "scope": "record",
+            "identifier": "gc.b",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "canonical_symbols": 4,
+            "gc_symbols": 4,
+            "ambiguous_symbols": 0,
+            "ignored_gap_symbols": 0,
+            "gc_percent": 100.0
+          },
+          {
+            "scope": "aggregate",
+            "identifier": null,
+            "sequence_length": 8,
+            "counted_symbols": 8,
+            "canonical_symbols": 8,
+            "gc_symbols": 6,
+            "ambiguous_symbols": 0,
+            "ignored_gap_symbols": 0,
+            "gc_percent": 75.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "pepstats_basic",
+      "method": "pepstats",
+      "family": "table",
+      "request": {
+        "method": "pepstats_summary",
+        "params": {
+          "records": [
+            {
+              "identifier": "pep.a",
+              "sequence": "MSTN",
+              "description": "protein one",
+              "molecule": "protein"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "pepstats",
+        "summary_rows": [
+          {
+            "identifier": "pep.a",
+            "sequence_length": 4,
+            "residue_length": 4,
+            "stop_count": 0,
+            "molecular_weight": 451.49497999999994
+          }
+        ],
+        "composition_rows": [
+          {
+            "scope": "record",
+            "identifier": "pep.a",
+            "molecule": "protein",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "M",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "pep.a",
+            "molecule": "protein",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "N",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "pep.a",
+            "molecule": "protein",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "S",
+            "count": 1,
+            "frequency": 0.25
+          },
+          {
+            "scope": "record",
+            "identifier": "pep.a",
+            "molecule": "protein",
+            "sequence_length": 4,
+            "counted_symbols": 4,
+            "ignored_gap_symbols": 0,
+            "residue": "T",
+            "count": 1,
+            "frequency": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "matcher_basic",
+      "method": "matcher",
+      "family": "alignment_summary",
+      "request": {
+        "method": "direct_match_sequences",
+        "params": {
+          "query": {
+            "identifier": "query",
+            "sequence": "ACGT",
+            "description": null,
+            "molecule": "dna"
+          },
+          "target": {
+            "identifier": "target",
+            "sequence": "ACGA",
+            "description": null,
+            "molecule": "dna"
+          }
+        }
+      },
+      "expected": {
+        "kind": "matcher_summary",
+        "summary": {
+          "mode": "nucleotide",
+          "query_length": 4,
+          "target_length": 4,
+          "compared_length": 4,
+          "identity_count": 3,
+          "mismatch_count": 1,
+          "identity_percent": 75,
+          "length_difference": 0
+        }
+      }
+    },
+    {
+      "id": "distmat_basic",
+      "method": "distmat",
+      "family": "alignment_summary",
+      "request": {
+        "method": "p_distance_for_sequences",
+        "params": {
+          "records": [
+            {
+              "identifier": "a",
+              "sequence": "ACGT",
+              "description": null,
+              "molecule": "dna"
+            },
+            {
+              "identifier": "b",
+              "sequence": "ACGA",
+              "description": null,
+              "molecule": "dna"
+            },
+            {
+              "identifier": "c",
+              "sequence": "TCGT",
+              "description": null,
+              "molecule": "dna"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "kind": "distance_matrix",
+        "matrix": {
+          "identifiers": [
+            "a",
+            "b",
+            "c"
+          ],
+          "mode": "nucleotide",
+          "sequence_length": 4,
+          "values": [
+            [
+              0.0,
+              0.25,
+              0.25
+            ],
+            [
+              0.25,
+              0.0,
+              0.5
+            ],
+            [
+              0.25,
+              0.5,
+              0.0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "cons_basic",
+      "method": "cons",
+      "family": "sequence_record",
+      "request": {
+        "method": "consensus_simple",
+        "params": {
+          "alignment": {
+            "identifier": "aln1",
+            "molecule": "dna",
+            "rows": [
+              {
+                "identifier": "a",
+                "aligned": "AC-GT",
+                "description": null
+              },
+              {
+                "identifier": "b",
+                "aligned": "ACTGT",
+                "description": null
+              },
+              {
+                "identifier": "c",
+                "aligned": "ACCGT",
+                "description": null
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "kind": "sequence_record",
+        "record": {
+          "identifier": "consensus",
+          "sequence": "ACNGT",
+          "description": null,
+          "molecule": "dna",
+          "alphabet": "dna",
+          "length": 5
+        }
+      }
+    },
+    {
+      "id": "consambig_basic",
+      "method": "consambig",
+      "family": "sequence_record",
+      "request": {
+        "method": "consensus_ambiguous",
+        "params": {
+          "alignment": {
+            "identifier": "aln1",
+            "molecule": "dna",
+            "rows": [
+              {
+                "identifier": "a",
+                "aligned": "AC-GT",
+                "description": null
+              },
+              {
+                "identifier": "b",
+                "aligned": "ACTGT",
+                "description": null
+              },
+              {
+                "identifier": "c",
+                "aligned": "ACCGT",
+                "description": null
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "kind": "sequence_record",
+        "record": {
+          "identifier": "consambig",
+          "sequence": "ACYGT",
+          "description": null,
+          "molecule": "dna",
+          "alphabet": "dna",
+          "length": 5
+        }
+      }
+    },
+    {
+      "id": "charge_profile_basic",
+      "method": "charge_profile",
+      "family": "numeric_profile",
+      "request": {
+        "method": "charge_profile",
+        "params": {
+          "record": {
+            "identifier": "charge1",
+            "sequence": "AKRHDDE",
+            "description": null,
+            "molecule": "protein"
+          },
+          "window": 5,
+          "step": 1
+        }
+      },
+      "expected": {
+        "kind": "charge_profile",
+        "identifier": "charge1",
+        "sequence_length": 7,
+        "window": 5,
+        "step": 1,
+        "windows": [
+          {
+            "identifier": "charge1",
+            "window_start": 1,
+            "window_end": 5,
+            "window_length": 5,
+            "mean_charge": 0.3
+          },
+          {
+            "identifier": "charge1",
+            "window_start": 2,
+            "window_end": 6,
+            "window_length": 5,
+            "mean_charge": 0.1
+          },
+          {
+            "identifier": "charge1",
+            "window_start": 3,
+            "window_end": 7,
+            "window_length": 5,
+            "mean_charge": -0.3
+          }
+        ]
+      }
+    }
+  ]
+}

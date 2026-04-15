@@ -5,10 +5,15 @@
 //! evidence, execution state, and comparison state without pretending that
 //! declared examples have already been run.
 
+pub mod cross_surface;
 pub mod evidence;
 pub mod projection;
 pub mod report;
 
+pub use cross_surface::{
+    CrossSurfaceExpected, CrossSurfaceFixtureCase, CrossSurfaceFixtureCatalog,
+    DEFAULT_NUMERIC_TOLERANCE, write_cross_surface_fixture_catalog_json,
+};
 pub use evidence::{
     ComparisonStatus, EvidenceDeclarationStatus, EvidenceNote, EvidenceNoteSeverity,
     EvidenceSourceKind, ExecutionStatus, ToolValidationCase,

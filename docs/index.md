@@ -15,6 +15,7 @@ The canonical normative entry point is the
 
 governance/index
 development/index
+cross-surface-validation
 generated/index
 README
 ```
