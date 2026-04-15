@@ -147,6 +147,9 @@ version = "0.1.0"
 [[package]]
 name = "emboss-io"
 version = "0.1.0"
+dependencies = [
+ "emboss-core",
+]
 
 [[package]]
 name = "emboss-plot-contract"

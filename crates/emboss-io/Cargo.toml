@@ -6,7 +6,10 @@ license.workspace = true
 repository.workspace = true
 authors.workspace = true
 rust-version.workspace = true
-description = "Input and output format catalogues for EMBOSS-RS."
+description = "Sequence file format parsing and writing for EMBOSS-RS."
+
+[dependencies]
+emboss-core.workspace = true
 
 [lints]
 workspace = true
