@@ -1,0 +1,26 @@
+{
+  "document_id": "cons-minimal",
+  "tool_name": "cons",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "cons-majority-consensus",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Derive a simple majority non-gap consensus from one alignment and fall back to N or X when a column has no unique non-gap winner."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

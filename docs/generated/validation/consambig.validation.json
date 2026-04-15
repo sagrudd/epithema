@@ -1,0 +1,26 @@
+{
+  "document_id": "consambig-minimal",
+  "tool_name": "consambig",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "consambig-iupac-consensus",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Derive an ambiguity-aware consensus from one alignment, using nucleotide IUPAC ambiguity for multi-base columns and X for ambiguous protein columns."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

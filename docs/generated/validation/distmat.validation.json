@@ -1,0 +1,26 @@
+{
+  "document_id": "distmat-minimal",
+  "tool_name": "distmat",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "distmat-equal-length-matrix",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Compute a deterministic equal-length p-distance matrix for one sequence-set input and emit a stable tabular matrix."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

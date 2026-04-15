@@ -11,6 +11,7 @@
 //! - extracted feature regions are rebased onto local zero-based half-open coordinates
 
 pub mod alignment;
+pub mod alignment_analysis;
 pub mod alphabet;
 pub mod codon_usage;
 pub mod composition;
@@ -30,6 +31,10 @@ pub mod strand;
 pub mod translation;
 
 pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
+pub use alignment_analysis::{
+    AlignmentAnalysisError, ConsensusStrategy, DirectMatchSummary, DistanceMatrix,
+    consensus_sequence, direct_match_summary, p_distance_matrix,
+};
 pub use alphabet::Alphabet;
 pub use codon_usage::{
     CodingSequenceSummary, CodonUsageError, CodonUsageProfile, amino_acid_for_sense_codon,

@@ -134,6 +134,18 @@ The next shipped cohort now covers global pairwise alignment operations:
   performs deterministic many-vs-many global pairwise alignments in query-major
   order and reports a structured comparison table.
 
+The next shipped cohort now covers alignment-summary and similarity operations:
+
+- `emboss-rs matcher <query-input> <target-input>` compares exactly one query
+  and one target record over their shared ungapped overlap and reports
+  identities, mismatches, and overlap-based identity percentage.
+- `emboss-rs distmat <input>` computes a deterministic equal-length p-distance
+  matrix for a sequence set and renders it as a stable table.
+- `emboss-rs cons <input>` derives a simple majority non-gap consensus from one
+  alignment and emits FASTA.
+- `emboss-rs consambig <input>` derives an ambiguity-aware consensus from one
+  alignment, using nucleotide IUPAC ambiguity where possible, and emits FASTA.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

@@ -1,0 +1,26 @@
+{
+  "document_id": "matcher-minimal",
+  "tool_name": "matcher",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "matcher-overlap-summary",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Compare one query and one target record over their shared ungapped overlap and report identities, mismatches, and overlap-based identity percentage."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

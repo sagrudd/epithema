@@ -14,6 +14,10 @@ use emboss_diagnostics::{
 };
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
+use emboss_tools::alignment_analysis::{
+    ConsParams, ConsambigParams, DistmatParams, MatcherParams, cons_help, consambig_help,
+    distmat_help, matcher_help, run_cons, run_consambig, run_distmat, run_matcher,
+};
 use emboss_tools::alignment_tools::{
     AligncopyParams, AligncopypairParams, AlignmentInput, ExtractalignParams, InfoalignParams,
     aligncopy_help, aligncopypair_help, extractalign_help, infoalign_help, run_aligncopy,
@@ -159,6 +163,10 @@ impl EmbossService {
             "aligncopypair" => self.invoke_aligncopypair(request, descriptor),
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
+            "matcher" => self.invoke_matcher(request, descriptor),
+            "distmat" => self.invoke_distmat(request, descriptor),
+            "cons" => self.invoke_cons(request, descriptor),
+            "consambig" => self.invoke_consambig(request, descriptor),
             "needle" => self.invoke_needle(request, descriptor),
             "needleall" => self.invoke_needleall(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
@@ -541,6 +549,231 @@ impl EmbossService {
                     outcome.gap_open, outcome.gap_extend
                 ))
                 .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_matcher(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, matcher_help()));
+        }
+
+        let params = parse_sequence_pair_params("matcher", request.arguments(), matcher_help())?;
+        let (query, query_provenance, query_diagnostics) =
+            self.resolve_local_sequence_input(&params.query.path.display().to_string())?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&params.target.path.display().to_string())?;
+        let outcome = run_matcher(MatcherParams { query, target })?;
+
+        let mut diagnostics = query_diagnostics;
+        diagnostics.extend(target_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            "computed direct pairwise match summary".to_owned(),
+            diagnostics,
+            vec![query_provenance, target_provenance],
+        );
+        let summary = &outcome.summary;
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "query".to_owned(),
+                    "target".to_owned(),
+                    "mode".to_owned(),
+                    "query_length".to_owned(),
+                    "target_length".to_owned(),
+                    "compared_length".to_owned(),
+                    "identity_count".to_owned(),
+                    "mismatch_count".to_owned(),
+                    "identity_percent".to_owned(),
+                    "length_difference".to_owned(),
+                ],
+                vec![vec![
+                    outcome.query.path.display().to_string(),
+                    outcome.target.path.display().to_string(),
+                    match summary.mode {
+                        emboss_core::AlignmentMode::Nucleotide => "nucleotide".to_owned(),
+                        emboss_core::AlignmentMode::Protein => "protein".to_owned(),
+                    },
+                    summary.query_length.to_string(),
+                    summary.target_length.to_string(),
+                    summary.compared_length.to_string(),
+                    summary.identity_count.to_string(),
+                    summary.mismatch_count.to_string(),
+                    summary.identity_percent.to_string(),
+                    summary.length_difference.to_string(),
+                ]],
+            )),
+            ResultSummary::new("Direct match summary computed")
+                .with_line(format!("Query: {}", outcome.query.path.display()))
+                .with_line(format!("Target: {}", outcome.target.path.display()))
+                .with_line("Comparison mode: ungapped positional overlap")
+                .with_line("Identity denominator: compared overlap length")
+                .with_line(format!("Compared length: {}", summary.compared_length))
+                .with_line(format!(
+                    "Identity: {} ({}%)",
+                    summary.identity_count, summary.identity_percent
+                )),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_distmat(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, distmat_help()));
+        }
+
+        let input = request
+            .arguments()
+            .first()
+            .cloned()
+            .ok_or_else(|| tool_usage_error("distmat", distmat_help()))?;
+        let (input, provenance, diagnostics) = self.resolve_local_sequence_input(&input)?;
+        let outcome = run_distmat(DistmatParams { input })?;
+        let report = self.success_report(
+            &request.context,
+            "computed pairwise distance matrix".to_owned(),
+            diagnostics,
+            vec![provenance],
+        );
+
+        let mut rows = Vec::with_capacity(outcome.matrix.identifiers.len());
+        for (index, identifier) in outcome.matrix.identifiers.iter().enumerate() {
+            let mut row = Vec::with_capacity(outcome.matrix.identifiers.len() + 1);
+            row.push(identifier.clone());
+            row.extend(
+                outcome.matrix.values[index]
+                    .iter()
+                    .map(|value| format!("{value:.6}")),
+            );
+            rows.push(row);
+        }
+
+        let mut columns = vec!["record".to_owned()];
+        columns.extend(outcome.matrix.identifiers.iter().cloned());
+
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(columns, rows)),
+            ResultSummary::new("Distance matrix computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Mode: {}", outcome.mode_label()))
+                .with_line("Distance measure: p-distance (mismatches / sequence length)")
+                .with_line(format!(
+                    "Equal-length requirement: {} residues",
+                    outcome.matrix.sequence_length
+                ))
+                .with_line(format!("Records: {}", outcome.matrix.identifiers.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_cons(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, cons_help()));
+        }
+
+        let input = request
+            .arguments()
+            .first()
+            .cloned()
+            .ok_or_else(|| tool_usage_error("cons", cons_help()))?;
+        let (input, provenance, diagnostics) = self.resolve_local_alignment_input(&input)?;
+        let outcome = run_cons(ConsParams { input })?;
+        let report = self.success_report(
+            &request.context,
+            "derived simple consensus sequence".to_owned(),
+            diagnostics,
+            vec![provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.consensus),
+            ResultSummary::new("Consensus sequence derived")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Consensus rule: majority non-gap residue")
+                .with_line("Tie policy: N for nucleotide, X for protein")
+                .with_line("Output format: FASTA"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_consambig(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, consambig_help()));
+        }
+
+        let input = request
+            .arguments()
+            .first()
+            .cloned()
+            .ok_or_else(|| tool_usage_error("consambig", consambig_help()))?;
+        let (input, provenance, diagnostics) = self.resolve_local_alignment_input(&input)?;
+        let outcome = run_consambig(ConsambigParams { input })?;
+        let report = self.success_report(
+            &request.context,
+            "derived ambiguity-aware consensus sequence".to_owned(),
+            diagnostics,
+            vec![provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.consensus),
+            ResultSummary::new("Ambiguity-aware consensus derived")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Consensus rule: gap-ignoring nucleotide/protein ambiguity handling")
+                .with_line("Nucleotide ambiguity: IUPAC exact-base sets")
+                .with_line("Protein ambiguity: X for non-singleton columns")
+                .with_line("Output format: FASTA"),
             report.clone(),
         );
 
@@ -3061,6 +3294,11 @@ struct NeedleCliParams {
     gap_extend: Option<i32>,
 }
 
+struct SequencePairCliParams {
+    query: SequenceInput,
+    target: SequenceInput,
+}
+
 fn parse_needle_params(
     tool: &str,
     arguments: &[String],
@@ -3141,6 +3379,21 @@ fn parse_alignment_penalty(tool: &str, field: &str, value: &str) -> Result<i32, 
         .with_detail(value.to_owned()));
     }
     Ok(parsed)
+}
+
+fn parse_sequence_pair_params(
+    tool: &str,
+    arguments: &[String],
+    help: &str,
+) -> Result<SequencePairCliParams, ServiceError> {
+    if arguments.len() != 2 {
+        return Err(tool_usage_error(tool, help));
+    }
+
+    Ok(SequencePairCliParams {
+        query: SequenceInput::new(arguments[0].clone()),
+        target: SequenceInput::new(arguments[1].clone()),
+    })
 }
 
 fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, ServiceError> {
@@ -3653,6 +3906,10 @@ fn describe_feature_kind(kind: &FeatureKind) -> String {
 
 fn feature_tool_help(tool: &str) -> &'static str {
     match tool {
+        "matcher" => matcher_help(),
+        "distmat" => distmat_help(),
+        "cons" => cons_help(),
+        "consambig" => consambig_help(),
         "needle" => needle_help(),
         "needleall" => needleall_help(),
         "aligncopy" => aligncopy_help(),
@@ -3691,21 +3948,18 @@ mod tests {
     fn resolves_registered_tool_to_placeholder_response() {
         let mut registry = ServiceRegistry::new();
         registry
-            .register(ToolDescriptor::new(
-                "matcher",
-                "local alignment placeholder",
-            ))
+            .register(ToolDescriptor::new("water", "local alignment placeholder"))
             .expect("registration should succeed");
 
         let service = EmbossService::new(registry);
         let request = InvocationRequest::new(
             ExecutionContext::for_origin(InvocationOrigin::Cli),
-            ToolName::new("matcher").expect("tool name should be valid"),
+            ToolName::new("water").expect("tool name should be valid"),
         );
 
         let response = service.invoke(request).expect("tool should resolve");
-        assert_eq!(response.descriptor.name, "matcher");
-        assert_eq!(response.tool.as_str(), "matcher");
+        assert_eq!(response.descriptor.name, "water");
+        assert_eq!(response.tool.as_str(), "water");
         assert_eq!(
             response.report.outcome.status,
             OutcomeStatus::NotImplemented
@@ -3979,6 +4233,89 @@ mod tests {
                 assert_eq!(table.rows[1][1], "t2");
                 assert_eq!(table.rows[2][0], "q2");
                 assert_eq!(table.rows[2][1], "t1");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_matcher_against_singleton_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("matcher").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            needle_query_fixture().display().to_string(),
+            needle_target_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("matcher should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][5], "3");
+                assert_eq!(table.rows[0][6], "2");
+                assert_eq!(table.rows[0][7], "1");
+                assert_eq!(table.rows[0][8], "66");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_distmat_against_equal_length_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("distmat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("distmat should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[0][0], "alpha");
+                assert_eq!(table.rows[0][1], "0.000000");
+                assert_eq!(table.rows[0][2], "0.750000");
+                assert_eq!(table.rows[0][3], "1.000000");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_cons_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cons").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![multiple_alignment_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("cons should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(sequence) => {
+                assert_eq!(sequence.residues(), "ACNGT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_consambig_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("consambig").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![multiple_alignment_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("consambig should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(sequence) => {
+                assert_eq!(sequence.residues(), "ACYGT");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
