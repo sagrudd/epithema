@@ -9,6 +9,7 @@ rust-version.workspace = true
 description = "Execution and service-layer scaffolding for EMBOSS-RS."
 
 [dependencies]
+emboss-core.workspace = true
 emboss-tools.workspace = true
 
 [lints]

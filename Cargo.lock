@@ -45,6 +45,7 @@ dependencies = [
 name = "emboss-service"
 version = "0.1.0"
 dependencies = [
+ "emboss-core",
  "emboss-tools",
 ]
 

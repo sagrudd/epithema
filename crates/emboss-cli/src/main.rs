@@ -3,10 +3,10 @@
 use std::env;
 use std::process::ExitCode;
 
-use emboss_service::ServiceRuntime;
+use emboss_service::{InvocationRequest, ServiceError, ServiceRuntime, ToolName};
 
 fn main() -> ExitCode {
-    let runtime = ServiceRuntime::new();
+    let runtime = ServiceRuntime::empty();
     let mut args = env::args().skip(1);
 
     match args.next().as_deref() {
@@ -19,11 +19,37 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Some(command) => {
-            eprintln!(
-                "emboss-rs: '{command}' is not implemented yet.\n{}",
-                runtime.status_line()
-            );
-            ExitCode::from(2)
+            let tool = match ToolName::new(command) {
+                Ok(tool) => tool,
+                Err(error) => {
+                    eprintln!("emboss-rs: {error}");
+                    return ExitCode::from(2);
+                }
+            };
+
+            let request = InvocationRequest::new(runtime.default_context(), tool);
+
+            match runtime.invoke(request) {
+                Ok(response) => {
+                    eprintln!(
+                        "emboss-rs: '{}' is registered but not implemented yet.\n{}",
+                        response.tool,
+                        runtime.status_line()
+                    );
+                    ExitCode::from(2)
+                }
+                Err(ServiceError::UnknownTool { tool }) => {
+                    eprintln!(
+                        "emboss-rs: unknown tool '{tool}'.\n{}",
+                        runtime.status_line()
+                    );
+                    ExitCode::from(2)
+                }
+                Err(error) => {
+                    eprintln!("emboss-rs: {error}");
+                    ExitCode::from(2)
+                }
+            }
         }
     }
 }

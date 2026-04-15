@@ -11,6 +11,14 @@ pub struct ToolDescriptor {
     pub summary: &'static str,
 }
 
+impl ToolDescriptor {
+    /// Creates a tool descriptor from stable identity metadata.
+    #[must_use]
+    pub const fn new(name: &'static str, summary: &'static str) -> Self {
+        Self { name, summary }
+    }
+}
+
 /// Registry of governed tools for the current runtime.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct ToolRegistry {

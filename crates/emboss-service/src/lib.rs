@@ -1,47 +1,25 @@
-//! Shared execution and service-layer scaffolding for EMBOSS-RS.
+//! Shared execution and runtime abstractions for EMBOSS-RS.
+//!
+//! This crate defines the front-end-neutral execution seam used by the CLI, the
+//! future R bridge, autodoc workflows, and a future API surface. It differs from
+//! `emboss-core`, which owns biological primitives, and from `emboss-tools`,
+//! which owns governed tool descriptors.
 
-use emboss_tools::ToolRegistry;
+pub mod context;
+pub mod error;
+pub mod registry;
+pub mod request;
+pub mod response;
+pub mod service;
+pub mod tool;
 
-/// Minimal shared runtime state for the initial CLI skeleton.
-#[derive(Clone, Debug, Default)]
-pub struct ServiceRuntime {
-    registry: ToolRegistry,
-}
+pub use context::{ExecutionContext, InvocationOrigin};
+pub use error::ServiceError;
+pub use registry::{ServiceRegistry, ToolCatalog};
+pub use request::InvocationRequest;
+pub use response::{InvocationResponse, InvocationStatus};
+pub use service::EmbossService;
+pub use tool::ToolName;
 
-impl ServiceRuntime {
-    /// Creates a runtime with the current tool registry.
-    #[must_use]
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Returns a human-readable status line for the CLI.
-    #[must_use]
-    pub fn status_line(&self) -> String {
-        format!(
-            "{} workspace skeleton active; {} tools registered",
-            self.registry.platform().invocation_pattern(),
-            self.registry.tools().len()
-        )
-    }
-
-    /// Returns the current tool registry.
-    #[must_use]
-    pub fn registry(&self) -> &ToolRegistry {
-        &self.registry
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::ServiceRuntime;
-
-    #[test]
-    fn reports_empty_registry_status() {
-        assert!(
-            ServiceRuntime::new()
-                .status_line()
-                .contains("0 tools registered")
-        );
-    }
-}
+/// Backwards-compatible alias for the initial service façade name.
+pub use service::EmbossService as ServiceRuntime;
