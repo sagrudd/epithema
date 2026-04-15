@@ -1,10 +1,11 @@
 //! Shared service façade for front-end-neutral tool discovery and invocation.
 
 use emboss_core::PLATFORM_IDENTITY;
+use emboss_diagnostics::{ExecutionOutcome, ExecutionReport, OutcomeStatus};
 use emboss_tools::ToolDescriptor;
 
 use crate::context::ExecutionContext;
-use crate::error::ServiceError;
+use crate::error::{ServiceError, unknown_tool};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
 use crate::response::InvocationResponse;
@@ -53,16 +54,27 @@ impl EmbossService {
     /// Resolves a request to a known tool and returns the placeholder invocation
     /// response used until tool execution is implemented.
     pub fn invoke(&self, request: InvocationRequest) -> Result<InvocationResponse, ServiceError> {
-        let descriptor = self.registry.find(request.tool()).copied().ok_or_else(|| {
-            ServiceError::UnknownTool {
-                tool: request.tool().clone(),
-            }
-        })?;
+        let descriptor = self
+            .registry
+            .find(request.tool())
+            .copied()
+            .ok_or_else(|| unknown_tool(request.tool()))?;
+
+        let report = ExecutionReport::from_context(
+            &request.context,
+            PLATFORM_IDENTITY.binary_name,
+            env!("CARGO_PKG_VERSION"),
+            ExecutionOutcome::new(OutcomeStatus::NotImplemented).with_summary(format!(
+                "tool '{}' is governed but not implemented yet",
+                descriptor.name
+            )),
+        );
 
         Ok(InvocationResponse::not_implemented(
             request.context,
             request.tool,
             descriptor,
+            report,
         ))
     }
 
@@ -78,7 +90,10 @@ mod tests {
     use emboss_tools::ToolDescriptor;
 
     use super::EmbossService;
-    use crate::{ExecutionContext, InvocationOrigin, InvocationRequest, ServiceRegistry, ToolName};
+    use crate::{
+        ExecutionContext, InvocationOrigin, InvocationRequest, OutcomeStatus, ServiceRegistry,
+        ToolName,
+    };
 
     #[test]
     fn resolves_registered_tool_to_placeholder_response() {
@@ -96,6 +111,10 @@ mod tests {
         let response = service.invoke(request).expect("tool should resolve");
         assert_eq!(response.descriptor.name, "needle");
         assert_eq!(response.tool.as_str(), "needle");
+        assert_eq!(
+            response.report.outcome.status,
+            OutcomeStatus::NotImplemented
+        );
     }
 
     #[test]

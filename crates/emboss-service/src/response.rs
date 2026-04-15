@@ -1,5 +1,6 @@
 //! Service responses for discovery and placeholder invocation.
 
+use emboss_diagnostics::ExecutionReport;
 use emboss_tools::ToolDescriptor;
 
 use crate::context::ExecutionContext;
@@ -23,6 +24,8 @@ pub struct InvocationResponse {
     pub descriptor: ToolDescriptor,
     /// Current invocation status.
     pub status: InvocationStatus,
+    /// Structured execution report for the invocation boundary.
+    pub report: ExecutionReport,
 }
 
 impl InvocationResponse {
@@ -32,12 +35,14 @@ impl InvocationResponse {
         context: ExecutionContext,
         tool: ToolName,
         descriptor: ToolDescriptor,
+        report: ExecutionReport,
     ) -> Self {
         Self {
             context,
             tool,
             descriptor,
             status: InvocationStatus::NotImplemented,
+            report,
         }
     }
 }

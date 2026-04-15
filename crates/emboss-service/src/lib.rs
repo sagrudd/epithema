@@ -14,6 +14,10 @@ pub mod service;
 pub mod tool;
 
 pub use context::{ExecutionContext, InvocationOrigin};
+pub use emboss_diagnostics::{
+    Diagnostic, DiagnosticLocation, ErrorCategory, ExecutionMetadata, ExecutionOutcome,
+    ExecutionReport, OutcomeStatus, PlatformError, RunId, Severity,
+};
 pub use error::ServiceError;
 pub use registry::{ServiceRegistry, ToolCatalog};
 pub use request::InvocationRequest;

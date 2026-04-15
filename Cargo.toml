@@ -2,6 +2,7 @@
 members = [
     "crates/emboss-cli",
     "crates/emboss-core",
+    "crates/emboss-diagnostics",
     "crates/emboss-docgen",
     "crates/emboss-fixtures",
     "crates/emboss-io",
@@ -23,6 +24,7 @@ rust-version = "1.85"
 
 [workspace.dependencies]
 emboss-core = { path = "crates/emboss-core", version = "0.1.0" }
+emboss-diagnostics = { path = "crates/emboss-diagnostics", version = "0.1.0" }
 emboss-docgen = { path = "crates/emboss-docgen", version = "0.1.0" }
 emboss-fixtures = { path = "crates/emboss-fixtures", version = "0.1.0" }
 emboss-io = { path = "crates/emboss-io", version = "0.1.0" }

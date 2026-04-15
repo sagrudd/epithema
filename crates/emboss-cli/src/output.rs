@@ -24,5 +24,6 @@ pub fn print_unimplemented_tool(response: &InvocationResponse, service: &EmbossS
         response.tool
     );
     println!("{}", response.descriptor.summary);
+    println!("Run ID: {}", response.report.metadata.run_id);
     println!("{}", service.status_line());
 }

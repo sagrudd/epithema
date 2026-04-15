@@ -10,6 +10,7 @@ description = "Single-binary command-line entry point for EMBOSS-RS."
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive"] }
+emboss-diagnostics.workspace = true
 emboss-service.workspace = true
 
 [lints]

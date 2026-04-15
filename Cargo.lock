@@ -103,11 +103,19 @@ name = "emboss-cli"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "emboss-diagnostics",
  "emboss-service",
 ]
 
 [[package]]
 name = "emboss-core"
+version = "0.1.0"
+dependencies = [
+ "emboss-diagnostics",
+]
+
+[[package]]
+name = "emboss-diagnostics"
 version = "0.1.0"
 
 [[package]]
@@ -143,6 +151,7 @@ name = "emboss-service"
 version = "0.1.0"
 dependencies = [
  "emboss-core",
+ "emboss-diagnostics",
  "emboss-tools",
 ]
 

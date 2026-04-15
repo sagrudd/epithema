@@ -2,7 +2,7 @@
 
 use emboss_tools::ToolDescriptor;
 
-use crate::error::ServiceError;
+use crate::error::{ServiceError, duplicate_tool};
 use crate::tool::ToolName;
 
 /// Read-only registry behavior used by the service layer.
@@ -32,7 +32,7 @@ impl ServiceRegistry {
         let tool = ToolName::new(descriptor.name)?;
 
         if self.find(&tool).is_some() {
-            return Err(ServiceError::DuplicateTool { tool });
+            return Err(duplicate_tool(&tool));
         }
 
         self.descriptors.push(descriptor);

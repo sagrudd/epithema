@@ -2,7 +2,7 @@
 
 use std::fmt::{Display, Formatter};
 
-use crate::error::ServiceError;
+use crate::error::{ServiceError, empty_tool_name};
 
 /// A normalized tool identifier used at the service boundary.
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
@@ -15,7 +15,7 @@ impl ToolName {
         let normalized = name.trim();
 
         if normalized.is_empty() {
-            return Err(ServiceError::EmptyToolName);
+            return Err(empty_tool_name());
         }
 
         Ok(Self(normalized.to_owned()))

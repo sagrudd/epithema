@@ -1,55 +1,60 @@
 //! Error types for the `emboss-rs` command surface.
 
-use std::fmt::{Display, Formatter};
 use std::process::ExitCode;
 
-use emboss_service::ServiceError;
+use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 /// CLI-local failures with explicit process exit behavior.
 #[derive(Debug)]
-pub(crate) enum CliError {
-    MissingToolName,
-    ToolArgumentsNotImplemented { tool: String },
-    AutodocNotImplemented,
-    Service(ServiceError),
-}
+pub(crate) struct CliError(PlatformError);
 
 impl CliError {
     pub(crate) fn missing_tool_name() -> Self {
-        Self::MissingToolName
+        Self(
+            PlatformError::new(
+                ErrorCategory::Validation,
+                "a tool name is required after `emboss-rs`",
+            )
+            .with_code("cli.tool.missing_name"),
+        )
     }
 
     pub(crate) fn tool_arguments_not_implemented(tool: String) -> Self {
-        Self::ToolArgumentsNotImplemented { tool }
+        Self(
+            PlatformError::new(
+                ErrorCategory::NotImplemented,
+                format!("tool argument forwarding for '{tool}' is not implemented yet"),
+            )
+            .with_code("cli.tool.arguments_not_implemented"),
+        )
     }
 
     pub(crate) fn autodoc_not_implemented() -> Self {
-        Self::AutodocNotImplemented
+        Self(
+            PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "`emboss-rs autodoc` is reserved but not implemented yet",
+            )
+            .with_code("cli.autodoc.not_implemented"),
+        )
     }
 
     pub(crate) fn exit_code(&self) -> ExitCode {
-        ExitCode::from(2)
-    }
-}
-
-impl Display for CliError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::MissingToolName => write!(f, "a tool name is required after `emboss-rs`"),
-            Self::ToolArgumentsNotImplemented { tool } => write!(
-                f,
-                "tool argument forwarding for '{tool}' is not implemented yet"
-            ),
-            Self::AutodocNotImplemented => {
-                write!(f, "`emboss-rs autodoc` is reserved but not implemented yet")
-            }
-            Self::Service(error) => Display::fmt(error, f),
+        match self.0.category() {
+            ErrorCategory::Internal => ExitCode::from(1),
+            _ => ExitCode::from(2),
         }
     }
 }
 
-impl From<ServiceError> for CliError {
-    fn from(value: ServiceError) -> Self {
-        Self::Service(value)
+impl std::fmt::Display for CliError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Display::fmt(&self.0, f)
+    }
+}
+
+impl From<PlatformError> for CliError {
+    fn from(value: PlatformError) -> Self {
+        Self(value)
     }
 }

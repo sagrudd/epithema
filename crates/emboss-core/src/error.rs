@@ -3,6 +3,8 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use emboss_diagnostics::{ErrorCategory, PlatformError};
+
 use crate::alphabet::Alphabet;
 use crate::molecule::MoleculeKind;
 
@@ -72,3 +74,30 @@ impl Display for DomainError {
 }
 
 impl Error for DomainError {}
+
+impl From<DomainError> for PlatformError {
+    fn from(value: DomainError) -> Self {
+        match value {
+            DomainError::EmptyIdentifier => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.identifier.empty")
+            }
+            DomainError::EmptySequence => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.sequence.empty")
+            }
+            DomainError::InvalidInterval { .. } => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.interval.invalid")
+            }
+            DomainError::InvalidResidues { .. } => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.sequence.invalid_residues")
+            }
+            DomainError::FeatureOutOfBounds { .. } => {
+                PlatformError::new(ErrorCategory::Validation, value.to_string())
+                    .with_code("core.feature.out_of_bounds")
+            }
+        }
+    }
+}
