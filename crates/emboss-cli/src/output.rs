@@ -3,7 +3,8 @@
 use std::path::Path;
 
 use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
-use emboss_service::{EmbossService, InvocationResponse, MethodResult};
+use emboss_io::write_fasta_string;
+use emboss_service::{EmbossService, InvocationResponse, MethodResult, ResultPayload};
 use emboss_testkit::ToolValidationReport;
 
 /// Prints the current governed tool catalogue.
@@ -21,8 +22,8 @@ pub fn print_tool_list(service: &EmbossService) {
     }
 }
 
-/// Prints the current placeholder response for a known but unimplemented tool.
-pub fn print_unimplemented_tool(response: &InvocationResponse, service: &EmbossService) {
+/// Prints a tool response using shared result payload rendering.
+pub fn print_tool_response(response: &InvocationResponse, service: &EmbossService) {
     println!("{}", format_method_result_summary(&response.result));
     println!("Run ID: {}", response.report.metadata.run_id);
     println!("{}", service.status_line());
@@ -40,14 +41,71 @@ pub fn format_method_result_summary(result: &MethodResult) -> String {
         rendered.push('\n');
     }
 
-    rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
-    rendered.push('\n');
-    rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+    match &result.payload {
+        ResultPayload::Empty => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+        }
+        ResultPayload::Sequence(record) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            rendered.push_str("\n\n");
+            match write_fasta_string(std::slice::from_ref(record)) {
+                Ok(fasta) => rendered.push_str(fasta.trim_end()),
+                Err(error) => rendered.push_str(&format!(
+                    "failed to render sequence payload as FASTA: {error}"
+                )),
+            }
+        }
+        ResultPayload::SequenceCollection(records) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            rendered.push_str("\n\n");
+            match write_fasta_string(records) {
+                Ok(fasta) => rendered.push_str(fasta.trim_end()),
+                Err(error) => rendered.push_str(&format!(
+                    "failed to render sequence payload as FASTA: {error}"
+                )),
+            }
+        }
+        ResultPayload::TextReport(report) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            rendered.push_str("\n\n");
+            if let Some(title) = &report.title {
+                rendered.push_str(title);
+                rendered.push('\n');
+            }
+            rendered.push_str(&report.body);
+        }
+        ResultPayload::TableReport(table) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            if !table.columns.is_empty() {
+                rendered.push_str("\n\n");
+                rendered.push_str(&table.columns.join("\t"));
+                for row in &table.rows {
+                    rendered.push('\n');
+                    rendered.push_str(&row.join("\t"));
+                }
+            }
+        }
+        ResultPayload::Alignment(_) | ResultPayload::Features(_) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+        }
+    }
 
     if !result.report.diagnostics().is_empty() {
         rendered.push('\n');
         rendered.push_str(&format!(
-            "Diagnostics: {}",
+            "\nDiagnostics: {}",
             result.report.diagnostics().len()
         ));
     }
@@ -253,5 +311,32 @@ mod tests {
         let rendered = format_method_result_summary(&result);
         assert!(rendered.contains("needle not implemented"));
         assert!(rendered.contains("Payload kind: empty"));
+    }
+
+    #[test]
+    fn renders_sequence_payload_as_fasta() {
+        let context = ExecutionContext::for_origin(InvocationOrigin::Cli);
+        let report = ExecutionReport::from_context(
+            &context,
+            "emboss-rs",
+            "0.1.0",
+            ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("ok"),
+        );
+        let sequence = emboss_core::SequenceRecord::new(
+            emboss_core::SequenceIdentifier::new("seq1").expect("identifier should build"),
+            emboss_core::MoleculeKind::Dna,
+            "ACGT",
+        )
+        .expect("sequence should build");
+        let result = MethodResult::new(
+            ToolName::new("newseq").expect("tool name should build"),
+            ResultPayload::Sequence(sequence),
+            ResultSummary::new("Sequence record created"),
+            report,
+        );
+
+        let rendered = format_method_result_summary(&result);
+        assert!(rendered.contains(">seq1"));
+        assert!(rendered.contains("ACGT"));
     }
 }

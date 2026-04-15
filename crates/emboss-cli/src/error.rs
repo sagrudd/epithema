@@ -20,16 +20,6 @@ impl CliError {
         )
     }
 
-    pub(crate) fn tool_arguments_not_implemented(tool: String) -> Self {
-        Self(
-            PlatformError::new(
-                ErrorCategory::NotImplemented,
-                format!("tool argument forwarding for '{tool}' is not implemented yet"),
-            )
-            .with_code("cli.tool.arguments_not_implemented"),
-        )
-    }
-
     pub(crate) fn exit_code(&self) -> ExitCode {
         match self.0.category() {
             ErrorCategory::Internal => ExitCode::from(1),

@@ -162,6 +162,8 @@ pub enum ResultPayload {
     Empty,
     /// Sequence payload.
     Sequence(SequenceRecord),
+    /// Multi-record sequence payload.
+    SequenceCollection(Vec<SequenceRecord>),
     /// Alignment payload.
     Alignment(Alignment),
     /// Feature payload.
@@ -179,6 +181,7 @@ impl ResultPayload {
         match self {
             Self::Empty => "empty",
             Self::Sequence(_) => "sequence",
+            Self::SequenceCollection(_) => "sequence-collection",
             Self::Alignment(_) => "alignment",
             Self::Features(_) => "features",
             Self::TextReport(_) => "text-report",

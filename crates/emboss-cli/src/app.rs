@@ -6,6 +6,7 @@ use std::process::ExitCode;
 
 use clap::{CommandFactory, Parser, Subcommand};
 use emboss_service::{EmbossService, InvocationRequest, ServiceRegistry, ToolName};
+use emboss_tools::governed_tool_descriptors;
 
 use crate::commands;
 use crate::error::CliError;
@@ -69,22 +70,38 @@ impl CliApp {
             .next()
             .and_then(|value| value.into_string().ok())
             .ok_or_else(CliError::missing_tool_name)?;
-
-        if arguments.next().is_some() {
-            return Err(CliError::tool_arguments_not_implemented(tool));
-        }
+        let tool_arguments = arguments
+            .map(|value| {
+                value.into_string().map_err(|_| {
+                    CliError::from(
+                        emboss_diagnostics::PlatformError::new(
+                            emboss_diagnostics::ErrorCategory::Validation,
+                            "tool arguments must be valid UTF-8",
+                        )
+                        .with_code("cli.tool.arguments.non_utf8"),
+                    )
+                })
+            })
+            .collect::<Result<Vec<_>, _>>()?;
 
         let tool = ToolName::new(tool).map_err(CliError::from)?;
-        let request = InvocationRequest::new(service.default_context(), tool);
+        let request =
+            InvocationRequest::new(service.default_context(), tool).with_arguments(tool_arguments);
         let response = service.invoke(request).map_err(CliError::from)?;
 
-        output::print_unimplemented_tool(&response, service);
+        output::print_tool_response(&response, service);
         Ok(())
     }
 }
 
 fn build_service() -> EmbossService {
-    EmbossService::new(ServiceRegistry::new())
+    let mut registry = ServiceRegistry::new();
+    for descriptor in governed_tool_descriptors() {
+        registry
+            .register(*descriptor)
+            .expect("built-in tool registration should succeed");
+    }
+    EmbossService::new(registry)
 }
 
 #[derive(Debug, Parser)]

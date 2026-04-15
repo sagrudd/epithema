@@ -1,6 +1,8 @@
-//! Tool descriptors and registry scaffolding for the governed EMBOSS-RS surface.
+//! Governed EMBOSS-RS tool descriptors and shared tool-family implementations.
 
 use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
+
+pub mod sequence_stream;
 
 /// Metadata for a governed tool entry.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -26,10 +28,12 @@ pub struct ToolRegistry {
 }
 
 impl ToolRegistry {
-    /// Creates an empty tool registry for the initial workspace skeleton.
+    /// Creates a tool registry containing the currently implemented cohort.
     #[must_use]
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            tools: governed_tool_descriptors().to_vec(),
+        }
     }
 
     /// Returns the currently registered tool descriptors.
@@ -45,12 +49,31 @@ impl ToolRegistry {
     }
 }
 
+/// Returns the descriptors for currently governed and implemented tools.
+#[must_use]
+pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
+    sequence_stream::TOOL_DESCRIPTORS
+}
+
 #[cfg(test)]
 mod tests {
-    use super::ToolRegistry;
+    use super::{ToolRegistry, governed_tool_descriptors};
 
     #[test]
     fn binds_to_platform_identity() {
         assert_eq!(ToolRegistry::new().platform().binary_name, "emboss-rs");
+    }
+
+    #[test]
+    fn exposes_sequence_stream_cohort() {
+        let names: Vec<_> = governed_tool_descriptors()
+            .iter()
+            .map(|descriptor| descriptor.name)
+            .collect();
+
+        assert_eq!(
+            names,
+            vec!["newseq", "seqcount", "notseq", "nthseq", "skipseq"]
+        );
     }
 }

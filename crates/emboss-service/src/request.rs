@@ -14,6 +14,8 @@ pub struct InvocationRequest {
     pub tool: ToolName,
     /// Optional input-resolution request associated with the invocation.
     pub input: Option<AcquisitionRequest>,
+    /// Raw tool arguments preserved in invocation order.
+    pub arguments: Vec<String>,
 }
 
 impl InvocationRequest {
@@ -24,6 +26,7 @@ impl InvocationRequest {
             context,
             tool,
             input: None,
+            arguments: Vec::new(),
         }
     }
 
@@ -31,6 +34,13 @@ impl InvocationRequest {
     #[must_use]
     pub fn with_input(mut self, input: AcquisitionRequest) -> Self {
         self.input = Some(input);
+        self
+    }
+
+    /// Attaches raw tool arguments for later typed parsing.
+    #[must_use]
+    pub fn with_arguments(mut self, arguments: Vec<String>) -> Self {
+        self.arguments = arguments;
         self
     }
 
@@ -44,5 +54,11 @@ impl InvocationRequest {
     #[must_use]
     pub fn input(&self) -> Option<&AcquisitionRequest> {
         self.input.as_ref()
+    }
+
+    /// Returns the raw tool arguments.
+    #[must_use]
+    pub fn arguments(&self) -> &[String] {
+        &self.arguments
     }
 }

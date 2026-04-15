@@ -10,6 +10,8 @@ description = "Tool descriptors and registry scaffolding for EMBOSS-RS."
 
 [dependencies]
 emboss-core.workspace = true
+emboss-diagnostics.workspace = true
+emboss-io.workspace = true
 
 [lints]
 workspace = true

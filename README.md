@@ -17,6 +17,21 @@ documentation command path, and future governed tools will execute as
 The Rust workspace also includes `emboss-r-bridge`, which provides the typed
 Rust-side contract seam for the first-class sister package `emboss-r`.
 
+The first shipped tool cohort now covers sequence-stream and sequence-selection
+operations through the governed single-binary surface:
+
+- `emboss-rs seqcount <input>` counts sequence records in a local FASTA, FASTQ,
+  EMBL, or GenBank file.
+- `emboss-rs nthseq <input> <index>` selects the 1-based Nth sequence record
+  and emits FASTA.
+- `emboss-rs skipseq <input> <count>` skips the first N records and emits the
+  remaining records as FASTA.
+- `emboss-rs notseq <input> <index>` emits all records except the 1-based
+  excluded record as FASTA.
+- `emboss-rs newseq <identifier> <sequence>` creates a new sequence record from
+  inline residues, with optional `--description` and `--molecule` hints, and
+  emits FASTA.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

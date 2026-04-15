@@ -12,6 +12,8 @@ use crate::tool::ToolName;
 pub enum InvocationStatus {
     /// The request resolved to a known tool, but implementation is still pending.
     NotImplemented,
+    /// The request completed with a real tool execution path.
+    Completed,
 }
 
 /// A typed service response for a resolved invocation request.
@@ -49,6 +51,25 @@ impl InvocationResponse {
             tool,
             descriptor,
             status: InvocationStatus::NotImplemented,
+            report,
+            result,
+        }
+    }
+
+    /// Creates a successful invocation response backed by a real result.
+    #[must_use]
+    pub fn completed(
+        context: ExecutionContext,
+        tool: ToolName,
+        descriptor: ToolDescriptor,
+        report: ExecutionReport,
+        result: MethodResult,
+    ) -> Self {
+        Self {
+            context,
+            tool,
+            descriptor,
+            status: InvocationStatus::Completed,
             report,
             result,
         }
