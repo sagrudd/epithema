@@ -1,6 +1,6 @@
 {
-  "document_id": "needle-minimal",
-  "tool_name": "needle",
+  "document_id": "needleall-minimal",
+  "tool_name": "needleall",
   "summary": {
     "declared_case_count": 1,
     "harvested_case_count": 0,
@@ -11,13 +11,13 @@
   },
   "cases": [
     {
-      "id": "needle-nucleotide-pair",
+      "id": "needleall-many-vs-many",
       "declaration_status": "declared",
       "source_kind": "curated",
       "execution_status": "pending",
       "comparison_status": "not_compared",
       "notes": [
-        "Align one nucleotide query and one nucleotide target with deterministic default scoring and emit Stockholm."
+        "Compute all query-target pairwise global alignments in query-major order and report a deterministic summary table."
       ]
     }
   ],

@@ -125,6 +125,15 @@ The next shipped cohort now covers alignment-utility operations:
   extracts selected rows plus an optional 1-based inclusive column slice and
   emits the resulting sub-alignment as Stockholm.
 
+The next shipped cohort now covers global pairwise alignment operations:
+
+- `emboss-rs needle <query-input> <target-input> [--gap-open <penalty>] [--gap-extend <penalty>]`
+  performs deterministic global pairwise alignment between exactly one query
+  sequence and one target sequence and emits Stockholm by default.
+- `emboss-rs needleall <query-input> <target-input> [--gap-open <penalty>] [--gap-extend <penalty>]`
+  performs deterministic many-vs-many global pairwise alignments in query-major
+  order and reports a structured comparison table.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

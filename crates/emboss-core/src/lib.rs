@@ -18,6 +18,7 @@ pub mod error;
 pub mod feature;
 pub mod feature_ops;
 pub mod feature_selector;
+pub mod global_alignment;
 pub mod identifier;
 pub mod interval;
 pub mod metadata;
@@ -44,6 +45,10 @@ pub use feature_ops::{
     mask_selected_features, retain_selected_features, select_features, summarize_features,
 };
 pub use feature_selector::FeatureSelector;
+pub use global_alignment::{
+    AlignmentMode, GlobalAlignmentError, GlobalAlignmentScoring, PairwiseAlignmentResult,
+    PairwiseAlignmentSummary, global_align, infer_alignment_mode,
+};
 pub use identifier::SequenceIdentifier;
 pub use interval::Interval;
 pub use metadata::{SequenceMetadata, SequenceTopology};

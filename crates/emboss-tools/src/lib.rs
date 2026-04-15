@@ -5,6 +5,7 @@ use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 pub mod alignment_tools;
 pub mod codon_tools;
 pub mod feature_tools;
+pub mod pairwise_alignment;
 pub mod pattern_tools;
 pub mod sequence_edit;
 pub mod sequence_stats;
@@ -65,6 +66,8 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         alignment_tools::ALIGNCOPYPAIR_DESCRIPTOR,
         alignment_tools::INFOALIGN_DESCRIPTOR,
         alignment_tools::EXTRACTALIGN_DESCRIPTOR,
+        pairwise_alignment::NEEDLE_DESCRIPTOR,
+        pairwise_alignment::NEEDLEALL_DESCRIPTOR,
         sequence_stream::NEWSEQ_DESCRIPTOR,
         sequence_stream::SEQCOUNT_DESCRIPTOR,
         sequence_stream::NOTSEQ_DESCRIPTOR,
@@ -121,6 +124,8 @@ mod tests {
                 "aligncopypair",
                 "infoalign",
                 "extractalign",
+                "needle",
+                "needleall",
                 "newseq",
                 "seqcount",
                 "notseq",

@@ -28,6 +28,9 @@ use emboss_tools::feature_tools::{
     featcopy_help, maskfeat_help, maskseq_help, run_extractfeat, run_featcopy, run_maskfeat,
     run_maskseq,
 };
+use emboss_tools::pairwise_alignment::{
+    NeedleParams, NeedleallParams, needle_help, needleall_help, run_needle, run_needleall,
+};
 use emboss_tools::pattern_tools::{
     FuzznucParams, FuzzproParams, FuzztranParams, fuzznuc_help, fuzzpro_help, fuzztran_help,
     run_fuzznuc, run_fuzzpro, run_fuzztran,
@@ -156,6 +159,8 @@ impl EmbossService {
             "aligncopypair" => self.invoke_aligncopypair(request, descriptor),
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
+            "needle" => self.invoke_needle(request, descriptor),
+            "needleall" => self.invoke_needleall(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
             "skipseq" => self.invoke_skipseq(request, descriptor),
@@ -470,6 +475,169 @@ impl EmbossService {
                     }
                 ))
                 .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_needle(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, needle_help()));
+        }
+
+        let params = parse_needle_params("needle", request.arguments(), needle_help())?;
+        let (query, query_provenance, query_diagnostics) =
+            self.resolve_local_sequence_input(&params.query.path.display().to_string())?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&params.target.path.display().to_string())?;
+        let outcome = run_needle(NeedleParams {
+            query,
+            target,
+            gap_open: params.gap_open,
+            gap_extend: params.gap_extend,
+        })?;
+
+        let mut diagnostics = query_diagnostics;
+        diagnostics.extend(target_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            "computed global pairwise alignment".to_owned(),
+            diagnostics,
+            vec![query_provenance, target_provenance],
+        );
+        let summary = &outcome.result.summary;
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.result.alignment),
+            ResultSummary::new("Global alignment computed")
+                .with_line(format!("Query: {}", outcome.query.path.display()))
+                .with_line(format!("Target: {}", outcome.target.path.display()))
+                .with_line(format!(
+                    "Mode: {}",
+                    match summary.mode {
+                        emboss_core::AlignmentMode::Nucleotide => "nucleotide",
+                        emboss_core::AlignmentMode::Protein => "protein",
+                    }
+                ))
+                .with_line(format!("Score: {}", summary.score))
+                .with_line(format!("Aligned length: {}", summary.aligned_length))
+                .with_line(format!(
+                    "Identity: {} ({}%)",
+                    summary.identity_count, summary.identity_percent
+                ))
+                .with_line(format!(
+                    "Gap penalties: open={} extend={}",
+                    outcome.gap_open, outcome.gap_extend
+                ))
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_needleall(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, needleall_help()));
+        }
+
+        let params = parse_needle_params("needleall", request.arguments(), needleall_help())?;
+        let (query, query_provenance, query_diagnostics) =
+            self.resolve_local_sequence_input(&params.query.path.display().to_string())?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&params.target.path.display().to_string())?;
+        let outcome = run_needleall(NeedleallParams {
+            query,
+            target,
+            gap_open: params.gap_open,
+            gap_extend: params.gap_extend,
+        })?;
+
+        let mut diagnostics = query_diagnostics;
+        diagnostics.extend(target_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "computed {} global pairwise alignments",
+                outcome.cases.len()
+            ),
+            diagnostics,
+            vec![query_provenance, target_provenance],
+        );
+        let rows = outcome
+            .cases
+            .iter()
+            .map(|case| {
+                vec![
+                    case.query_id.clone(),
+                    case.target_id.clone(),
+                    match case.mode {
+                        emboss_core::AlignmentMode::Nucleotide => "nucleotide".to_owned(),
+                        emboss_core::AlignmentMode::Protein => "protein".to_owned(),
+                    },
+                    case.score.to_string(),
+                    case.aligned_length.to_string(),
+                    case.identity_count.to_string(),
+                    case.identity_percent.to_string(),
+                    case.query_gap_count.to_string(),
+                    case.target_gap_count.to_string(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "query".to_owned(),
+                    "target".to_owned(),
+                    "mode".to_owned(),
+                    "score".to_owned(),
+                    "aligned_length".to_owned(),
+                    "identity_count".to_owned(),
+                    "identity_percent".to_owned(),
+                    "query_gap_count".to_owned(),
+                    "target_gap_count".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Global alignment comparisons reported")
+                .with_line(format!("Query input: {}", outcome.query.path.display()))
+                .with_line(format!("Target input: {}", outcome.target.path.display()))
+                .with_line("Comparison order: query-major then target-major")
+                .with_line(format!("Comparisons: {}", outcome.cases.len()))
+                .with_line(format!(
+                    "Gap overrides: open={} extend={}",
+                    outcome
+                        .gap_open
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "default".to_owned()),
+                    outcome
+                        .gap_extend
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "default".to_owned())
+                ))
+                .with_line("Alignment outputs: summary table only in v1"),
             report.clone(),
         );
 
@@ -2886,6 +3054,95 @@ fn parse_extractalign_params(arguments: &[String]) -> Result<ExtractalignParams,
     })
 }
 
+struct NeedleCliParams {
+    query: SequenceInput,
+    target: SequenceInput,
+    gap_open: Option<i32>,
+    gap_extend: Option<i32>,
+}
+
+fn parse_needle_params(
+    tool: &str,
+    arguments: &[String],
+    help: &str,
+) -> Result<NeedleCliParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error(tool, help));
+    }
+
+    let query = SequenceInput::new(arguments[0].clone());
+    let target = SequenceInput::new(arguments[1].clone());
+    let mut gap_open = None;
+    let mut gap_extend = None;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--gap-open=") {
+            gap_open = Some(parse_alignment_penalty(tool, "gap_open", value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--gap-open" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --gap-open")
+                    .with_code(format!("service.tool.{tool}.gap_open_missing"))
+            })?;
+            gap_open = Some(parse_alignment_penalty(tool, "gap_open", value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--gap-extend=") {
+            gap_extend = Some(parse_alignment_penalty(tool, "gap_extend", value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--gap-extend" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --gap-extend")
+                    .with_code(format!("service.tool.{tool}.gap_extend_missing"))
+            })?;
+            gap_extend = Some(parse_alignment_penalty(tool, "gap_extend", value)?);
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown {tool} argument '{argument}'"),
+        )
+        .with_code(format!("service.tool.{tool}.argument_unknown"))
+        .with_detail(help));
+    }
+
+    Ok(NeedleCliParams {
+        query,
+        target,
+        gap_open,
+        gap_extend,
+    })
+}
+
+fn parse_alignment_penalty(tool: &str, field: &str, value: &str) -> Result<i32, ServiceError> {
+    let parsed = value.parse::<i32>().map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{field} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{field}_invalid"))
+        .with_detail(value.to_owned())
+    })?;
+    if parsed <= 0 {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{field} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{field}_invalid"))
+        .with_detail(value.to_owned()));
+    }
+    Ok(parsed)
+}
+
 fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, ServiceError> {
     let parsed = value.parse::<usize>().map_err(|_| {
         PlatformError::new(
@@ -3396,6 +3653,8 @@ fn describe_feature_kind(kind: &FeatureKind) -> String {
 
 fn feature_tool_help(tool: &str) -> &'static str {
     match tool {
+        "needle" => needle_help(),
+        "needleall" => needleall_help(),
         "aligncopy" => aligncopy_help(),
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
@@ -3432,18 +3691,21 @@ mod tests {
     fn resolves_registered_tool_to_placeholder_response() {
         let mut registry = ServiceRegistry::new();
         registry
-            .register(ToolDescriptor::new("needle", "global alignment"))
+            .register(ToolDescriptor::new(
+                "matcher",
+                "local alignment placeholder",
+            ))
             .expect("registration should succeed");
 
         let service = EmbossService::new(registry);
         let request = InvocationRequest::new(
             ExecutionContext::for_origin(InvocationOrigin::Cli),
-            ToolName::new("needle").expect("tool name should be valid"),
+            ToolName::new("matcher").expect("tool name should be valid"),
         );
 
         let response = service.invoke(request).expect("tool should resolve");
-        assert_eq!(response.descriptor.name, "needle");
-        assert_eq!(response.tool.as_str(), "needle");
+        assert_eq!(response.descriptor.name, "matcher");
+        assert_eq!(response.tool.as_str(), "matcher");
         assert_eq!(
             response.report.outcome.status,
             OutcomeStatus::NotImplemented
@@ -3568,6 +3830,26 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/multiple_alignment.sto")
     }
 
+    fn needle_query_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/needle_query.fasta")
+    }
+
+    fn needle_target_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/needle_target.fasta")
+    }
+
+    fn needleall_queries_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/needleall_queries.fasta")
+    }
+
+    fn needleall_targets_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/needleall_targets.fasta")
+    }
+
     fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
@@ -3631,6 +3913,72 @@ mod tests {
             ResultPayload::Alignment(alignment) => {
                 assert_eq!(alignment.row_count(), 3);
                 assert_eq!(alignment.identifier(), Some("multiple-demo"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_needle_against_singleton_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("needle").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            needle_query_fixture().display().to_string(),
+            needle_target_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("needle should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 2);
+                assert_eq!(alignment.column_count(), 4);
+                assert_eq!(alignment.rows()[0].aligned(), "ACGT");
+                assert_eq!(alignment.rows()[1].aligned(), "AC-T");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn needle_rejects_multi_record_query_input() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("needle").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            needleall_queries_fixture().display().to_string(),
+            needle_target_fixture().display().to_string(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_needleall_against_multi_record_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("needleall").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            needleall_queries_fixture().display().to_string(),
+            needleall_targets_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("needleall should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 4);
+                assert_eq!(table.rows[0][0], "q1");
+                assert_eq!(table.rows[0][1], "t1");
+                assert_eq!(table.rows[1][0], "q1");
+                assert_eq!(table.rows[1][1], "t2");
+                assert_eq!(table.rows[2][0], "q2");
+                assert_eq!(table.rows[2][1], "t1");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
