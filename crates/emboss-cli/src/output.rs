@@ -138,6 +138,15 @@ pub fn format_method_result_summary(result: &MethodResult) -> String {
         ));
     }
 
+    if let Some(plot) = &result.plot {
+        rendered.push('\n');
+        rendered.push_str(&format!(
+            "\nPlot contract: {} ({})",
+            plot.metadata.title,
+            plot.kind.as_str()
+        ));
+    }
+
     rendered
 }
 

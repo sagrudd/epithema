@@ -174,6 +174,13 @@ The explicit retained-exception tool now available in v1 is:
   computes canonical-nucleotide linguistic complexity for whole sequences and,
   when requested, deterministic sliding windows.
 
+The first end-to-end plot-producing tool now available is:
+
+- `emboss-rs charge <protein-input> [--window <length>] [--step <length>] [--plot-contract-out <path>]`
+  computes a sliding-window mean protein charge profile, emits a structured
+  report, and can write a typed line-plot contract JSON for rendering through
+  the sister `emboss-r` package.
+
 The provider layer now also supports formal library/service-backed single
 sequence retrieval for provider-qualified accession inputs. The initial
 implemented routes are:

@@ -131,6 +131,8 @@ pub struct BridgeResultSummary {
     pub artifact_count: usize,
     /// Number of attached diagnostics.
     pub diagnostic_count: usize,
+    /// Whether a typed plot payload is attached.
+    pub plot_available: bool,
 }
 
 /// Bridge-safe tabular summary suitable for later data-frame conversion.

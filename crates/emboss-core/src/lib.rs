@@ -27,6 +27,7 @@ pub mod metadata;
 pub mod molecule;
 pub mod pattern;
 pub mod platform;
+pub mod protein_charge;
 pub mod sequence;
 pub mod strand;
 pub mod translation;
@@ -65,6 +66,9 @@ pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
 pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern};
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
+pub use protein_charge::{
+    ChargeWindow, ProteinChargeError, ProteinChargeProfile, protein_charge_profile,
+};
 pub use sequence::SequenceRecord;
 pub use strand::Strand;
 pub use translation::{

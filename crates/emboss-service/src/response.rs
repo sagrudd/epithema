@@ -17,7 +17,7 @@ pub enum InvocationStatus {
 }
 
 /// A typed service response for a resolved invocation request.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct InvocationResponse {
     /// Execution context used for the request.
     pub context: ExecutionContext,

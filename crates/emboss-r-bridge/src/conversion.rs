@@ -123,6 +123,7 @@ impl From<&MethodResult> for BridgeResultSummary {
             lines: value.summary.lines.clone(),
             artifact_count: value.artifacts.len(),
             diagnostic_count: value.report.diagnostics().len(),
+            plot_available: value.plot.is_some(),
         }
     }
 }
@@ -334,6 +335,7 @@ mod tests {
         assert_eq!(summary.payload_kind, "empty");
         assert_eq!(summary.title, "Sequence result");
         assert_eq!(summary.lines, vec!["Length: 4"]);
+        assert!(!summary.plot_available);
     }
 
     #[test]

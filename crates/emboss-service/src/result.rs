@@ -8,6 +8,7 @@ use std::path::PathBuf;
 
 use emboss_core::{Alignment, Feature, SequenceRecord};
 use emboss_diagnostics::{ArtifactProvenance, ExecutionReport};
+use emboss_plot_contract::PlotPayload;
 
 use crate::tool::ToolName;
 
@@ -194,7 +195,7 @@ impl ResultPayload {
 }
 
 /// Front-end-neutral method result envelope.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MethodResult {
     /// Tool or method identifier that produced the result.
     pub tool: ToolName,
@@ -202,6 +203,8 @@ pub struct MethodResult {
     pub payload: ResultPayload,
     /// Compact result summary.
     pub summary: ResultSummary,
+    /// Optional plot-ready payload for the R backend.
+    pub plot: Option<PlotPayload>,
     /// Auxiliary output artefacts.
     pub artifacts: Vec<ArtifactReference>,
     /// Structured execution report carrying outcome, diagnostics, and provenance.
@@ -221,9 +224,17 @@ impl MethodResult {
             tool,
             payload,
             summary,
+            plot: None,
             artifacts: Vec::new(),
             report,
         }
+    }
+
+    /// Attaches a plot-ready payload.
+    #[must_use]
+    pub fn with_plot(mut self, plot: PlotPayload) -> Self {
+        self.plot = Some(plot);
+        self
     }
 
     /// Attaches an auxiliary artefact reference.
@@ -283,6 +294,7 @@ mod tests {
 
         assert_eq!(result.summary.title, "Sequence result");
         assert_eq!(result.artifacts.len(), 1);
+        assert!(result.plot.is_none());
         assert_eq!(result.report.diagnostics().len(), 1);
         assert_eq!(result.report.provenance().len(), 1);
         assert_eq!(result.payload.kind_label(), "sequence");

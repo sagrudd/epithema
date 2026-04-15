@@ -275,6 +275,7 @@ dependencies = [
  "emboss-config",
  "emboss-core",
  "emboss-diagnostics",
+ "emboss-plot-contract",
  "emboss-providers",
  "emboss-tools",
 ]
@@ -297,6 +298,7 @@ dependencies = [
  "emboss-core",
  "emboss-diagnostics",
  "emboss-io",
+ "emboss-plot-contract",
 ]
 
 [[package]]

@@ -221,4 +221,12 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("runget"));
     }
+
+    #[test]
+    fn routes_charge_to_tool_path() {
+        let cli =
+            Cli::try_parse_from(["emboss-rs", "charge", "example.faa"]).expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("charge"));
+    }
 }

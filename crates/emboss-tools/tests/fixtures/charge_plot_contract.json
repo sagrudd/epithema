@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "charge_charge_example",
+    "title": "Charge profile for charge_example",
+    "subtitle": "Window 5 step 1",
+    "provenance": {
+      "tool": "charge",
+      "method": "protein_charge_profile",
+      "source_artifact_ids": [
+        "table:charge-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Mean charge",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "charge_profile",
+      "label": "Charge profile",
+      "legend_label": "Charge profile",
+      "semantic_group": "charge",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0
+        ]
+      },
+      "y": [
+        0.3,
+        0.1,
+        -0.3
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

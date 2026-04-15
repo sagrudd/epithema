@@ -9,6 +9,7 @@ pub mod codon_tools;
 pub mod feature_tools;
 pub mod pairwise_alignment;
 pub mod pattern_tools;
+pub mod protein_plots;
 pub mod retrieval_tools;
 pub mod sequence_edit;
 pub mod sequence_stats;
@@ -99,6 +100,7 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         pattern_tools::FUZZNUC_DESCRIPTOR,
         pattern_tools::FUZZPRO_DESCRIPTOR,
         pattern_tools::FUZZTRAN_DESCRIPTOR,
+        protein_plots::CHARGE_DESCRIPTOR,
         sequence_stats::COMPLEX_DESCRIPTOR,
         sequence_stats::COMPSEQ_DESCRIPTOR,
         sequence_stats::GEECEE_DESCRIPTOR,
@@ -166,6 +168,7 @@ mod tests {
                 "fuzznuc",
                 "fuzzpro",
                 "fuzztran",
+                "charge",
                 "complex",
                 "compseq",
                 "geecee",
