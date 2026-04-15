@@ -157,7 +157,10 @@ name = "emboss-r-bridge"
 version = "0.1.0"
 dependencies = [
  "emboss-core",
+ "emboss-diagnostics",
  "emboss-plot-contract",
+ "emboss-service",
+ "emboss-tools",
 ]
 
 [[package]]

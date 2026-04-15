@@ -14,6 +14,9 @@ provides service-backed discovery, `emboss-rs autodoc` reserves the governed
 documentation command path, and future governed tools will execute as
 `emboss-rs <tool> ...`.
 
+The Rust workspace also includes `emboss-r-bridge`, which provides the typed
+Rust-side contract seam for the first-class sister package `emboss-r`.
+
 ## Documentation
 
 Project-governing documentation is maintained under [docs/](./docs/README.md).

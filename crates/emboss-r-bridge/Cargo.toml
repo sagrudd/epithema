@@ -10,7 +10,10 @@ description = "Rust-side bridge scaffolding for the sister emboss-r project."
 
 [dependencies]
 emboss-core.workspace = true
+emboss-diagnostics.workspace = true
 emboss-plot-contract.workspace = true
+emboss-service.workspace = true
+emboss-tools.workspace = true
 
 [lints]
 workspace = true
