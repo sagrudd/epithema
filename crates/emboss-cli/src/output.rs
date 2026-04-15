@@ -4,6 +4,7 @@ use std::path::Path;
 
 use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
 use emboss_service::{EmbossService, InvocationResponse};
+use emboss_testkit::ToolValidationReport;
 
 /// Prints the current governed tool catalogue.
 pub fn print_tool_list(service: &EmbossService) {
@@ -75,13 +76,44 @@ pub fn print_generated_docs_report(report: &GeneratedDocsReport) {
     println!("{}", format_generated_docs_report(report));
 }
 
+/// Renders a stable human-readable validation-stub emission summary.
+#[must_use]
+pub fn format_validation_report_summary(report: &ToolValidationReport, path: &Path) -> String {
+    format!(
+        "Validation evidence stub emitted successfully\nOutput: {}\nTool: {}\nDocument ID: {}\nCases: {}\nDeclared: {}\nHarvested: {}\nRunnable: {}\nExecuted: {}\nCompared: {}\nPending gaps: {}\nDiagnostics: {}",
+        path.display(),
+        report.tool_name,
+        report.document_id,
+        report.summary.total_case_count,
+        report.summary.declared_case_count,
+        report.summary.harvested_case_count,
+        report.summary.runnable_case_count,
+        report.summary.executed_case_count,
+        report.summary.compared_case_count,
+        report.unresolved_gaps.len(),
+        report.diagnostics.len(),
+    )
+}
+
+/// Prints a stable validation-stub emission summary.
+pub fn print_validation_report_summary(report: &ToolValidationReport, path: &Path) {
+    println!("{}", format_validation_report_summary(report, path));
+}
+
 #[cfg(test)]
 mod tests {
     use std::path::Path;
 
     use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
+    use emboss_docgen::{AutodocSourceMode, LegacyReference};
+    use emboss_testkit::{
+        ComparisonStatus, EvidenceDeclarationStatus, EvidenceSourceKind, ExecutionStatus,
+        ToolValidationCase, ToolValidationReport, ValidationEvidenceSummary,
+    };
 
-    use super::{format_autodoc_summary, format_generated_docs_report};
+    use super::{
+        format_autodoc_summary, format_generated_docs_report, format_validation_report_summary,
+    };
 
     #[test]
     fn formats_autodoc_summary() {
@@ -121,5 +153,54 @@ mod tests {
         let rendered = format_generated_docs_report(&report);
         assert!(rendered.contains("Generated documentation pages emitted successfully"));
         assert!(rendered.contains("Tool page: docs/generated/tools/needle.md"));
+    }
+
+    #[test]
+    fn formats_validation_report_summary() {
+        let report = ToolValidationReport {
+            tool_name: "needle".to_owned(),
+            document_id: "needle-minimal".to_owned(),
+            source_mode: AutodocSourceMode::Curated,
+            evidence_source: EvidenceSourceKind::CuratedAutodoc,
+            summary: ValidationEvidenceSummary {
+                total_case_count: 1,
+                declared_case_count: 1,
+                harvested_case_count: 0,
+                runnable_case_count: 1,
+                executed_case_count: 0,
+                compared_case_count: 0,
+                passed_case_count: 0,
+                failed_case_count: 0,
+                partial_case_count: 0,
+                unsupported_case_count: 0,
+            },
+            cases: vec![ToolValidationCase {
+                id: "basic_alignment".to_owned(),
+                title: "Basic alignment example".to_owned(),
+                evidence_source: EvidenceSourceKind::CuratedAutodoc,
+                declaration_status: EvidenceDeclarationStatus::Declared,
+                execution_status: ExecutionStatus::Runnable,
+                comparison_status: ComparisonStatus::NotRequested,
+                required: true,
+                artifact_ids: vec!["example_fasta".to_owned()],
+                expected_output_ids: vec!["report".to_owned()],
+                provenance: vec![LegacyReference {
+                    source: "curated".to_owned(),
+                    locator: None,
+                    invocation: None,
+                }],
+                diagnostics: Vec::new(),
+            }],
+            unresolved_gaps: Vec::new(),
+            diagnostics: Vec::new(),
+            provenance: Vec::new(),
+        };
+
+        let rendered = format_validation_report_summary(
+            &report,
+            Path::new("docs/generated/validation/needle.validation.json"),
+        );
+        assert!(rendered.contains("Validation evidence stub emitted successfully"));
+        assert!(rendered.contains("Runnable: 1"));
     }
 }

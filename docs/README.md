@@ -33,6 +33,17 @@ through the governed CLI path:
 cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-docs
 ```
 
+Structured validation-evidence stubs for tool examples can also be derived from
+the same autodoc inputs:
+
+```bash
+cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-validation-stub
+```
+
+By default these reports are written under `docs/generated/validation/` as
+machine-readable JSON. They represent declared and harvested evidence only; they
+do not imply that the corresponding cases were executed or compared yet.
+
 At this stage generated pages include validated narrative content, declared
 artefacts, declared example stubs, provenance, and transformation notes when
 available. Tool execution, acquisition, and acceptance reporting remain

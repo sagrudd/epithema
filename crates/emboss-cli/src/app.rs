@@ -47,9 +47,18 @@ impl CliApp {
                 input,
                 emit_docs,
                 docs_output_dir,
-            }) => commands::run_autodoc(&service, &input, emit_docs, docs_output_dir.as_deref())
-                .map(|_| ())
-                .map_err(CliError::from),
+                emit_validation_stub,
+                validation_output_path,
+            }) => commands::run_autodoc(
+                &service,
+                &input,
+                emit_docs,
+                docs_output_dir.as_deref(),
+                emit_validation_stub,
+                validation_output_path.as_deref(),
+            )
+            .map(|_| ())
+            .map_err(CliError::from),
             Some(Command::Tool(arguments)) => Self::run_tool(&service, arguments),
         }
     }
@@ -83,7 +92,7 @@ fn build_service() -> EmbossService {
     name = "emboss-rs",
     version,
     about = "Governed EMBOSS reboot command surface in Rust.",
-    long_about = "EMBOSS-RS is a governed reboot of EMBOSS with a single binary surface. Use `emboss-rs <tool>` for tool execution, `emboss-rs list` for governed tool discovery, and `emboss-rs autodoc` to validate autodoc contracts and emit generated documentation pages.",
+    long_about = "EMBOSS-RS is a governed reboot of EMBOSS with a single binary surface. Use `emboss-rs <tool>` for tool execution, `emboss-rs list` for governed tool discovery, and `emboss-rs autodoc` to validate autodoc contracts, emit generated documentation pages, and derive validation evidence stubs.",
     arg_required_else_help = false,
     disable_help_subcommand = true
 )]
@@ -106,6 +115,12 @@ enum Command {
         /// Override the output directory used for generated Markdown pages.
         #[arg(long)]
         docs_output_dir: Option<PathBuf>,
+        /// Emit a structured validation evidence stub as JSON.
+        #[arg(long)]
+        emit_validation_stub: bool,
+        /// Override the output path used for the validation evidence JSON.
+        #[arg(long)]
+        validation_output_path: Option<PathBuf>,
     },
     #[command(external_subcommand)]
     /// Invoke a governed EMBOSS-RS tool through the shared service layer.
@@ -141,9 +156,13 @@ mod tests {
             "--emit-docs",
             "--docs-output-dir",
             "docs/generated",
+            "--emit-validation-stub",
+            "--validation-output-path",
+            "docs/generated/validation/example.validation.json",
         ])
         .expect("autodoc generation flags should parse");
         assert!(format!("{cli:?}").contains("emit_docs: true"));
+        assert!(format!("{cli:?}").contains("emit_validation_stub: true"));
         assert!(format!("{cli:?}").contains("docs/generated"));
     }
 

@@ -106,6 +106,7 @@ dependencies = [
  "emboss-diagnostics",
  "emboss-docgen",
  "emboss-service",
+ "emboss-testkit",
 ]
 
 [[package]]
@@ -184,7 +185,11 @@ dependencies = [
 name = "emboss-testkit"
 version = "0.1.0"
 dependencies = [
+ "emboss-diagnostics",
+ "emboss-docgen",
  "emboss-fixtures",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

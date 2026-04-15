@@ -21,8 +21,10 @@ The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
 prints a normalized summary. With `--emit-docs`, it also writes deterministic
-generated Markdown pages under `docs/generated/`. The same crate also contains a
-legacy EMBOSS artefact discovery layer for tool-focused harvesting from a local
+generated Markdown pages under `docs/generated/`. With
+`--emit-validation-stub`, it also derives a structured tool-evidence JSON stub
+under `docs/generated/validation/`. The same crate also contains a legacy
+EMBOSS artefact discovery layer for tool-focused harvesting from a local
 historical source tree, plus a typed legacy-to-autodoc transformation layer
 that emits provenance-rich autodoc JSON. Provider-backed documentation artefacts
 must now pass through the formal EMBOSS-RS acquisition seam; docgen will reject
