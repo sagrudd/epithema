@@ -233,3 +233,216 @@ pub struct BridgeChargeProfile {
     /// Typed plot contract JSON for the R plotting backend.
     pub plot_contract_json: String,
 }
+
+/// One bridge-safe pattern hit row.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgePatternHit {
+    /// Stable source record identifier.
+    pub identifier: String,
+    /// Searched pattern text.
+    pub pattern: String,
+    /// Optional strand label.
+    pub strand: Option<String>,
+    /// Optional translated frame label.
+    pub frame: Option<usize>,
+    /// Zero-based inclusive residue start.
+    pub start: usize,
+    /// Zero-based half-open residue end.
+    pub end: usize,
+    /// Optional zero-based inclusive amino-acid start.
+    pub amino_start: Option<usize>,
+    /// Optional zero-based half-open amino-acid end.
+    pub amino_end: Option<usize>,
+    /// Optional zero-based inclusive nucleotide start.
+    pub nucleotide_start: Option<usize>,
+    /// Optional zero-based half-open nucleotide end.
+    pub nucleotide_end: Option<usize>,
+    /// Matched text.
+    pub matched: String,
+}
+
+/// One bridge-safe translation-check case.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeTranslationCheck {
+    /// Nucleotide input identifier.
+    pub nucleotide_id: String,
+    /// Protein input identifier.
+    pub protein_id: String,
+    /// Whether the translated and expected proteins match after terminal-stop normalization.
+    pub matches: bool,
+    /// Translated protein sequence.
+    pub translated_protein: String,
+    /// Expected protein sequence.
+    pub expected_protein: String,
+    /// Whether the translated protein ended with a terminal stop.
+    pub translated_terminal_stop: bool,
+    /// Whether the expected protein ended with a terminal stop.
+    pub expected_terminal_stop: bool,
+    /// Stable detail text.
+    pub detail: String,
+}
+
+/// One bridge-safe composition row.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeCompositionRow {
+    /// Stable scope label such as `record` or `aggregate`.
+    pub scope: String,
+    /// Optional record identifier.
+    pub identifier: Option<String>,
+    /// Optional molecule label.
+    pub molecule: Option<String>,
+    /// Optional raw sequence length.
+    pub sequence_length: Option<usize>,
+    /// Number of counted non-gap symbols.
+    pub counted_symbols: usize,
+    /// Number of ignored gap symbols.
+    pub ignored_gap_symbols: usize,
+    /// Residue symbol.
+    pub residue: String,
+    /// Residue count.
+    pub count: usize,
+    /// Residue frequency.
+    pub frequency: f64,
+}
+
+/// One bridge-safe GC summary row.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeGcRow {
+    /// Stable scope label such as `record` or `aggregate`.
+    pub scope: String,
+    /// Optional record identifier.
+    pub identifier: Option<String>,
+    /// Raw sequence length.
+    pub sequence_length: usize,
+    /// Total non-gap symbols.
+    pub counted_symbols: usize,
+    /// Canonical A/C/G/T/U symbols in the denominator.
+    pub canonical_symbols: usize,
+    /// Canonical G/C symbols in the numerator.
+    pub gc_symbols: usize,
+    /// Ambiguous non-gap symbols.
+    pub ambiguous_symbols: usize,
+    /// Ignored gap symbols.
+    pub ignored_gap_symbols: usize,
+    /// GC percentage over canonical symbols.
+    pub gc_percent: f64,
+}
+
+/// One bridge-safe pepstats summary row.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgePepstatsSummaryRow {
+    /// Record identifier.
+    pub identifier: String,
+    /// Raw sequence length.
+    pub sequence_length: usize,
+    /// Number of non-gap, non-stop residues contributing to mass.
+    pub residue_length: usize,
+    /// Number of stop symbols.
+    pub stop_count: usize,
+    /// Deterministic molecular-weight estimate.
+    pub molecular_weight: f64,
+}
+
+/// Bridge-safe pepstats result carrying summary and composition rows.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgePepstatsResult {
+    /// Per-record summary rows.
+    pub summary_rows: Vec<BridgePepstatsSummaryRow>,
+    /// Per-record composition rows.
+    pub composition_rows: Vec<BridgeCompositionRow>,
+}
+
+/// Bridge-safe whole-sequence complexity summary.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeComplexitySummary {
+    /// Record identifier.
+    pub identifier: String,
+    /// Sequence length.
+    pub sequence_length: usize,
+    /// Inclusive minimum k.
+    pub k_min: usize,
+    /// Inclusive maximum k.
+    pub k_max: usize,
+    /// Whole-sequence complexity ratio.
+    pub complexity: f64,
+}
+
+/// Bridge-safe sliding-window complexity row.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeComplexityWindow {
+    /// Record identifier.
+    pub identifier: String,
+    /// One-based inclusive window start.
+    pub window_start: usize,
+    /// One-based inclusive window end.
+    pub window_end: usize,
+    /// Window length.
+    pub window_length: usize,
+    /// Complexity ratio.
+    pub complexity: f64,
+}
+
+/// Bridge-safe complexity result.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeComplexityResult {
+    /// Whole-sequence summary.
+    pub summary: BridgeComplexitySummary,
+    /// Optional sliding-window rows.
+    pub windows: Vec<BridgeComplexityWindow>,
+}
+
+/// Bridge-safe matcher summary row.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeMatcherSummary {
+    /// Comparison mode label.
+    pub mode: String,
+    /// Query length.
+    pub query_length: usize,
+    /// Target length.
+    pub target_length: usize,
+    /// Compared overlap length.
+    pub compared_length: usize,
+    /// Identity count.
+    pub identity_count: usize,
+    /// Mismatch count.
+    pub mismatch_count: usize,
+    /// Integer identity percentage over the compared overlap.
+    pub identity_percent: usize,
+    /// Signed target-minus-query length difference.
+    pub length_difference: isize,
+}
+
+/// Bridge-safe p-distance matrix.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeDistanceMatrix {
+    /// Ordered record identifiers.
+    pub identifiers: Vec<String>,
+    /// Comparison mode label.
+    pub mode: String,
+    /// Shared sequence length.
+    pub sequence_length: usize,
+    /// Pairwise p-distance values.
+    pub values: Vec<Vec<f64>>,
+}
+
+/// Bridge-safe aligned-row input.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeAlignmentRowInput {
+    /// Stable row identifier.
+    pub identifier: String,
+    /// Aligned row content including `-` gaps.
+    pub aligned: String,
+    /// Optional row description.
+    pub description: Option<String>,
+}
+
+/// Bridge-safe alignment input.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeAlignmentInput {
+    /// Optional alignment identifier.
+    pub identifier: Option<String>,
+    /// Optional explicit molecule label.
+    pub molecule: Option<String>,
+    /// Ordered aligned rows.
+    pub rows: Vec<BridgeAlignmentRowInput>,
+}

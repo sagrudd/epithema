@@ -16,9 +16,10 @@ documentation command path, and future governed tools will execute as
 
 The Rust workspace also includes `emboss-r-bridge`, which provides the typed
 Rust-side contract seam for the first-class sister package `emboss-r`. The
-first curated R-facing subset now grows through narrow bridge methods rather
-than CLI emulation and currently covers `newseq`, `seqcount`, `nthseq`,
-`skipseq`, `notseq`, and the plotted `charge` profile path.
+R-facing bridge now grows through narrow typed methods rather than CLI
+emulation and currently covers the early in-memory analytical surface for
+sequence construction/editing, translation, pattern scanning, statistics,
+alignment summaries, and the plotted `charge` profile path.
 
 Plot-ready analytical outputs should target the typed JSON-serializable
 `emboss-plot-contract` crate. Rendering remains owned by the sister `emboss-r`
