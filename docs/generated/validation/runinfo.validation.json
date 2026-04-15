@@ -1,0 +1,26 @@
+{
+  "document_id": "runinfo-minimal",
+  "tool_name": "runinfo",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "runinfo-ena-and-sra-metadata-normalization",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Normalize one provider-qualified ENA or SRA archive accession into a structured archive metadata report with linked identifiers and file counts."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

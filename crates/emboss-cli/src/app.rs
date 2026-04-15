@@ -205,4 +205,20 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("refseqget"));
     }
+
+    #[test]
+    fn routes_runinfo_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "runinfo", "ena:ERR123456"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("runinfo"));
+    }
+
+    #[test]
+    fn routes_runget_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "runget", "ena:ERR123456"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("runget"));
+    }
 }

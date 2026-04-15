@@ -83,10 +83,11 @@ fn builtin_provider_descriptors() -> Vec<ProviderDescriptor> {
     vec![
         ProviderDescriptor::new(
             ProviderId::new("ena").expect("static provider id should be valid"),
-            "European Nucleotide Archive single-sequence retrieval",
+            "European Nucleotide Archive sequence and archive retrieval",
             [
                 ProviderCapability::MetadataLookup,
                 ProviderCapability::SequenceRetrieval,
+                ProviderCapability::ArchiveAcquisition,
             ],
         ),
         ProviderDescriptor::new(
@@ -95,6 +96,14 @@ fn builtin_provider_descriptors() -> Vec<ProviderDescriptor> {
             [
                 ProviderCapability::MetadataLookup,
                 ProviderCapability::SequenceRetrieval,
+            ],
+        ),
+        ProviderDescriptor::new(
+            ProviderId::new("sra").expect("static provider id should be valid"),
+            "NCBI Sequence Read Archive metadata normalization",
+            [
+                ProviderCapability::MetadataLookup,
+                ProviderCapability::ArchiveAcquisition,
             ],
         ),
     ]
@@ -140,7 +149,7 @@ mod tests {
     }
 
     #[test]
-    fn builtin_defaults_include_ena_and_ncbi() {
+    fn builtin_defaults_include_ena_ncbi_and_sra() {
         let registry = ProviderRegistry::builtin_defaults();
 
         assert!(
@@ -151,6 +160,11 @@ mod tests {
         assert!(
             registry
                 .find(&ProviderId::new("ncbi").expect("valid id"))
+                .is_some()
+        );
+        assert!(
+            registry
+                .find(&ProviderId::new("sra").expect("valid id"))
                 .is_some()
         );
     }

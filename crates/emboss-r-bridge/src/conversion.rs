@@ -277,7 +277,7 @@ mod tests {
         let service = EmbossService::empty();
         let health = project_health(&service);
         assert_eq!(health.sister_package, "emboss-r");
-        assert_eq!(health.providers_configured, 2);
+        assert_eq!(health.providers_configured, 3);
         assert!(health.operation_status.ok);
     }
 

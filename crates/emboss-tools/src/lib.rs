@@ -4,6 +4,7 @@ use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
 pub mod alignment_analysis;
 pub mod alignment_tools;
+pub mod archive_tools;
 pub mod codon_tools;
 pub mod feature_tools;
 pub mod pairwise_alignment;
@@ -68,6 +69,8 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         alignment_tools::ALIGNCOPYPAIR_DESCRIPTOR,
         alignment_tools::INFOALIGN_DESCRIPTOR,
         alignment_tools::EXTRACTALIGN_DESCRIPTOR,
+        archive_tools::RUNINFO_DESCRIPTOR,
+        archive_tools::RUNGET_DESCRIPTOR,
         alignment_analysis::MATCHER_DESCRIPTOR,
         alignment_analysis::DISTMAT_DESCRIPTOR,
         alignment_analysis::CONS_DESCRIPTOR,
@@ -133,6 +136,8 @@ mod tests {
                 "aligncopypair",
                 "infoalign",
                 "extractalign",
+                "runinfo",
+                "runget",
                 "matcher",
                 "distmat",
                 "cons",

@@ -13,7 +13,8 @@ use emboss_diagnostics::{
     OutcomeStatus, PlatformError,
 };
 use emboss_providers::{
-    AcquisitionRequest, ProviderHttpClient, ProviderRegistry, RetrievedSequence,
+    AcquisitionRequest, ArchiveObjectClass, ProviderHttpClient, ProviderRegistry,
+    RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
 };
 use emboss_tools::ToolDescriptor;
 use emboss_tools::alignment_analysis::{
@@ -24,6 +25,9 @@ use emboss_tools::alignment_tools::{
     AligncopyParams, AligncopypairParams, AlignmentInput, ExtractalignParams, InfoalignParams,
     aligncopy_help, aligncopypair_help, extractalign_help, infoalign_help, run_aligncopy,
     run_aligncopypair, run_extractalign, run_infoalign,
+};
+use emboss_tools::archive_tools::{
+    RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
 };
 use emboss_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, cai_help, chips_help, codcmp_help,
@@ -68,6 +72,7 @@ use emboss_tools::translation_tools::{
 };
 
 use crate::ServiceDocumentationAcquisition;
+use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
@@ -151,6 +156,14 @@ impl EmbossService {
         ServiceSequenceRetrieval::new(&self.config, &self.providers)
     }
 
+    /// Returns the formal archive metadata and manifest retrieval gateway.
+    pub fn archive_retrieval(
+        &self,
+    ) -> Result<ServiceArchiveRetrieval<'_, emboss_providers::ReqwestHttpClient>, ServiceError>
+    {
+        ServiceArchiveRetrieval::new(&self.config, &self.providers)
+    }
+
     /// Resolves an accession-style input into a provider-backed single sequence record.
     pub fn retrieve_single_sequence(
         &self,
@@ -223,6 +236,8 @@ impl EmbossService {
             "aligncopypair" => self.invoke_aligncopypair(request, descriptor),
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
+            "runinfo" => self.invoke_runinfo(request, descriptor),
+            "runget" => self.invoke_runget(request, descriptor),
             "matcher" => self.invoke_matcher(request, descriptor),
             "distmat" => self.invoke_distmat(request, descriptor),
             "cons" => self.invoke_cons(request, descriptor),
@@ -612,6 +627,193 @@ impl EmbossService {
                     outcome.gap_open, outcome.gap_extend
                 ))
                 .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_runinfo(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_runinfo_inner::<emboss_providers::ReqwestHttpClient>(request, descriptor, None)
+    }
+
+    fn invoke_runinfo_inner<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, runinfo_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("runinfo", runinfo_help()))?;
+        let (route_provenance, metadata, diagnostics) =
+            self.resolve_archive_metadata_with_client(&input, client)?;
+        let outcome = run_runinfo(RuninfoParams {
+            provider: metadata.provider.as_str().to_owned(),
+            accession: metadata.requested_accession.clone(),
+            object_class: metadata.object_class.as_str().to_owned(),
+            run_accession: metadata.run_accession.clone(),
+            experiment_accession: metadata.experiment_accession.clone(),
+            sample_accession: metadata.sample_accession.clone(),
+            study_accession: metadata.study_accession.clone(),
+            platform: metadata.platform.clone(),
+            instrument_model: metadata.instrument_model.clone(),
+            library_layout: metadata.library_layout.clone(),
+            library_strategy: metadata.library_strategy.clone(),
+            library_source: metadata.library_source.clone(),
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "retrieved archive metadata for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            diagnostics,
+            vec![route_provenance, metadata.provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "role".to_owned(),
+                    "format".to_owned(),
+                    "url".to_owned(),
+                    "bytes".to_owned(),
+                    "md5".to_owned(),
+                ],
+                archive_file_rows(&metadata.files),
+            )),
+            ResultSummary::new("Archive metadata normalized")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Accession: {}", outcome.accession))
+                .with_line(format!("Object class: {}", outcome.object_class))
+                .with_line(format!(
+                    "Run: {}",
+                    outcome.run_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Experiment: {}",
+                    outcome.experiment_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Sample: {}",
+                    outcome.sample_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Study: {}",
+                    outcome.study_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Platform: {}",
+                    outcome.platform.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Instrument: {}",
+                    outcome.instrument_model.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!("Files: {}", metadata.files.len()))
+                .with_line(format!("Route: {}", metadata.route.endpoint)),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_runget(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_runget_inner::<emboss_providers::ReqwestHttpClient>(request, descriptor, None)
+    }
+
+    fn invoke_runget_inner<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, runget_help()));
+        }
+
+        let (input, download) = parse_runget_arguments(request.arguments())
+            .map_err(|_| tool_usage_error("runget", runget_help()))?;
+        if download {
+            return Err(PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "runget --download is not implemented in v1; use the default manifest output",
+            )
+            .with_code("service.runget.download_not_supported"));
+        }
+
+        let (route_provenance, manifest, diagnostics) =
+            self.resolve_run_manifest_with_client(&input, client)?;
+        let outcome = run_runget(RungetParams {
+            provider: manifest.provider.as_str().to_owned(),
+            accession: manifest.requested_accession.clone(),
+            object_class: manifest.object_class.as_str().to_owned(),
+            download,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "generated public-run manifest for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            diagnostics,
+            vec![route_provenance, manifest.provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "role".to_owned(),
+                    "format".to_owned(),
+                    "url".to_owned(),
+                    "bytes".to_owned(),
+                    "md5".to_owned(),
+                ],
+                archive_file_rows(&manifest.files),
+            )),
+            ResultSummary::new("Public run manifest normalized")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Accession: {}", outcome.accession))
+                .with_line(format!("Object class: {}", outcome.object_class))
+                .with_line("Mode: manifest only")
+                .with_line(format!("Files: {}", manifest.files.len()))
+                .with_line(format!(
+                    "Total bytes: {}",
+                    manifest
+                        .total_size_bytes()
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned())
+                ))
+                .with_line(format!("Route: {}", manifest.route.endpoint)),
             report.clone(),
         );
 
@@ -3341,6 +3543,148 @@ impl EmbossService {
         }
     }
 
+    fn resolve_archive_metadata_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            ArtifactProvenance,
+            RetrievedArchiveMetadata,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::ArchiveAsset)? {
+            ToolInputResolution::ProviderRouted {
+                request,
+                provenance,
+                diagnostics,
+                ..
+            } => Ok((
+                provenance,
+                self.retrieve_archive_metadata_request_with_client(&request, client)?,
+                diagnostics,
+            )),
+            ToolInputResolution::LocalFile { provenance, .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "runinfo expects archive accession input, not a local file",
+            )
+            .with_code("service.runinfo.local_input_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "runinfo does not accept inline sequence literals",
+            )
+            .with_code("service.runinfo.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve runinfo input '{}'", reference.raw()),
+            )
+            .with_code("service.runinfo.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
+
+    fn resolve_run_manifest_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            ArtifactProvenance,
+            RetrievedArchiveManifest,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::ArchiveAsset)? {
+            ToolInputResolution::ProviderRouted {
+                request,
+                provenance,
+                diagnostics,
+                ..
+            } => {
+                let manifest =
+                    self.retrieve_archive_manifest_request_with_client(&request, client)?;
+                if manifest.object_class != ArchiveObjectClass::Run {
+                    return Err(PlatformError::new(
+                        ErrorCategory::Validation,
+                        "runget currently supports run accessions only",
+                    )
+                    .with_code("service.runget.unsupported_object_class")
+                    .with_detail(manifest.object_class.as_str().to_owned()));
+                }
+                Ok((provenance, manifest, diagnostics))
+            }
+            ToolInputResolution::LocalFile { provenance, .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "runget expects archive run accessions, not a local file",
+            )
+            .with_code("service.runget.local_input_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "runget does not accept inline sequence literals",
+            )
+            .with_code("service.runget.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve runget input '{}'", reference.raw()),
+            )
+            .with_code("service.runget.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
+
+    fn retrieve_archive_metadata_request_with_client<C: ProviderHttpClient>(
+        &self,
+        request: &AcquisitionRequest,
+        client: Option<&C>,
+    ) -> Result<RetrievedArchiveMetadata, ServiceError> {
+        match client {
+            Some(client) => {
+                ServiceArchiveRetrieval::with_client(&self.config, &self.providers, client)
+                    .lookup_metadata(request)
+            }
+            None => self.archive_retrieval()?.lookup_metadata(request),
+        }
+    }
+
+    fn retrieve_archive_manifest_request_with_client<C: ProviderHttpClient>(
+        &self,
+        request: &AcquisitionRequest,
+        client: Option<&C>,
+    ) -> Result<RetrievedArchiveManifest, ServiceError> {
+        match client {
+            Some(client) => {
+                ServiceArchiveRetrieval::with_client(&self.config, &self.providers, client)
+                    .retrieve_run_manifest(request)
+            }
+            None => self.archive_retrieval()?.retrieve_run_manifest(request),
+        }
+    }
+
     fn resolve_local_sequence_input(
         &self,
         raw: &str,
@@ -3933,6 +4277,31 @@ fn parse_sequence_pair_params(
     })
 }
 
+fn parse_runget_arguments(arguments: &[String]) -> Result<(String, bool), ServiceError> {
+    match arguments {
+        [input] => Ok((input.clone(), false)),
+        [input, flag] if flag == "--download" => Ok((input.clone(), true)),
+        _ => Err(tool_usage_error("runget", runget_help())),
+    }
+}
+
+fn archive_file_rows(files: &[emboss_providers::ArchiveFile]) -> Vec<Vec<String>> {
+    files
+        .iter()
+        .map(|file| {
+            vec![
+                file.role.clone(),
+                file.format.clone(),
+                file.url.clone(),
+                file.size_bytes
+                    .map(|value| value.to_string())
+                    .unwrap_or_else(|| "-".to_owned()),
+                file.checksum_md5.clone().unwrap_or_else(|| "-".to_owned()),
+            ]
+        })
+        .collect()
+}
+
 fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, ServiceError> {
     let parsed = value.parse::<usize>().map_err(|_| {
         PlatformError::new(
@@ -4451,6 +4820,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "needleall" => needleall_help(),
         "seqret" => seqret_help(),
         "refseqget" => refseqget_help(),
+        "runinfo" => runinfo_help(),
+        "runget" => runget_help(),
         "aligncopy" => aligncopy_help(),
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
@@ -4559,6 +4930,12 @@ mod tests {
             service
                 .providers()
                 .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
+                .is_some()
+        );
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("sra").expect("valid provider"))
                 .is_some()
         );
         assert!(service.config().acquisition.allow_remote_acquisition);
@@ -4834,6 +5211,142 @@ mod tests {
         assert_eq!(
             error.code(),
             Some("service.refseqget.local_input_not_supported")
+        );
+    }
+
+    #[test]
+    fn executes_runinfo_against_mocked_ena_run_metadata() {
+        let service = implemented_service();
+        let tool = ToolName::new("runinfo").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("runinfo should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["ena:ERR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let response = service
+            .invoke_runinfo_inner(request, descriptor, Some(&client))
+            .expect("runinfo should execute with mocked ENA metadata");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "fastq");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Provider: ena")
+        );
+    }
+
+    #[test]
+    fn executes_runinfo_against_mocked_sra_run_metadata() {
+        let service = implemented_service();
+        let tool = ToolName::new("runinfo").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("runinfo should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["sra:SRR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://trace.ncbi.nlm.nih.gov/Traces/sra-db-be/runinfo?acc=SRR123456",
+            HttpResponse::new(200, "Run,ReleaseDate,LoadDate,spots,bases,spots_with_mates,avgLength,size_MB,AssemblyName,download_path,Experiment,LibraryName,LibraryStrategy,LibrarySelection,LibrarySource,LibraryLayout,InsertSize,InsertDev,Platform,Model,SRAStudy,BioProject,Study_Pubmed_id,ProjectID,Sample,BioSample,SampleType,TaxID,ScientificName,SampleName,CenterName,Submission,dbgap_study_accession,Consent,RunHash,ReadHash\nSRR123456,2024-01-01,2024-01-02,1,100,1,100,1,,https://example.invalid/SRR123456,SRX123456,,WGS,,GENOMIC,PAIRED,,,,ILLUMINA,NextSeq 2000,SRP000001,PRJNA1,,1,SRS123456,SAMN1,,9606,Homo sapiens,,NCBI,SRA000001,,,runhash,readhash\n"),
+        );
+
+        let response = service
+            .invoke_runinfo_inner(request, descriptor, Some(&client))
+            .expect("runinfo should execute with mocked SRA metadata");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.is_empty());
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Provider: sra")
+        );
+    }
+
+    #[test]
+    fn executes_runget_against_mocked_ena_manifest() {
+        let service = implemented_service();
+        let tool = ToolName::new("runget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("runget should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["ena:ERR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let response = service
+            .invoke_runget_inner(request, descriptor, Some(&client))
+            .expect("runget should execute with mocked ENA manifest");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "fastq");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn runget_rejects_download_mode_in_v1() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("runget").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:ERR123456".to_owned(), "--download".to_owned()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("download mode should be rejected");
+        assert_eq!(error.code(), Some("service.runget.download_not_supported"));
+    }
+
+    #[test]
+    fn runget_reports_sra_manifest_as_not_supported() {
+        let service = implemented_service();
+        let tool = ToolName::new("runget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("runget should be registered");
+        let request = InvocationRequest::new(ExecutionContext::default(), tool)
+            .with_arguments(vec!["sra:SRR123456".to_owned()]);
+        let client = MockHttpClient::default();
+
+        let error = service
+            .invoke_runget_inner(request, descriptor, Some(&client))
+            .expect_err("SRA manifest should not yet be supported");
+        assert_eq!(
+            error.code(),
+            Some("providers.archive.sra.manifest_not_supported")
         );
     }
 

@@ -6,6 +6,7 @@
 //! which owns governed tool descriptors.
 
 pub mod acquisition;
+pub mod archive_retrieval;
 pub mod context;
 pub mod error;
 pub mod input;
@@ -19,6 +20,7 @@ pub mod service;
 pub mod tool;
 
 pub use acquisition::ServiceDocumentationAcquisition;
+pub use archive_retrieval::ServiceArchiveRetrieval;
 pub use context::{ExecutionContext, InvocationOrigin};
 pub use emboss_config::{AcquisitionPolicy, AutodocPolicy, ConfigEnvironment, PlatformConfig};
 pub use emboss_diagnostics::{
@@ -26,12 +28,13 @@ pub use emboss_diagnostics::{
     ExecutionReport, OutcomeStatus, PlatformError, RunId, Severity,
 };
 pub use emboss_providers::{
-    AcquisitionRequest, DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
+    AcquisitionRequest, ArchiveFile, ArchiveObjectClass, ArchiveProviderResolution, ArchiveRoute,
+    DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
     DocumentationAcquisitionRequest, DocumentationAcquisitionRoute, DocumentationAssetRequest,
     InputReference as ProviderInputReference, InputReferenceKind, MetadataLookupRequest,
     ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent,
-    RetrievalFormat, RetrievalRoute, RetrievedSequence, SequenceProviderResolution,
-    SequenceRequest,
+    RetrievalFormat, RetrievalRoute, RetrievedArchiveManifest, RetrievedArchiveMetadata,
+    RetrievedSequence, SequenceProviderResolution, SequenceRequest,
 };
 pub use error::ServiceError;
 pub use input::{ToolInputKind, ToolInputReference, ToolInputResolution, ToolInputResolver};

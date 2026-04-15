@@ -1,0 +1,26 @@
+{
+  "document_id": "runget-minimal",
+  "tool_name": "runget",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "runget-public-manifest-normalization",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Discover a normalized ENA public-run manifest through the governed archive acquisition seam and report file URLs, checksums, and byte counts."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

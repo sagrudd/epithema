@@ -143,6 +143,14 @@ The next shipped cohort now covers modernized sequence retrieval operations:
   provider-backed accession-addressable sequence through the governed
   acquisition seam and emits normalized FASTA.
 
+The next shipped cohort now covers modern archive metadata and run acquisition:
+
+- `emboss-rs runinfo <archive-accession>` normalizes one ENA or SRA
+  accession-backed archive metadata record into a structured report.
+- `emboss-rs runget <run-accession>` discovers a normalized public-run manifest
+  through the governed archive acquisition seam and reports provider file URLs,
+  checksums, and byte counts when available.
+
 The next shipped cohort now covers alignment-summary and similarity operations:
 
 - `emboss-rs matcher <query-input> <target-input>` compares exactly one query
