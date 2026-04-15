@@ -35,6 +35,13 @@ The following documents are supporting reference material:
 Appendices support planning, implementation, and release review, but they do not
 supersede the normative governance documents.
 
+## Operational Guidance
+
+Operational workflow guidance for contributors and Codex sessions is maintained
+separately under [Development Workflow](../development/index.md). That material
+explains how to follow the governance rules in practice but does not supersede
+the normative governance documents.
+
 ## Maintenance Notes
 
 New governance material should be added under `docs/governance/` and linked from

@@ -12,3 +12,9 @@ GitHub Pages is the formal public publication path for the documentation site.
 Repository administrators must set Pages to deploy from **GitHub Actions** so
 the workflow in `.github/workflows/docs-pages.yml` can publish the built Sphinx
 site.
+
+## Contributor Workflow
+
+Contributor guidance is provided in [CONTRIBUTING.md](./CONTRIBUTING.md) and in
+the development workflow section of the docs site at
+[docs/development/index.md](./docs/development/index.md).

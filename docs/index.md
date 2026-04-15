@@ -14,5 +14,6 @@ The canonical normative entry point is the
 :caption: Documentation
 
 governance/index
+development/index
 README
 ```
