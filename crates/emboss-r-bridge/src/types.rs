@@ -32,3 +32,20 @@ pub struct BridgeOperationStatus {
     /// Human-readable status message.
     pub message: String,
 }
+
+/// Bridge-safe projection of a shared EMBOSS-RS method result summary.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeResultSummary {
+    /// Tool or method identifier.
+    pub tool: String,
+    /// Stable payload family label.
+    pub payload_kind: String,
+    /// Summary title.
+    pub title: String,
+    /// Ordered summary lines.
+    pub lines: Vec<String>,
+    /// Number of attached artefacts.
+    pub artifact_count: usize,
+    /// Number of attached diagnostics.
+    pub diagnostic_count: usize,
+}

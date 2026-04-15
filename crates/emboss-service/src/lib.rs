@@ -13,6 +13,7 @@ pub mod input_resolution;
 pub mod registry;
 pub mod request;
 pub mod response;
+pub mod result;
 pub mod service;
 pub mod tool;
 
@@ -35,6 +36,10 @@ pub use input::{ToolInputKind, ToolInputReference, ToolInputResolution, ToolInpu
 pub use registry::{ServiceRegistry, ToolCatalog};
 pub use request::InvocationRequest;
 pub use response::{InvocationResponse, InvocationStatus};
+pub use result::{
+    ArtifactKind, ArtifactReference, MethodResult, ResultPayload, ResultSummary, TableReport,
+    TextReport,
+};
 pub use service::EmbossService;
 pub use tool::ToolName;
 

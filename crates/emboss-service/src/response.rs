@@ -4,6 +4,7 @@ use emboss_diagnostics::ExecutionReport;
 use emboss_tools::ToolDescriptor;
 
 use crate::context::ExecutionContext;
+use crate::result::{MethodResult, ResultPayload, ResultSummary};
 use crate::tool::ToolName;
 
 /// Current execution state at the service boundary.
@@ -26,6 +27,8 @@ pub struct InvocationResponse {
     pub status: InvocationStatus,
     /// Structured execution report for the invocation boundary.
     pub report: ExecutionReport,
+    /// Front-end-neutral method result envelope for the invocation.
+    pub result: MethodResult,
 }
 
 impl InvocationResponse {
@@ -37,12 +40,17 @@ impl InvocationResponse {
         descriptor: ToolDescriptor,
         report: ExecutionReport,
     ) -> Self {
+        let summary = ResultSummary::new(format!("{} not implemented", descriptor.name))
+            .with_line(descriptor.summary)
+            .with_line("Execution path is registered but implementation is pending.");
+        let result = MethodResult::new(tool.clone(), ResultPayload::Empty, summary, report.clone());
         Self {
             context,
             tool,
             descriptor,
             status: InvocationStatus::NotImplemented,
             report,
+            result,
         }
     }
 }

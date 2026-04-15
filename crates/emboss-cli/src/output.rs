@@ -3,7 +3,7 @@
 use std::path::Path;
 
 use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
-use emboss_service::{EmbossService, InvocationResponse};
+use emboss_service::{EmbossService, InvocationResponse, MethodResult};
 use emboss_testkit::ToolValidationReport;
 
 /// Prints the current governed tool catalogue.
@@ -23,13 +23,36 @@ pub fn print_tool_list(service: &EmbossService) {
 
 /// Prints the current placeholder response for a known but unimplemented tool.
 pub fn print_unimplemented_tool(response: &InvocationResponse, service: &EmbossService) {
-    println!(
-        "Tool '{}' is governed but not implemented yet.",
-        response.tool
-    );
-    println!("{}", response.descriptor.summary);
+    println!("{}", format_method_result_summary(&response.result));
     println!("Run ID: {}", response.report.metadata.run_id);
     println!("{}", service.status_line());
+}
+
+/// Renders a stable human-readable method-result summary.
+#[must_use]
+pub fn format_method_result_summary(result: &MethodResult) -> String {
+    let mut rendered = String::new();
+    rendered.push_str(&result.summary.title);
+    rendered.push('\n');
+
+    for line in &result.summary.lines {
+        rendered.push_str(line);
+        rendered.push('\n');
+    }
+
+    rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+    rendered.push('\n');
+    rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+
+    if !result.report.diagnostics().is_empty() {
+        rendered.push('\n');
+        rendered.push_str(&format!(
+            "Diagnostics: {}",
+            result.report.diagnostics().len()
+        ));
+    }
+
+    rendered
 }
 
 /// Renders a stable human-readable autodoc summary.
@@ -106,13 +129,18 @@ mod tests {
 
     use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
     use emboss_docgen::{AutodocSourceMode, LegacyReference};
+    use emboss_service::{
+        ExecutionContext, ExecutionOutcome, ExecutionReport, InvocationOrigin, MethodResult,
+        OutcomeStatus, ResultPayload, ResultSummary, ToolName,
+    };
     use emboss_testkit::{
         ComparisonStatus, EvidenceDeclarationStatus, EvidenceSourceKind, ExecutionStatus,
         ToolValidationCase, ToolValidationReport, ValidationEvidenceSummary,
     };
 
     use super::{
-        format_autodoc_summary, format_generated_docs_report, format_validation_report_summary,
+        format_autodoc_summary, format_generated_docs_report, format_method_result_summary,
+        format_validation_report_summary,
     };
 
     #[test]
@@ -202,5 +230,28 @@ mod tests {
         );
         assert!(rendered.contains("Validation evidence stub emitted successfully"));
         assert!(rendered.contains("Runnable: 1"));
+    }
+
+    #[test]
+    fn formats_method_result_summary() {
+        let context = ExecutionContext::for_origin(InvocationOrigin::Cli);
+        let report = ExecutionReport::from_context(
+            &context,
+            "emboss-rs",
+            "0.1.0",
+            ExecutionOutcome::new(OutcomeStatus::NotImplemented).with_summary("pending"),
+        );
+        let result = MethodResult::new(
+            ToolName::new("needle").expect("tool name should build"),
+            ResultPayload::Empty,
+            ResultSummary::new("needle not implemented")
+                .with_line("global alignment")
+                .with_line("Execution path is registered but implementation is pending."),
+            report,
+        );
+
+        let rendered = format_method_result_summary(&result);
+        assert!(rendered.contains("needle not implemented"));
+        assert!(rendered.contains("Payload kind: empty"));
     }
 }

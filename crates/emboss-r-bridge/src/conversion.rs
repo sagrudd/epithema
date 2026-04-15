@@ -2,12 +2,14 @@
 
 use emboss_core::PLATFORM_IDENTITY;
 use emboss_diagnostics::{Diagnostic, PlatformError};
-use emboss_service::EmbossService;
+use emboss_service::{EmbossService, MethodResult};
 use emboss_tools::ToolDescriptor;
 
 use crate::error::BridgeErrorSummary;
 use crate::health::BridgeHealth;
-use crate::types::{BridgeDiagnosticSummary, BridgeOperationStatus, BridgeToolSummary};
+use crate::types::{
+    BridgeDiagnosticSummary, BridgeOperationStatus, BridgeResultSummary, BridgeToolSummary,
+};
 use crate::version::BridgeVersion;
 
 impl From<ToolDescriptor> for BridgeToolSummary {
@@ -33,6 +35,19 @@ impl From<&Diagnostic> for BridgeDiagnosticSummary {
             message: value.message().to_owned(),
             context: value.context().map(ToOwned::to_owned),
             location: value.location().map(|location| location.scope().to_owned()),
+        }
+    }
+}
+
+impl From<&MethodResult> for BridgeResultSummary {
+    fn from(value: &MethodResult) -> Self {
+        Self {
+            tool: value.tool.as_str().to_owned(),
+            payload_kind: value.payload.kind_label().to_owned(),
+            title: value.summary.title.clone(),
+            lines: value.summary.lines.clone(),
+            artifact_count: value.artifacts.len(),
+            diagnostic_count: value.report.diagnostics().len(),
         }
     }
 }
@@ -78,13 +93,14 @@ pub fn project_health(service: &EmbossService) -> BridgeHealth {
 #[cfg(test)]
 mod tests {
     use emboss_diagnostics::{
-        Diagnostic, DiagnosticLocation, ErrorCategory, PlatformError, Severity,
+        Diagnostic, DiagnosticLocation, ErrorCategory, ExecutionContext, ExecutionOutcome,
+        ExecutionReport, InvocationOrigin, OutcomeStatus, PlatformError, Severity,
     };
-    use emboss_service::EmbossService;
+    use emboss_service::{EmbossService, MethodResult, ResultPayload, ResultSummary, ToolName};
     use emboss_tools::ToolDescriptor;
 
     use super::{project_health, project_version};
-    use crate::types::{BridgeDiagnosticSummary, BridgeToolSummary};
+    use crate::types::{BridgeDiagnosticSummary, BridgeResultSummary, BridgeToolSummary};
 
     #[test]
     fn projects_version_metadata() {
@@ -138,5 +154,28 @@ mod tests {
         assert_eq!(health.sister_package, "emboss-r");
         assert_eq!(health.providers_configured, 0);
         assert!(health.operation_status.ok);
+    }
+
+    #[test]
+    fn projects_shared_method_result_summary() {
+        let context = ExecutionContext::for_origin(InvocationOrigin::Cli);
+        let report = ExecutionReport::from_context(
+            &context,
+            "emboss-rs",
+            "0.1.0",
+            ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("ok"),
+        );
+        let result = MethodResult::new(
+            ToolName::new("seqret").expect("tool name should build"),
+            ResultPayload::Empty,
+            ResultSummary::new("Sequence result").with_line("Length: 4"),
+            report,
+        );
+
+        let summary = BridgeResultSummary::from(&result);
+        assert_eq!(summary.tool, "seqret");
+        assert_eq!(summary.payload_kind, "empty");
+        assert_eq!(summary.title, "Sequence result");
+        assert_eq!(summary.lines, vec!["Length: 4"]);
     }
 }
