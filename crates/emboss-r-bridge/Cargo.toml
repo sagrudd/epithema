@@ -1,0 +1,16 @@
+[package]
+name = "emboss-r-bridge"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Rust-side bridge scaffolding for the sister emboss-r project."
+
+[dependencies]
+emboss-core.workspace = true
+emboss-plot-contract.workspace = true
+
+[lints]
+workspace = true

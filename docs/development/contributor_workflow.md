@@ -47,6 +47,10 @@ Run `make help` for the current task surface.
 
 At present the most relevant targets are:
 
+- `make build`
+- `make fmt`
+- `make lint`
+- `make test`
 - `make lint-repo`
 - `make check-sister-repo`
 - `make lint-docs`
@@ -73,10 +77,10 @@ material change set rather than a follow-up task.
 
 ## Structure and Naming Discipline
 
-Contributors must preserve disciplined structure and naming. When future Rust
-code is introduced, module names and code layout should follow the established
-governance policy rather than ad hoc placement. Documentation and repository
-structure should follow the same principle now.
+Contributors must preserve disciplined structure and naming. The current Rust
+workspace is organized under `crates/` by architectural role, and future code
+should extend that layout coherently rather than bypassing it. Documentation and
+repository structure should follow the same principle.
 
 ## Pull Request Expectations
 

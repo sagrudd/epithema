@@ -30,14 +30,15 @@ New contributors should read, in order:
 
 The current baseline local checks are:
 
+- `make build`
+- `make fmt`
+- `make lint`
+- `make test`
 - `make lint-repo`
 - `make check-sister-repo`
 - `make lint-docs`
 - `make docs`
 - `make ci`
-
-Rust-specific checks are intentionally deferred until a real Cargo workspace or
-crate exists in this repository.
 
 ## Pull Requests
 

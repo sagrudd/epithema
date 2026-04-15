@@ -1,0 +1,16 @@
+[package]
+name = "emboss-docgen"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Documentation generation and autodoc scaffolding for EMBOSS-RS."
+
+[dependencies]
+emboss-fixtures.workspace = true
+emboss-tools.workspace = true
+
+[lints]
+workspace = true

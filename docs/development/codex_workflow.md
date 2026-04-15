@@ -62,6 +62,10 @@ are directly implicated by the work.
 
 For the current repository state, the main checks are:
 
+- `make build`
+- `make fmt`
+- `make lint`
+- `make test`
 - `make lint-repo`
 - `make check-sister-repo`
 - `make lint-docs`

@@ -2,6 +2,13 @@
 
 A reboot of the EMBOSS package of bioinformatics tools in Rust.
 
+## Workspace
+
+The Rust workspace is organized under `crates/` with a single CLI binary named
+`emboss-rs` and domain-oriented library crates for core primitives, IO, tools,
+service/runtime, plot contracts, R bridging, fixtures, validation, and doc
+generation.
+
 ## Documentation
 
 Project-governing documentation is maintained under [docs/](./docs/README.md).
