@@ -1,4 +1,7 @@
 //! Coordinate and interval primitives.
+//!
+//! EMBOSS-RS uses zero-based, half-open intervals throughout the core model.
+//! An interval `[start, end)` includes `start` and excludes `end`.
 
 use crate::error::DomainError;
 
@@ -54,6 +57,20 @@ impl Interval {
     pub fn contains_interval(self, other: Self) -> bool {
         other.start >= self.start && other.end <= self.end
     }
+
+    /// Returns true when this interval overlaps another interval.
+    #[must_use]
+    pub fn intersects(self, other: Self) -> bool {
+        self.start < other.end && other.start < self.end
+    }
+
+    /// Returns the overlapping region between two intervals when one exists.
+    #[must_use]
+    pub fn intersection(self, other: Self) -> Option<Self> {
+        let start = self.start.max(other.start);
+        let end = self.end.min(other.end);
+        (start < end).then_some(Self { start, end })
+    }
 }
 
 #[cfg(test)]
@@ -72,5 +89,16 @@ mod tests {
 
         assert!(outer.contains_interval(inner));
         assert!(!inner.contains_interval(outer));
+    }
+
+    #[test]
+    fn computes_intersection() {
+        let left = Interval::new(2, 8).expect("valid interval");
+        let right = Interval::new(5, 10).expect("valid interval");
+
+        assert_eq!(
+            left.intersection(right),
+            Some(Interval::new(5, 8).expect("valid overlap"))
+        );
     }
 }

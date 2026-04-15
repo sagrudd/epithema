@@ -30,6 +30,23 @@ impl Alphabet {
         }
     }
 
+    /// Returns true when the alphabet is a sensible match for the supplied molecule.
+    #[must_use]
+    pub fn is_compatible_with(self, molecule: MoleculeKind) -> bool {
+        match molecule {
+            MoleculeKind::Dna => matches!(self, Self::Dna | Self::Text),
+            MoleculeKind::Rna => matches!(self, Self::Rna | Self::Text),
+            MoleculeKind::Protein => matches!(self, Self::Protein | Self::Text),
+            MoleculeKind::Unknown => true,
+        }
+    }
+
+    /// Returns true when the alphabet represents nucleotides.
+    #[must_use]
+    pub fn is_nucleotide(self) -> bool {
+        matches!(self, Self::Dna | Self::Rna)
+    }
+
     /// Returns true if the supplied symbol is valid for this alphabet.
     #[must_use]
     pub fn allows(self, symbol: char) -> bool {
@@ -108,9 +125,22 @@ impl Alphabet {
         }
     }
 
-    /// Validates a residue string against the alphabet.
-    pub fn validate(self, molecule: MoleculeKind, residues: &str) -> Result<(), DomainError> {
-        for (position, symbol) in residues.chars().enumerate() {
+    /// Returns a normalized, uppercase residue string with whitespace removed.
+    pub fn normalize(self, molecule: MoleculeKind, residues: &str) -> Result<String, DomainError> {
+        if !self.is_compatible_with(molecule) {
+            return Err(DomainError::IncompatibleAlphabet {
+                molecule,
+                alphabet: self,
+            });
+        }
+
+        let normalized: String = residues
+            .chars()
+            .filter(|symbol| !symbol.is_whitespace())
+            .map(|symbol| symbol.to_ascii_uppercase())
+            .collect();
+
+        for (position, symbol) in normalized.chars().enumerate() {
             if !self.allows(symbol) {
                 return Err(DomainError::InvalidResidues {
                     molecule,
@@ -121,6 +151,12 @@ impl Alphabet {
             }
         }
 
+        Ok(normalized)
+    }
+
+    /// Validates a residue string against the alphabet.
+    pub fn validate(self, molecule: MoleculeKind, residues: &str) -> Result<(), DomainError> {
+        let _ = self.normalize(molecule, residues)?;
         Ok(())
     }
 }
@@ -150,5 +186,23 @@ mod tests {
             .expect_err("U is not valid DNA");
 
         assert!(error.to_string().contains("invalid residue 'U'"));
+    }
+
+    #[test]
+    fn normalizes_whitespace_and_case() {
+        let normalized = Alphabet::Protein
+            .normalize(MoleculeKind::Protein, "m s t n\n")
+            .expect("sequence should normalize");
+
+        assert_eq!(normalized, "MSTN");
+    }
+
+    #[test]
+    fn rejects_incompatible_alphabet_for_molecule() {
+        let error = Alphabet::Protein
+            .normalize(MoleculeKind::Dna, "ACGT")
+            .expect_err("protein alphabet should not validate dna");
+
+        assert!(error.to_string().contains("not compatible"));
     }
 }

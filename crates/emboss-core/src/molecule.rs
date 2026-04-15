@@ -27,6 +27,18 @@ impl MoleculeKind {
             Self::Unknown => "unknown",
         }
     }
+
+    /// Returns true when the molecule is nucleotide-based.
+    #[must_use]
+    pub fn is_nucleotide(self) -> bool {
+        matches!(self, Self::Dna | Self::Rna)
+    }
+
+    /// Returns true when the molecule represents amino-acid sequence.
+    #[must_use]
+    pub fn is_protein(self) -> bool {
+        matches!(self, Self::Protein)
+    }
 }
 
 impl Display for MoleculeKind {
