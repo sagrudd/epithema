@@ -9,6 +9,7 @@ pub mod contract;
 pub mod error;
 pub mod legacy;
 pub mod process;
+pub mod transform;
 pub mod validate;
 
 pub use contract::{
@@ -23,4 +24,7 @@ pub use legacy::{
     discover_legacy_tool_artifacts,
 };
 pub use process::{AutodocProcessingSummary, load_document_from_path, load_summary_from_path};
+pub use transform::{
+    LegacyAutodocTransformReport, derive_autodoc_from_legacy_root, transform_legacy_report,
+};
 pub use validate::AUTODOC_SCHEMA_VERSION;
