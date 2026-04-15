@@ -8,11 +8,14 @@
 //! - feature locations are one or more ordered, non-overlapping spans
 //! - sequence records own normalized uppercase residue content and attached features
 //! - alignment coordinates refer to aligned columns, with `-` as the canonical gap
+//! - extracted feature regions are rebased onto local zero-based half-open coordinates
 
 pub mod alignment;
 pub mod alphabet;
 pub mod error;
 pub mod feature;
+pub mod feature_ops;
+pub mod feature_selector;
 pub mod identifier;
 pub mod interval;
 pub mod metadata;
@@ -25,6 +28,12 @@ pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alphabet::Alphabet;
 pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};
+pub use feature_ops::{
+    ExtractedFeatureRecord, FeatureOperationError, FeatureSummary, copy_selected_features,
+    drop_selected_features, extract_selected_regions, extract_single_region,
+    retain_selected_features, select_features, summarize_features,
+};
+pub use feature_selector::FeatureSelector;
 pub use identifier::SequenceIdentifier;
 pub use interval::Interval;
 pub use metadata::{SequenceMetadata, SequenceTopology};

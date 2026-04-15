@@ -127,6 +127,34 @@ impl FeatureLocation {
             .all(|span| span.strand() == first)
             .then_some(first)
     }
+
+    /// Returns true when the location has exactly one span.
+    #[must_use]
+    pub fn is_simple(&self) -> bool {
+        self.spans.len() == 1
+    }
+
+    /// Returns the single span for simple locations.
+    #[must_use]
+    pub fn single_span(&self) -> Option<FeatureSpan> {
+        (self.spans.len() == 1).then(|| self.spans[0])
+    }
+
+    /// Returns true when any span overlaps the supplied interval.
+    #[must_use]
+    pub fn overlaps(&self, interval: Interval) -> bool {
+        self.spans
+            .iter()
+            .any(|span| span.interval().intersects(interval))
+    }
+
+    /// Returns true when all spans are fully contained within the supplied interval.
+    #[must_use]
+    pub fn contained_within(&self, interval: Interval) -> bool {
+        self.spans
+            .iter()
+            .all(|span| interval.contains_interval(span.interval()))
+    }
 }
 
 /// Lightweight sequence feature annotation.
