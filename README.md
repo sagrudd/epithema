@@ -9,6 +9,11 @@ The Rust workspace is organized under `crates/` with a single CLI binary named
 service/runtime, plot contracts, R bridging, fixtures, validation, and doc
 generation.
 
+The current top-level command surface is intentionally small: `emboss-rs list`
+provides service-backed discovery, `emboss-rs autodoc` reserves the governed
+documentation command path, and future governed tools will execute as
+`emboss-rs <tool> ...`.
+
 ## Documentation
 
 Project-governing documentation is maintained under [docs/](./docs/README.md).
