@@ -8,7 +8,7 @@ DOCS_LIVE_PORT ?= 8000
 
 .DEFAULT_GOAL := help
 
-.PHONY: help docs docs-clean docs-live lint-docs clean
+.PHONY: help docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean
 
 help:
 	@printf "%s\n" \
@@ -17,6 +17,9 @@ help:
 		"Documentation:" \
 		"  make docs        Build the Sphinx documentation site" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
+		"  make lint-repo   Validate required repository entry points and docs wiring" \
+		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
+		"  make ci          Run the current local CI-equivalent checks" \
 		"  make docs-live   Start a live-reloading docs preview (requires sphinx-autobuild)" \
 		"  make docs-clean  Remove built documentation output" \
 		"" \
@@ -32,6 +35,28 @@ docs:
 
 lint-docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b dummy $(DOCS_DIR) $(DOCS_BUILD_DIR)/lint
+
+lint-repo:
+	test -f README.md
+	test -f Makefile
+	test -f docs/index.md
+	test -f docs/README.md
+	test -f docs/governance/index.md
+	test -f docs/governance/emboss_rs_governance_manual.md
+	test -f .github/workflows/docs-pages.yml
+	grep -n "^governance/index$$" docs/index.md
+	grep -n "emboss_rs_governance_manual" docs/governance/index.md docs/README.md README.md
+	grep -n "emboss-r" README.md docs/governance/emboss_rs_governance_manual.md docs/governance/appendices/foundational_architecture_brief.md
+
+check-sister-repo:
+	@if [ -d ../emboss-r ]; then \
+		printf "%s\n" "Found sibling repository: ../emboss-r"; \
+		test -f ../emboss-r/README.md; \
+		grep -n "^# emboss-r$$" ../emboss-r/README.md; \
+		grep -n "plots\|methods available in R\|R" ../emboss-r/README.md; \
+	else \
+		printf "%s\n" "../emboss-r is not present in this environment; skipping read-only compatibility awareness check."; \
+	fi
 
 docs-live:
 	@$(PYTHON) -m sphinx_autobuild --version >/dev/null 2>&1 || { \
@@ -50,6 +75,8 @@ docs-clean:
 
 # Housekeeping
 clean: docs-clean
+
+ci: lint-repo check-sister-repo lint-docs docs
 
 # Future extension points:
 # - autodoc
