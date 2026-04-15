@@ -2,7 +2,7 @@
 
 use std::path::Path;
 
-use emboss_docgen::AutodocProcessingSummary;
+use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
 use emboss_service::{EmbossService, InvocationResponse};
 
 /// Prints the current governed tool catalogue.
@@ -53,13 +53,34 @@ pub fn print_autodoc_summary(summary: &AutodocProcessingSummary, path: &Path) {
     println!("{}", format_autodoc_summary(summary, path));
 }
 
+/// Renders a stable human-readable generated-docs emission summary.
+#[must_use]
+pub fn format_generated_docs_report(report: &GeneratedDocsReport) -> String {
+    format!(
+        "Generated documentation pages emitted successfully\nOutput root: {}\nTool page: {}\nIndex page: {}\nTool slug: {}\nSections rendered: {}\nArtifacts rendered: {}\nExamples rendered: {}\nDiagnostics included: {}",
+        report.output_root.display(),
+        report.tool_page.display(),
+        report.index_page.display(),
+        report.tool_slug,
+        report.section_count,
+        report.artifact_count,
+        report.example_count,
+        report.diagnostic_count,
+    )
+}
+
+/// Prints a stable generated-docs emission summary.
+pub fn print_generated_docs_report(report: &GeneratedDocsReport) {
+    println!("{}", format_generated_docs_report(report));
+}
+
 #[cfg(test)]
 mod tests {
     use std::path::Path;
 
-    use emboss_docgen::AutodocProcessingSummary;
+    use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
 
-    use super::format_autodoc_summary;
+    use super::{format_autodoc_summary, format_generated_docs_report};
 
     #[test]
     fn formats_autodoc_summary() {
@@ -79,5 +100,23 @@ mod tests {
         assert!(rendered.contains("Autodoc contract loaded successfully"));
         assert!(rendered.contains("Tool: needle"));
         assert!(rendered.contains("Validation: passed"));
+    }
+
+    #[test]
+    fn formats_generated_docs_report() {
+        let report = GeneratedDocsReport {
+            output_root: Path::new("docs/generated").to_path_buf(),
+            tool_page: Path::new("docs/generated/tools/needle.md").to_path_buf(),
+            index_page: Path::new("docs/generated/index.md").to_path_buf(),
+            tool_slug: "needle".to_owned(),
+            section_count: 1,
+            artifact_count: 1,
+            example_count: 1,
+            diagnostic_count: 0,
+        };
+
+        let rendered = format_generated_docs_report(&report);
+        assert!(rendered.contains("Generated documentation pages emitted successfully"));
+        assert!(rendered.contains("Tool page: docs/generated/tools/needle.md"));
     }
 }

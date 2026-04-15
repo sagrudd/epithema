@@ -61,6 +61,7 @@ lint-repo:
 	test -f Cargo.toml
 	test -f docs/index.md
 	test -f docs/README.md
+	test -f docs/generated/index.md
 	test -f docs/governance/index.md
 	test -f docs/governance/emboss_rs_governance_manual.md
 	test -f .github/workflows/docs-pages.yml

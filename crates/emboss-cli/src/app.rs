@@ -43,7 +43,11 @@ impl CliApp {
                 commands::run_list(&service);
                 Ok(())
             }
-            Some(Command::Autodoc { input }) => commands::run_autodoc(&input)
+            Some(Command::Autodoc {
+                input,
+                emit_docs,
+                docs_output_dir,
+            }) => commands::run_autodoc(&input, emit_docs, docs_output_dir.as_deref())
                 .map(|_| ())
                 .map_err(CliError::from),
             Some(Command::Tool(arguments)) => Self::run_tool(&service, arguments),
@@ -79,7 +83,7 @@ fn build_service() -> EmbossService {
     name = "emboss-rs",
     version,
     about = "Governed EMBOSS reboot command surface in Rust.",
-    long_about = "EMBOSS-RS is a governed reboot of EMBOSS with a single binary surface. Use `emboss-rs <tool>` for tool execution, `emboss-rs list` for governed tool discovery, and `emboss-rs autodoc` for the future documentation pipeline.",
+    long_about = "EMBOSS-RS is a governed reboot of EMBOSS with a single binary surface. Use `emboss-rs <tool>` for tool execution, `emboss-rs list` for governed tool discovery, and `emboss-rs autodoc` to validate autodoc contracts and emit generated documentation pages.",
     arg_required_else_help = false,
     disable_help_subcommand = true
 )]
@@ -92,10 +96,16 @@ pub(crate) struct Cli {
 enum Command {
     /// List currently governed tools known to the shared service layer.
     List,
-    /// Load and validate an autodoc JSON contract.
+    /// Load and validate an autodoc JSON contract, optionally emitting generated docs pages.
     Autodoc {
         /// Path to the autodoc JSON document to load and validate.
         input: PathBuf,
+        /// Emit generated Markdown pages under the docs tree.
+        #[arg(long)]
+        emit_docs: bool,
+        /// Override the output directory used for generated Markdown pages.
+        #[arg(long)]
+        docs_output_dir: Option<PathBuf>,
     },
     #[command(external_subcommand)]
     /// Invoke a governed EMBOSS-RS tool through the shared service layer.
@@ -120,6 +130,21 @@ mod tests {
             .expect("autodoc should parse");
         assert!(format!("{cli:?}").contains("Autodoc"));
         assert!(format!("{cli:?}").contains("example.json"));
+    }
+
+    #[test]
+    fn parses_autodoc_generation_flags() {
+        let cli = Cli::try_parse_from([
+            "emboss-rs",
+            "autodoc",
+            "example.json",
+            "--emit-docs",
+            "--docs-output-dir",
+            "docs/generated",
+        ])
+        .expect("autodoc generation flags should parse");
+        assert!(format!("{cli:?}").contains("emit_docs: true"));
+        assert!(format!("{cli:?}").contains("docs/generated"));
     }
 
     #[test]

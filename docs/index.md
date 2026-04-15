@@ -15,5 +15,6 @@ The canonical normative entry point is the
 
 governance/index
 development/index
+generated/index
 README
 ```

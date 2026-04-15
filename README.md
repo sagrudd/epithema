@@ -20,10 +20,11 @@ Rust-side contract seam for the first-class sister package `emboss-r`.
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
-prints a normalized summary, while harvesting and rendering remain deferred.
-The same crate now also contains a legacy EMBOSS artefact discovery layer for
-tool-focused harvesting from a local historical source tree, plus a typed
-legacy-to-autodoc transformation layer that emits provenance-rich autodoc JSON.
+prints a normalized summary. With `--emit-docs`, it also writes deterministic
+generated Markdown pages under `docs/generated/`. The same crate also contains a
+legacy EMBOSS artefact discovery layer for tool-focused harvesting from a local
+historical source tree, plus a typed legacy-to-autodoc transformation layer
+that emits provenance-rich autodoc JSON.
 
 ## Documentation
 

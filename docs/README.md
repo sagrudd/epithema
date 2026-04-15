@@ -25,6 +25,19 @@ make docs
 
 The generated HTML is written to `docs/_build/html/`.
 
+Autodoc-generated Markdown source pages live under `docs/generated/`. They are
+intended to be committed as deterministic Sphinx source artefacts and refreshed
+through the governed CLI path:
+
+```bash
+cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-docs
+```
+
+At this stage generated pages include validated narrative content, declared
+artefacts, declared example stubs, provenance, and transformation notes when
+available. Tool execution, acquisition, and acceptance reporting remain
+deferred.
+
 The root `Makefile` is the canonical entry point for common repository tasks.
 Run `make help` from the repository root to see the current task surface.
 

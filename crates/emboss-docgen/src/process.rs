@@ -3,10 +3,10 @@
 use std::fs::File;
 use std::path::Path;
 
-use emboss_diagnostics::Diagnostic;
-
 use crate::contract::AutodocDocument;
+use crate::emit::{GeneratedDocsReport, emit_generated_docs};
 use crate::error::AutodocContractError;
+use emboss_diagnostics::Diagnostic;
 
 /// Normalized outcome of loading and validating an autodoc contract.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -66,6 +66,15 @@ pub fn load_summary_from_path(
 ) -> Result<AutodocProcessingSummary, AutodocContractError> {
     let document = load_document_from_path(path)?;
     Ok(AutodocProcessingSummary::from_document(&document))
+}
+
+/// Loads, validates, and emits generated Markdown pages for an autodoc document.
+pub fn emit_generated_docs_from_path(
+    path: impl AsRef<Path>,
+    output_root: impl AsRef<Path>,
+) -> Result<GeneratedDocsReport, AutodocContractError> {
+    let document = load_document_from_path(path)?;
+    emit_generated_docs(&document, &[], output_root).map_err(AutodocContractError::from)
 }
 
 #[cfg(test)]
