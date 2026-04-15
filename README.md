@@ -17,6 +17,9 @@ documentation command path, and future governed tools will execute as
 The Rust workspace also includes `emboss-r-bridge`, which provides the typed
 Rust-side contract seam for the first-class sister package `emboss-r`.
 
+The `emboss-docgen` crate owns the versioned JSON contract that future
+`emboss-rs autodoc` runs will consume for reproducible documentation inputs.
+
 ## Documentation
 
 Project-governing documentation is maintained under [docs/](./docs/README.md).

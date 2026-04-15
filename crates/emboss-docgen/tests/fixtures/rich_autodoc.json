@@ -1,0 +1,144 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "seqret-rich",
+  "tool": {
+    "name": "seqret",
+    "family": "sequence_io",
+    "summary": "Sequence format conversion",
+    "legacy_names": ["seqret"]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "Seqret converts sequence data between supported representations."
+    },
+    {
+      "id": "legacy-context",
+      "kind": "legacy_context",
+      "title": "Legacy context",
+      "content": "This contract preserves example structure harvested from historical EMBOSS material."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "Historical examples may reference obsolete output formatting."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "legacy_example_html",
+      "label": "Historical EMBOSS example page",
+      "origin": {
+        "kind": "legacy_emboss_reference",
+        "source_label": "EMBOSS seqret HTML example"
+      },
+      "acquisition": {
+        "mode": "legacy_harvest"
+      },
+      "reference": {
+        "kind": "path",
+        "path": "legacy/emboss/seqret/example.html"
+      },
+      "description": "Harvested reference artifact from the historical EMBOSS repository."
+    },
+    {
+      "id": "ena_accession",
+      "label": "ENA accession example",
+      "origin": {
+        "kind": "accessioned_resource"
+      },
+      "acquisition": {
+        "mode": "provider",
+        "intent": "sequence_input",
+        "preferred_provider": "ena"
+      },
+      "reference": {
+        "kind": "accession",
+        "accession": "AB000263"
+      },
+      "description": "Demonstrates provider-backed sequence acquisition."
+    },
+    {
+      "id": "generated_preview",
+      "label": "Generated preview output",
+      "origin": {
+        "kind": "generated_artifact"
+      },
+      "acquisition": {
+        "mode": "generated"
+      },
+      "reference": {
+        "kind": "generated",
+        "locator": "build/autodoc/seqret/preview.txt"
+      },
+      "description": "Placeholder for generated preview text."
+    }
+  ],
+  "examples": [
+    {
+      "id": "convert_accession_to_fasta",
+      "title": "Convert an accession-backed sequence to FASTA",
+      "description": "Illustrates provider-backed acquisition through the governed autodoc path.",
+      "artifact_ids": ["ena_accession", "generated_preview"],
+      "parameters": [
+        {
+          "name": "output_format",
+          "value": "fasta"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "fasta_output",
+          "label": "Converted FASTA output",
+          "description": "Future emitted FASTA result."
+        }
+      ],
+      "legacy_reference": {
+        "source": "historical seqret example",
+        "locator": "https://github.com/kimrutherford/EMBOSS",
+        "invocation": "seqret -sequence AB000263 -outseq out.fa"
+      }
+    },
+    {
+      "id": "legacy_example_normalization",
+      "title": "Normalize a harvested legacy example",
+      "description": "Captures the relationship between harvested documentation and future generated output.",
+      "artifact_ids": ["legacy_example_html", "generated_preview"],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "normalized_doc_block",
+          "label": "Normalized documentation block",
+          "description": "Structured text derived from the harvested artifact."
+        }
+      ],
+      "legacy_reference": {
+        "source": "historical EMBOSS documentation",
+        "locator": "legacy/emboss/seqret/example.html",
+        "invocation": null
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "mixed",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS GitHub repository",
+        "locator": "https://github.com/kimrutherford/EMBOSS",
+        "invocation": null
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "convert_accession_to_fasta",
+      "legacy_example_normalization"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

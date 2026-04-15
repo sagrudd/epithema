@@ -9,8 +9,12 @@ rust-version.workspace = true
 description = "Documentation generation and autodoc scaffolding for EMBOSS-RS."
 
 [dependencies]
+emboss-diagnostics.workspace = true
 emboss-fixtures.workspace = true
+emboss-providers.workspace = true
 emboss-tools.workspace = true
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
 
 [lints]
 workspace = true
