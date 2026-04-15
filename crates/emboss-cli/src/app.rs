@@ -1,6 +1,7 @@
 //! Top-level CLI application orchestration for `emboss-rs`.
 
 use std::ffi::OsString;
+use std::path::PathBuf;
 use std::process::ExitCode;
 
 use clap::{CommandFactory, Parser, Subcommand};
@@ -42,7 +43,9 @@ impl CliApp {
                 commands::run_list(&service);
                 Ok(())
             }
-            Some(Command::Autodoc) => Err(CliError::autodoc_not_implemented()),
+            Some(Command::Autodoc { input }) => commands::run_autodoc(&input)
+                .map(|_| ())
+                .map_err(CliError::from),
             Some(Command::Tool(arguments)) => Self::run_tool(&service, arguments),
         }
     }
@@ -89,8 +92,11 @@ pub(crate) struct Cli {
 enum Command {
     /// List currently governed tools known to the shared service layer.
     List,
-    /// Reserve the governed autodoc command surface.
-    Autodoc,
+    /// Load and validate an autodoc JSON contract.
+    Autodoc {
+        /// Path to the autodoc JSON document to load and validate.
+        input: PathBuf,
+    },
     #[command(external_subcommand)]
     /// Invoke a governed EMBOSS-RS tool through the shared service layer.
     Tool(Vec<OsString>),
@@ -110,8 +116,10 @@ mod tests {
 
     #[test]
     fn parses_autodoc_command() {
-        let cli = Cli::try_parse_from(["emboss-rs", "autodoc"]).expect("autodoc should parse");
+        let cli = Cli::try_parse_from(["emboss-rs", "autodoc", "example.json"])
+            .expect("autodoc should parse");
         assert!(format!("{cli:?}").contains("Autodoc"));
+        assert!(format!("{cli:?}").contains("example.json"));
     }
 
     #[test]

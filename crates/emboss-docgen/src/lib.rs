@@ -7,6 +7,7 @@
 
 pub mod contract;
 pub mod error;
+pub mod process;
 pub mod validate;
 
 pub use contract::{
@@ -16,4 +17,5 @@ pub use contract::{
     ValidationExpectation,
 };
 pub use error::AutodocContractError;
+pub use process::{AutodocProcessingSummary, load_document_from_path, load_summary_from_path};
 pub use validate::AUTODOC_SCHEMA_VERSION;

@@ -19,6 +19,8 @@ Rust-side contract seam for the first-class sister package `emboss-r`.
 
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
+The current `emboss-rs autodoc <path>` command validates that contract and
+prints a normalized summary, while harvesting and rendering remain deferred.
 
 ## Documentation
 

@@ -3,6 +3,7 @@
 use std::process::ExitCode;
 
 use emboss_diagnostics::{ErrorCategory, PlatformError};
+use emboss_docgen::AutodocContractError;
 
 /// CLI-local failures with explicit process exit behavior.
 #[derive(Debug)]
@@ -29,16 +30,6 @@ impl CliError {
         )
     }
 
-    pub(crate) fn autodoc_not_implemented() -> Self {
-        Self(
-            PlatformError::new(
-                ErrorCategory::NotImplemented,
-                "`emboss-rs autodoc` is reserved but not implemented yet",
-            )
-            .with_code("cli.autodoc.not_implemented"),
-        )
-    }
-
     pub(crate) fn exit_code(&self) -> ExitCode {
         match self.0.category() {
             ErrorCategory::Internal => ExitCode::from(1),
@@ -56,5 +47,30 @@ impl std::fmt::Display for CliError {
 impl From<PlatformError> for CliError {
     fn from(value: PlatformError) -> Self {
         Self(value)
+    }
+}
+
+impl From<AutodocContractError> for CliError {
+    fn from(value: AutodocContractError) -> Self {
+        match value {
+            AutodocContractError::Json(error) => Self(
+                PlatformError::new(ErrorCategory::Validation, "invalid autodoc JSON document")
+                    .with_code("cli.autodoc.invalid_json")
+                    .with_detail(error.to_string()),
+            ),
+            AutodocContractError::Io { path, source } => {
+                let error = PlatformError::new(
+                    ErrorCategory::Configuration,
+                    "failed to read autodoc input",
+                )
+                .with_code("cli.autodoc.input_read_failed")
+                .with_detail(match path {
+                    Some(path) => format!("{}: {source}", path.display()),
+                    None => source.to_string(),
+                });
+                Self(error)
+            }
+            AutodocContractError::Validation(error) => Self(error),
+        }
     }
 }

@@ -42,36 +42,8 @@ fn rejects_unsupported_schema_version() {
 
 #[test]
 fn rejects_duplicate_artifact_identifier() {
-    let json = r#"
-    {
-      "schema_version": "emboss-rs.autodoc/v1",
-      "document_id": "dup-artifact",
-      "tool": { "name": "needle", "family": null, "summary": null, "legacy_names": [] },
-      "sections": [],
-      "artifacts": [
-        {
-          "id": "a1",
-          "label": "one",
-          "origin": { "kind": "local_file" },
-          "acquisition": { "mode": "local_path" },
-          "reference": { "kind": "path", "path": "example.txt" },
-          "description": null
-        },
-        {
-          "id": "a1",
-          "label": "two",
-          "origin": { "kind": "local_file" },
-          "acquisition": { "mode": "local_path" },
-          "reference": { "kind": "path", "path": "example2.txt" },
-          "description": null
-        }
-      ],
-      "examples": [],
-      "provenance": { "source_mode": "curated", "curated_by": null, "source_references": [] },
-      "validation": null
-    }"#;
-
-    let error = AutodocDocument::from_json_str(json).expect_err("duplicate id should fail");
+    let json = fixture("tests/fixtures/invalid_duplicate_artifact.json");
+    let error = AutodocDocument::from_json_str(&json).expect_err("duplicate id should fail");
     assert!(error.to_string().contains("duplicate artifact identifier"));
 }
 
