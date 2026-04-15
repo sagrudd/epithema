@@ -23,6 +23,16 @@ make docs
 
 The generated HTML is written to `docs/_build/html/`.
 
+The root `Makefile` is the canonical entry point for common repository tasks.
+Run `make help` from the repository root to see the current task surface.
+
+Additional documentation-oriented targets currently available are:
+
+- `make lint-docs` for strict Sphinx structure and cross-reference checks
+- `make docs-clean` to remove generated documentation output
+- `make docs-live` for a live-reloading preview when `sphinx-autobuild` is
+  installed in the selected Python environment
+
 ## GitHub Pages Publication
 
 GitHub Pages is the formal public publication path for the EMBOSS-RS
