@@ -150,8 +150,12 @@ pub fn mask_intervals(
 
     let mut residues: Vec<char> = record.residues().chars().collect();
     for interval in intervals {
-        for index in interval.start()..interval.end() {
-            residues[index] = mask_symbol;
+        for residue in residues
+            .iter_mut()
+            .take(interval.end())
+            .skip(interval.start())
+        {
+            *residue = mask_symbol;
         }
     }
 

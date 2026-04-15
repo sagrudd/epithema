@@ -108,6 +108,12 @@ impl NucleotidePattern {
         self.allowed_sets.len()
     }
 
+    /// Returns whether the pattern contains zero symbols.
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.allowed_sets.is_empty()
+    }
+
     /// Scans a sequence and returns all forward matches.
     #[must_use]
     pub fn scan(&self, sequence: &str) -> Vec<PatternMatch> {
@@ -172,6 +178,12 @@ impl ProteinPattern {
     #[must_use]
     pub fn len(&self) -> usize {
         self.symbols.len()
+    }
+
+    /// Returns whether the pattern contains zero symbols.
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.symbols.is_empty()
     }
 
     /// Scans a protein sequence and returns all forward matches.

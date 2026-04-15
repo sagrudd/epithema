@@ -17,6 +17,9 @@ use crate::flatfile::{
     sequence_from_flatfile_line, write_sequence_blocks,
 };
 
+type RawQualifierLines = Vec<(usize, String)>;
+type RawFeatureEntry = (String, String, usize, RawQualifierLines);
+
 /// Parses one or more EMBL records from a buffered reader.
 pub fn parse_embl_reader<R: BufRead>(reader: R) -> Result<Vec<SequenceRecord>, IoError> {
     let mut records = Vec::new();
@@ -139,7 +142,7 @@ fn parse_embl_record(lines: &[String]) -> Result<SequenceRecord, IoError> {
     let mut molecule: Option<MoleculeKind> = None;
     let mut in_sequence = false;
     let mut sequence = String::new();
-    let mut raw_features: Vec<(String, String, usize, Vec<(usize, String)>)> = Vec::new();
+    let mut raw_features: Vec<RawFeatureEntry> = Vec::new();
 
     for (index, line) in lines.iter().enumerate() {
         let line_number = index + 1;
@@ -229,7 +232,7 @@ fn parse_embl_record(lines: &[String]) -> Result<SequenceRecord, IoError> {
 fn parse_embl_feature_line(
     line: &str,
     line_number: usize,
-    raw_features: &mut Vec<(String, String, usize, Vec<(usize, String)>)>,
+    raw_features: &mut Vec<RawFeatureEntry>,
 ) -> Result<(), IoError> {
     let key_field = line.get(5..20).unwrap_or("").trim();
     let value_field = line.get(21..).unwrap_or("").trim();

@@ -1,0 +1,175 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version to verify, for example 1.0.0-rc.1"
+        required: true
+        type: string
+      publish_container:
+        description: "Publish the GHCR container image during manual verification"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release-build:
+    name: Release Build And Docs
+    runs-on: ubuntu-latest
+
+    outputs:
+      release_version: ${{ steps.version.outputs.release_version }}
+      container_image: ${{ steps.container.outputs.image }}
+      container_tags: ${{ steps.container.outputs.tags }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="${{ inputs.release_version }}"
+          fi
+          echo "release_version=${version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Verify Cargo workspace version matches release version
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          expected = os.environ["RELEASE_VERSION"]
+          data = tomllib.loads(Path("Cargo.toml").read_text())
+          actual = data["workspace"]["package"]["version"]
+          if actual != expected:
+              raise SystemExit(
+                  f"workspace.package.version is {actual!r}, expected {expected!r} for release"
+              )
+          PY
+
+      - name: Install documentation dependencies
+        run: python -m pip install -r docs/requirements.txt
+
+      - name: Run release checks
+        run: make release-check PYTHON=python
+
+      - name: Package Linux release artefact
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        shell: bash
+        run: |
+          mkdir -p release-artifacts
+          tar -C target/release -czf \
+            "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz" \
+            emboss-rs
+          sha256sum "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz" \
+            > "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz.sha256"
+
+      - name: Archive documentation build
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        shell: bash
+        run: |
+          tar -C docs/_build -czf \
+            "release-artifacts/emboss-rs-docs-${RELEASE_VERSION}.tar.gz" \
+            html
+
+      - name: Upload release artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: emboss-rs-release-${{ steps.version.outputs.release_version }}
+          path: release-artifacts/*
+
+      - name: Prepare container tags
+        id: container
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          {
+            echo "image=${image}"
+            echo "tags<<EOF"
+            echo "${image}:${RELEASE_VERSION}"
+            if [[ "${RELEASE_VERSION}" != *"-"* ]]; then
+              echo "${image}:latest"
+            fi
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+  container:
+    name: Container Image
+    runs-on: ubuntu-latest
+    needs: release-build
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.ref_type == 'tag' || github.event.inputs.publish_container == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and optionally push container image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.ref_type == 'tag' || github.event.inputs.publish_container == 'true' }}
+          tags: ${{ needs.release-build.outputs.container_tags }}
+
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    needs:
+      - release-build
+      - container
+    if: github.ref_type == 'tag'
+
+    steps:
+      - name: Download release artefacts
+        uses: actions/download-artifact@v4
+        with:
+          name: emboss-rs-release-${{ needs.release-build.outputs.release_version }}
+          path: release-artifacts
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: release-artifacts/*

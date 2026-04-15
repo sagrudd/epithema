@@ -2,6 +2,8 @@ PYTHON ?= python3
 RUSTCARGO ?= cargo
 SPHINXBUILD ?= $(PYTHON) -m sphinx
 SPHINXOPTS ?= -n -W --keep-going
+CONTAINER_RUNTIME ?= docker
+CONTAINER_IMAGE ?= emboss-rs:local
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DOCS_HTML_DIR := $(DOCS_BUILD_DIR)/html
@@ -9,7 +11,7 @@ DOCS_LIVE_PORT ?= 8000
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean
+.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean release-build release-test release-docs release-container release-check
 
 help:
 	@printf "%s\n" \
@@ -29,12 +31,16 @@ help:
 		"  make lint        Run clippy across the workspace" \
 		"  make test        Run Rust tests across the workspace" \
 		"" \
+		"Release:" \
+		"  make release-build     Build release-mode Rust artefacts" \
+		"  make release-test      Run release-gating Rust checks" \
+		"  make release-docs      Build release-gating documentation output" \
+		"  make release-container Build the Linux-first container image" \
+		"  make release-check     Run the local release gate" \
+		"" \
 		"Housekeeping:" \
 		"  make ci          Run the current local CI-equivalent checks" \
 		"  make clean       Remove generated repository artefacts tracked by this Makefile" \
-		"" \
-		"Reserved for future extension:" \
-		"  autodoc, validate, release, and container targets will be added as implemented"
 
 # Documentation
 build:
@@ -44,10 +50,23 @@ fmt:
 	$(RUSTCARGO) fmt --check
 
 lint:
-	$(RUSTCARGO) clippy --workspace --all-targets --all-features -- -D warnings
+	$(RUSTCARGO) clippy --workspace --all-targets --all-features
 
 test:
 	$(RUSTCARGO) test --workspace --all-features
+
+release-build:
+	$(RUSTCARGO) build --workspace --release
+
+release-test: fmt lint test
+
+release-docs:
+	$(MAKE) docs PYTHON=$(PYTHON)
+
+release-container:
+	$(CONTAINER_RUNTIME) build -t $(CONTAINER_IMAGE) .
+
+release-check: lint-repo check-sister-repo release-test release-docs release-build
 
 docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)

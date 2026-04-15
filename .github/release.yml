@@ -1,0 +1,29 @@
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+  categories:
+    - title: Rust CLI And Tools
+      labels:
+        - tools
+        - cli
+    - title: R Bridge And Plot Contract
+      labels:
+        - bridge
+        - r
+        - plotting
+    - title: Providers And Retrieval
+      labels:
+        - providers
+        - retrieval
+    - title: Documentation And Validation
+      labels:
+        - docs
+        - validation
+    - title: Release And Infrastructure
+      labels:
+        - release
+        - infra
+    - title: Other Changes
+      labels:
+        - "*"

@@ -18,6 +18,9 @@ use crate::flatfile::{
     sequence_from_flatfile_line, write_sequence_blocks,
 };
 
+type RawQualifierLines = Vec<(usize, String)>;
+type RawFeatureEntry = (String, String, usize, RawQualifierLines);
+
 /// Parses one or more GenBank records from a buffered reader.
 pub fn parse_genbank_reader<R: BufRead>(reader: R) -> Result<Vec<SequenceRecord>, IoError> {
     let mut records = Vec::new();
@@ -149,7 +152,7 @@ fn parse_genbank_record(lines: &[String]) -> Result<SequenceRecord, IoError> {
     let mut in_origin = false;
     let mut sequence = String::new();
     let mut molecule: Option<MoleculeKind> = None;
-    let mut raw_features: Vec<(String, String, usize, Vec<(usize, String)>)> = Vec::new();
+    let mut raw_features: Vec<RawFeatureEntry> = Vec::new();
     let mut current_header: Option<&'static str> = None;
 
     for (index, line) in lines.iter().enumerate() {
@@ -273,7 +276,7 @@ fn parse_genbank_record(lines: &[String]) -> Result<SequenceRecord, IoError> {
 fn parse_genbank_feature_line(
     line: &str,
     line_number: usize,
-    raw_features: &mut Vec<(String, String, usize, Vec<(usize, String)>)>,
+    raw_features: &mut Vec<RawFeatureEntry>,
 ) -> Result<(), IoError> {
     let trimmed = line.trim();
     if trimmed.is_empty() {

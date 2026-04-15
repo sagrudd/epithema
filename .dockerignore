@@ -1,0 +1,6 @@
+.git
+.github
+.venv-docs
+docs/_build
+target
+../emboss-r
