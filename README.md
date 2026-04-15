@@ -24,7 +24,10 @@ prints a normalized summary. With `--emit-docs`, it also writes deterministic
 generated Markdown pages under `docs/generated/`. The same crate also contains a
 legacy EMBOSS artefact discovery layer for tool-focused harvesting from a local
 historical source tree, plus a typed legacy-to-autodoc transformation layer
-that emits provenance-rich autodoc JSON.
+that emits provenance-rich autodoc JSON. Provider-backed documentation artefacts
+must now pass through the formal EMBOSS-RS acquisition seam; docgen will reject
+ad hoc downloader-style references and still reports provider acquisition as
+not implemented until a real governed provider path exists.
 
 ## Documentation
 

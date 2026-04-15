@@ -35,7 +35,7 @@ pub fn print_unimplemented_tool(response: &InvocationResponse, service: &EmbossS
 #[must_use]
 pub fn format_autodoc_summary(summary: &AutodocProcessingSummary, path: &Path) -> String {
     format!(
-        "Autodoc contract loaded successfully\nInput: {}\nSchema version: {}\nDocument ID: {}\nTool: {}\nSections: {}\nArtifacts: {}\nExamples: {}\nSource mode: {}\nValidation: passed\nDiagnostics: {}",
+        "Autodoc contract loaded successfully\nInput: {}\nSchema version: {}\nDocument ID: {}\nTool: {}\nSections: {}\nArtifacts: {}\nExamples: {}\nSource mode: {}\nGoverned acquisition records: {}\nValidation: passed\nDiagnostics: {}",
         path.display(),
         summary.schema_version,
         summary.document_id,
@@ -44,6 +44,7 @@ pub fn format_autodoc_summary(summary: &AutodocProcessingSummary, path: &Path) -
         summary.artifact_count,
         summary.example_count,
         summary.source_mode,
+        summary.acquisition_record_count,
         summary.diagnostics.len(),
     )
 }
@@ -92,6 +93,7 @@ mod tests {
             artifact_count: 1,
             example_count: 1,
             source_mode: "curated".to_owned(),
+            acquisition_record_count: 1,
             valid: true,
             diagnostics: Vec::new(),
         };
@@ -99,6 +101,7 @@ mod tests {
         let rendered = format_autodoc_summary(&summary, Path::new("example.json"));
         assert!(rendered.contains("Autodoc contract loaded successfully"));
         assert!(rendered.contains("Tool: needle"));
+        assert!(rendered.contains("Governed acquisition records: 1"));
         assert!(rendered.contains("Validation: passed"));
     }
 

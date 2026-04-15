@@ -38,6 +38,11 @@ artefacts, declared example stubs, provenance, and transformation notes when
 available. Tool execution, acquisition, and acceptance reporting remain
 deferred.
 
+Provider-backed documentation artefacts are enforced through the governed
+EMBOSS-RS acquisition seam. Until a real provider implementation exists,
+`emboss-rs autodoc` will reject such inputs rather than allowing ad hoc direct
+downloads inside docgen.
+
 The root `Makefile` is the canonical entry point for common repository tasks.
 Run `make help` from the repository root to see the current task surface.
 

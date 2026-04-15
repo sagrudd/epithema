@@ -5,6 +5,8 @@
 pub enum ArtifactOriginKind {
     /// Local filesystem input or output.
     LocalFile,
+    /// Historical EMBOSS-derived source artefact.
+    LegacyEmbossAsset,
     /// Accession or remote biological identifier.
     Accession,
     /// Provider-derived asset retrieved from an external source.
@@ -49,6 +51,12 @@ impl ArtifactProvenance {
     #[must_use]
     pub fn accession(accession: impl Into<String>) -> Self {
         Self::new(ArtifactOriginKind::Accession, accession)
+    }
+
+    /// Creates a provenance record for a legacy EMBOSS-derived artefact.
+    #[must_use]
+    pub fn legacy_emboss_asset(locator: impl Into<String>) -> Self {
+        Self::new(ArtifactOriginKind::LegacyEmbossAsset, locator)
     }
 
     /// Creates a provenance record for a provider-backed asset.

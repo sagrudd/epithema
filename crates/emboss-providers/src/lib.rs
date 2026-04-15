@@ -4,6 +4,7 @@
 //! remote resolution, documentation asset retrieval, and future archive support
 //! without embedding network logic into the CLI or individual tools.
 
+pub mod acquisition;
 pub mod capability;
 pub mod descriptor;
 pub mod identity;
@@ -12,6 +13,10 @@ pub mod registry;
 pub mod request;
 pub mod traits;
 
+pub use acquisition::{
+    DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
+    DocumentationAcquisitionRequest, DocumentationAcquisitionRoute,
+};
 pub use capability::ProviderCapability;
 pub use descriptor::ProviderDescriptor;
 pub use identity::ProviderId;

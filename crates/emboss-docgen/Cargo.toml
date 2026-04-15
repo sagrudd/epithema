@@ -9,6 +9,7 @@ rust-version.workspace = true
 description = "Documentation generation and autodoc scaffolding for EMBOSS-RS."
 
 [dependencies]
+emboss-config.workspace = true
 emboss-diagnostics.workspace = true
 emboss-fixtures.workspace = true
 emboss-providers.workspace = true

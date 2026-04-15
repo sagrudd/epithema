@@ -47,7 +47,7 @@ impl CliApp {
                 input,
                 emit_docs,
                 docs_output_dir,
-            }) => commands::run_autodoc(&input, emit_docs, docs_output_dir.as_deref())
+            }) => commands::run_autodoc(&service, &input, emit_docs, docs_output_dir.as_deref())
                 .map(|_| ())
                 .map_err(CliError::from),
             Some(Command::Tool(arguments)) => Self::run_tool(&service, arguments),

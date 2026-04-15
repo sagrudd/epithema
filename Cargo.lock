@@ -130,6 +130,7 @@ version = "0.1.0"
 name = "emboss-docgen"
 version = "0.1.0"
 dependencies = [
+ "emboss-config",
  "emboss-diagnostics",
  "emboss-fixtures",
  "emboss-providers",

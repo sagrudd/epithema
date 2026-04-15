@@ -9,5 +9,4 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 :caption: Generated Tools
 
 tools/needle
-tools/seqret
 ```

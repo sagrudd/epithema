@@ -5,6 +5,7 @@
 //! `emboss-core`, which owns biological primitives, and from `emboss-tools`,
 //! which owns governed tool descriptors.
 
+pub mod acquisition;
 pub mod context;
 pub mod error;
 pub mod registry;
@@ -13,6 +14,7 @@ pub mod response;
 pub mod service;
 pub mod tool;
 
+pub use acquisition::ServiceDocumentationAcquisition;
 pub use context::{ExecutionContext, InvocationOrigin};
 pub use emboss_config::{AcquisitionPolicy, AutodocPolicy, ConfigEnvironment, PlatformConfig};
 pub use emboss_diagnostics::{
@@ -20,9 +22,10 @@ pub use emboss_diagnostics::{
     ExecutionReport, OutcomeStatus, PlatformError, RunId, Severity,
 };
 pub use emboss_providers::{
-    AcquisitionRequest, DocumentationAssetRequest, InputReference, InputReferenceKind,
-    MetadataLookupRequest, ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry,
-    ResolutionIntent, SequenceRequest,
+    AcquisitionRequest, DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
+    DocumentationAcquisitionRequest, DocumentationAcquisitionRoute, DocumentationAssetRequest,
+    InputReference, InputReferenceKind, MetadataLookupRequest, ProviderCapability,
+    ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent, SequenceRequest,
 };
 pub use error::ServiceError;
 pub use registry::{ServiceRegistry, ToolCatalog};

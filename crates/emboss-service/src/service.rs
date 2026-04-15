@@ -6,6 +6,7 @@ use emboss_diagnostics::{ExecutionOutcome, ExecutionReport, OutcomeStatus};
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
 
+use crate::ServiceDocumentationAcquisition;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
 use crate::registry::{ServiceRegistry, ToolCatalog};
@@ -63,6 +64,12 @@ impl EmbossService {
     #[must_use]
     pub fn providers(&self) -> &ProviderRegistry {
         &self.providers
+    }
+
+    /// Returns the formal documentation acquisition gateway for docgen paths.
+    #[must_use]
+    pub fn documentation_acquisition(&self) -> ServiceDocumentationAcquisition<'_> {
+        ServiceDocumentationAcquisition::new(&self.config, &self.providers)
     }
 
     /// Returns a human-readable status line for front ends.
