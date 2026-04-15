@@ -1,0 +1,40 @@
+{
+  "tool_name": "splitter",
+  "document_id": "splitter-initial",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "split_into_chunks_of_two",
+      "title": "Partition a FASTA stream into fixed-size chunks of two records",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "expected_output_ids": [
+        "sequence_partitions"
+      ],
+      "provenance": [],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": []
+}

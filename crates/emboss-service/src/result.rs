@@ -164,6 +164,8 @@ pub enum ResultPayload {
     Sequence(SequenceRecord),
     /// Multi-record sequence payload.
     SequenceCollection(Vec<SequenceRecord>),
+    /// Partitioned multi-record sequence payload.
+    SequencePartitions(Vec<Vec<SequenceRecord>>),
     /// Alignment payload.
     Alignment(Alignment),
     /// Feature payload.
@@ -182,6 +184,7 @@ impl ResultPayload {
             Self::Empty => "empty",
             Self::Sequence(_) => "sequence",
             Self::SequenceCollection(_) => "sequence-collection",
+            Self::SequencePartitions(_) => "sequence-partitions",
             Self::Alignment(_) => "alignment",
             Self::Features(_) => "features",
             Self::TextReport(_) => "text-report",

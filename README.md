@@ -32,6 +32,17 @@ operations through the governed single-binary surface:
   inline residues, with optional `--description` and `--molecule` hints, and
   emits FASTA.
 
+The next shipped cohort now covers extraction and partitioning operations:
+
+- `emboss-rs extractseq <input> <start> <end>` extracts the same 1-based
+  inclusive region from each input record and emits FASTA.
+- `emboss-rs cutseq <input> <position>` cuts each input record after the
+  supplied 1-based interior position and emits left/right FASTA fragments.
+- `emboss-rs union <input-a> <input-b> [input-c ...]` concatenates multiple
+  sequence inputs in deterministic input order and emits FASTA.
+- `emboss-rs splitter <input> <chunk-size>` partitions a sequence stream into
+  fixed-size record chunks and emits deterministic FASTA partitions.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

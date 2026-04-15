@@ -3,6 +3,7 @@
 use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
 pub mod sequence_stream;
+pub mod sequence_transform;
 
 /// Metadata for a governed tool entry.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -52,7 +53,17 @@ impl ToolRegistry {
 /// Returns the descriptors for currently governed and implemented tools.
 #[must_use]
 pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
-    sequence_stream::TOOL_DESCRIPTORS
+    &[
+        sequence_stream::NEWSEQ_DESCRIPTOR,
+        sequence_stream::SEQCOUNT_DESCRIPTOR,
+        sequence_stream::NOTSEQ_DESCRIPTOR,
+        sequence_stream::NTHSEQ_DESCRIPTOR,
+        sequence_stream::SKIPSEQ_DESCRIPTOR,
+        sequence_transform::EXTRACTSEQ_DESCRIPTOR,
+        sequence_transform::CUTSEQ_DESCRIPTOR,
+        sequence_transform::UNION_DESCRIPTOR,
+        sequence_transform::SPLITTER_DESCRIPTOR,
+    ]
 }
 
 #[cfg(test)]
@@ -73,7 +84,17 @@ mod tests {
 
         assert_eq!(
             names,
-            vec!["newseq", "seqcount", "notseq", "nthseq", "skipseq"]
+            vec![
+                "newseq",
+                "seqcount",
+                "notseq",
+                "nthseq",
+                "skipseq",
+                "extractseq",
+                "cutseq",
+                "union",
+                "splitter",
+            ]
         );
     }
 }

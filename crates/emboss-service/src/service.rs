@@ -15,6 +15,10 @@ use emboss_tools::sequence_stream::{
     newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq, run_nthseq, run_seqcount,
     run_skipseq, seqcount_help, skipseq_help,
 };
+use emboss_tools::sequence_transform::{
+    CutseqParams, ExtractseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
+    run_cutseq, run_extractseq, run_splitter, run_union, splitter_help, union_help,
+};
 
 use crate::ServiceDocumentationAcquisition;
 use crate::context::ExecutionContext;
@@ -119,6 +123,10 @@ impl EmbossService {
             "skipseq" => self.invoke_skipseq(request, descriptor),
             "notseq" => self.invoke_notseq(request, descriptor),
             "newseq" => self.invoke_newseq(request, descriptor),
+            "extractseq" => self.invoke_extractseq(request, descriptor),
+            "cutseq" => self.invoke_cutseq(request, descriptor),
+            "union" => self.invoke_union(request, descriptor),
+            "splitter" => self.invoke_splitter(request, descriptor),
             _ => {
                 let report = ExecutionReport::from_context(
                     &request.context,
@@ -430,6 +438,220 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_extractseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, extractseq_help()));
+        }
+
+        let arguments: [String; 3] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("extractseq", extractseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let start = parse_positive_index("extractseq", &arguments[1])?;
+        let end = parse_positive_index("extractseq", &arguments[2])?;
+        let outcome = run_extractseq(ExtractseqParams { input, start, end })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("extracted FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("extracted region {}..{}", outcome.start, outcome.end),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence region extracted")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Coordinates: {}..{}", outcome.start, outcome.end))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("extracted-sequences", ArtifactKind::Sequence)
+                .with_label("Extracted sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_cutseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, cutseq_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("cutseq", cutseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let cut_position = parse_positive_index("cutseq", &arguments[1])?;
+        let outcome = run_cutseq(CutseqParams {
+            input,
+            cut_position,
+        })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("cut FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("cut sequences at position {}", outcome.cut_position),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence cut completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Cut position: {}", outcome.cut_position))
+                .with_line("Coordinate convention: 1-based cut after position")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("cut-sequences", ArtifactKind::Sequence)
+                .with_label("Cut fragments")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_union(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, union_help()));
+        }
+
+        if request.arguments.len() < 2 {
+            return Err(tool_usage_error("union", union_help()));
+        }
+
+        let (inputs, input_provenance, input_diagnostics) =
+            self.resolve_multiple_local_sequence_inputs(request.arguments())?;
+        let input_count = inputs.len();
+        let outcome = run_union(UnionParams { inputs })?;
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("union FASTA output");
+        let mut provenance = input_provenance;
+        provenance.push(output_provenance.clone());
+        let report = self.success_report(
+            &request.context,
+            format!("concatenated {} sequence inputs", input_count),
+            input_diagnostics,
+            provenance,
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence union completed")
+                .with_line(format!("Inputs: {}", input_count))
+                .with_line("Ordering: preserve input order and per-input record order")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("union-sequences", ArtifactKind::Sequence)
+                .with_label("Union sequence stream")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_splitter(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, splitter_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("splitter", splitter_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let chunk_size = parse_non_negative_count("splitter", &arguments[1])?;
+        let outcome = run_splitter(SplitterParams { input, chunk_size })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("partitioned FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "partitioned sequence stream into {} chunks",
+                outcome.partitions.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequencePartitions(outcome.partitions),
+            ResultSummary::new("Sequence partitions created")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Chunk size: {}", outcome.chunk_size))
+                .with_line("Partition rule: fixed-size record chunks")
+                .with_line("Output format: fasta partitions"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("sequence-partitions", ArtifactKind::Sequence)
+                .with_label("Partitioned sequence stream")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn help_response(
         &self,
         request: InvocationRequest,
@@ -516,6 +738,25 @@ impl EmbossService {
                     .join("; "),
             )),
         }
+    }
+
+    fn resolve_multiple_local_sequence_inputs(
+        &self,
+        raw_inputs: &[String],
+    ) -> Result<(Vec<SequenceInput>, Vec<ArtifactProvenance>, Vec<Diagnostic>), ServiceError> {
+        let mut inputs = Vec::new();
+        let mut provenance = Vec::new();
+        let mut diagnostics = Vec::new();
+
+        for raw in raw_inputs {
+            let (input, input_provenance, input_diagnostics) =
+                self.resolve_local_sequence_input(raw)?;
+            inputs.push(input);
+            provenance.push(input_provenance);
+            diagnostics.extend(input_diagnostics);
+        }
+
+        Ok((inputs, provenance, diagnostics))
     }
 }
 
@@ -715,6 +956,11 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/three_records.fasta")
     }
 
+    fn second_sequence_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/two_records.fasta")
+    }
+
     fn implemented_service() -> EmbossService {
         let mut registry = ServiceRegistry::new();
         for descriptor in governed_tool_descriptors() {
@@ -834,6 +1080,100 @@ mod tests {
                     record.metadata().description.as_deref(),
                     Some("created example")
                 );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_extractseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "2".to_owned(),
+            "3".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("extractseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 3);
+                assert_eq!(records[0].residues(), "CG");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_cutseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cutseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("cutseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 6);
+                assert_eq!(records[0].identifier().accession(), "alpha.left");
+                assert_eq!(records[0].residues(), "AC");
+                assert_eq!(records[1].identifier().accession(), "alpha.right");
+                assert_eq!(records[1].residues(), "GT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_union_against_two_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("union").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            second_sequence_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("union should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 5);
+                assert_eq!(records[0].identifier().accession(), "alpha");
+                assert_eq!(records[4].identifier().accession(), "epsilon");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_splitter_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("splitter").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("splitter should execute");
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 2);
+                assert_eq!(partitions[0].len(), 2);
+                assert_eq!(partitions[1].len(), 1);
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

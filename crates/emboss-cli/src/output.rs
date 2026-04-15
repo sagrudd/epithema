@@ -71,6 +71,22 @@ pub fn format_method_result_summary(result: &MethodResult) -> String {
                 )),
             }
         }
+        ResultPayload::SequencePartitions(partitions) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            for (index, partition) in partitions.iter().enumerate() {
+                rendered.push_str("\n\n");
+                rendered.push_str(&format!("# Partition {}", index + 1));
+                rendered.push('\n');
+                match write_fasta_string(partition) {
+                    Ok(fasta) => rendered.push_str(fasta.trim_end()),
+                    Err(error) => rendered.push_str(&format!(
+                        "failed to render partition payload as FASTA: {error}"
+                    )),
+                }
+            }
+        }
         ResultPayload::TextReport(report) => {
             rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
             rendered.push('\n');
