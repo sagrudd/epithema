@@ -4,7 +4,7 @@ use emboss_diagnostics::PlatformError;
 
 use crate::{
     AcquisitionRequest, DocumentationAssetRequest, MetadataLookupRequest, ProviderDescriptor,
-    SequenceRequest,
+    RetrievedSequence, SequenceRequest,
 };
 
 /// Trait for exposing provider identity and capability metadata.
@@ -22,7 +22,10 @@ pub trait MetadataProvider: CapabilityProvider {
 /// Trait for providers that can resolve sequences.
 pub trait SequenceProvider: CapabilityProvider {
     /// Attempts to resolve sequence input through the provider.
-    fn retrieve_sequence(&self, request: &SequenceRequest) -> Result<(), PlatformError>;
+    fn retrieve_sequence(
+        &self,
+        request: &SequenceRequest,
+    ) -> Result<RetrievedSequence, PlatformError>;
 }
 
 /// Trait for providers that can resolve archive or run-level assets.

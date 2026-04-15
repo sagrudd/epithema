@@ -186,7 +186,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "requested documentation provider is not registered: ena"
+            "requested provider does not advertise documentation retrieval capability: ena"
         );
     }
 }

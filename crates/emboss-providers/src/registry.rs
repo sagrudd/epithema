@@ -17,6 +17,18 @@ impl ProviderRegistry {
         Self::default()
     }
 
+    /// Creates a registry populated with built-in sequence providers.
+    #[must_use]
+    pub fn builtin_defaults() -> Self {
+        let mut registry = Self::new();
+        for descriptor in builtin_provider_descriptors() {
+            registry
+                .register(descriptor)
+                .expect("built-in provider descriptors must be unique");
+        }
+        registry
+    }
+
     /// Registers a provider descriptor, rejecting duplicate identities.
     pub fn register(&mut self, descriptor: ProviderDescriptor) -> Result<(), PlatformError> {
         if self.find(&descriptor.id).is_some() {
@@ -67,6 +79,27 @@ impl ProviderRegistry {
     }
 }
 
+fn builtin_provider_descriptors() -> Vec<ProviderDescriptor> {
+    vec![
+        ProviderDescriptor::new(
+            ProviderId::new("ena").expect("static provider id should be valid"),
+            "European Nucleotide Archive single-sequence retrieval",
+            [
+                ProviderCapability::MetadataLookup,
+                ProviderCapability::SequenceRetrieval,
+            ],
+        ),
+        ProviderDescriptor::new(
+            ProviderId::new("ncbi").expect("static provider id should be valid"),
+            "NCBI E-utilities single-sequence retrieval",
+            [
+                ProviderCapability::MetadataLookup,
+                ProviderCapability::SequenceRetrieval,
+            ],
+        ),
+    ]
+}
+
 #[cfg(test)]
 mod tests {
     use super::ProviderRegistry;
@@ -103,6 +136,22 @@ mod tests {
                 .supporting(ProviderCapability::ArchiveAcquisition)
                 .len(),
             1
+        );
+    }
+
+    #[test]
+    fn builtin_defaults_include_ena_and_ncbi() {
+        let registry = ProviderRegistry::builtin_defaults();
+
+        assert!(
+            registry
+                .find(&ProviderId::new("ena").expect("valid id"))
+                .is_some()
+        );
+        assert!(
+            registry
+                .find(&ProviderId::new("ncbi").expect("valid id"))
+                .is_some()
         );
     }
 }

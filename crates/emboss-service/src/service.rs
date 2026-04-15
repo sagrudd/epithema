@@ -12,7 +12,7 @@ use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
     OutcomeStatus, PlatformError,
 };
-use emboss_providers::ProviderRegistry;
+use emboss_providers::{ProviderRegistry, RetrievedSequence};
 use emboss_tools::ToolDescriptor;
 use emboss_tools::alignment_analysis::{
     ConsParams, ConsambigParams, DistmatParams, MatcherParams, cons_help, consambig_help,
@@ -72,6 +72,7 @@ use crate::result::{
     ArtifactKind, ArtifactReference, MethodResult, ResultPayload, ResultSummary, TableReport,
     TextReport,
 };
+use crate::sequence_retrieval::ServiceSequenceRetrieval;
 
 /// Front-end-neutral EMBOSS-RS service façade.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
@@ -85,7 +86,11 @@ impl EmbossService {
     /// Creates a service façade for the supplied registry.
     #[must_use]
     pub fn new(registry: ServiceRegistry) -> Self {
-        Self::with_platform(registry, PlatformConfig::default(), ProviderRegistry::new())
+        Self::with_platform(
+            registry,
+            PlatformConfig::default(),
+            ProviderRegistry::builtin_defaults(),
+        )
     }
 
     /// Creates a service façade with explicit platform configuration and providers.
@@ -130,6 +135,55 @@ impl EmbossService {
     #[must_use]
     pub fn documentation_acquisition(&self) -> ServiceDocumentationAcquisition<'_> {
         ServiceDocumentationAcquisition::new(&self.config, &self.providers)
+    }
+
+    /// Returns the formal single-sequence retrieval gateway for provider-backed accessions.
+    pub fn sequence_retrieval(
+        &self,
+    ) -> Result<ServiceSequenceRetrieval<'_, emboss_providers::ReqwestHttpClient>, ServiceError>
+    {
+        ServiceSequenceRetrieval::new(&self.config, &self.providers)
+    }
+
+    /// Resolves an accession-style input into a provider-backed single sequence record.
+    pub fn retrieve_single_sequence(
+        &self,
+        raw: impl Into<String>,
+    ) -> Result<RetrievedSequence, ServiceError> {
+        let reference = self.classify_input(raw.into())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)? {
+            ToolInputResolution::ProviderRouted { request, .. } => {
+                self.sequence_retrieval()?.retrieve_single_sequence(&request)
+            }
+            ToolInputResolution::LocalFile {
+                provenance, ..
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "single-sequence provider retrieval expects an accession-style input, not a local file",
+            )
+            .with_code("service.sequence_retrieval.local_input_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "single-sequence provider retrieval expects an accession-style input, not an inline literal",
+            )
+            .with_code("service.sequence_retrieval.inline_input_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve provider-backed input '{}'", reference.raw()),
+            )
+            .with_code("service.sequence_retrieval.unresolved_input")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
     }
 
     /// Returns a human-readable status line for front ends.
@@ -4172,9 +4226,20 @@ mod tests {
     }
 
     #[test]
-    fn starts_with_default_platform_configuration_and_no_providers() {
+    fn starts_with_default_platform_configuration_and_builtin_sequence_providers() {
         let service = EmbossService::empty();
-        assert!(service.providers().is_empty());
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("ena").expect("valid provider"))
+                .is_some()
+        );
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
+                .is_some()
+        );
         assert!(service.config().acquisition.allow_remote_acquisition);
     }
 

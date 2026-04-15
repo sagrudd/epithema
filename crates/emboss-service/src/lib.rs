@@ -14,6 +14,7 @@ pub mod registry;
 pub mod request;
 pub mod response;
 pub mod result;
+pub mod sequence_retrieval;
 pub mod service;
 pub mod tool;
 
@@ -29,6 +30,7 @@ pub use emboss_providers::{
     DocumentationAcquisitionRequest, DocumentationAcquisitionRoute, DocumentationAssetRequest,
     InputReference as ProviderInputReference, InputReferenceKind, MetadataLookupRequest,
     ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent,
+    RetrievalFormat, RetrievalRoute, RetrievedSequence, SequenceProviderResolution,
     SequenceRequest,
 };
 pub use error::ServiceError;
@@ -40,6 +42,7 @@ pub use result::{
     ArtifactKind, ArtifactReference, MethodResult, ResultPayload, ResultSummary, TableReport,
     TextReport,
 };
+pub use sequence_retrieval::ServiceSequenceRetrieval;
 pub use service::EmbossService;
 pub use tool::ToolName;
 

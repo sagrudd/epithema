@@ -152,6 +152,20 @@ The explicit retained-exception tool now available in v1 is:
   computes canonical-nucleotide linguistic complexity for whole sequences and,
   when requested, deterministic sliding windows.
 
+The provider layer now also supports formal library/service-backed single
+sequence retrieval for provider-qualified accession inputs. The initial
+implemented routes are:
+
+- `ena:<accession>` for ENA browser FASTA retrieval of one nucleotide record.
+- `ncbi:nuccore:<accession>` or `ncbi:protein:<accession>` for NCBI E-utilities
+  FASTA retrieval of one nucleotide or protein record.
+- `ncbi:<refseq-accession>` for a conservative subset of safe RefSeq prefixes
+  where the database can be inferred without broad guessing.
+
+Bare accessions remain conservative in v1: they flow through the shared
+accession-resolution seam but are not automatically fetched unless the caller
+provides an explicit provider route.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
