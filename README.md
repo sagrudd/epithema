@@ -68,6 +68,16 @@ annotation-copy operations:
   copies selected features from annotated source records onto identifier-matched,
   equal-length target records.
 
+The next shipped cohort now covers translation-adjacent operations:
+
+- `emboss-rs backtranseq <protein-input>` back-translates protein records to
+  deterministic representative DNA codons using the standard genetic code.
+- `emboss-rs backtranambig <protein-input>` back-translates protein records to
+  deterministic ambiguous DNA codons using IUPAC nucleotide ambiguity.
+- `emboss-rs checktrans <nucleotide-input> <protein-input>` strictly translates
+  frame-1 DNA coding sequences with the standard genetic code and compares them
+  against expected protein records paired by input order.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

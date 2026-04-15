@@ -6,6 +6,7 @@ pub mod feature_tools;
 pub mod sequence_edit;
 pub mod sequence_stream;
 pub mod sequence_transform;
+pub mod translation_tools;
 
 /// Metadata for a governed tool entry.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -69,6 +70,9 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         feature_tools::MASKFEAT_DESCRIPTOR,
         feature_tools::EXTRACTFEAT_DESCRIPTOR,
         feature_tools::FEATCOPY_DESCRIPTOR,
+        translation_tools::BACKTRANSEQ_DESCRIPTOR,
+        translation_tools::BACKTRANAMBIG_DESCRIPTOR,
+        translation_tools::CHECKTRANS_DESCRIPTOR,
         sequence_transform::EXTRACTSEQ_DESCRIPTOR,
         sequence_transform::CUTSEQ_DESCRIPTOR,
         sequence_transform::UNION_DESCRIPTOR,
@@ -108,6 +112,9 @@ mod tests {
                 "maskfeat",
                 "extractfeat",
                 "featcopy",
+                "backtranseq",
+                "backtranambig",
+                "checktrans",
                 "extractseq",
                 "cutseq",
                 "union",

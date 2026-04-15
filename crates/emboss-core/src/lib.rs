@@ -23,6 +23,7 @@ pub mod molecule;
 pub mod platform;
 pub mod sequence;
 pub mod strand;
+pub mod translation;
 
 pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alphabet::Alphabet;
@@ -41,3 +42,7 @@ pub use molecule::MoleculeKind;
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
 pub use sequence::SequenceRecord;
 pub use strand::Strand;
+pub use translation::{
+    TranslationError, ambiguous_codon, backtranslate_ambiguous, backtranslate_representative,
+    representative_codon, translate_dna_strict,
+};

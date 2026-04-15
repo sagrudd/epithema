@@ -30,6 +30,10 @@ use emboss_tools::sequence_transform::{
     CutseqParams, ExtractseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
     run_cutseq, run_extractseq, run_splitter, run_union, splitter_help, union_help,
 };
+use emboss_tools::translation_tools::{
+    BacktranambigParams, BacktranseqParams, ChecktransParams, backtranambig_help, backtranseq_help,
+    checktrans_help, run_backtranambig, run_backtranseq, run_checktrans,
+};
 
 use crate::ServiceDocumentationAcquisition;
 use crate::context::ExecutionContext;
@@ -142,6 +146,9 @@ impl EmbossService {
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
             "featcopy" => self.invoke_featcopy(request, descriptor),
+            "backtranseq" => self.invoke_backtranseq(request, descriptor),
+            "backtranambig" => self.invoke_backtranambig(request, descriptor),
+            "checktrans" => self.invoke_checktrans(request, descriptor),
             "extractseq" => self.invoke_extractseq(request, descriptor),
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
@@ -970,6 +977,213 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("feature-copied-sequences", ArtifactKind::Sequence)
                 .with_label("Feature-copied sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_backtranseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, backtranseq_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("backtranseq", backtranseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_backtranseq(BacktranseqParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("representative back-translated FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("back-translated {} protein records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Representative back-translation completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Genetic code: standard")
+                .with_line("Codon policy: one deterministic representative DNA codon per residue")
+                .with_line("Stop symbol handling: '*' -> TAA")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("backtranslated-sequences", ArtifactKind::Sequence)
+                .with_label("Representative back-translated sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_backtranambig(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, backtranambig_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("backtranambig", backtranambig_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_backtranambig(BacktranambigParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("ambiguous back-translated FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "ambiguously back-translated {} protein records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Ambiguous back-translation completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Genetic code: standard")
+                .with_line("Codon policy: deterministic IUPAC-ambiguous DNA codons")
+                .with_line("Stop symbol handling: '*' -> TAR")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("ambiguous-backtranslated-sequences", ArtifactKind::Sequence)
+                .with_label("Ambiguous back-translated sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_checktrans(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, checktrans_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("checktrans", checktrans_help()))?;
+        let (nucleotide_input, nucleotide_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let (protein_input, protein_provenance, protein_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[1])?;
+        diagnostics.extend(protein_diagnostics);
+        let outcome = run_checktrans(ChecktransParams {
+            nucleotide_input,
+            protein_input,
+        })?;
+
+        let match_count = outcome.cases.iter().filter(|case| case.matches).count();
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("translation-check tabular report");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "checked {} nucleotide/protein record pairs",
+                outcome.cases.len()
+            ),
+            diagnostics,
+            vec![
+                nucleotide_provenance,
+                protein_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let rows = outcome
+            .cases
+            .iter()
+            .map(|case| {
+                vec![
+                    case.nucleotide_id.clone(),
+                    case.protein_id.clone(),
+                    case.matches.to_string(),
+                    case.translated_terminal_stop.to_string(),
+                    case.expected_terminal_stop.to_string(),
+                    case.detail.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "nucleotide_id".to_owned(),
+                    "protein_id".to_owned(),
+                    "matches".to_owned(),
+                    "translated_terminal_stop".to_owned(),
+                    "expected_terminal_stop".to_owned(),
+                    "detail".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Translation check completed")
+                .with_line(format!(
+                    "Nucleotide input: {}",
+                    outcome.nucleotide_input.path.display()
+                ))
+                .with_line(format!(
+                    "Protein input: {}",
+                    outcome.protein_input.path.display()
+                ))
+                .with_line("Genetic code: standard")
+                .with_line("Frame assumption: strict frame 1 only")
+                .with_line("Pairing rule: equal record counts paired by input order")
+                .with_line(format!(
+                    "Matching pairs: {match_count}/{}",
+                    outcome.cases.len()
+                )),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("translation-check-report", ArtifactKind::Table)
+                .with_label("Translation check report")
                 .with_provenance(output_provenance),
         );
 
@@ -1851,6 +2065,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    use emboss_core::MoleculeKind;
     use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
 
     use super::EmbossService;
@@ -1957,6 +2172,31 @@ mod tests {
     fn featcopy_mismatch_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/featcopy_mismatch.fasta")
+    }
+
+    fn protein_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/protein_records.fasta")
+    }
+
+    fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+    }
+
+    fn checktrans_protein_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/checktrans_protein.fasta")
+    }
+
+    fn checktrans_mismatch_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/checktrans_mismatch.fasta")
+    }
+
+    fn checktrans_invalid_codon_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/checktrans_invalid_codon.fasta")
     }
 
     fn implemented_service() -> EmbossService {
@@ -2384,6 +2624,108 @@ mod tests {
         .with_arguments(vec![
             annotated_feature_fixture().display().to_string(),
             featcopy_mismatch_fixture().display().to_string(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_backtranseq_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("backtranseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("backtranseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].molecule(), MoleculeKind::Dna);
+                assert_eq!(records[0].residues(), "ATGGCTTAA");
+                assert_eq!(records[1].residues(), "CTTTCT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_backtranambig_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("backtranambig").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("backtranambig should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].molecule(), MoleculeKind::Dna);
+                assert_eq!(records[0].residues(), "ATGGCNTAR");
+                assert_eq!(records[1].residues(), "YTNWSN");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_checktrans_against_matching_fixture_pair() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("checktrans").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            checktrans_protein_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("checktrans should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][2], "true");
+                assert_eq!(table.rows[1][2], "true");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn checktrans_reports_mismatch_for_inconsistent_translation() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("checktrans").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            checktrans_mismatch_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("checktrans should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows[0][2], "false");
+                assert!(table.rows[0][5].contains("translation mismatch"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn checktrans_rejects_invalid_codon_input() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("checktrans").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_invalid_codon_fixture().display().to_string(),
+            checktrans_protein_fixture().display().to_string(),
         ]);
 
         assert!(service.invoke(request).is_err());

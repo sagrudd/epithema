@@ -1,0 +1,40 @@
+{
+  "tool_name": "backtranseq",
+  "document_id": "backtranseq-initial",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "backtranslate_protein_to_representative_dna",
+      "title": "Back-translate a protein record to deterministic representative DNA codons",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "protein_fasta"
+      ],
+      "expected_output_ids": [
+        "representative_backtranslated_sequences"
+      ],
+      "provenance": [],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": []
+}
