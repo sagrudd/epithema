@@ -5,6 +5,7 @@ use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 pub mod feature_tools;
 pub mod pattern_tools;
 pub mod sequence_edit;
+pub mod sequence_stats;
 pub mod sequence_stream;
 pub mod sequence_transform;
 pub mod translation_tools;
@@ -74,6 +75,9 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         pattern_tools::FUZZNUC_DESCRIPTOR,
         pattern_tools::FUZZPRO_DESCRIPTOR,
         pattern_tools::FUZZTRAN_DESCRIPTOR,
+        sequence_stats::COMPSEQ_DESCRIPTOR,
+        sequence_stats::GEECEE_DESCRIPTOR,
+        sequence_stats::PEPSTATS_DESCRIPTOR,
         translation_tools::BACKTRANSEQ_DESCRIPTOR,
         translation_tools::BACKTRANAMBIG_DESCRIPTOR,
         translation_tools::CHECKTRANS_DESCRIPTOR,
@@ -119,6 +123,9 @@ mod tests {
                 "fuzznuc",
                 "fuzzpro",
                 "fuzztran",
+                "compseq",
+                "geecee",
+                "pepstats",
                 "backtranseq",
                 "backtranambig",
                 "checktrans",

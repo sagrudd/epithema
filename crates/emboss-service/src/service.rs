@@ -26,6 +26,10 @@ use emboss_tools::sequence_edit::{
     DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
 };
+use emboss_tools::sequence_stats::{
+    CompseqParams, GeeceeParams, PepstatsParams, compseq_help, geecee_help, pepstats_help,
+    run_compseq, run_geecee, run_pepstats,
+};
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
     newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq, run_nthseq, run_seqcount,
@@ -154,6 +158,9 @@ impl EmbossService {
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
             "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
             "fuzztran" => self.invoke_fuzztran(request, descriptor),
+            "compseq" => self.invoke_compseq(request, descriptor),
+            "geecee" => self.invoke_geecee(request, descriptor),
+            "pepstats" => self.invoke_pepstats(request, descriptor),
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
             "backtranambig" => self.invoke_backtranambig(request, descriptor),
             "checktrans" => self.invoke_checktrans(request, descriptor),
@@ -1261,6 +1268,273 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_compseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, compseq_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("compseq", compseq_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_compseq(CompseqParams { input })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            for (residue, count) in record.composition.counts() {
+                rows.push(vec![
+                    "record".to_owned(),
+                    record.record_id.clone(),
+                    record.molecule.as_str().to_owned(),
+                    record.sequence_length.to_string(),
+                    residue.to_string(),
+                    count.to_string(),
+                    format!("{:.4}", record.composition.frequency_for(*residue)),
+                ]);
+            }
+        }
+        for (residue, count) in outcome.aggregate.counts() {
+            rows.push(vec![
+                "aggregate".to_owned(),
+                "ALL".to_owned(),
+                "mixed".to_owned(),
+                outcome.aggregate.counted_symbols().to_string(),
+                residue.to_string(),
+                count.to_string(),
+                format!("{:.4}", outcome.aggregate.frequency_for(*residue)),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported composition for {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "molecule".to_owned(),
+                    "length".to_owned(),
+                    "residue".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Sequence composition reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Scope: per-record plus aggregate summary")
+                .with_line("Gap policy: '-' is ignored")
+                .with_line("Frequency denominator: all non-gap normalized residue symbols")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_geecee(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, geecee_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("geecee", geecee_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_geecee(GeeceeParams { input })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            rows.push(vec![
+                "record".to_owned(),
+                record.record_id.clone(),
+                record.sequence_length.to_string(),
+                record.gc.gc_symbols.to_string(),
+                record.gc.canonical_symbols.to_string(),
+                record.gc.ambiguous_symbols.to_string(),
+                format!("{:.2}", record.gc.gc_percent()),
+            ]);
+        }
+        rows.push(vec![
+            "aggregate".to_owned(),
+            "ALL".to_owned(),
+            outcome.aggregate.counted_symbols.to_string(),
+            outcome.aggregate.gc_symbols.to_string(),
+            outcome.aggregate.canonical_symbols.to_string(),
+            outcome.aggregate.ambiguous_symbols.to_string(),
+            format!("{:.2}", outcome.aggregate.gc_percent()),
+        ]);
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported GC statistics for {} records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "length".to_owned(),
+                    "gc_count".to_owned(),
+                    "gc_denominator".to_owned(),
+                    "ambiguous_count".to_owned(),
+                    "gc_percent".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("GC statistics reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Scope: per-record plus aggregate summary")
+                .with_line("GC denominator: canonical A/C/G/T/U symbols only")
+                .with_line("Ambiguous symbols are excluded from GC percentage")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_pepstats(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, pepstats_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("pepstats", pepstats_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_pepstats(PepstatsParams { input })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            rows.push(vec![
+                "summary".to_owned(),
+                record.record_id.clone(),
+                "sequence_length".to_owned(),
+                record.sequence_length.to_string(),
+                String::new(),
+                String::new(),
+            ]);
+            rows.push(vec![
+                "summary".to_owned(),
+                record.record_id.clone(),
+                "residue_length".to_owned(),
+                record.residue_length.to_string(),
+                String::new(),
+                String::new(),
+            ]);
+            rows.push(vec![
+                "summary".to_owned(),
+                record.record_id.clone(),
+                "stop_count".to_owned(),
+                record.stop_count.to_string(),
+                String::new(),
+                String::new(),
+            ]);
+            rows.push(vec![
+                "summary".to_owned(),
+                record.record_id.clone(),
+                "molecular_weight".to_owned(),
+                format!("{:.3}", record.molecular_weight),
+                String::new(),
+                String::new(),
+            ]);
+            for (residue, count) in record.composition.counts() {
+                rows.push(vec![
+                    "composition".to_owned(),
+                    record.record_id.clone(),
+                    residue.to_string(),
+                    count.to_string(),
+                    format!("{:.4}", record.composition.frequency_for(*residue)),
+                    String::new(),
+                ]);
+            }
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported protein statistics for {} records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "section".to_owned(),
+                    "record".to_owned(),
+                    "metric_or_residue".to_owned(),
+                    "value_or_count".to_owned(),
+                    "frequency".to_owned(),
+                    "notes".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein statistics reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Mass convention: average residue masses plus one water molecule")
+                .with_line("Stop symbols are excluded from residue_length and mass")
+                .with_line("pI estimation: deferred in v1")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_backtranambig(
         &self,
         request: InvocationRequest,
@@ -2303,6 +2577,9 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
+        "compseq" => compseq_help(),
+        "geecee" => geecee_help(),
+        "pepstats" => pepstats_help(),
         _ => "",
     }
 }
@@ -2426,6 +2703,11 @@ mod tests {
     fn nucleotide_pattern_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+    }
+
+    fn protein_stats_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/protein_stats_records.fasta")
     }
 
     fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
@@ -3065,5 +3347,81 @@ mod tests {
         ]);
 
         assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_compseq_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("compseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("compseq should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "record" && row[1] == "nucA" && row[4] == "N" && row[5] == "1"
+                }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" })
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_geecee_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("geecee").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("geecee should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "record"
+                        && row[1] == "nucA"
+                        && row[3] == "4"
+                        && row[4] == "8"
+                        && row[6] == "50.00"
+                }));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_pepstats_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepstats").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_stats_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("pepstats should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "summary"
+                        && row[1] == "pepA"
+                        && row[2] == "molecular_weight"
+                        && row[3] == "220.287"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "composition" && row[1] == "pepA" && row[2] == "M" && row[3] == "1"
+                }));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 }

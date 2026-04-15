@@ -91,6 +91,17 @@ operations:
   three forward frames and reports translated-protein hits mapped back to
   1-based inclusive nucleotide coordinates.
 
+The next shipped cohort now covers simple composition and summary-statistics
+operations:
+
+- `emboss-rs compseq <input>` reports per-record and aggregate residue counts
+  and frequencies for nucleotide or protein sequence inputs.
+- `emboss-rs geecee <nucleotide-input>` reports per-record and aggregate GC
+  counts and GC percentages using canonical bases in the denominator.
+- `emboss-rs pepstats <protein-input>` reports per-record protein composition,
+  residue length, and molecular-weight estimates. pI estimation is deferred in
+  v1.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

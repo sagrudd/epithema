@@ -12,6 +12,7 @@
 
 pub mod alignment;
 pub mod alphabet;
+pub mod composition;
 pub mod error;
 pub mod feature;
 pub mod feature_ops;
@@ -28,6 +29,7 @@ pub mod translation;
 
 pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alphabet::Alphabet;
+pub use composition::{CompositionError, GcSummary, ResidueComposition, protein_molecular_weight};
 pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};
 pub use feature_ops::{
