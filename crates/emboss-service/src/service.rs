@@ -44,8 +44,8 @@ use emboss_tools::sequence_edit::{
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
 };
 use emboss_tools::sequence_stats::{
-    CompseqParams, GeeceeParams, PepstatsParams, compseq_help, geecee_help, pepstats_help,
-    run_compseq, run_geecee, run_pepstats,
+    ComplexParams, CompseqParams, GeeceeParams, PepstatsParams, complex_help, compseq_help,
+    geecee_help, pepstats_help, run_complex, run_compseq, run_geecee, run_pepstats,
 };
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
@@ -189,6 +189,7 @@ impl EmbossService {
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
             "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
             "fuzztran" => self.invoke_fuzztran(request, descriptor),
+            "complex" => self.invoke_complex(request, descriptor),
             "compseq" => self.invoke_compseq(request, descriptor),
             "geecee" => self.invoke_geecee(request, descriptor),
             "pepstats" => self.invoke_pepstats(request, descriptor),
@@ -2344,6 +2345,110 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_complex(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, complex_help()));
+        }
+
+        let params = parse_complex_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_complex(ComplexParams {
+            input,
+            k_min: params.k_min,
+            k_max: params.k_max,
+            window: params.window,
+            step: params.step,
+        })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.sequences {
+            rows.push(vec![
+                "record".to_owned(),
+                record.record_id.clone(),
+                record.sequence_length.to_string(),
+                record.k_min.to_string(),
+                record.k_max.to_string(),
+                String::new(),
+                String::new(),
+                String::new(),
+                format!("{:.6}", record.complexity),
+            ]);
+        }
+        for window in &outcome.windows {
+            rows.push(vec![
+                "window".to_owned(),
+                window.record_id.clone(),
+                String::new(),
+                window.k_min.to_string(),
+                window.k_max.to_string(),
+                (window.start + 1).to_string(),
+                window.end.to_string(),
+                window.window_length.to_string(),
+                format!("{:.6}", window.complexity),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported linguistic complexity for {} records{}",
+                outcome.sequences.len(),
+                if outcome.windows.is_empty() {
+                    String::new()
+                } else {
+                    format!(" and {} windows", outcome.windows.len())
+                }
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "sequence_length".to_owned(),
+                    "k_min".to_owned(),
+                    "k_max".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "complexity".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Linguistic complexity reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Definition: sum(observed distinct k-mers) / sum(min(4^k, L-k+1))")
+                .with_line("Alphabet policy: canonical A/C/G/T only")
+                .with_line(format!("k-range: {}..={}", outcome.k_min, outcome.k_max))
+                .with_line(format!(
+                    "Sliding windows: {}",
+                    match (outcome.window, outcome.step) {
+                        (Some(window), Some(step)) => format!("window={window} step={step}"),
+                        _ => "disabled".to_owned(),
+                    }
+                ))
+                .with_line(format!("Record summaries: {}", outcome.sequences.len()))
+                .with_line(format!("Window rows: {}", outcome.windows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_geecee(
         &self,
         request: InvocationRequest,
@@ -3199,6 +3304,94 @@ fn parse_codcopy_params(arguments: &[String]) -> Result<CodcopyParams, ServiceEr
     })
 }
 
+fn parse_complex_params(arguments: &[String]) -> Result<ComplexParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("complex", complex_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut k_min = None;
+    let mut k_max = None;
+    let mut window = None;
+    let mut step = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--k-min=") {
+            k_min = Some(parse_positive_count("complex", value, "--k-min")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--k-min" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --k-min")
+                    .with_code("service.tool.complex.k_min_missing")
+            })?;
+            k_min = Some(parse_positive_count("complex", value, "--k-min")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--k-max=") {
+            k_max = Some(parse_positive_count("complex", value, "--k-max")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--k-max" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --k-max")
+                    .with_code("service.tool.complex.k_max_missing")
+            })?;
+            k_max = Some(parse_positive_count("complex", value, "--k-max")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--window=") {
+            window = Some(parse_positive_count("complex", value, "--window")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --window")
+                    .with_code("service.tool.complex.window_missing")
+            })?;
+            window = Some(parse_positive_count("complex", value, "--window")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--step=") {
+            step = Some(parse_positive_count("complex", value, "--step")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --step")
+                    .with_code("service.tool.complex.step_missing")
+            })?;
+            step = Some(parse_positive_count("complex", value, "--step")?);
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown complex argument '{argument}'"),
+        )
+        .with_code("service.tool.complex.argument_unknown")
+        .with_detail(complex_help()));
+    }
+
+    Ok(ComplexParams {
+        input,
+        k_min: k_min.ok_or_else(|| tool_usage_error("complex", complex_help()))?,
+        k_max: k_max.ok_or_else(|| tool_usage_error("complex", complex_help()))?,
+        window,
+        step,
+    })
+}
+
 fn parse_extractalign_params(arguments: &[String]) -> Result<ExtractalignParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("extractalign", extractalign_help()));
@@ -3922,6 +4115,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
+        "complex" => complex_help(),
         "compseq" => compseq_help(),
         "geecee" => geecee_help(),
         "pepstats" => pepstats_help(),
@@ -4052,6 +4246,16 @@ mod tests {
     fn nucleotide_pattern_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+    }
+
+    fn complex_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/complex_records.fasta")
+    }
+
+    fn complex_invalid_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/complex_invalid.fasta")
     }
 
     fn protein_stats_fixture() -> std::path::PathBuf {
@@ -5024,6 +5228,82 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_complex_against_whole_sequence_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("complex").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            complex_fixture().display().to_string(),
+            "--k-min".to_owned(),
+            "1".to_owned(),
+            "--k-max".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("complex should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "record");
+                assert_eq!(table.rows[0][1], "low");
+                assert_eq!(table.rows[1][1], "high");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_complex_against_windowed_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("complex").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            complex_fixture().display().to_string(),
+            "--k-min".to_owned(),
+            "1".to_owned(),
+            "--k-max".to_owned(),
+            "2".to_owned(),
+            "--window".to_owned(),
+            "4".to_owned(),
+            "--step".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("complex should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.len() > 2);
+                assert_eq!(table.rows[2][0], "window");
+                assert_eq!(table.rows[2][5], "1");
+                assert_eq!(table.rows[2][6], "4");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn complex_rejects_unsupported_symbols() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("complex").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            complex_invalid_fixture().display().to_string(),
+            "--k-min".to_owned(),
+            "1".to_owned(),
+            "--k-max".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
     }
 
     #[test]

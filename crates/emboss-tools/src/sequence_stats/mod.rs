@@ -1,15 +1,22 @@
 //! Composition and summary-statistics tool cohort.
 
+mod complex;
 mod compseq;
 mod geecee;
 mod pepstats;
 
 use crate::ToolDescriptor;
 
+pub use complex::{ComplexOutcome, ComplexParams, complex_help, run_complex};
 pub use compseq::{CompseqOutcome, CompseqParams, compseq_help, run_compseq};
 pub use geecee::{GeeceeOutcome, GeeceeParams, geecee_help, run_geecee};
 pub use pepstats::{PepstatsOutcome, PepstatsParams, pepstats_help, run_pepstats};
 
+/// `complex` descriptor.
+pub const COMPLEX_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "complex",
+    "report whole-sequence and sliding-window nucleotide linguistic complexity",
+);
 /// `compseq` descriptor.
 pub const COMPSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "compseq",

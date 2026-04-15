@@ -1,0 +1,26 @@
+{
+  "document_id": "complex-minimal",
+  "tool_name": "complex",
+  "summary": {
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "total_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "complex-whole-and-windowed",
+      "declaration_status": "declared",
+      "source_kind": "curated",
+      "execution_status": "pending",
+      "comparison_status": "not_compared",
+      "notes": [
+        "Compute canonical nucleotide linguistic complexity for each input record and optionally emit sliding-window complexity rows using an explicit k-mer range."
+      ]
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": []
+}

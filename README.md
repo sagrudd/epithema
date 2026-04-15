@@ -146,6 +146,12 @@ The next shipped cohort now covers alignment-summary and similarity operations:
 - `emboss-rs consambig <input>` derives an ambiguity-aware consensus from one
   alignment, using nucleotide IUPAC ambiguity where possible, and emits FASTA.
 
+The explicit retained-exception tool now available in v1 is:
+
+- `emboss-rs complex <input> --k-min <k> --k-max <k> [--window <length> --step <length>]`
+  computes canonical-nucleotide linguistic complexity for whole sequences and,
+  when requested, deterministic sliding windows.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and
