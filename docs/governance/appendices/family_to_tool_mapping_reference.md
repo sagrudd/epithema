@@ -1,4 +1,9 @@
-# EMBOSS-RS family-to-tool mapping appendix
+# EMBOSS-RS Family-to-Tool Mapping Reference
+
+Status: governance appendix and maintained reference registry
+
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
 
 This appendix ties the named tool families from the governance policy back to individual tools from the full scope matrix.
 

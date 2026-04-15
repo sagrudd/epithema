@@ -4,11 +4,15 @@
 **Date:** 2026-04-15  
 **Applies to:** `emboss-rs`, `emboss-r`, and any directly related repository used in the EMBOSS-RS programme of work
 
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+
 ## 1. Purpose
 
 This policy defines the minimum source-control discipline required for development work performed through Codex prompts.
 
-OpenAI describes Codex as a coding agent that can work on repositories, change code, and propose pull requests, including in local and cloud development workflows. That makes commit and push discipline a necessary part of reproducible development governance for EMBOSS-RS. citeturn600598search1turn600598search3turn600598search13
+Codex can change repository contents directly, so commit and push discipline is a
+necessary part of reproducible development governance for EMBOSS-RS.
 
 ## 2. Policy Statement
 

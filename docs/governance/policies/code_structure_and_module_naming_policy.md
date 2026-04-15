@@ -1,5 +1,8 @@
 # EMBOSS-RS Code Structure and Module Naming Policy
 
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+
 ## Purpose
 
 This policy establishes mandatory structural rules for the `emboss-rs` and related codebases so that the project remains navigable, reviewable, and maintainable as a large volume of code is generated and revised over time.

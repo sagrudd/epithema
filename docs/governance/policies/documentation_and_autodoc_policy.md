@@ -4,6 +4,9 @@
 **Applies to:** `emboss-rs`, `emboss-r`, project documentation, release process, and GitHub Pages publication  
 **Date:** 2026-04-15
 
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+
 ## 1. Purpose
 
 This policy establishes the mandatory documentation, auto-documentation, and publication standards for the EMBOSS-RS project.

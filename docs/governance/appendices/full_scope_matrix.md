@@ -1,5 +1,10 @@
 # EMBOSS tool scope matrix for `emboss-rs`
 
+Status: governance appendix and detailed planning inventory
+
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+
 This matrix classifies the **256 core EMBOSS applications** listed in the official EMBOSS applications index, plus **`complex`** as an explicit extra row because you have already said it must be retained.
 
 Decision meanings:
@@ -307,4 +312,3 @@ Scope notes:
   - generic text-cleaning utilities outside the bioinformatics core
   - small pockets of dated or low-value specialist workflow
 - Use **Add** for modern capabilities that EMBOSS did not cover well enough, especially contemporary archive retrieval and rebooted HMM support.
-

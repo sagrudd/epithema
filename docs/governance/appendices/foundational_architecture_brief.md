@@ -1,15 +1,18 @@
-EMBOSS-RS FORMAL ARCHITECTURE BRIEF
-Sponsored Work for Mnemosyne Biosciences Ltd
+# EMBOSS-RS Foundational Architecture Brief
 
-Document status
-Foundational architecture brief
+Sponsored work for Mnemosyne Biosciences Ltd
 
-Date
-2026-04-15
+Status: supporting architecture appendix
 
-Primary repositories
-emboss-rs
-emboss-r
+Date: 2026-04-15
+
+Primary repositories:
+
+- `emboss-rs`
+- `emboss-r`
+
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
 
 
 1. EXECUTIVE SUMMARY

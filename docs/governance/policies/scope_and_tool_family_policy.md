@@ -5,6 +5,9 @@
 **Date:** 2026-04-15  
 **Status:** Governance policy derived from the raw scope matrix
 
+Canonical governance context:
+[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+
 ---
 
 ## 1. Purpose
