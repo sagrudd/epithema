@@ -1,5 +1,33 @@
 //! Bridge-safe projection types for future R-facing wrappers.
 
+/// Compact provenance summary safe to marshal across the bridge.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeProvenanceSummary {
+    /// Stable origin kind label.
+    pub origin_kind: String,
+    /// Main locator or identifier.
+    pub locator: String,
+    /// Optional provider identity.
+    pub provider: Option<String>,
+    /// Optional descriptive label.
+    pub description: Option<String>,
+}
+
+/// Bridge-safe summary of an auxiliary artefact.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeArtifactSummary {
+    /// Stable artefact identifier.
+    pub id: String,
+    /// Stable artefact kind label.
+    pub kind: String,
+    /// Optional human-readable label.
+    pub label: Option<String>,
+    /// Optional local path.
+    pub local_path: Option<String>,
+    /// Optional artefact provenance summary.
+    pub provenance: Option<BridgeProvenanceSummary>,
+}
+
 /// Stable summary of a governed EMBOSS-RS tool for bridge exposure.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BridgeToolSummary {
@@ -22,6 +50,61 @@ pub struct BridgeDiagnosticSummary {
     pub context: Option<String>,
     /// Optional scoped location.
     pub location: Option<String>,
+}
+
+/// Bridge-safe summary of a biological feature.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeFeatureSummary {
+    /// Stable feature kind label.
+    pub kind: String,
+    /// Optional feature name.
+    pub name: Option<String>,
+    /// Zero-based inclusive start coordinate of the spanning bounds.
+    pub start: usize,
+    /// Zero-based exclusive end coordinate of the spanning bounds.
+    pub end: usize,
+    /// Shared strand label when available.
+    pub strand: Option<String>,
+    /// Number of location spans.
+    pub span_count: usize,
+    /// Number of qualifiers.
+    pub qualifier_count: usize,
+}
+
+/// Bridge-safe summary of a sequence record.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeSequenceSummary {
+    /// Stable sequence identifier.
+    pub identifier: String,
+    /// Optional display label.
+    pub display_name: Option<String>,
+    /// Stable molecule kind label.
+    pub molecule: String,
+    /// Stable alphabet label.
+    pub alphabet: String,
+    /// Residue length.
+    pub length: usize,
+    /// Optional description.
+    pub description: Option<String>,
+    /// Number of attached features.
+    pub feature_count: usize,
+}
+
+/// Bridge-safe summary of an alignment.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeAlignmentSummary {
+    /// Optional alignment identifier.
+    pub identifier: Option<String>,
+    /// Number of rows.
+    pub row_count: usize,
+    /// Number of aligned columns.
+    pub column_count: usize,
+    /// Whether the alignment is pairwise.
+    pub pairwise: bool,
+    /// Whether the alignment is multiple.
+    pub multiple: bool,
+    /// Ordered row identifiers.
+    pub row_identifiers: Vec<String>,
 }
 
 /// Generic operation status summary suitable for thin bridge responses.
@@ -48,4 +131,17 @@ pub struct BridgeResultSummary {
     pub artifact_count: usize,
     /// Number of attached diagnostics.
     pub diagnostic_count: usize,
+}
+
+/// Bridge-safe tabular summary suitable for later data-frame conversion.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BridgeTableSummary {
+    /// Optional table title.
+    pub title: Option<String>,
+    /// Ordered column names.
+    pub columns: Vec<String>,
+    /// Ordered row cell values as strings.
+    pub rows: Vec<Vec<String>>,
+    /// Cached row count.
+    pub row_count: usize,
 }

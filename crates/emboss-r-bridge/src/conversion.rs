@@ -1,14 +1,16 @@
 //! Conversion helpers from internal workspace types to bridge-safe summaries.
 
-use emboss_core::PLATFORM_IDENTITY;
+use emboss_core::{Alignment, Feature, PLATFORM_IDENTITY, SequenceRecord};
 use emboss_diagnostics::{Diagnostic, PlatformError};
-use emboss_service::{EmbossService, MethodResult};
+use emboss_service::{ArtifactReference, EmbossService, MethodResult, ResultPayload, TableReport};
 use emboss_tools::ToolDescriptor;
 
 use crate::error::BridgeErrorSummary;
 use crate::health::BridgeHealth;
 use crate::types::{
-    BridgeDiagnosticSummary, BridgeOperationStatus, BridgeResultSummary, BridgeToolSummary,
+    BridgeAlignmentSummary, BridgeArtifactSummary, BridgeDiagnosticSummary, BridgeFeatureSummary,
+    BridgeOperationStatus, BridgeProvenanceSummary, BridgeResultSummary, BridgeSequenceSummary,
+    BridgeTableSummary, BridgeToolSummary,
 };
 use crate::version::BridgeVersion;
 
@@ -39,6 +41,78 @@ impl From<&Diagnostic> for BridgeDiagnosticSummary {
     }
 }
 
+impl From<&emboss_diagnostics::ArtifactProvenance> for BridgeProvenanceSummary {
+    fn from(value: &emboss_diagnostics::ArtifactProvenance) -> Self {
+        Self {
+            origin_kind: format!("{:?}", value.origin_kind).to_ascii_lowercase(),
+            locator: value.locator().to_owned(),
+            provider: value.provider().map(ToOwned::to_owned),
+            description: value.description().map(ToOwned::to_owned),
+        }
+    }
+}
+
+impl From<&ArtifactReference> for BridgeArtifactSummary {
+    fn from(value: &ArtifactReference) -> Self {
+        Self {
+            id: value.id.clone(),
+            kind: format!("{:?}", value.kind).to_ascii_lowercase(),
+            label: value.label.clone(),
+            local_path: value
+                .local_path
+                .as_ref()
+                .map(|path| path.display().to_string()),
+            provenance: value.provenance.as_ref().map(BridgeProvenanceSummary::from),
+        }
+    }
+}
+
+impl From<&SequenceRecord> for BridgeSequenceSummary {
+    fn from(value: &SequenceRecord) -> Self {
+        Self {
+            identifier: value.identifier().accession().to_owned(),
+            display_name: value.identifier().display_name().map(ToOwned::to_owned),
+            molecule: value.molecule().as_str().to_owned(),
+            alphabet: value.alphabet().to_string(),
+            length: value.len(),
+            description: value.metadata().description.clone(),
+            feature_count: value.features().len(),
+        }
+    }
+}
+
+impl From<&Feature> for BridgeFeatureSummary {
+    fn from(value: &Feature) -> Self {
+        let bounds = value.location.bounds();
+        Self {
+            kind: format!("{:?}", value.kind).to_ascii_lowercase(),
+            name: value.name.clone(),
+            start: bounds.start(),
+            end: bounds.end(),
+            strand: value.location.strand().map(|strand| strand.to_string()),
+            span_count: value.location.spans().len(),
+            qualifier_count: value.qualifiers.len(),
+        }
+    }
+}
+
+impl From<&Alignment> for BridgeAlignmentSummary {
+    fn from(value: &Alignment) -> Self {
+        Self {
+            identifier: value.identifier().map(ToOwned::to_owned),
+            row_count: value.row_count(),
+            column_count: value.column_count(),
+            pairwise: value.is_pairwise(),
+            multiple: value.is_multiple(),
+            row_identifiers: value
+                .rows()
+                .iter()
+                .map(|row| row.identifier().accession().to_owned())
+                .collect(),
+        }
+    }
+}
+
 impl From<&MethodResult> for BridgeResultSummary {
     fn from(value: &MethodResult) -> Self {
         Self {
@@ -49,6 +123,26 @@ impl From<&MethodResult> for BridgeResultSummary {
             artifact_count: value.artifacts.len(),
             diagnostic_count: value.report.diagnostics().len(),
         }
+    }
+}
+
+impl From<&TableReport> for BridgeTableSummary {
+    fn from(value: &TableReport) -> Self {
+        Self {
+            title: None,
+            columns: value.columns.clone(),
+            rows: value.rows.clone(),
+            row_count: value.row_count(),
+        }
+    }
+}
+
+/// Projects a compact table summary when the method result payload is tabular.
+#[must_use]
+pub fn project_table_summary(result: &MethodResult) -> Option<BridgeTableSummary> {
+    match &result.payload {
+        ResultPayload::TableReport(table) => Some(BridgeTableSummary::from(table)),
+        _ => None,
     }
 }
 
@@ -90,17 +184,48 @@ pub fn project_health(service: &EmbossService) -> BridgeHealth {
     }
 }
 
+/// Projects a sequence summary into a bridge-safe owned form.
+#[must_use]
+pub fn project_sequence_summary(record: &SequenceRecord) -> BridgeSequenceSummary {
+    BridgeSequenceSummary::from(record)
+}
+
+/// Projects feature summaries into bridge-safe owned forms.
+#[must_use]
+pub fn project_feature_summaries(features: &[Feature]) -> Vec<BridgeFeatureSummary> {
+    features.iter().map(BridgeFeatureSummary::from).collect()
+}
+
+/// Projects an alignment summary into a bridge-safe owned form.
+#[must_use]
+pub fn project_alignment_summary(alignment: &Alignment) -> BridgeAlignmentSummary {
+    BridgeAlignmentSummary::from(alignment)
+}
+
 #[cfg(test)]
 mod tests {
+    use emboss_core::{
+        Alignment, AlignmentRow, Feature, FeatureKind, FeatureLocation, Interval, MoleculeKind,
+        SequenceIdentifier, SequenceRecord, Strand,
+    };
     use emboss_diagnostics::{
         Diagnostic, DiagnosticLocation, ErrorCategory, ExecutionContext, ExecutionOutcome,
         ExecutionReport, InvocationOrigin, OutcomeStatus, PlatformError, Severity,
     };
-    use emboss_service::{EmbossService, MethodResult, ResultPayload, ResultSummary, ToolName};
+    use emboss_service::{
+        ArtifactKind, ArtifactReference, EmbossService, MethodResult, ResultPayload, ResultSummary,
+        TableReport, ToolName,
+    };
     use emboss_tools::ToolDescriptor;
 
-    use super::{project_health, project_version};
-    use crate::types::{BridgeDiagnosticSummary, BridgeResultSummary, BridgeToolSummary};
+    use super::{
+        project_alignment_summary, project_feature_summaries, project_health,
+        project_table_summary, project_version,
+    };
+    use crate::types::{
+        BridgeDiagnosticSummary, BridgeFeatureSummary, BridgeResultSummary, BridgeSequenceSummary,
+        BridgeToolSummary,
+    };
 
     #[test]
     fn projects_version_metadata() {
@@ -177,5 +302,98 @@ mod tests {
         assert_eq!(summary.payload_kind, "empty");
         assert_eq!(summary.title, "Sequence result");
         assert_eq!(summary.lines, vec!["Length: 4"]);
+    }
+
+    #[test]
+    fn projects_sequence_summary() {
+        let sequence = SequenceRecord::new(
+            SequenceIdentifier::new("seq1").expect("valid identifier"),
+            MoleculeKind::Dna,
+            "ACGT",
+        )
+        .expect("sequence should build");
+
+        let summary = BridgeSequenceSummary::from(&sequence);
+        assert_eq!(summary.identifier, "seq1");
+        assert_eq!(summary.molecule, "dna");
+        assert_eq!(summary.length, 4);
+    }
+
+    #[test]
+    fn projects_feature_summaries() {
+        let feature = Feature::new(
+            FeatureKind::Gene,
+            FeatureLocation::new(
+                Interval::new(2, 6).expect("valid interval"),
+                Strand::Forward,
+            ),
+        )
+        .with_name("geneA")
+        .with_qualifier("product", "enzyme");
+
+        let summaries = project_feature_summaries(&[feature]);
+        assert_eq!(summaries.len(), 1);
+        let summary: &BridgeFeatureSummary = &summaries[0];
+        assert_eq!(summary.name.as_deref(), Some("geneA"));
+        assert_eq!(summary.start, 2);
+        assert_eq!(summary.end, 6);
+    }
+
+    #[test]
+    fn projects_alignment_summary() {
+        let alignment = Alignment::with_identifier(
+            Some("pairwise"),
+            vec![
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq1").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "AC-GT",
+                )
+                .expect("row should build"),
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq2").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "ACTGT",
+                )
+                .expect("row should build"),
+            ],
+        )
+        .expect("alignment should build");
+
+        let summary = project_alignment_summary(&alignment);
+        assert_eq!(summary.identifier.as_deref(), Some("pairwise"));
+        assert!(summary.pairwise);
+        assert_eq!(summary.row_identifiers, vec!["seq1", "seq2"]);
+    }
+
+    #[test]
+    fn projects_table_summary_from_method_result() {
+        let context = ExecutionContext::for_origin(InvocationOrigin::Cli);
+        let report = ExecutionReport::from_context(
+            &context,
+            "emboss-rs",
+            "0.1.0",
+            ExecutionOutcome::new(OutcomeStatus::Succeeded).with_summary("ok"),
+        );
+        let table = TableReport::new(
+            vec!["name".to_owned(), "length".to_owned()],
+            vec![vec!["seq1".to_owned(), "4".to_owned()]],
+        );
+        let result = MethodResult::new(
+            ToolName::new("infoseq").expect("tool name should build"),
+            ResultPayload::TableReport(table),
+            ResultSummary::new("Sequence table").with_line("Rows: 1"),
+            report,
+        )
+        .with_artifact(
+            ArtifactReference::new("summary-table", ArtifactKind::Table)
+                .with_label("Summary table"),
+        );
+
+        let summary = project_table_summary(&result).expect("table summary should project");
+        let result_summary = BridgeResultSummary::from(&result);
+        assert_eq!(summary.row_count, 1);
+        assert_eq!(summary.columns, vec!["name", "length"]);
+        assert_eq!(result_summary.artifact_count, 1);
     }
 }
