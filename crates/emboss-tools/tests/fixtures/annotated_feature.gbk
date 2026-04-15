@@ -1,0 +1,16 @@
+LOCUS       FEAT1               12 bp    DNA     linear   SYN 01-JAN-2000
+DEFINITION  Example annotated sequence.
+ACCESSION   FEAT1
+VERSION     FEAT1.1
+SOURCE      Synthetic construct
+  ORGANISM  Synthetic construct
+FEATURES             Location/Qualifiers
+     gene            2..6
+                     /gene="geneA"
+                     /note="example gene"
+     CDS             8..10
+                     /gene="cdsA"
+                     /product="short peptide"
+ORIGIN
+        1 acgtacgtacgt
+//

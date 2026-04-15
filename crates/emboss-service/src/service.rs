@@ -3,13 +3,20 @@
 use std::str::FromStr;
 
 use emboss_config::PlatformConfig;
-use emboss_core::{MoleculeKind, PLATFORM_IDENTITY};
+use emboss_core::{
+    FeatureKind, FeatureSelector, Interval, MoleculeKind, PLATFORM_IDENTITY, Strand,
+};
 use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
     OutcomeStatus, PlatformError,
 };
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
+use emboss_tools::feature_tools::{
+    ExtractfeatParams, FeatcopyParams, MaskfeatParams, MaskseqParams, extractfeat_help,
+    featcopy_help, maskfeat_help, maskseq_help, run_extractfeat, run_featcopy, run_maskfeat,
+    run_maskseq,
+};
 use emboss_tools::sequence_edit::{
     DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
@@ -131,6 +138,10 @@ impl EmbossService {
             "revseq" => self.invoke_revseq(request, descriptor),
             "trimseq" => self.invoke_trimseq(request, descriptor),
             "descseq" => self.invoke_descseq(request, descriptor),
+            "maskseq" => self.invoke_maskseq(request, descriptor),
+            "maskfeat" => self.invoke_maskfeat(request, descriptor),
+            "extractfeat" => self.invoke_extractfeat(request, descriptor),
+            "featcopy" => self.invoke_featcopy(request, descriptor),
             "extractseq" => self.invoke_extractseq(request, descriptor),
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
@@ -713,6 +724,264 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_maskseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, maskseq_help()));
+        }
+
+        let params = parse_maskseq_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_maskseq(MaskseqParams {
+            input,
+            intervals: params.intervals.clone(),
+            mask_char: params.mask_char,
+        })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("masked FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "masked {} records across {} intervals",
+                outcome.records.len(),
+                outcome.intervals.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Explicit sequence masking completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Intervals: {}",
+                    format_interval_list(&outcome.intervals)
+                ))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!(
+                    "Mask symbol: {}",
+                    mask_char_summary(outcome.mask_char)
+                ))
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("masked-sequences", ArtifactKind::Sequence)
+                .with_label("Masked sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_maskfeat(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, maskfeat_help()));
+        }
+
+        let params = parse_maskfeat_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_maskfeat(MaskfeatParams {
+            input,
+            selector: params.selector.clone(),
+            mask_char: params.mask_char,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("feature-masked FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "masked {} selected features across {} records",
+                outcome.selected_feature_count,
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Feature masking completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line(format!(
+                    "Selected features: {}",
+                    outcome.selected_feature_count
+                ))
+                .with_line(format!(
+                    "Mask symbol: {}",
+                    mask_char_summary(outcome.mask_char)
+                ))
+                .with_line("Output format: fasta (annotations retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("feature-masked-sequences", ArtifactKind::Sequence)
+                .with_label("Feature-masked sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_extractfeat(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, extractfeat_help()));
+        }
+
+        let params = parse_extractfeat_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_extractfeat(ExtractfeatParams {
+            input,
+            selector: params.selector.clone(),
+        })?;
+        let extracted_records = outcome
+            .records
+            .into_iter()
+            .map(|record| record.record)
+            .collect::<Vec<_>>();
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("feature-extracted FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "extracted {} feature-defined regions",
+                extracted_records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(extracted_records),
+            ResultSummary::new("Feature extraction completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line(format!(
+                    "Extracted records: {}",
+                    outcome.extracted_feature_count
+                ))
+                .with_line("Derived identifiers: <source>:<start>-<end>:<feature-or-kind>")
+                .with_line("Output format: fasta (rebased feature retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("extracted-feature-sequences", ArtifactKind::Sequence)
+                .with_label("Feature-defined extracted sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_featcopy(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, featcopy_help()));
+        }
+
+        let params = parse_featcopy_params(request.arguments())?;
+        let source_path = params.source.path.display().to_string();
+        let target_path = params.target.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (source, source_provenance, mut source_diagnostics) =
+            self.resolve_local_sequence_input(&source_path)?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&target_path)?;
+        source_diagnostics.extend(target_diagnostics);
+        let outcome = run_featcopy(FeatcopyParams {
+            source,
+            target,
+            selector: params.selector.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("feature-copied FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "copied {} features onto {} target records",
+                outcome.copied_feature_count,
+                outcome.records.len()
+            ),
+            source_diagnostics,
+            vec![
+                source_provenance,
+                target_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Feature copy completed")
+                .with_line(format!("Source: {}", outcome.source.path.display()))
+                .with_line(format!("Target: {}", outcome.target.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line(format!("Copied features: {}", outcome.copied_feature_count))
+                .with_line("Compatibility: pair by identifier and require equal lengths")
+                .with_line("Output format: fasta (copied annotations retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("feature-copied-sequences", ArtifactKind::Sequence)
+                .with_label("Feature-copied sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_cutseq(
         &self,
         request: InvocationRequest,
@@ -1210,6 +1479,376 @@ fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceEr
     })
 }
 
+fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("maskseq", maskseq_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut intervals = Vec::new();
+    let mut mask_char = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--mask-char=") {
+            mask_char = Some(parse_mask_char("maskseq", value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--mask-char" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --mask-char")
+                    .with_code("service.tool.maskseq.mask_char_missing")
+            })?;
+            mask_char = Some(parse_mask_char("maskseq", value)?);
+            index += 2;
+            continue;
+        }
+        if argument.starts_with("--") {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("unknown maskseq argument '{argument}'"),
+            )
+            .with_code("service.tool.maskseq.argument_unknown")
+            .with_detail(maskseq_help()));
+        }
+
+        intervals.push(parse_interval_token("maskseq", argument)?);
+        index += 1;
+    }
+
+    if intervals.is_empty() {
+        return Err(tool_usage_error("maskseq", maskseq_help()));
+    }
+
+    Ok(MaskseqParams {
+        input,
+        intervals,
+        mask_char,
+    })
+}
+
+fn parse_maskfeat_params(arguments: &[String]) -> Result<MaskfeatParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("maskfeat", maskfeat_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let (selector, mask_char) = parse_feature_selector_flags("maskfeat", &arguments[1..], true)?;
+
+    Ok(MaskfeatParams {
+        input,
+        selector,
+        mask_char,
+    })
+}
+
+fn parse_extractfeat_params(arguments: &[String]) -> Result<ExtractfeatParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("extractfeat", extractfeat_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let (selector, mask_char) =
+        parse_feature_selector_flags("extractfeat", &arguments[1..], false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "extractfeat does not accept --mask-char",
+        )
+        .with_code("service.tool.extractfeat.mask_char_unsupported")
+        .with_detail(extractfeat_help()));
+    }
+
+    Ok(ExtractfeatParams { input, selector })
+}
+
+fn parse_featcopy_params(arguments: &[String]) -> Result<FeatcopyParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("featcopy", featcopy_help()));
+    }
+
+    let source = SequenceInput::new(arguments[0].clone());
+    let target = SequenceInput::new(arguments[1].clone());
+    let (selector, mask_char) = parse_feature_selector_flags("featcopy", &arguments[2..], false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "featcopy does not accept --mask-char",
+        )
+        .with_code("service.tool.featcopy.mask_char_unsupported")
+        .with_detail(featcopy_help()));
+    }
+
+    Ok(FeatcopyParams {
+        source,
+        target,
+        selector,
+    })
+}
+
+fn parse_feature_selector_flags(
+    tool: &str,
+    arguments: &[String],
+    allow_mask_char: bool,
+) -> Result<(FeatureSelector, Option<char>), ServiceError> {
+    let mut selectors = Vec::new();
+    let mut mask_char = None;
+    let mut index = 0usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--kind=") {
+            selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 1;
+            continue;
+        }
+        if argument == "--kind" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --kind")
+                    .with_code(format!("service.tool.{tool}.kind_missing"))
+            })?;
+            selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--name=") {
+            selectors.push(FeatureSelector::Name(value.to_owned()));
+            index += 1;
+            continue;
+        }
+        if argument == "--name" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --name")
+                    .with_code(format!("service.tool.{tool}.name_missing"))
+            })?;
+            selectors.push(FeatureSelector::Name(value.clone()));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--qualifier=") {
+            selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--qualifier" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --qualifier")
+                    .with_code(format!("service.tool.{tool}.qualifier_missing"))
+            })?;
+            selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--strand=") {
+            selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 1;
+            continue;
+        }
+        if argument == "--strand" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --strand")
+                    .with_code(format!("service.tool.{tool}.strand_missing"))
+            })?;
+            selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 2;
+            continue;
+        }
+        if allow_mask_char {
+            if let Some(value) = argument.strip_prefix("--mask-char=") {
+                mask_char = Some(parse_mask_char(tool, value)?);
+                index += 1;
+                continue;
+            }
+            if argument == "--mask-char" {
+                let value = arguments.get(index + 1).ok_or_else(|| {
+                    PlatformError::new(ErrorCategory::Validation, "missing value for --mask-char")
+                        .with_code(format!("service.tool.{tool}.mask_char_missing"))
+                })?;
+                mask_char = Some(parse_mask_char(tool, value)?);
+                index += 2;
+                continue;
+            }
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown {tool} argument '{argument}'"),
+        )
+        .with_code(format!("service.tool.{tool}.argument_unknown"))
+        .with_detail(feature_tool_help(tool)));
+    }
+
+    let selector = match selectors.len() {
+        0 => FeatureSelector::Any,
+        1 => selectors.remove(0),
+        _ => FeatureSelector::All(selectors),
+    };
+
+    Ok((selector, mask_char))
+}
+
+fn parse_feature_qualifier_selector(value: &str) -> Result<FeatureSelector, ServiceError> {
+    let (key, qualifier_value) = match value.split_once('=') {
+        Some((key, qualifier_value)) => (key.trim(), Some(qualifier_value.trim().to_owned())),
+        None => (value.trim(), None),
+    };
+
+    if key.is_empty() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "feature qualifier selectors require a non-empty key",
+        )
+        .with_code("service.tool.feature.qualifier_invalid"));
+    }
+
+    Ok(FeatureSelector::Qualifier {
+        key: key.to_owned(),
+        value: qualifier_value.filter(|value| !value.is_empty()),
+    })
+}
+
+fn parse_feature_kind(value: &str) -> FeatureKind {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "gene" => FeatureKind::Gene,
+        "cds" | "codingsequence" | "coding_sequence" => FeatureKind::CodingSequence,
+        "exon" => FeatureKind::Exon,
+        "intron" => FeatureKind::Intron,
+        "region" => FeatureKind::Region,
+        "motif" => FeatureKind::Motif,
+        "repeat" | "repeatregion" | "repeat_region" => FeatureKind::RepeatRegion,
+        "misc" | "miscfeature" | "misc_feature" => FeatureKind::MiscFeature,
+        other => FeatureKind::Other(other.to_owned()),
+    }
+}
+
+fn parse_feature_strand(value: &str) -> Result<Strand, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "forward" | "+" | "plus" => Ok(Strand::Forward),
+        "reverse" | "-" | "minus" => Ok(Strand::Reverse),
+        "unknown" | "." => Ok(Strand::Unknown),
+        other => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "strand must be one of forward, reverse, or unknown",
+        )
+        .with_code("service.tool.feature.strand_invalid")
+        .with_detail(other.to_owned())),
+    }
+}
+
+fn parse_mask_char(tool: &str, value: &str) -> Result<char, ServiceError> {
+    let mut chars = value.chars();
+    match (chars.next(), chars.next()) {
+        (Some(symbol), None) => Ok(symbol),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} expects a single mask character"),
+        )
+        .with_code("service.tool.mask_char.invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn parse_interval_token(tool: &str, value: &str) -> Result<Interval, ServiceError> {
+    let (start_raw, end_raw) = value.split_once(':').ok_or_else(|| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} expects intervals in start:end form"),
+        )
+        .with_code("service.tool.interval.parse_failed")
+        .with_detail(value.to_owned())
+    })?;
+    let start = parse_positive_index(tool, start_raw.trim())?;
+    let end = parse_positive_index(tool, end_raw.trim())?;
+    if start > end {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} requires interval start <= end"),
+        )
+        .with_code("service.tool.interval.invalid")
+        .with_detail(value.to_owned()));
+    }
+
+    Interval::new(start - 1, end).map_err(|error| {
+        PlatformError::new(ErrorCategory::Validation, error.to_string())
+            .with_code("service.tool.interval.invalid")
+            .with_detail(value.to_owned())
+    })
+}
+
+fn format_interval_list(intervals: &[Interval]) -> String {
+    intervals
+        .iter()
+        .map(|interval| format!("{}:{}", interval.start() + 1, interval.end()))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+fn mask_char_summary(mask_char: Option<char>) -> String {
+    match mask_char {
+        Some(mask_char) => mask_char.to_string(),
+        None => "auto (N for nucleotide, X for protein)".to_owned(),
+    }
+}
+
+fn describe_selector(selector: &FeatureSelector) -> String {
+    match selector {
+        FeatureSelector::Any => "all features".to_owned(),
+        FeatureSelector::Kind(kind) => format!("kind={}", describe_feature_kind(kind)),
+        FeatureSelector::Name(name) => format!("name={name}"),
+        FeatureSelector::Qualifier { key, value } => match value {
+            Some(value) => format!("qualifier={key}={value}"),
+            None => format!("qualifier={key}"),
+        },
+        FeatureSelector::Strand(strand) => format!("strand={strand}"),
+        FeatureSelector::Overlaps(interval) => {
+            format!("overlaps={}..{}", interval.start() + 1, interval.end())
+        }
+        FeatureSelector::ContainedWithin(interval) => {
+            format!(
+                "contained-within={}..{}",
+                interval.start() + 1,
+                interval.end()
+            )
+        }
+        FeatureSelector::All(selectors) => selectors
+            .iter()
+            .map(describe_selector)
+            .collect::<Vec<_>>()
+            .join(" and "),
+        FeatureSelector::AnyOf(selectors) => selectors
+            .iter()
+            .map(describe_selector)
+            .collect::<Vec<_>>()
+            .join(" or "),
+        FeatureSelector::Not(selector) => format!("not ({})", describe_selector(selector)),
+    }
+}
+
+fn describe_feature_kind(kind: &FeatureKind) -> String {
+    match kind {
+        FeatureKind::Gene => "gene".to_owned(),
+        FeatureKind::CodingSequence => "cds".to_owned(),
+        FeatureKind::Exon => "exon".to_owned(),
+        FeatureKind::Intron => "intron".to_owned(),
+        FeatureKind::Region => "region".to_owned(),
+        FeatureKind::Motif => "motif".to_owned(),
+        FeatureKind::RepeatRegion => "repeat_region".to_owned(),
+        FeatureKind::MiscFeature => "misc_feature".to_owned(),
+        FeatureKind::Other(label) => label.clone(),
+    }
+}
+
+fn feature_tool_help(tool: &str) -> &'static str {
+    match tool {
+        "maskfeat" => maskfeat_help(),
+        "extractfeat" => extractfeat_help(),
+        "featcopy" => featcopy_help(),
+        _ => "",
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
@@ -1298,6 +1937,26 @@ mod tests {
     fn gapped_sequence_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/gapped_records.fasta")
+    }
+
+    fn annotated_feature_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/annotated_feature.gbk")
+    }
+
+    fn annotated_complex_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/annotated_complex.gbk")
+    }
+
+    fn featcopy_target_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/featcopy_target.fasta")
+    }
+
+    fn featcopy_mismatch_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/featcopy_mismatch.fasta")
     }
 
     fn implemented_service() -> EmbossService {
@@ -1605,5 +2264,128 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_maskseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "2:3".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("maskseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ANNT");
+                assert_eq!(records[2].residues(), "GNNC");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_maskfeat_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("maskfeat should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ANNNNNGTACGT");
+                assert_eq!(records[0].features().len(), 2);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_extractfeat_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("extractfeat should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "FEAT1:2-6:geneA");
+                assert_eq!(records[0].residues(), "CGTAC");
+                assert_eq!(records[0].features()[0].location.bounds().start(), 0);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn extractfeat_rejects_complex_locations() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_complex_fixture().display().to_string()]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_featcopy_against_matching_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featcopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featcopy_target_fixture().display().to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("featcopy should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "FEAT1");
+                assert_eq!(records[0].features().len(), 1);
+                assert_eq!(records[0].features()[0].name.as_deref(), Some("geneA"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn featcopy_rejects_identifier_mismatch() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featcopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featcopy_mismatch_fixture().display().to_string(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
     }
 }

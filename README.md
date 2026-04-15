@@ -55,6 +55,19 @@ The next shipped cohort now covers simple cleanup and editing operations:
   `emboss-rs descseq <input> --clear` replaces or clears sequence descriptions
   while preserving identifiers and sequence content.
 
+The next shipped cohort now covers feature-driven masking, extraction, and
+annotation-copy operations:
+
+- `emboss-rs maskseq <input> <start:end> [start:end ...] [--mask-char <char>]`
+  masks explicit 1-based inclusive coordinate intervals in each input record.
+- `emboss-rs maskfeat <input> [--kind <kind>] [--name <name>] [--qualifier <key[=value]>]`
+  masks selected simple feature spans from annotated EMBL or GenBank inputs.
+- `emboss-rs extractfeat <input> [--kind <kind>] [--name <name>] [--qualifier <key[=value]>]`
+  extracts one rebased output record per selected simple feature.
+- `emboss-rs featcopy <source> <target> [--kind <kind>] [--name <name>] [--qualifier <key[=value]>]`
+  copies selected features from annotated source records onto identifier-matched,
+  equal-length target records.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

@@ -30,8 +30,8 @@ pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};
 pub use feature_ops::{
     ExtractedFeatureRecord, FeatureOperationError, FeatureSummary, copy_selected_features,
-    drop_selected_features, extract_selected_regions, extract_single_region,
-    retain_selected_features, select_features, summarize_features,
+    drop_selected_features, extract_selected_regions, extract_single_region, mask_intervals,
+    mask_selected_features, retain_selected_features, select_features, summarize_features,
 };
 pub use feature_selector::FeatureSelector;
 pub use identifier::SequenceIdentifier;

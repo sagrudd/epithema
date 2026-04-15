@@ -131,6 +131,62 @@ pub fn copy_selected_features(record: &SequenceRecord, selector: &FeatureSelecto
         .collect()
 }
 
+/// Returns a copy of the record with the supplied intervals masked in place.
+pub fn mask_intervals(
+    record: &SequenceRecord,
+    intervals: &[Interval],
+    mask_symbol: char,
+) -> Result<SequenceRecord, FeatureOperationError> {
+    for interval in intervals {
+        if !record.span().contains_interval(*interval) {
+            return Err(FeatureOperationError::Domain(
+                crate::DomainError::SequenceIntervalOutOfBounds {
+                    interval_end: interval.end(),
+                    sequence_length: record.len(),
+                },
+            ));
+        }
+    }
+
+    let mut residues: Vec<char> = record.residues().chars().collect();
+    for interval in intervals {
+        for index in interval.start()..interval.end() {
+            residues[index] = mask_symbol;
+        }
+    }
+
+    clone_record_with_features_and_residues(
+        record,
+        record.features().to_vec(),
+        residues.into_iter().collect(),
+    )
+}
+
+/// Returns a copy of the record with matching simple feature spans masked in place.
+pub fn mask_selected_features(
+    record: &SequenceRecord,
+    selector: &FeatureSelector,
+    mask_symbol: char,
+) -> Result<SequenceRecord, FeatureOperationError> {
+    let matches = select_features(record, selector);
+    if matches.is_empty() {
+        return Err(FeatureOperationError::NoMatchingFeatures);
+    }
+
+    let intervals = matches
+        .into_iter()
+        .map(|feature| {
+            feature
+                .location
+                .single_span()
+                .map(|span| span.interval())
+                .ok_or(FeatureOperationError::UnsupportedComplexLocation)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    mask_intervals(record, &intervals, mask_symbol)
+}
+
 /// Returns a copy of the record retaining only matching features.
 pub fn retain_selected_features(
     record: &SequenceRecord,
@@ -186,11 +242,19 @@ fn clone_record_with_features(
     record: &SequenceRecord,
     features: Vec<Feature>,
 ) -> Result<SequenceRecord, FeatureOperationError> {
+    clone_record_with_features_and_residues(record, features, record.residues().to_owned())
+}
+
+fn clone_record_with_features_and_residues(
+    record: &SequenceRecord,
+    features: Vec<Feature>,
+    residues: String,
+) -> Result<SequenceRecord, FeatureOperationError> {
     let mut cloned = SequenceRecord::with_alphabet(
         record.identifier().clone(),
         record.molecule(),
         record.alphabet(),
-        record.residues().to_owned(),
+        residues,
     )?
     .with_metadata(record.metadata().clone());
 
@@ -363,8 +427,8 @@ mod tests {
 
     use super::{
         FeatureOperationError, copy_selected_features, drop_selected_features,
-        extract_selected_regions, extract_single_region, retain_selected_features,
-        summarize_features,
+        extract_selected_regions, extract_single_region, mask_intervals, mask_selected_features,
+        retain_selected_features, summarize_features,
     };
 
     fn annotated_record() -> SequenceRecord {
@@ -520,5 +584,30 @@ mod tests {
         let error = extract_selected_regions(&record, &FeatureSelector::Any)
             .expect_err("joined locations should be unsupported");
         assert_eq!(error, FeatureOperationError::UnsupportedComplexLocation);
+    }
+
+    #[test]
+    fn masks_intervals_and_preserves_features() {
+        let record = annotated_record();
+        let masked = mask_intervals(
+            &record,
+            &[Interval::new(1, 4).expect("valid interval")],
+            'N',
+        )
+        .expect("interval masking should succeed");
+
+        assert_eq!(masked.residues(), "ANNNGGTTAACC");
+        assert_eq!(masked.features(), record.features());
+    }
+
+    #[test]
+    fn masks_selected_simple_feature_spans() {
+        let record = annotated_record();
+        let masked =
+            mask_selected_features(&record, &FeatureSelector::Kind(FeatureKind::Gene), 'N')
+                .expect("feature masking should succeed");
+
+        assert_eq!(masked.residues(), "AANNNNTTAACC");
+        assert_eq!(masked.features(), record.features());
     }
 }
