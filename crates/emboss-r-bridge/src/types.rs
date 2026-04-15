@@ -1,5 +1,7 @@
 //! Bridge-safe projection types for future R-facing wrappers.
 
+use serde::{Deserialize, Serialize};
+
 /// Compact provenance summary safe to marshal across the bridge.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BridgeProvenanceSummary {
@@ -168,4 +170,66 @@ pub struct BridgePlotContract {
     pub summary: BridgePlotSummary,
     /// Serialized JSON contract.
     pub json: String,
+}
+
+/// Bridge-safe owned sequence record for the first analytical R surface.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeSequenceRecord {
+    /// Stable sequence identifier.
+    pub identifier: String,
+    /// Normalized uppercase residue content.
+    pub sequence: String,
+    /// Optional description.
+    pub description: Option<String>,
+    /// Stable molecule label.
+    pub molecule: String,
+    /// Stable alphabet label.
+    pub alphabet: String,
+    /// Residue length.
+    pub length: usize,
+}
+
+/// Bridge-safe input record for analytical method requests.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeSequenceInput {
+    /// Optional stable sequence identifier.
+    pub identifier: Option<String>,
+    /// Residue content to normalize and validate.
+    pub sequence: String,
+    /// Optional free-text description.
+    pub description: Option<String>,
+    /// Optional explicit molecule label.
+    pub molecule: Option<String>,
+}
+
+/// One bridge-safe charge-profile row.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeChargeWindow {
+    /// Stable sequence identifier.
+    pub identifier: String,
+    /// One-based inclusive window start.
+    pub window_start: usize,
+    /// One-based inclusive window end.
+    pub window_end: usize,
+    /// Window length in residues.
+    pub window_length: usize,
+    /// Mean charge across the window.
+    pub mean_charge: f64,
+}
+
+/// Bridge-safe charge-profile response.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BridgeChargeProfile {
+    /// Stable sequence identifier.
+    pub identifier: String,
+    /// Sequence length in residues.
+    pub sequence_length: usize,
+    /// Window length.
+    pub window: usize,
+    /// Step size.
+    pub step: usize,
+    /// Ordered sliding-window rows.
+    pub windows: Vec<BridgeChargeWindow>,
+    /// Typed plot contract JSON for the R plotting backend.
+    pub plot_contract_json: String,
 }

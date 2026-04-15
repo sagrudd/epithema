@@ -266,6 +266,8 @@ dependencies = [
  "emboss-plot-contract",
  "emboss-service",
  "emboss-tools",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
