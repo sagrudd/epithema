@@ -253,6 +253,44 @@ impl Alignment {
                 .collect(),
         )
     }
+
+    /// Returns the zero-based row index for the supplied identifier.
+    #[must_use]
+    pub fn row_index(&self, identifier: &str) -> Option<usize> {
+        self.rows
+            .iter()
+            .position(|row| row.identifier().accession() == identifier)
+    }
+
+    /// Returns a row by stable identifier.
+    #[must_use]
+    pub fn row_by_identifier(&self, identifier: &str) -> Option<&AlignmentRow> {
+        self.row_index(identifier)
+            .and_then(|index| self.rows.get(index))
+    }
+
+    /// Returns a new alignment sliced to the supplied zero-based half-open column interval.
+    pub fn slice_columns(&self, start: usize, end: usize) -> Result<Self, DomainError> {
+        if start >= end || end > self.column_count() {
+            return Err(DomainError::InvalidInterval { start, end });
+        }
+
+        let rows = self
+            .rows
+            .iter()
+            .map(|row| {
+                AlignmentRow::with_alphabet(
+                    row.identifier().clone(),
+                    row.molecule(),
+                    row.alphabet(),
+                    row.aligned()[start..end].to_owned(),
+                )
+                .map(|rebuilt| rebuilt.with_metadata(row.metadata().clone()))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Self::with_identifier(self.identifier.clone(), rows)
+    }
 }
 
 fn normalize_alignment_string(
@@ -352,5 +390,63 @@ mod tests {
         assert!(alignment.is_pairwise());
         assert_eq!(alignment.column_count(), 5);
         assert_eq!(alignment.column(2).expect("column should exist").len(), 2);
+    }
+
+    #[test]
+    fn finds_rows_by_identifier() {
+        let alignment = Alignment::with_identifier(
+            Some("example"),
+            vec![
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq1").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "AC-GT",
+                )
+                .expect("valid row"),
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq2").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "ACTGT",
+                )
+                .expect("valid row"),
+            ],
+        )
+        .expect("alignment should be valid");
+
+        assert_eq!(alignment.row_index("seq2"), Some(1));
+        assert_eq!(
+            alignment
+                .row_by_identifier("seq1")
+                .expect("row should exist")
+                .aligned(),
+            "AC-GT"
+        );
+    }
+
+    #[test]
+    fn slices_alignment_columns() {
+        let alignment = Alignment::with_identifier(
+            Some("example"),
+            vec![
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq1").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "AC-GT",
+                )
+                .expect("valid row"),
+                AlignmentRow::new(
+                    SequenceIdentifier::new("seq2").expect("valid identifier"),
+                    MoleculeKind::Dna,
+                    "ACTGT",
+                )
+                .expect("valid row"),
+            ],
+        )
+        .expect("alignment should be valid");
+
+        let sliced = alignment.slice_columns(1, 4).expect("slice should succeed");
+        assert_eq!(sliced.column_count(), 3);
+        assert_eq!(sliced.rows()[0].aligned(), "C-G");
+        assert_eq!(sliced.rows()[1].aligned(), "CTG");
     }
 }

@@ -14,6 +14,11 @@ use emboss_diagnostics::{
 };
 use emboss_providers::ProviderRegistry;
 use emboss_tools::ToolDescriptor;
+use emboss_tools::alignment_tools::{
+    AligncopyParams, AligncopypairParams, AlignmentInput, ExtractalignParams, InfoalignParams,
+    aligncopy_help, aligncopypair_help, extractalign_help, infoalign_help, run_aligncopy,
+    run_aligncopypair, run_extractalign, run_infoalign,
+};
 use emboss_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, cai_help, chips_help, codcmp_help,
     codcopy_help, render_profile_rows, run_cai, run_chips, run_codcmp, run_codcopy,
@@ -147,6 +152,10 @@ impl EmbossService {
             .ok_or_else(|| unknown_tool(request.tool()))?;
 
         match descriptor.name {
+            "aligncopy" => self.invoke_aligncopy(request, descriptor),
+            "aligncopypair" => self.invoke_aligncopypair(request, descriptor),
+            "infoalign" => self.invoke_infoalign(request, descriptor),
+            "extractalign" => self.invoke_extractalign(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
             "skipseq" => self.invoke_skipseq(request, descriptor),
@@ -219,6 +228,258 @@ impl EmbossService {
         intent: emboss_providers::ResolutionIntent,
     ) -> Result<ToolInputResolution, ServiceError> {
         ToolInputResolver::new().resolve(reference, intent)
+    }
+
+    fn invoke_aligncopy(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, aligncopy_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("aligncopy", aligncopy_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_alignment_input(&input)?;
+        let outcome = run_aligncopy(AligncopyParams { input })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "copied alignment with {} rows and {} columns",
+                outcome.alignment.row_count(),
+                outcome.alignment.column_count()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Alignment copied")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Output format: Stockholm")
+                .with_line("Copy policy: preserve row order and aligned content unchanged"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_aligncopypair(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, aligncopypair_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("aligncopypair", aligncopypair_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_alignment_input(&input)?;
+        let outcome = run_aligncopypair(AligncopypairParams { input })?;
+
+        let report = self.success_report(
+            &request.context,
+            "copied pairwise alignment".to_owned(),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Pairwise alignment copied")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Pairwise policy: exactly two rows required")
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_infoalign(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, infoalign_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("infoalign", infoalign_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_alignment_input(&input)?;
+        let outcome = run_infoalign(InfoalignParams { input })?;
+
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    outcome
+                        .alignment_identifier
+                        .clone()
+                        .unwrap_or_else(|| "-".to_owned()),
+                    outcome.classification.clone(),
+                    outcome.row_count.to_string(),
+                    outcome.column_count.to_string(),
+                    row.ordinal.to_string(),
+                    row.identifier.clone(),
+                    row.ungapped_length.to_string(),
+                    row.gap_count.to_string(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported alignment summary for {} rows", outcome.row_count),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "alignment".to_owned(),
+                    "classification".to_owned(),
+                    "row_count".to_owned(),
+                    "column_count".to_owned(),
+                    "row_ordinal".to_owned(),
+                    "row_identifier".to_owned(),
+                    "ungapped_length".to_owned(),
+                    "gap_count".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Alignment summary reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Alignment identifier: {}",
+                    outcome
+                        .alignment_identifier
+                        .clone()
+                        .unwrap_or_else(|| "-".to_owned())
+                ))
+                .with_line(format!("Classification: {}", outcome.classification))
+                .with_line(format!("Rows: {}", outcome.row_count))
+                .with_line(format!("Columns: {}", outcome.column_count)),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_extractalign(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, extractalign_help()));
+        }
+
+        let params = parse_extractalign_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_alignment_input(&params.input.path.display().to_string())?;
+        let outcome = run_extractalign(ExtractalignParams {
+            input,
+            row_ordinals: params.row_ordinals,
+            row_identifiers: params.row_identifiers,
+            start: params.start,
+            end: params.end,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "extracted sub-alignment with {} rows and {} columns",
+                outcome.alignment.row_count(),
+                outcome.alignment.column_count()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Alignment extracted")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Selected rows: {}",
+                    if outcome.row_ordinals.is_empty() && outcome.row_identifiers.is_empty() {
+                        "all".to_owned()
+                    } else {
+                        let mut parts = Vec::new();
+                        if !outcome.row_ordinals.is_empty() {
+                            parts.push(format!(
+                                "ordinals {}",
+                                outcome
+                                    .row_ordinals
+                                    .iter()
+                                    .map(ToString::to_string)
+                                    .collect::<Vec<_>>()
+                                    .join(",")
+                            ));
+                        }
+                        if !outcome.row_identifiers.is_empty() {
+                            parts
+                                .push(format!("identifiers {}", outcome.row_identifiers.join(",")));
+                        }
+                        parts.join("; ")
+                    }
+                ))
+                .with_line(format!(
+                    "Selected columns: {}",
+                    match (outcome.start, outcome.end) {
+                        (Some(start), Some(end)) => format!("{start}..{end}"),
+                        _ => "all".to_owned(),
+                    }
+                ))
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
     }
 
     fn invoke_seqcount(
@@ -2271,6 +2532,47 @@ impl EmbossService {
         }
     }
 
+    fn resolve_local_alignment_input(
+        &self,
+        raw: &str,
+    ) -> Result<(AlignmentInput, ArtifactProvenance, Vec<Diagnostic>), ServiceError> {
+        let reference = self.classify_input(raw.to_owned())?;
+        match self.resolve_input(reference, emboss_providers::ResolutionIntent::SequenceInput)? {
+            ToolInputResolution::LocalFile {
+                canonical_path,
+                provenance,
+                diagnostics,
+                ..
+            } => Ok((AlignmentInput::new(canonical_path), provenance, diagnostics)),
+            ToolInputResolution::ProviderRouted { provenance, .. } => Err(PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "provider-backed alignment acquisition is not implemented for this tool cohort yet",
+            )
+            .with_code("service.tool.input.provider_not_supported")
+            .with_detail(provenance.locator().to_owned())),
+            ToolInputResolution::InlineSequence { .. } => Err(PlatformError::new(
+                ErrorCategory::NotImplemented,
+                "inline sequence literals are not accepted for alignment input files",
+            )
+            .with_code("service.tool.input.inline_not_supported")),
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("could not resolve tool input '{}'", reference.raw()),
+            )
+            .with_code("service.tool.input.unresolved")
+            .with_detail(
+                diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.message().to_owned())
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            )),
+        }
+    }
+
     fn resolve_multiple_local_sequence_inputs(
         &self,
         raw_inputs: &[String],
@@ -2494,6 +2796,116 @@ fn parse_codcopy_params(arguments: &[String]) -> Result<CodcopyParams, ServiceEr
         source,
         profile_out,
     })
+}
+
+fn parse_extractalign_params(arguments: &[String]) -> Result<ExtractalignParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("extractalign", extractalign_help()));
+    }
+
+    let input = AlignmentInput::new(arguments[0].clone());
+    let mut row_ordinals = Vec::new();
+    let mut row_identifiers = Vec::new();
+    let mut start = None;
+    let mut end = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--row=") {
+            row_ordinals.push(parse_positive_count("extractalign", value, "row")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--row" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --row")
+                    .with_code("service.tool.extractalign.row_missing")
+            })?;
+            row_ordinals.push(parse_positive_count("extractalign", value, "row")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--row-id=") {
+            row_identifiers.push(value.to_owned());
+            index += 1;
+            continue;
+        }
+        if argument == "--row-id" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --row-id")
+                    .with_code("service.tool.extractalign.row_id_missing")
+            })?;
+            row_identifiers.push(value.clone());
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--start=") {
+            start = Some(parse_positive_count("extractalign", value, "start")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--start" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --start")
+                    .with_code("service.tool.extractalign.start_missing")
+            })?;
+            start = Some(parse_positive_count("extractalign", value, "start")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--end=") {
+            end = Some(parse_positive_count("extractalign", value, "end")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--end" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --end")
+                    .with_code("service.tool.extractalign.end_missing")
+            })?;
+            end = Some(parse_positive_count("extractalign", value, "end")?);
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown extractalign argument '{argument}'"),
+        )
+        .with_code("service.tool.extractalign.argument_unknown")
+        .with_detail(extractalign_help()));
+    }
+
+    Ok(ExtractalignParams {
+        input,
+        row_ordinals,
+        row_identifiers,
+        start,
+        end,
+    })
+}
+
+fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, ServiceError> {
+    let parsed = value.parse::<usize>().map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{flag} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{flag}_invalid"))
+        .with_detail(value.to_owned())
+    })?;
+
+    if parsed == 0 {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{flag} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{flag}_invalid"))
+        .with_detail(value.to_owned()));
+    }
+
+    Ok(parsed)
 }
 
 fn map_pattern_error(tool: &str, error: PatternError) -> ServiceError {
@@ -2984,6 +3396,10 @@ fn describe_feature_kind(kind: &FeatureKind) -> String {
 
 fn feature_tool_help(tool: &str) -> &'static str {
     match tool {
+        "aligncopy" => aligncopy_help(),
+        "aligncopypair" => aligncopypair_help(),
+        "infoalign" => infoalign_help(),
+        "extractalign" => extractalign_help(),
         "maskfeat" => maskfeat_help(),
         "extractfeat" => extractfeat_help(),
         "featcopy" => featcopy_help(),
@@ -3142,6 +3558,16 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/codon_compare_right.fasta")
     }
 
+    fn pairwise_alignment_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/pairwise_alignment.sto")
+    }
+
+    fn multiple_alignment_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/multiple_alignment.sto")
+    }
+
     fn checktrans_nucleotide_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
@@ -3186,6 +3612,114 @@ mod tests {
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
                 assert_eq!(table.rows[0][1], "3");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_aligncopy_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("aligncopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![multiple_alignment_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("aligncopy should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 3);
+                assert_eq!(alignment.identifier(), Some("multiple-demo"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_aligncopypair_against_pairwise_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("aligncopypair").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![pairwise_alignment_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("aligncopypair should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert!(alignment.is_pairwise());
+                assert_eq!(alignment.column_count(), 5);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn aligncopypair_rejects_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("aligncopypair").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![multiple_alignment_fixture().display().to_string()]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_infoalign_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infoalign").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![multiple_alignment_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("infoalign should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[0][2], "3");
+                assert_eq!(table.rows[0][3], "5");
+                assert_eq!(table.rows[0][7], "1");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_extractalign_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractalign").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            multiple_alignment_fixture().display().to_string(),
+            "--row-id".to_owned(),
+            "alpha".to_owned(),
+            "--row".to_owned(),
+            "3".to_owned(),
+            "--start".to_owned(),
+            "2".to_owned(),
+            "--end".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("extractalign should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 2);
+                assert_eq!(alignment.column_count(), 3);
+                assert_eq!(alignment.rows()[0].identifier().accession(), "alpha");
+                assert_eq!(alignment.rows()[0].aligned(), "C-G");
+                assert_eq!(alignment.rows()[1].identifier().accession(), "gamma");
+                assert_eq!(alignment.rows()[1].aligned(), "CCG");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

@@ -2,6 +2,7 @@
 
 use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
+pub mod alignment_tools;
 pub mod codon_tools;
 pub mod feature_tools;
 pub mod pattern_tools;
@@ -60,6 +61,10 @@ impl ToolRegistry {
 #[must_use]
 pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
     &[
+        alignment_tools::ALIGNCOPY_DESCRIPTOR,
+        alignment_tools::ALIGNCOPYPAIR_DESCRIPTOR,
+        alignment_tools::INFOALIGN_DESCRIPTOR,
+        alignment_tools::EXTRACTALIGN_DESCRIPTOR,
         sequence_stream::NEWSEQ_DESCRIPTOR,
         sequence_stream::SEQCOUNT_DESCRIPTOR,
         sequence_stream::NOTSEQ_DESCRIPTOR,
@@ -112,6 +117,10 @@ mod tests {
         assert_eq!(
             names,
             vec![
+                "aligncopy",
+                "aligncopypair",
+                "infoalign",
+                "extractalign",
                 "newseq",
                 "seqcount",
                 "notseq",

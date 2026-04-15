@@ -113,6 +113,18 @@ The next shipped cohort now covers codon-usage and coding-bias operations:
 - `emboss-rs codcmp <left-input> <right-input>` compares codon counts and
   frequencies across two coding-sequence or normalized-profile sources.
 
+The next shipped cohort now covers alignment-utility operations:
+
+- `emboss-rs aligncopy <input>` copies a single aligned FASTA or Stockholm
+  alignment unchanged and emits Stockholm by default.
+- `emboss-rs aligncopypair <input>` copies a pairwise alignment unchanged and
+  rejects inputs that do not contain exactly two rows.
+- `emboss-rs infoalign <input>` reports alignment-level and per-row summary
+  statistics including row count, column count, ungapped length, and gap count.
+- `emboss-rs extractalign <input> [--row <ordinal>] [--row-id <identifier>] [--start <column>] [--end <column>]`
+  extracts selected rows plus an optional 1-based inclusive column slice and
+  emits the resulting sub-alignment as Stockholm.
+
 The `emboss-docgen` crate owns the versioned JSON contract that future
 `emboss-rs autodoc` runs will consume for reproducible documentation inputs.
 The current `emboss-rs autodoc <path>` command validates that contract and

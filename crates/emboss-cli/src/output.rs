@@ -3,7 +3,7 @@
 use std::path::Path;
 
 use emboss_docgen::{AutodocProcessingSummary, GeneratedDocsReport};
-use emboss_io::write_fasta_string;
+use emboss_io::{write_fasta_string, write_stockholm_string};
 use emboss_service::{EmbossService, InvocationResponse, MethodResult, ResultPayload};
 use emboss_testkit::ToolValidationReport;
 
@@ -111,7 +111,19 @@ pub fn format_method_result_summary(result: &MethodResult) -> String {
                 }
             }
         }
-        ResultPayload::Alignment(_) | ResultPayload::Features(_) => {
+        ResultPayload::Alignment(alignment) => {
+            rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
+            rendered.push('\n');
+            rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
+            rendered.push_str("\n\n");
+            match write_stockholm_string(alignment) {
+                Ok(stockholm) => rendered.push_str(stockholm.trim_end()),
+                Err(error) => rendered.push_str(&format!(
+                    "failed to render alignment payload as Stockholm: {error}"
+                )),
+            }
+        }
+        ResultPayload::Features(_) => {
             rendered.push_str(&format!("Payload kind: {}", result.payload.kind_label()));
             rendered.push('\n');
             rendered.push_str(&format!("Artifacts: {}", result.artifacts.len()));
