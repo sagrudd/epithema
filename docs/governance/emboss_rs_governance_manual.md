@@ -150,9 +150,10 @@ This manual is the obvious canonical entry point for governance. Supporting
 documents are organized as follows:
 
 - [Governance Index](./index.md) provides the maintained table of contents
-- [Policies](./policies/) hold focused normative elaborations
-- [Appendices](./appendices/) hold architecture background, registries, and
-  inventory reference material
+- policy modules under `docs/governance/policies/` hold focused normative
+  elaborations
+- appendix documents under `docs/governance/appendices/` hold architecture
+  background, registries, and inventory reference material
 
 Governance updates should prefer normalization, consolidation, and
 de-duplication over a flat accumulation of disconnected files. Important

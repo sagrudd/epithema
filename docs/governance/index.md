@@ -41,3 +41,18 @@ New governance material should be added under `docs/governance/` and linked from
 this index. Normative policy belongs in the governance manual and, where useful,
 the `policies/` directory. Extended registries, detailed inventories, and other
 supporting material belong in `appendices/`.
+
+## Governance Contents
+
+```{toctree}
+:maxdepth: 2
+
+emboss_rs_governance_manual
+policies/scope_and_tool_family_policy
+policies/documentation_and_autodoc_policy
+policies/codex_commit_and_push_policy
+policies/code_structure_and_module_naming_policy
+appendices/foundational_architecture_brief
+appendices/family_to_tool_mapping_reference
+appendices/full_scope_matrix
+```
