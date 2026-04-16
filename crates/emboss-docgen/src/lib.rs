@@ -11,6 +11,7 @@ pub mod emit;
 pub mod error;
 pub mod legacy;
 pub mod process;
+pub mod stub;
 pub mod transform;
 pub mod validate;
 
@@ -31,6 +32,9 @@ pub use process::{
     AutodocProcessingSummary, emit_generated_docs_from_path,
     emit_generated_docs_from_path_with_gateway, load_document_from_path, load_summary_from_path,
     load_summary_from_path_with_gateway,
+};
+pub use stub::{
+    DEFAULT_AUTODOC_STUBS_ROOT, build_stub_catalog, build_stub_document, write_stub_catalog,
 };
 pub use transform::{
     LegacyAutodocTransformReport, derive_autodoc_from_legacy_root, transform_legacy_report,

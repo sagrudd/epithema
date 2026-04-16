@@ -11,7 +11,7 @@ DOCS_LIVE_PORT ?= 8000
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean release-build release-test release-docs release-container release-check
+.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh release-build release-test release-docs release-container release-check
 
 help:
 	@printf "%s\n" \
@@ -19,6 +19,8 @@ help:
 		"" \
 		"Documentation:" \
 		"  make docs        Build the Sphinx documentation site" \
+		"  make autodoc-stubs   Refresh committed autodoc JSON inputs for the exposed tool registry" \
+		"  make autodoc-refresh Refresh generated tool Markdown pages from the committed autodoc inputs" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
 		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
@@ -71,6 +73,16 @@ release-check: lint-repo check-sister-repo release-test release-docs release-bui
 docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)
 
+autodoc-stubs:
+	$(RUSTCARGO) run -p emboss-docgen --example write_registry_autodoc_stubs -- docs/autodoc/tools
+
+autodoc-refresh: autodoc-stubs
+	rm -rf docs/generated/tools docs/generated/index.md
+	@for doc in $$(find docs/autodoc/tools -name '*.json' | sort); do \
+		printf "%s\n" "Refreshing $$doc"; \
+		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs >/dev/null; \
+	done
+
 lint-docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b dummy $(DOCS_DIR) $(DOCS_BUILD_DIR)/lint
 
@@ -80,6 +92,7 @@ lint-repo:
 	test -f Cargo.toml
 	test -f docs/index.md
 	test -f docs/README.md
+	test -f docs/autodoc/README.md
 	test -f docs/generated/index.md
 	test -f docs/governance/index.md
 	test -f docs/governance/emboss_rs_governance_manual.md

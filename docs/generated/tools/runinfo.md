@@ -1,0 +1,49 @@
+# runinfo
+
+> Generated from validated autodoc input. Edit the source autodoc document rather than this page.
+
+## Summary
+
+Normalize ENA or SRA archive metadata for one accession-backed archive object
+
+## Document Metadata
+
+- Document ID: `runinfo-stub-v1`
+- Schema version: `emboss-rs.autodoc/v1`
+- Source mode: `curated`
+- Tool family: `archive_tools`
+- Legacy names: `runinfo`
+
+## Overview
+
+`runinfo` is part of the exposed EMBOSS-RS `archive_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+
+## Inputs
+
+This archive-facing tool accepts one governed ENA/SRA-style archive accession through the shared input-resolution seam. Provider qualification and bare-accession behaviour follow the documented archive acquisition policy for the implemented v1 subset.
+
+## Outputs
+
+The current implementation emits structured archive metadata or normalized public-run manifest rows. Direct acquisition support is method-specific and explicitly documented where available.
+
+## Current Status
+
+This method is implemented and exposed through `emboss-rs runinfo`. The generated tool page and the machine-readable validation stub at [`../validation/runinfo.validation.json`](../validation/runinfo.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+
+## Caveats
+
+Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+
+## Declared Artifacts
+
+No artifacts are declared for this autodoc document.
+
+## Declared Examples
+
+No examples are declared for this autodoc document.
+
+## Provenance
+
+- Curated by: emboss-rs autodoc stub generator
+- Source references: none declared
+

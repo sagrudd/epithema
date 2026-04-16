@@ -6,6 +6,8 @@ mod checktrans;
 
 use crate::ToolDescriptor;
 
+const FAMILY: &str = "translation_tools";
+
 pub use backtranambig::{
     BacktranambigOutcome, BacktranambigParams, backtranambig_help, run_backtranambig,
 };
@@ -16,14 +18,17 @@ pub use checktrans::{ChecktransOutcome, ChecktransParams, checktrans_help, run_c
 pub const BACKTRANSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "backtranseq",
     "back-translate protein sequences to deterministic representative DNA codons",
-);
+)
+.with_family(FAMILY);
 /// `backtranambig` descriptor.
 pub const BACKTRANAMBIG_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "backtranambig",
     "back-translate protein sequences to ambiguous DNA codon representations",
-);
+)
+.with_family(FAMILY);
 /// `checktrans` descriptor.
 pub const CHECKTRANS_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "checktrans",
     "strictly compare frame-1 DNA translation against expected protein sequences",
-);
+)
+.with_family(FAMILY);

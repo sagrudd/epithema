@@ -1,0 +1,52 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "charge-stub-v1",
+  "tool": {
+    "name": "charge",
+    "family": "protein_plots",
+    "summary": "Report a sliding-window protein charge profile and emit a line-plot contract",
+    "legacy_names": [
+      "charge"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`charge` is part of the exposed EMBOSS-RS `protein_plots` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one protein sequence record for the current v1 plotted analytical path and computes plot-ready analytical data in Rust."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The current implementation emits both a structured analytical report and a formal plot-contract payload consumed by the R rendering surface."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs charge`. The generated tool page and the machine-readable validation stub at [`../validation/charge.validation.json`](../validation/charge.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+    }
+  ],
+  "artifacts": [],
+  "examples": [],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs autodoc stub generator",
+    "source_references": []
+  },
+  "validation": null
+}

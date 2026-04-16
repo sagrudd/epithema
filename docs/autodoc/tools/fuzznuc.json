@@ -1,0 +1,52 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "fuzznuc-stub-v1",
+  "tool": {
+    "name": "fuzznuc",
+    "family": "pattern_tools",
+    "summary": "Scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
+    "legacy_names": [
+      "fuzznuc"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`fuzznuc` is part of the exposed EMBOSS-RS `pattern_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts nucleotide or protein sequence inputs plus a deterministic pattern specification defined by the implemented method parameters."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The current implementation emits deterministic pattern-hit tables with explicit coordinates, frames, or matched motifs as appropriate to the tool."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs fuzznuc`. The generated tool page and the machine-readable validation stub at [`../validation/fuzznuc.validation.json`](../validation/fuzznuc.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+    }
+  ],
+  "artifacts": [],
+  "examples": [],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs autodoc stub generator",
+    "source_references": []
+  },
+  "validation": null
+}

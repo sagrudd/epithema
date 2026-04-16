@@ -8,13 +8,17 @@ pub use seqret::{SeqretOutcome, SeqretParams, SeqretSource, run_seqret, seqret_h
 
 use crate::ToolDescriptor;
 
+const FAMILY: &str = "retrieval_tools";
+
 /// `seqret` descriptor.
 pub const SEQRET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "seqret",
     "normalize local sequence inputs or retrieve one accession-backed sequence",
-);
+)
+.with_family(FAMILY);
 /// `refseqget` descriptor.
 pub const REFSEQGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "refseqget",
     "retrieve one provider-backed reference sequence through the governed acquisition seam",
-);
+)
+.with_family(FAMILY);

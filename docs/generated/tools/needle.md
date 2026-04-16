@@ -11,7 +11,7 @@ Global pairwise sequence alignment
 - Document ID: `needle-minimal`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
-- Tool family: `alignment`
+- Tool family: `pairwise_alignment`
 - Legacy names: `needle`
 
 ## Overview

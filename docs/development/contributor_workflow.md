@@ -75,6 +75,12 @@ update documentation whenever they change:
 For this repository state, documentation changes are often part of the same
 material change set rather than a follow-up task.
 
+For exposed bioinformatics methods, the canonical documentation-preparation path
+is the committed autodoc contract set under `docs/autodoc/tools/` plus
+generation through `emboss-rs autodoc`. Adding or exposing a tool without a
+matching autodoc contract, generated page, and generated index entry is treated
+as a repository error and should fail the completeness checks.
+
 ## Structure and Naming Discipline
 
 Contributors must preserve disciplined structure and naming. The current Rust

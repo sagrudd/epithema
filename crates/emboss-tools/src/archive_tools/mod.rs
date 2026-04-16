@@ -8,14 +8,18 @@ pub use runinfo::{RuninfoOutcome, RuninfoParams, run_runinfo, runinfo_help};
 
 use crate::ToolDescriptor;
 
+const FAMILY: &str = "archive_tools";
+
 /// `runinfo` descriptor.
 pub const RUNINFO_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "runinfo",
     "normalize ENA or SRA archive metadata for one accession-backed archive object",
-);
+)
+.with_family(FAMILY);
 
 /// `runget` descriptor.
 pub const RUNGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "runget",
     "discover a normalized public-run manifest through the governed archive acquisition seam",
-);
+)
+.with_family(FAMILY);

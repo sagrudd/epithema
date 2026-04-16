@@ -1,0 +1,52 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "aligncopypair-stub-v1",
+  "tool": {
+    "name": "aligncopypair",
+    "family": "alignment_tools",
+    "summary": "Copy a single pairwise alignment unchanged and reject non-pairwise inputs",
+    "legacy_names": [
+      "aligncopypair"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`aligncopypair` is part of the exposed EMBOSS-RS `alignment_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts alignment or sequence inputs through the shared alignment and sequence IO layers. Exact parameter shape remains governed by the implemented CLI/service definition for the method."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The current implementation emits normalized alignments or structured alignment summaries through the shared result layer."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs aligncopypair`. The generated tool page and the machine-readable validation stub at [`../validation/aligncopypair.validation.json`](../validation/aligncopypair.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+    }
+  ],
+  "artifacts": [],
+  "examples": [],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs autodoc stub generator",
+    "source_references": []
+  },
+  "validation": null
+}

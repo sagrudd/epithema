@@ -7,6 +7,8 @@ mod union;
 
 use crate::ToolDescriptor;
 
+const FAMILY: &str = "sequence_transform";
+
 pub use cutseq::{CutseqOutcome, CutseqParams, cutseq_help, run_cutseq};
 pub use extractseq::{ExtractseqOutcome, ExtractseqParams, extractseq_help, run_extractseq};
 pub use splitter::{SplitterOutcome, SplitterParams, run_splitter, splitter_help};
@@ -16,19 +18,23 @@ pub use union::{UnionOutcome, UnionParams, run_union, union_help};
 pub const EXTRACTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "extractseq",
     "extract a 1-based inclusive region from each input sequence record",
-);
+)
+.with_family(FAMILY);
 /// `cutseq` descriptor.
 pub const CUTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "cutseq",
     "cut each input sequence record into left and right fragments at a position",
-);
+)
+.with_family(FAMILY);
 /// `union` descriptor.
 pub const UNION_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "union",
     "concatenate multiple sequence inputs into one output stream",
-);
+)
+.with_family(FAMILY);
 /// `splitter` descriptor.
 pub const SPLITTER_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "splitter",
     "partition an input sequence stream into deterministic fixed-size chunks",
-);
+)
+.with_family(FAMILY);

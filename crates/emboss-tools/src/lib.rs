@@ -22,6 +22,8 @@ pub mod translation_tools;
 pub struct ToolDescriptor {
     /// Stable tool name as exposed through `emboss-rs <tool>`.
     pub name: &'static str,
+    /// Stable governed tool family used for discovery and documentation grouping.
+    pub family: &'static str,
     /// Short summary for help and documentation generation.
     pub summary: &'static str,
 }
@@ -30,7 +32,18 @@ impl ToolDescriptor {
     /// Creates a tool descriptor from stable identity metadata.
     #[must_use]
     pub const fn new(name: &'static str, summary: &'static str) -> Self {
-        Self { name, summary }
+        Self {
+            name,
+            family: "ungrouped",
+            summary,
+        }
+    }
+
+    /// Associates the descriptor with its governed tool family.
+    #[must_use]
+    pub const fn with_family(mut self, family: &'static str) -> Self {
+        self.family = family;
+        self
     }
 }
 

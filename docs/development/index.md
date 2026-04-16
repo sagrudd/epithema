@@ -15,4 +15,5 @@ its related governance policies.
 
 contributor_workflow
 codex_workflow
+../autodoc/README
 ```
