@@ -85,8 +85,10 @@ For `v1.0.0`, “release compatible” means:
 
 ## Manual settings still required
 
-- GitHub Pages must remain configured to deploy from GitHub Actions for
-  `emboss-rs`.
+- GitHub Pages publication is provisioned automatically by the docs workflow
+  when repository policy allows it. If repository or organization policy blocks
+  automatic enablement, Pages must be set manually to deploy from GitHub
+  Actions for `emboss-rs`.
 - GHCR publication requires GitHub Actions package write permission on the
   `emboss-rs` repository. No extra secret is required when publishing with the
   repository `GITHUB_TOKEN`.

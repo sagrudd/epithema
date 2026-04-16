@@ -236,9 +236,9 @@ The canonical governance entry point is
 [docs/governance/index.md](./docs/governance/index.md).
 
 GitHub Pages is the formal public publication path for the documentation site.
-Repository administrators must set Pages to deploy from **GitHub Actions** so
-the workflow in `.github/workflows/docs-pages.yml` can publish the built Sphinx
-site.
+The workflow in `.github/workflows/docs-pages.yml` now provisions Pages through
+the standard GitHub Pages actions and publishes the built Sphinx site from
+`main`.
 
 ## Contributor Workflow
 

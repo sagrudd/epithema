@@ -40,6 +40,8 @@ Environment-limited checks not runnable on this machine:
 - `emboss-r` package tests and release checks, because `Rscript` is not
   installed here
 - local container smoke build, because Docker is not installed here
+- GitHub Pages still needs one successful docs workflow run after automatic
+  enablement was added in this fix
 
 These are release-process verification items, not audited product blockers, but
 they must still be confirmed in CI or on a maintainer workstation before the

@@ -98,13 +98,17 @@ The workflow:
 
 - runs automatically on pushes to `main`
 - supports manual publication through `workflow_dispatch`
+- provisions the repository Pages site automatically when the repository token
+  is allowed to manage Pages configuration
 - rebuilds the Sphinx site from `docs/requirements.txt`
 - uploads `docs/_build/html/` as the Pages artifact and deploys it through the
   standard GitHub Pages deployment actions
 
-## Required Repository Setting
+## Repository Setting Note
 
-A repository administrator must enable GitHub Pages with:
+The publication workflow now requests GitHub Pages enablement automatically via
+`actions/configure-pages`. If an organization policy or repository setting
+still blocks that change, the equivalent manual configuration is:
 
 - **Source:** `GitHub Actions`
 
