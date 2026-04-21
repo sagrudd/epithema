@@ -3,4 +3,5 @@
 .venv-docs
 docs/_build
 target
+dist
 ../emboss-r

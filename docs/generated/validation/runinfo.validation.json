@@ -1,26 +1,31 @@
 {
-  "document_id": "runinfo-minimal",
   "tool_name": "runinfo",
+  "document_id": "runinfo-stub-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
-    "total_case_count": 1
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'runinfo' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "runinfo-ena-and-sra-metadata-normalization",
-      "declaration_status": "declared",
-      "source_kind": "curated",
-      "execution_status": "pending",
-      "comparison_status": "not_compared",
-      "notes": [
-        "Normalize one provider-qualified ENA or SRA archive accession into a structured archive metadata report with linked identifiers and file counts."
-      ]
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "runinfo"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": []
+  "provenance": []
 }

@@ -39,7 +39,7 @@ jobs:
         run: python -m pip install -r docs/requirements.txt
 
       - name: Build documentation site
-        run: make docs PYTHON=python
+        run: make release-docs PYTHON=python
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4

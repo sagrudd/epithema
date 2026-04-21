@@ -32,8 +32,9 @@ package. Until that cutover, changes accumulate under `Unreleased`.
   `docs/release/`.
 
 ### Infrastructure
-- Added tag-driven GitHub release automation, release-note scaffolding, and
-  local release-check targets.
+- Added tag-driven GitHub release automation, release-note scaffolding,
+  release-bundle assembly, release metadata checks, and Linux container smoke
+  validation.
 
 ### Notes
 - `1.0.0` is reserved for the coordinated release with `emboss-r` `1.0.0`.

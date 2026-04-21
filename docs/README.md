@@ -91,6 +91,12 @@ Additional documentation-oriented targets currently available are:
 - `make docs-clean` to remove generated documentation output
 - `make docs-live` for a live-reloading preview when `sphinx-autobuild` is
   installed in the selected Python environment
+- `make release-version-check` to verify the checked-in Cargo and Sphinx
+  release metadata are aligned
+- `make release-generated-check` to refresh governed generated artefacts and
+  require a clean diff
+- `make release-artifacts` to assemble the reproducible local release bundle
+  under `dist/release/<version>/`
 
 ## Baseline CI Validation
 
@@ -102,10 +108,13 @@ At present CI enforces:
 - Rust formatting checks
 - Rust Clippy validation
 - Rust tests
+- release-mode Rust build verification
+- release-generated docs and validation artefact freshness verification
 - repository-structure and governance entry-point checks
 - read-only awareness of the sister `emboss-r` repository when available
 - strict Sphinx validation
 - full Sphinx HTML build
+- Linux-first container smoke build verification
 
 ## GitHub Pages Publication
 
@@ -121,6 +130,8 @@ The workflow:
 - provisions the repository Pages site automatically when the repository token
   is allowed to manage Pages configuration
 - rebuilds the Sphinx site from `docs/requirements.txt`
+- runs the release-oriented docs target so the published site stays aligned
+  with release metadata
 - uploads `docs/_build/html/` as the Pages artifact and deploys it through the
   standard GitHub Pages deployment actions
 

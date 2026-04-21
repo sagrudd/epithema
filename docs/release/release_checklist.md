@@ -14,7 +14,11 @@ Use this checklist before cutting a coordinated stable tag.
 
 - [ ] `cargo build` succeeds.
 - [ ] `cargo test` succeeds.
+- [ ] `make release-version-check` succeeds.
+- [ ] `make release-generated-check` succeeds.
 - [ ] `make release-check` succeeds.
+- [ ] `make release-artifacts` succeeds and produces the expected bundle under
+      `dist/release/<version>/`.
 - [ ] autodoc-generated content and validation artefacts are current.
 - [ ] documentation builds cleanly.
 - [ ] release artefact packaging has been smoke-tested.
@@ -36,6 +40,8 @@ Use this checklist before cutting a coordinated stable tag.
 - [ ] charge-profile analytical path remains aligned between Rust and R.
 - [ ] docs published by GitHub Pages are current for `emboss-rs`.
 - [ ] release-process docs still match repository automation.
+- [ ] release manifest JSON and cohort validation outputs are present in the
+      local bundle.
 
 ## Cutover
 

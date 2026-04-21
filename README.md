@@ -41,8 +41,19 @@ Release engineering guidance now lives under
 [docs/release/](./docs/release/index.md). The coordinated first stable release
 target is `emboss-rs` `1.0.0` paired with `emboss-r` `1.0.0`, with checked-in
 `1.0.0` version metadata, tag-driven release automation, Linux binary
-packaging, Sphinx docs gating, and a GHCR container image path in place for the
-final cutover.
+packaging, Sphinx docs gating, release-bundle assembly under
+`dist/release/<version>/`, and a GHCR container image path in place for the
+final cutover. The local pre-release path is intentionally explicit:
+
+- `make release-version-check`
+- `make release-generated-check`
+- `make release-check`
+- `make release-artifacts`
+- `make release-container`
+
+`make release-artifacts` produces the Linux tarball, checksum, docs archive,
+validation archive, and a release manifest JSON that records the exact checked-
+in version and artefact names for the candidate build.
 
 The first shipped tool cohort now covers sequence-stream and sequence-selection
 operations through the governed single-binary surface:
@@ -240,7 +251,8 @@ The canonical governance entry point is
 GitHub Pages is the formal public publication path for the documentation site.
 The workflow in `.github/workflows/docs-pages.yml` now provisions Pages through
 the standard GitHub Pages actions and publishes the built Sphinx site from
-`main`.
+`main`. The Pages build now runs the release-oriented docs task so that the
+published documentation stays aligned with the checked-in release metadata.
 
 ## Contributor Workflow
 

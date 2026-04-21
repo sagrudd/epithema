@@ -1,13 +1,13 @@
 {
   "tool_name": "cai",
-  "document_id": "cai-initial",
+  "document_id": "cai-stub-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 1,
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,27 +15,17 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'cai' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "report_cai_against_reference_profile",
-      "title": "Compute deterministic CAI-like values against a reference codon profile",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "not_requested",
-      "required": true,
-      "artifact_ids": [
-        "coding_fasta",
-        "reference_profile_or_fasta"
-      ],
-      "expected_output_ids": [
-        "cai_report"
-      ],
-      "provenance": [],
-      "diagnostics": []
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "cai"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": [],
   "provenance": []
 }

@@ -1,13 +1,13 @@
 {
   "tool_name": "trimseq",
-  "document_id": "trimseq-initial",
+  "document_id": "trimseq-stub-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 1,
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,26 +15,17 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'trimseq' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "trim_left_and_right",
-      "title": "Trim one residue from each end of a FASTA fixture",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "not_requested",
-      "required": true,
-      "artifact_ids": [
-        "three_record_fasta"
-      ],
-      "expected_output_ids": [
-        "trimmed_sequences"
-      ],
-      "provenance": [],
-      "diagnostics": []
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "trimseq"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": [],
   "provenance": []
 }

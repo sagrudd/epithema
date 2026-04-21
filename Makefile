@@ -3,15 +3,21 @@ RUSTCARGO ?= cargo
 SPHINXBUILD ?= $(PYTHON) -m sphinx
 SPHINXOPTS ?= -n -W --keep-going
 CONTAINER_RUNTIME ?= docker
-CONTAINER_IMAGE ?= emboss-rs:local
+RELEASE_VERSION ?= $(shell $(PYTHON) scripts/release_metadata.py workspace-version)
+CONTAINER_IMAGE ?= emboss-rs:$(RELEASE_VERSION)
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DOCS_HTML_DIR := $(DOCS_BUILD_DIR)/html
 DOCS_LIVE_PORT ?= 8000
+RELEASE_DIST_DIR ?= dist/release/$(RELEASE_VERSION)
+RELEASE_BINARY_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-$(RELEASE_VERSION)-linux-x86_64.tar.gz
+RELEASE_DOCS_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-docs-$(RELEASE_VERSION).tar.gz
+RELEASE_VALIDATION_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-validation-$(RELEASE_VERSION).tar.gz
+RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh cohort-report release-build release-test release-docs release-container release-check
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize cohort-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -29,21 +35,29 @@ help:
 		"  make docs-clean  Remove built documentation output" \
 		"" \
 		"Rust:" \
+		"  make version     Print the checked-in workspace release version" \
 		"  make build       Build the Rust workspace" \
 		"  make fmt         Check Rust formatting with rustfmt" \
 		"  make lint        Run clippy across the workspace" \
 		"  make test        Run Rust tests across the workspace" \
 		"" \
 		"Release:" \
+		"  make release-version-check Verify Cargo and Sphinx release metadata alignment" \
+		"  make release-generated-check Refresh governed generated artefacts and require a clean diff" \
 		"  make release-build     Build release-mode Rust artefacts" \
 		"  make release-test      Run release-gating Rust checks" \
 		"  make release-docs      Build release-gating documentation output" \
+		"  make release-artifacts Assemble the local Linux/docs/validation release bundle" \
 		"  make release-container Build the Linux-first container image" \
 		"  make release-check     Run the local release gate" \
 		"" \
 		"Housekeeping:" \
 		"  make ci          Run the current local CI-equivalent checks" \
 		"  make clean       Remove generated repository artefacts tracked by this Makefile" \
+		"  make release-clean Remove local release bundle output under dist/release/" \
+
+version:
+	@printf "%s\n" "$(RELEASE_VERSION)"
 
 # Documentation
 build:
@@ -58,18 +72,48 @@ lint:
 test:
 	$(RUSTCARGO) test --workspace --all-features
 
+release-version-check:
+	$(PYTHON) scripts/release_metadata.py check
+
+release-generated-check:
+	rm -rf docs/generated/tools docs/generated/index.md
+	@for doc in $$(find docs/autodoc/tools -name '*.json' | sort); do \
+		printf "%s\n" "Refreshing $$doc"; \
+		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs --emit-validation-stub >/dev/null; \
+	done
+	$(MAKE) generated-index-normalize PYTHON=$(PYTHON)
+	$(MAKE) cohort-report
+	git diff --exit-code -- docs/generated
+
 release-build:
 	$(RUSTCARGO) build --workspace --release
 
 release-test: fmt lint test
 
 release-docs:
+	$(MAKE) release-version-check PYTHON=$(PYTHON)
+	$(MAKE) docs-clean
 	$(MAKE) docs PYTHON=$(PYTHON)
 
-release-container:
-	$(CONTAINER_RUNTIME) build -t $(CONTAINER_IMAGE) .
+release-artifacts: release-version-check release-build release-docs cohort-report
+	mkdir -p $(RELEASE_DIST_DIR)
+	tar -C target/release -czf $(RELEASE_BINARY_ARCHIVE) emboss-rs
+	sha256sum $(RELEASE_BINARY_ARCHIVE) > $(RELEASE_BINARY_ARCHIVE).sha256
+	tar -C $(DOCS_BUILD_DIR) -czf $(RELEASE_DOCS_ARCHIVE) html
+	tar -czf $(RELEASE_VALIDATION_ARCHIVE) \
+		docs/generated/cohort_validation.md \
+		docs/generated/validation
+	$(PYTHON) scripts/release_metadata.py manifest \
+		--output $(RELEASE_MANIFEST) \
+		--container-image $(CONTAINER_IMAGE)
 
-release-check: lint-repo check-sister-repo release-test release-docs release-build
+release-container:
+	$(CONTAINER_RUNTIME) build \
+		--build-arg EMBOSS_RS_VERSION=$(RELEASE_VERSION) \
+		-t $(CONTAINER_IMAGE) \
+		.
+
+release-check: lint-repo check-sister-repo release-version-check release-generated-check release-test release-docs release-build
 
 docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)
@@ -83,6 +127,10 @@ autodoc-refresh: autodoc-stubs
 		printf "%s\n" "Refreshing $$doc"; \
 		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs >/dev/null; \
 	done
+	$(MAKE) generated-index-normalize
+
+generated-index-normalize:
+	$(PYTHON) scripts/normalize_generated_index.py
 
 cohort-report:
 	$(RUSTCARGO) run -p emboss-testkit --example write_shipped_cohort_validation_report -- \
@@ -135,6 +183,9 @@ docs-clean:
 
 # Housekeeping
 clean: docs-clean
+
+release-clean:
+	rm -rf dist/release
 
 ci: lint-repo check-sister-repo lint-docs docs fmt lint test
 

@@ -1,13 +1,13 @@
 {
   "tool_name": "codcmp",
-  "document_id": "codcmp-initial",
+  "document_id": "codcmp-stub-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 1,
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,27 +15,17 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'codcmp' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "compare_two_codon_profiles",
-      "title": "Compare codon counts and frequencies across two coding or profile sources",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "not_requested",
-      "required": true,
-      "artifact_ids": [
-        "left_profile_or_fasta",
-        "right_profile_or_fasta"
-      ],
-      "expected_output_ids": [
-        "codcmp_report"
-      ],
-      "provenance": [],
-      "diagnostics": []
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "codcmp"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": [],
   "provenance": []
 }

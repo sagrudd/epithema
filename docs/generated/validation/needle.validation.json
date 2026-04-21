@@ -1,26 +1,40 @@
 {
-  "document_id": "needle-minimal",
   "tool_name": "needle",
+  "document_id": "needle-minimal",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
+    "total_case_count": 1,
     "declared_case_count": 1,
     "harvested_case_count": 0,
     "runnable_case_count": 1,
     "executed_case_count": 0,
     "compared_case_count": 0,
-    "total_case_count": 1
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
   },
   "cases": [
     {
-      "id": "needle-nucleotide-pair",
+      "id": "basic_alignment",
+      "title": "Basic alignment example",
+      "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
-      "source_kind": "curated",
-      "execution_status": "pending",
-      "comparison_status": "not_compared",
-      "notes": [
-        "Align one nucleotide query and one nucleotide target with deterministic default scoring and emit Stockholm."
-      ]
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "example_fasta"
+      ],
+      "expected_output_ids": [
+        "report"
+      ],
+      "provenance": [],
+      "diagnostics": []
     }
   ],
   "unresolved_gaps": [],
-  "diagnostics": []
+  "diagnostics": [],
+  "provenance": []
 }

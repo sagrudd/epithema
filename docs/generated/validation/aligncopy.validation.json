@@ -1,26 +1,31 @@
 {
-  "document_id": "aligncopy-minimal",
   "tool_name": "aligncopy",
+  "document_id": "aligncopy-stub-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
-    "total_case_count": 1
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'aligncopy' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "aligncopy-stockholm",
-      "declaration_status": "declared",
-      "source_kind": "curated",
-      "execution_status": "pending",
-      "comparison_status": "not_compared",
-      "notes": [
-        "Copy a single Stockholm alignment unchanged and emit Stockholm by default."
-      ]
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "aligncopy"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": []
+  "provenance": []
 }

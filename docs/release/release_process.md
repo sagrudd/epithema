@@ -42,16 +42,20 @@ For `v1.0.0`, “release compatible” means:
 
 ### `emboss-rs`
 
+- `make release-version-check`
+- `make release-generated-check`
 - `make release-build`
 - `make release-test`
 - `make release-docs`
+- `make release-artifacts`
 - `make release-container`
 - `make release-check`
 - GitHub Actions release workflow:
   - runs on `v*` tags
   - supports manual dispatch for release-candidate verification
-  - builds Linux release artefacts
-  - builds docs
+  - verifies checked-in release metadata before packaging
+  - runs the local release gate
+  - assembles the Linux/docs/validation artefact bundle through `make release-artifacts`
   - builds the container image and publishes to GHCR when configured
   - attaches artefacts to a GitHub release on tag builds
 
@@ -74,6 +78,8 @@ For `v1.0.0`, “release compatible” means:
 - Linux `emboss-rs` binary tarball
 - SHA256 checksum for the Linux tarball
 - built documentation archive
+- validation-report archive containing the cohort-level evidence outputs
+- release manifest JSON describing the checked-in version and artefact names
 - source archive from GitHub
 - GHCR container image
 
@@ -102,3 +108,16 @@ The workflows automate build, packaging, and release staging. Humans still own:
 - final release-note review
 - final tag creation
 - final go/no-go decision after stabilization audit
+
+## Local release-candidate flow
+
+For a conservative local candidate build, run:
+
+1. `make release-version-check`
+2. `make release-generated-check`
+3. `make release-check`
+4. `make release-artifacts`
+5. `make release-container` on a machine with Docker available
+
+The release bundle is written under `dist/release/<version>/`. It is intended
+for inspection and local smoke verification before a `v*` tag is created.

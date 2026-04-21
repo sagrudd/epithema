@@ -40,6 +40,13 @@ The current baseline local checks are:
 - `make docs`
 - `make ci`
 
+For release-oriented work, the conservative local path is:
+
+- `make release-version-check`
+- `make release-generated-check`
+- `make release-check`
+- `make release-artifacts`
+
 ## Pull Requests
 
 Pull requests should describe the prompt or task scope they cover, identify the

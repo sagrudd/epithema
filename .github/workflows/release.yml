@@ -57,23 +57,17 @@ jobs:
           fi
           echo "release_version=${version}" >> "${GITHUB_OUTPUT}"
 
-      - name: Verify Cargo workspace version matches release version
+      - name: Verify checked-in release metadata matches release version
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
         run: |
-          python - <<'PY'
-          import os
-          import tomllib
-          from pathlib import Path
-
-          expected = os.environ["RELEASE_VERSION"]
-          data = tomllib.loads(Path("Cargo.toml").read_text())
-          actual = data["workspace"]["package"]["version"]
-          if actual != expected:
-              raise SystemExit(
-                  f"workspace.package.version is {actual!r}, expected {expected!r} for release"
-              )
-          PY
+          actual="$(python scripts/release_metadata.py workspace-version)"
+          if [[ "${actual}" != "${RELEASE_VERSION}" ]]; then
+            printf '%s\n' \
+              "workspace release version ${actual} does not match requested release ${RELEASE_VERSION}" >&2
+            exit 1
+          fi
+          python scripts/release_metadata.py check
 
       - name: Install documentation dependencies
         run: python -m pip install -r docs/requirements.txt
@@ -81,32 +75,18 @@ jobs:
       - name: Run release checks
         run: make release-check PYTHON=python
 
-      - name: Package Linux release artefact
+      - name: Assemble release artefacts
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+          CONTAINER_IMAGE: ghcr.io/${{ github.repository }}:${{ steps.version.outputs.release_version }}
         shell: bash
-        run: |
-          mkdir -p release-artifacts
-          tar -C target/release -czf \
-            "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz" \
-            emboss-rs
-          sha256sum "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz" \
-            > "release-artifacts/emboss-rs-${RELEASE_VERSION}-linux-x86_64.tar.gz.sha256"
-
-      - name: Archive documentation build
-        env:
-          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
-        shell: bash
-        run: |
-          tar -C docs/_build -czf \
-            "release-artifacts/emboss-rs-docs-${RELEASE_VERSION}.tar.gz" \
-            html
+        run: make release-artifacts PYTHON=python RELEASE_VERSION="${RELEASE_VERSION}" CONTAINER_IMAGE="${CONTAINER_IMAGE}"
 
       - name: Upload release artefacts
         uses: actions/upload-artifact@v4
         with:
           name: emboss-rs-release-${{ steps.version.outputs.release_version }}
-          path: release-artifacts/*
+          path: dist/release/${{ steps.version.outputs.release_version }}/*
 
       - name: Prepare container tags
         id: container
