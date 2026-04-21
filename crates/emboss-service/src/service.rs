@@ -6,7 +6,7 @@ use std::str::FromStr;
 use emboss_config::PlatformConfig;
 use emboss_core::{
     FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PLATFORM_IDENTITY,
-    PatternError, ProteinPattern, Strand,
+    PatternError, ProteinPattern, RevseqMode, Strand,
 };
 use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
@@ -1683,20 +1683,23 @@ impl EmbossService {
             return Ok(self.help_response(request, descriptor, revseq_help()));
         }
 
-        let [input]: [String; 1] = request
-            .arguments
-            .clone()
-            .try_into()
-            .map_err(|_| tool_usage_error("revseq", revseq_help()))?;
+        let params = parse_revseq_params(request.arguments())?;
         let (input, input_provenance, input_diagnostics) =
-            self.resolve_local_sequence_input(&input)?;
-        let outcome = run_revseq(RevseqParams { input })?;
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_revseq(RevseqParams {
+            input,
+            mode: params.mode,
+        })?;
 
-        let output_provenance = ArtifactProvenance::generated_output("stdout")
-            .with_description("reversed FASTA output");
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("revseq FASTA output");
         let report = self.success_report(
             &request.context,
-            format!("reversed {} records", outcome.records.len()),
+            format!(
+                "transformed {} records with {}",
+                outcome.records.len(),
+                outcome.mode
+            ),
             input_diagnostics,
             vec![input_provenance, output_provenance.clone()],
         );
@@ -1705,13 +1708,16 @@ impl EmbossService {
             ResultPayload::SequenceCollection(outcome.records),
             ResultSummary::new("Sequence reversal completed")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
-                .with_line("Behavior: plain reversal only")
+                .with_line(format!("Mode: {}", outcome.mode))
+                .with_line(
+                    "Default auto behavior: reverse-complement DNA/RNA, reverse protein/unknown",
+                )
                 .with_line("Output format: fasta"),
             report.clone(),
         )
         .with_artifact(
             ArtifactReference::new("reversed-sequences", ArtifactKind::Sequence)
-                .with_label("Reversed sequences")
+                .with_label("Revseq output sequences")
                 .with_provenance(output_provenance),
         );
 
@@ -4590,6 +4596,61 @@ fn parse_trimseq_params(arguments: &[String]) -> Result<TrimseqParams, ServiceEr
     })
 }
 
+fn parse_revseq_params(arguments: &[String]) -> Result<RevseqParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("revseq", revseq_help()));
+    }
+
+    let mut input = None;
+    let mut mode = RevseqMode::Auto;
+
+    for argument in arguments {
+        match argument.as_str() {
+            "--reverse-only" => {
+                if mode == RevseqMode::ReverseComplement {
+                    return Err(PlatformError::new(
+                        ErrorCategory::Validation,
+                        "revseq cannot combine --reverse-only with --complement",
+                    )
+                    .with_code("service.tool.revseq.mode_conflict")
+                    .with_detail(revseq_help()));
+                }
+                mode = RevseqMode::ReverseOnly;
+            }
+            "--complement" => {
+                if mode == RevseqMode::ReverseOnly {
+                    return Err(PlatformError::new(
+                        ErrorCategory::Validation,
+                        "revseq cannot combine --complement with --reverse-only",
+                    )
+                    .with_code("service.tool.revseq.mode_conflict")
+                    .with_detail(revseq_help()));
+                }
+                mode = RevseqMode::ReverseComplement;
+            }
+            value if value.starts_with("--") => {
+                return Err(PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("unknown revseq argument '{value}'"),
+                )
+                .with_code("service.tool.revseq.argument_unknown")
+                .with_detail(revseq_help()));
+            }
+            value => {
+                if input.is_some() {
+                    return Err(tool_usage_error("revseq", revseq_help()));
+                }
+                input = Some(SequenceInput::new(value.to_owned()));
+            }
+        }
+    }
+
+    Ok(RevseqParams {
+        input: input.ok_or_else(|| tool_usage_error("revseq", revseq_help()))?,
+        mode,
+    })
+}
+
 fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("descseq", descseq_help()));
@@ -6059,11 +6120,78 @@ mod tests {
         let response = service.invoke(request).expect("revseq should execute");
         match &response.result.payload {
             ResultPayload::SequenceCollection(records) => {
-                assert_eq!(records[0].residues(), "TGCA");
+                assert_eq!(records[0].residues(), "ACGT");
+                assert_eq!(records[1].residues(), "AAAA");
                 assert_eq!(records[2].residues(), "CCGG");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_revseq_reverse_only_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("revseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--reverse-only".to_owned(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("reverse-only revseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "TGCA");
+                assert_eq!(records[1].residues(), "TTTT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_revseq_against_unknown_fasta_fixture_as_reverse_only_in_auto_mode() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("revseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("unknown-molecule revseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "*AM");
+                assert_eq!(records[1].residues(), "SL");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn revseq_rejects_explicit_complement_for_unknown_fasta_input() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("revseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "--complement".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("unknown-molecule reverse-complement should fail");
+        assert_eq!(
+            error.to_string(),
+            "reverse-complement is not supported for molecule kind unknown"
+        );
     }
 
     #[test]

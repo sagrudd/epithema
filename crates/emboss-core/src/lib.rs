@@ -28,6 +28,7 @@ pub mod molecule;
 pub mod pattern;
 pub mod platform;
 pub mod protein_charge;
+pub mod revseq;
 pub mod sequence;
 pub mod strand;
 pub mod translation;
@@ -68,6 +69,10 @@ pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern}
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
 pub use protein_charge::{
     ChargeWindow, ProteinChargeError, ProteinChargeProfile, protein_charge_profile,
+};
+pub use revseq::{
+    RevseqError, RevseqMode, reverse_complement_residues, reverse_residues,
+    transform_sequence_record,
 };
 pub use sequence::SequenceRecord;
 pub use strand::Strand;

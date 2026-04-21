@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "revseq-stub-v1",
+  "document_id": "revseq-v1",
   "tool": {
     "name": "revseq",
     "family": "sequence_edit",
-    "summary": "Reverse sequence content record by record",
+    "summary": "Reverse sequence content and reverse-complement nucleotide records",
     "legacy_names": [
       "revseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`revseq` is part of the exposed EMBOSS-RS `sequence_edit` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared EMBOSS-RS sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current tool accepts local sequence inputs through the governed sequence IO path. Multi-record inputs are supported and record order is preserved. FASTA is the primary exercised format in the current validation path, with other sequence formats depending on the shared IO layer."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "Output is a normalized sequence collection rendered through the shared result and CLI layers. By default, records classified as DNA or RNA are reverse-complemented, while protein and unknown-molecule records are reversed without complementing. `--reverse-only` forces plain reversal, and `--complement` requires nucleotide reverse-complement behavior."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs revseq`. The generated tool page and the machine-readable validation stub at [`../validation/revseq.validation.json`](../validation/revseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs revseq`. Validation currently covers DNA auto reverse-complement behavior and reverse-only output against a committed FASTA fixture. Records with attached features are rejected in v1 because feature-coordinate remapping is not yet implemented, and conservative FASTA molecule inference means some residue-only records remain `unknown` unless a richer source format carries molecule metadata."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "Explicit reverse-complement requests fail for protein or unknown-molecule records. Unsupported nucleotide residues also fail clearly instead of being guessed. Residue-only FASTA inputs such as short GC-only records may remain `unknown` under the current conservative inference policy and therefore use reverse-only behavior in auto mode. Richer historical examples and broader fixture coverage can be added later through the same autodoc path without changing the generated page structure."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic revseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "auto_reverse_complement_fixture",
+      "title": "Reverse-complement nucleotide records in auto mode",
+      "description": "Runs `revseq` on a small DNA FASTA fixture using the default molecule-aware behavior.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "mode",
+          "value": "auto"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "auto_transformed_sequences",
+          "label": "Auto-mode transformed sequences",
+          "description": "DNA records are reverse-complemented and emitted as normalized FASTA output."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "auto_reverse_complement_fixture"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

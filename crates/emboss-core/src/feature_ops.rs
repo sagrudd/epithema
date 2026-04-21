@@ -14,6 +14,7 @@ use crate::feature_selector::FeatureSelector;
 use crate::identifier::SequenceIdentifier;
 use crate::interval::Interval;
 use crate::molecule::MoleculeKind;
+use crate::revseq::reverse_complement_residues;
 use crate::sequence::SequenceRecord;
 use crate::strand::Strand;
 
@@ -349,67 +350,8 @@ fn reverse_complement(
     molecule: MoleculeKind,
     residues: &str,
 ) -> Result<String, FeatureOperationError> {
-    match molecule {
-        MoleculeKind::Dna => Ok(residues
-            .chars()
-            .rev()
-            .map(complement_dna)
-            .collect::<Option<String>>()
-            .ok_or(FeatureOperationError::UnsupportedReverseStrand { molecule })?),
-        MoleculeKind::Rna => Ok(residues
-            .chars()
-            .rev()
-            .map(complement_rna)
-            .collect::<Option<String>>()
-            .ok_or(FeatureOperationError::UnsupportedReverseStrand { molecule })?),
-        _ => Err(FeatureOperationError::UnsupportedReverseStrand { molecule }),
-    }
-}
-
-fn complement_dna(symbol: char) -> Option<char> {
-    match symbol {
-        'A' => Some('T'),
-        'T' => Some('A'),
-        'G' => Some('C'),
-        'C' => Some('G'),
-        'N' => Some('N'),
-        'R' => Some('Y'),
-        'Y' => Some('R'),
-        'S' => Some('S'),
-        'W' => Some('W'),
-        'K' => Some('M'),
-        'M' => Some('K'),
-        'B' => Some('V'),
-        'V' => Some('B'),
-        'D' => Some('H'),
-        'H' => Some('D'),
-        '-' => Some('-'),
-        '*' => Some('*'),
-        _ => None,
-    }
-}
-
-fn complement_rna(symbol: char) -> Option<char> {
-    match symbol {
-        'A' => Some('U'),
-        'U' => Some('A'),
-        'G' => Some('C'),
-        'C' => Some('G'),
-        'N' => Some('N'),
-        'R' => Some('Y'),
-        'Y' => Some('R'),
-        'S' => Some('S'),
-        'W' => Some('W'),
-        'K' => Some('M'),
-        'M' => Some('K'),
-        'B' => Some('V'),
-        'V' => Some('B'),
-        'D' => Some('H'),
-        'H' => Some('D'),
-        '-' => Some('-'),
-        '*' => Some('*'),
-        _ => None,
-    }
+    reverse_complement_residues(molecule, residues)
+        .map_err(|_| FeatureOperationError::UnsupportedReverseStrand { molecule })
 }
 
 fn summarize_feature(feature: &Feature) -> FeatureSummary {

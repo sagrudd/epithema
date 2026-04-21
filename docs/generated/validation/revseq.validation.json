@@ -1,6 +1,6 @@
 {
   "tool_name": "revseq",
-  "document_id": "revseq-initial",
+  "document_id": "revseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "reverse_sequence_content",
-      "title": "Reverse each record in a three-sequence FASTA fixture",
+      "id": "auto_reverse_complement_fixture",
+      "title": "Reverse-complement nucleotide records in auto mode",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "reversed_sequences"
+        "auto_transformed_sequences"
       ],
       "provenance": [],
       "diagnostics": []
