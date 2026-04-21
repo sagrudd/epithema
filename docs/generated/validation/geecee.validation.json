@@ -1,6 +1,6 @@
 {
   "tool_name": "geecee",
-  "document_id": "geecee-initial",
+  "document_id": "geecee-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,18 +17,18 @@
   },
   "cases": [
     {
-      "id": "report_gc_statistics_over_nucleotide_records",
-      "title": "Summarize per-record and aggregate GC counts and percentages",
+      "id": "per_record_and_aggregate_gc",
+      "title": "Per-record and aggregate GC reporting",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [
-        "nucleotide_fasta"
+        "nucleotide_pattern_fixture"
       ],
       "expected_output_ids": [
-        "gc_report"
+        "gc_table"
       ],
       "provenance": [],
       "diagnostics": []

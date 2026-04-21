@@ -7640,16 +7640,71 @@ mod tests {
         let response = service.invoke(request).expect("geecee should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "scope",
+                        "record",
+                        "length",
+                        "gc_count",
+                        "gc_denominator",
+                        "ambiguous_count",
+                        "gc_percent"
+                    ]
+                );
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record"
                         && row[1] == "nucA"
+                        && row[2] == "9"
                         && row[3] == "4"
                         && row[4] == "8"
+                        && row[5] == "1"
+                        && row[6] == "50.00"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "aggregate"
+                        && row[1] == "ALL"
+                        && row[2] == "15"
+                        && row[3] == "7"
+                        && row[4] == "14"
+                        && row[5] == "1"
                         && row[6] == "50.00"
                 }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Scope: per-record plus aggregate summary"
+        );
+        assert_eq!(
+            response.result.summary.lines[2],
+            "GC denominator: canonical A/C/G/T/U symbols only"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Ambiguous symbols are excluded from GC percentage"
+        );
+        assert_eq!(response.result.summary.lines[4], "Records: 2");
+    }
+
+    #[test]
+    fn rejects_protein_input_for_geecee() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("geecee").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_stats_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("protein input should fail for geecee");
+        assert!(error.to_string().contains("expects nucleotide input"));
     }
 
     #[test]

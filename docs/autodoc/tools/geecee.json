@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "geecee-stub-v1",
+  "document_id": "geecee-v1",
   "tool": {
     "name": "geecee",
     "family": "sequence_stats",
-    "summary": "Report per-record and aggregate GC statistics for nucleotide sequences",
+    "summary": "Report deterministic GC counts and GC percentages for nucleotide sequence records",
     "legacy_names": [
       "geecee"
     ]
@@ -14,39 +14,85 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`geecee` is part of the exposed EMBOSS-RS `sequence_stats` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`geecee` reports GC statistics for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 implementation keeps the model deliberately conservative: only canonical A/C/G/T/U symbols contribute to the GC denominator, while ambiguous non-gap symbols are counted separately and excluded from the percentage."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts nucleotide or protein sequence records through the shared sequence IO abstraction and emits structured analytical summaries rather than bespoke CLI-only text."
+      "content": "The current interface accepts one local nucleotide input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. DNA and RNA records are supported; non-nucleotide records are rejected."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured per-record and aggregate statistics tables suitable for CLI rendering, testing, and later R projection."
+      "content": "The tool emits a stable table report with columns `scope`, `record`, `length`, `gc_count`, `gc_denominator`, `ambiguous_count`, and `gc_percent`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL`."
+    },
+    {
+      "id": "gc_model",
+      "kind": "notes",
+      "title": "GC Model",
+      "content": "Input residues are normalized case-insensitively before counting. Gap symbols `-` are ignored completely. Canonical `G` and `C` contribute to the numerator and denominator. Canonical `A`, `T`, and `U` contribute to the denominator only. Ambiguous or otherwise non-canonical non-gap symbols such as `N` are counted in `ambiguous_count` and excluded from the GC percentage."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs geecee`. The generated tool page and the machine-readable validation stub at [`../validation/geecee.validation.json`](../validation/geecee.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs geecee`. Validation currently covers DNA input, RNA input, ambiguity exclusion from the denominator, aggregate reporting, and non-nucleotide failure."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not attempt probabilistic treatment of ambiguous nucleotide codes. Ambiguous symbols are tracked separately rather than fractionally contributing to GC. Mixed inputs containing non-nucleotide records are rejected. Empty FASTA records are also rejected by the shared EMBOSS-RS sequence parser before GC calculation begins."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "nucleotide_pattern_fixture",
+      "label": "Nucleotide GC fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture used for deterministic GC reporting validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "per_record_and_aggregate_gc",
+      "title": "Per-record and aggregate GC reporting",
+      "description": "Reports GC counts, canonical-symbol denominators, ambiguity counts, and GC percentage for each input record plus one aggregate summary row.",
+      "artifact_ids": [
+        "nucleotide_pattern_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "gc_table",
+          "label": "GC statistics table",
+          "description": "A stable tabular report containing per-record and aggregate GC statistics over canonical nucleotide symbols."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "OpenAI Codex",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "per_record_and_aggregate_gc"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

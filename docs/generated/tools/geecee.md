@@ -4,11 +4,11 @@
 
 ## Summary
 
-Report per-record and aggregate GC statistics for nucleotide sequences
+Report deterministic GC counts and GC percentages for nucleotide sequence records
 
 ## Document Metadata
 
-- Document ID: `geecee-stub-v1`
+- Document ID: `geecee-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
@@ -16,34 +16,56 @@ Report per-record and aggregate GC statistics for nucleotide sequences
 
 ## Overview
 
-`geecee` is part of the exposed EMBOSS-RS `sequence_stats` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`geecee` reports GC statistics for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 implementation keeps the model deliberately conservative: only canonical A/C/G/T/U symbols contribute to the GC denominator, while ambiguous non-gap symbols are counted separately and excluded from the percentage.
 
 ## Inputs
 
-This tool accepts nucleotide or protein sequence records through the shared sequence IO abstraction and emits structured analytical summaries rather than bespoke CLI-only text.
+The current interface accepts one local nucleotide input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. DNA and RNA records are supported; non-nucleotide records are rejected.
 
 ## Outputs
 
-The current implementation emits structured per-record and aggregate statistics tables suitable for CLI rendering, testing, and later R projection.
+The tool emits a stable table report with columns `scope`, `record`, `length`, `gc_count`, `gc_denominator`, `ambiguous_count`, and `gc_percent`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL`.
+
+## GC Model
+
+Input residues are normalized case-insensitively before counting. Gap symbols `-` are ignored completely. Canonical `G` and `C` contribute to the numerator and denominator. Canonical `A`, `T`, and `U` contribute to the denominator only. Ambiguous or otherwise non-canonical non-gap symbols such as `N` are counted in `ambiguous_count` and excluded from the GC percentage.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs geecee`. The generated tool page and the machine-readable validation stub at [`../validation/geecee.validation.json`](../validation/geecee.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs geecee`. Validation currently covers DNA input, RNA input, ambiguity exclusion from the denominator, aggregate reporting, and non-nucleotide failure.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release does not attempt probabilistic treatment of ambiguous nucleotide codes. Ambiguous symbols are tracked separately rather than fractionally contributing to GC. Mixed inputs containing non-nucleotide records are rejected. Empty FASTA records are also rejected by the shared EMBOSS-RS sequence parser before GC calculation begins.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Nucleotide GC fixture
+
+- Artifact ID: `nucleotide_pattern_fixture`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta`
+- Notes: Repository-managed nucleotide fixture used for deterministic GC reporting validation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Per-record and aggregate GC reporting
+
+- Example ID: `per_record_and_aggregate_gc`
+- Description: Reports GC counts, canonical-symbol denominators, ambiguity counts, and GC percentage for each input record plus one aggregate summary row.
+- Referenced artifacts: `nucleotide_pattern_fixture`
+- Expected outputs:
+  - `gc_table`: GC statistics table (A stable tabular report containing per-record and aggregate GC statistics over canonical nucleotide symbols.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: OpenAI Codex
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `per_record_and_aggregate_gc`
+- Compare against legacy: no
+- Require provenance capture: yes
 
