@@ -6507,6 +6507,66 @@ mod tests {
     }
 
     #[test]
+    fn maskfeat_masks_multiple_selected_regions_in_stable_order() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_feature_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("maskfeat should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].residues(), "ANNNNNGNNNGT");
+                assert_eq!(records[0].features().len(), 2);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn maskfeat_rejects_no_matching_features() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--name".to_owned(),
+            "missing".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("missing selector should fail");
+        assert_eq!(
+            error.to_string(),
+            "maskfeat did not find any features matching the requested selector"
+        );
+    }
+
+    #[test]
+    fn maskfeat_rejects_complex_locations() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_complex_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("complex locations should be rejected");
+        assert_eq!(
+            error.to_string(),
+            "feature extraction currently supports only simple single-span locations"
+        );
+    }
+
+    #[test]
     fn executes_extractfeat_against_annotated_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(

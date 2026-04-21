@@ -4,11 +4,11 @@
 
 ## Summary
 
-Mask selected simple feature spans while preserving annotations in the result payload
+Mask selected simple annotated feature spans in-place while preserving record annotations
 
 ## Document Metadata
 
-- Document ID: `maskfeat-stub-v1`
+- Document ID: `maskfeat-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
@@ -16,34 +16,58 @@ Mask selected simple feature spans while preserving annotations in the result pa
 
 ## Overview
 
-`maskfeat` is part of the exposed EMBOSS-RS `feature_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`maskfeat` masks sequence spans defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and interval-masking path. The original record is retained, matching simple feature spans are masked in place, and feature annotations remain attached to the resulting payload.
 
 ## Inputs
 
-This tool accepts annotated sequence records through the shared IO layer and operates on simple feature spans preserved in EMBOSS-RS feature-aware payloads.
+The current v1 tool accepts annotated EMBL or GenBank input plus optional selector flags. Supported selectors are `--kind`, `--name`, `--qualifier`, and `--strand`. When more than one selector is supplied they are combined conjunctively. If no selector flags are provided, all features in each input record are selected.
 
 ## Outputs
 
-The current implementation emits transformed sequence records plus structured feature or masking summaries where appropriate.
+The output preserves source record order and emits masked full-length records in FASTA form while retaining original feature annotations in the structured payload. Overlapping or adjacent selected simple spans are masked deterministically in place, so repeated coverage does not change the final result beyond replacing covered residues with the chosen mask symbol.
+
+## Masking Policy
+
+The default mask symbol is `N` for nucleotide and unknown-molecule records and `X` for protein records. A custom single-character mask can be supplied with `--mask-char` only when that symbol is valid for the target alphabet. Selected feature spans are not removed or rebased; they remain attached to the original coordinate system of the masked record.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs maskfeat`. The generated tool page and the machine-readable validation stub at [`../validation/maskfeat.validation.json`](../validation/maskfeat.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs maskfeat`. Validation currently covers masking a selected gene feature from a committed annotated GenBank fixture. Rust service and core tests also cover masking all selected spans in one record, no-match handling, invalid mask-symbol handling, and conservative failure on unsupported complex feature locations.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The v1 scope supports only simple single-span feature locations. Joined, compound, or otherwise complex locations fail clearly rather than being partially masked. If no selected features are found across the input, the tool fails with an explicit validation error instead of silently returning unchanged records.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Annotated GenBank fixture
+
+- Artifact ID: `annotated_feature_genbank`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Notes: Repository-managed annotated GenBank fixture used for deterministic maskfeat validation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Mask a selected gene feature in-place on an annotated record
+
+- Example ID: `mask_selected_gene_feature`
+- Description: Selects the `gene` feature from a small annotated GenBank fixture and masks that span with the default nucleotide mask symbol while preserving the source record length and annotations.
+- Referenced artifacts: `annotated_feature_genbank`
+- Parameters:
+  - `kind` = `gene`
+- Expected outputs:
+  - `feature_masked_sequences`: Feature-masked sequence records (The source sequence is returned at full length with the selected feature span replaced by masking symbols in place.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `mask_selected_gene_feature`
+- Compare against legacy: no
+- Require provenance capture: yes
 

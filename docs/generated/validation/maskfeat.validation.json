@@ -1,6 +1,6 @@
 {
   "tool_name": "maskfeat",
-  "document_id": "maskfeat-initial",
+  "document_id": "maskfeat-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "mask_selected_gene_feature",
-      "title": "Mask a selected simple feature span from an annotated record",
+      "title": "Mask a selected gene feature in-place on an annotated record",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
