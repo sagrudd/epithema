@@ -4,11 +4,11 @@
 
 ## Summary
 
-Extract selected simple feature spans into rebased sequence records
+Extract selected simple feature-defined sequence regions into rebased output records
 
 ## Document Metadata
 
-- Document ID: `extractfeat-stub-v1`
+- Document ID: `extractfeat-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
@@ -16,34 +16,54 @@ Extract selected simple feature spans into rebased sequence records
 
 ## Overview
 
-`extractfeat` is part of the exposed EMBOSS-RS `feature_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`extractfeat` extracts sequence regions defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and extraction foundations. Each selected simple feature span becomes one output record, and the copied feature is rebased onto the local extracted coordinate system.
 
 ## Inputs
 
-This tool accepts annotated sequence records through the shared IO layer and operates on simple feature spans preserved in EMBOSS-RS feature-aware payloads.
+The current v1 tool accepts annotated EMBL or GenBank input plus optional feature-selection flags. Supported selectors are `--kind`, `--name`, `--qualifier`, and `--strand`, which combine conjunctively when more than one is supplied. If no selector flags are provided, all annotated features are considered.
 
 ## Outputs
 
-The current implementation emits transformed sequence records plus structured feature or masking summaries where appropriate.
+One output sequence record is emitted per selected simple feature in stable source and feature order. Output identifiers are derived deterministically as `<source>:<start>-<end>:<feature-name-or-kind>`, extracted residues preserve the source molecule kind and metadata, and the copied feature location is rebased so the extracted span starts at local coordinate 1.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs extractfeat`. The generated tool page and the machine-readable validation stub at [`../validation/extractfeat.validation.json`](../validation/extractfeat.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs extractfeat`. Validation currently covers gene extraction from a committed annotated GenBank fixture. Rust service and core tests also cover qualifier-based selection, no-match handling, coordinate rebasing, and reverse-strand nucleotide extraction through the shared feature-extraction layer.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The v1 scope supports only simple single-span feature locations. Joined, compound, or otherwise complex feature locations fail clearly rather than being partially interpreted. Reverse-strand extraction is supported only where the shared core can reverse-complement the underlying molecule correctly, and unannotated inputs or selector combinations with no matches fail with explicit validation errors.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Annotated GenBank fixture
+
+- Artifact ID: `annotated_feature_genbank`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Notes: Repository-managed annotated GenBank fixture used for deterministic extractfeat validation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Extract a selected gene feature into a rebased record
+
+- Example ID: `extract_selected_gene_feature`
+- Description: Selects the `gene` feature from a small annotated GenBank fixture and emits one rebased extracted sequence record.
+- Referenced artifacts: `annotated_feature_genbank`
+- Parameters:
+  - `kind` = `gene`
+- Expected outputs:
+  - `extracted_feature_sequences`: Feature-defined extracted sequences (The selected `gene` span is emitted as its own sequence record with rebased copied feature coordinates.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `extract_selected_gene_feature`
+- Compare against legacy: no
+- Require provenance capture: yes
 

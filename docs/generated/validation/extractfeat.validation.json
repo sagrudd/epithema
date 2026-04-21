@@ -1,6 +1,6 @@
 {
   "tool_name": "extractfeat",
-  "document_id": "extractfeat-initial",
+  "document_id": "extractfeat-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "extract_selected_gene_feature",
-      "title": "Extract a selected simple feature span into a rebased record",
+      "title": "Extract a selected gene feature into a rebased record",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",

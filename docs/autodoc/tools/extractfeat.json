@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "extractfeat-stub-v1",
+  "document_id": "extractfeat-v1",
   "tool": {
     "name": "extractfeat",
     "family": "feature_tools",
-    "summary": "Extract selected simple feature spans into rebased sequence records",
+    "summary": "Extract selected simple feature-defined sequence regions into rebased output records",
     "legacy_names": [
       "extractfeat"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`extractfeat` is part of the exposed EMBOSS-RS `feature_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`extractfeat` extracts sequence regions defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and extraction foundations. Each selected simple feature span becomes one output record, and the copied feature is rebased onto the local extracted coordinate system."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts annotated sequence records through the shared IO layer and operates on simple feature spans preserved in EMBOSS-RS feature-aware payloads."
+      "content": "The current v1 tool accepts annotated EMBL or GenBank input plus optional feature-selection flags. Supported selectors are `--kind`, `--name`, `--qualifier`, and `--strand`, which combine conjunctively when more than one is supplied. If no selector flags are provided, all annotated features are considered."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits transformed sequence records plus structured feature or masking summaries where appropriate."
+      "content": "One output sequence record is emitted per selected simple feature in stable source and feature order. Output identifiers are derived deterministically as `<source>:<start>-<end>:<feature-name-or-kind>`, extracted residues preserve the source molecule kind and metadata, and the copied feature location is rebased so the extracted span starts at local coordinate 1."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractfeat`. The generated tool page and the machine-readable validation stub at [`../validation/extractfeat.validation.json`](../validation/extractfeat.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs extractfeat`. Validation currently covers gene extraction from a committed annotated GenBank fixture. Rust service and core tests also cover qualifier-based selection, no-match handling, coordinate rebasing, and reverse-strand nucleotide extraction through the shared feature-extraction layer."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 scope supports only simple single-span feature locations. Joined, compound, or otherwise complex feature locations fail clearly rather than being partially interpreted. Reverse-strand extraction is supported only where the shared core can reverse-complement the underlying molecule correctly, and unannotated inputs or selector combinations with no matches fail with explicit validation errors."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used for deterministic extractfeat validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "extract_selected_gene_feature",
+      "title": "Extract a selected gene feature into a rebased record",
+      "description": "Selects the `gene` feature from a small annotated GenBank fixture and emits one rebased extracted sequence record.",
+      "artifact_ids": [
+        "annotated_feature_genbank"
+      ],
+      "parameters": [
+        {
+          "name": "kind",
+          "value": "gene"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "extracted_feature_sequences",
+          "label": "Feature-defined extracted sequences",
+          "description": "The selected `gene` span is emitted as its own sequence record with rebased copied feature coordinates."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "extract_selected_gene_feature"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

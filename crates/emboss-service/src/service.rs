@@ -6532,6 +6532,53 @@ mod tests {
     }
 
     #[test]
+    fn extractfeat_supports_qualifier_selection_and_stable_order() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--qualifier".to_owned(),
+            "product=short peptide".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("extractfeat should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "FEAT1:8-10:cdsA");
+                assert_eq!(records[0].residues(), "TAC");
+                assert_eq!(records[0].features()[0].location.bounds().start(), 0);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn extractfeat_rejects_no_matching_features() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractfeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--name".to_owned(),
+            "missing".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("missing selector should fail");
+        assert_eq!(
+            error.to_string(),
+            "extractfeat did not find any features matching the requested selector"
+        );
+    }
+
+    #[test]
     fn extractfeat_rejects_complex_locations() {
         let service = implemented_service();
         let request = InvocationRequest::new(
