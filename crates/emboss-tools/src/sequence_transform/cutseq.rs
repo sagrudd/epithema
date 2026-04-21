@@ -1,6 +1,6 @@
 //! `cutseq` implementation.
 
-use emboss_core::{SequenceIdentifier, SequenceRecord};
+use emboss_core::{Interval, SequenceIdentifier, SequenceRecord};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
@@ -28,7 +28,7 @@ pub struct CutseqOutcome {
 /// Returns `cutseq` help text.
 #[must_use]
 pub fn cutseq_help() -> &'static str {
-    "Usage: emboss-rs cutseq <input> <position>\n\nCut each sequence record after the supplied 1-based interior position. The cut position belongs to the left fragment, and the position must be between 1 and length-1 for every record."
+    "Usage: emboss-rs cutseq <input> <position>\n\nSplit each sequence record after the supplied 1-based interior position. The cut position belongs to the left fragment, and the same cut is applied to every input record. Position must be between 1 and length-1 for every record, so `cutseq` always emits exactly two non-empty fragments per input record."
 }
 
 /// Executes `cutseq`.
@@ -71,16 +71,41 @@ fn split_record(
         .with_code("tools.cutseq.position.out_of_range"));
     }
 
-    let left = &record.residues()[..cut_position];
-    let right = &record.residues()[cut_position..];
+    let left = subsequence_for_interval(
+        &record,
+        Interval::new(0, cut_position).map_err(|error| {
+            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                .with_code("tools.cutseq.interval.invalid")
+        })?,
+    )?;
+    let right = subsequence_for_interval(
+        &record,
+        Interval::new(cut_position, record.len()).map_err(|error| {
+            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                .with_code("tools.cutseq.interval.invalid")
+        })?,
+    )?;
     let molecule = record.molecule();
     let metadata = record.metadata().clone();
     let base = record.identifier().accession();
 
     Ok([
-        build_fragment(base, "left", molecule, left, metadata.clone())?,
-        build_fragment(base, "right", molecule, right, metadata)?,
+        build_fragment(base, "left", molecule, &left, metadata.clone())?,
+        build_fragment(base, "right", molecule, &right, metadata)?,
     ])
+}
+
+fn subsequence_for_interval(
+    record: &SequenceRecord,
+    interval: Interval,
+) -> Result<String, ToolExecutionError> {
+    record
+        .subsequence(interval)
+        .map(str::to_owned)
+        .map_err(|error| {
+            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                .with_code("tools.cutseq.interval.invalid")
+        })
 }
 
 fn build_fragment(
@@ -100,4 +125,60 @@ fn build_fragment(
     })?;
     record = record.with_metadata(metadata);
     Ok(record)
+}
+
+#[cfg(test)]
+mod tests {
+    use emboss_core::{MoleculeKind, SequenceIdentifier};
+
+    use super::{CutseqParams, run_cutseq, split_record};
+    use crate::sequence_stream::SequenceInput;
+
+    fn record(id: &str, residues: &str) -> emboss_core::SequenceRecord {
+        emboss_core::SequenceRecord::new(
+            SequenceIdentifier::new(id).expect("valid identifier"),
+            MoleculeKind::Dna,
+            residues,
+        )
+        .expect("valid sequence")
+    }
+
+    #[test]
+    fn splits_record_at_interior_position() {
+        let [left, right] = split_record(record("seq1", "ACGT"), 2).expect("splits");
+        assert_eq!(left.identifier().accession(), "seq1.left");
+        assert_eq!(left.residues(), "AC");
+        assert_eq!(right.identifier().accession(), "seq1.right");
+        assert_eq!(right.residues(), "GT");
+    }
+
+    #[test]
+    fn supports_boundary_cut_after_first_position() {
+        let [left, right] = split_record(record("seq1", "ACGT"), 1).expect("splits");
+        assert_eq!(left.residues(), "A");
+        assert_eq!(right.residues(), "CGT");
+    }
+
+    #[test]
+    fn supports_boundary_cut_before_last_position() {
+        let [left, right] = split_record(record("seq1", "ACGT"), 3).expect("splits");
+        assert_eq!(left.residues(), "ACG");
+        assert_eq!(right.residues(), "T");
+    }
+
+    #[test]
+    fn rejects_out_of_range_cut_position() {
+        let error = split_record(record("seq1", "ACGT"), 4).expect_err("must fail");
+        assert_eq!(error.code(), Some("tools.cutseq.position.out_of_range"));
+    }
+
+    #[test]
+    fn rejects_zero_cut_position_before_reading_input() {
+        let error = run_cutseq(CutseqParams {
+            input: SequenceInput::new("unused.fa"),
+            cut_position: 0,
+        })
+        .expect_err("must fail");
+        assert_eq!(error.code(), Some("tools.cutseq.position.invalid"));
+    }
 }

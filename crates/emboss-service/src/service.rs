@@ -6132,9 +6132,62 @@ mod tests {
                 assert_eq!(records[0].residues(), "AC");
                 assert_eq!(records[1].identifier().accession(), "alpha.right");
                 assert_eq!(records[1].residues(), "GT");
+                assert_eq!(records[2].identifier().accession(), "beta.left");
+                assert_eq!(records[2].residues(), "TT");
+                assert_eq!(records[3].identifier().accession(), "beta.right");
+                assert_eq!(records[3].residues(), "TT");
+                assert_eq!(records[4].identifier().accession(), "gamma.left");
+                assert_eq!(records[4].residues(), "GG");
+                assert_eq!(records[5].identifier().accession(), "gamma.right");
+                assert_eq!(records[5].residues(), "CC");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_cutseq_at_first_boundary_position() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cutseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "1".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("cutseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "A");
+                assert_eq!(records[1].residues(), "CGT");
+                assert_eq!(records[2].residues(), "T");
+                assert_eq!(records[3].residues(), "TTT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn cutseq_rejects_non_interior_position() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cutseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "4".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("position equal to record length must fail");
+        assert_eq!(
+            error.to_string(),
+            "cut position 4 must be an interior position for sequence 'alpha' of length 4"
+        );
     }
 
     #[test]

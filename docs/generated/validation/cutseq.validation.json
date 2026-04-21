@@ -1,6 +1,6 @@
 {
   "tool_name": "cutseq",
-  "document_id": "cutseq-initial",
+  "document_id": "cutseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "cut_after_second_base",
-      "title": "Cut each record after the second base",
+      "id": "cut_after_second_position",
+      "title": "Cut each record after the second position",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",

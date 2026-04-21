@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "cutseq-stub-v1",
+  "document_id": "cutseq-v1",
   "tool": {
     "name": "cutseq",
     "family": "sequence_transform",
-    "summary": "Cut each input sequence record into left and right fragments at a position",
+    "summary": "Split each input sequence record into left and right fragments at one 1-based cut position",
     "legacy_names": [
       "cutseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`cutseq` is part of the exposed EMBOSS-RS `sequence_transform` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared EMBOSS-RS interval and subsequence primitives instead of ad hoc string slicing."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current tool accepts a local sequence file plus one cut `position`. User-facing coordinates are 1-based and the cut occurs *after* the supplied position, so base or residue `position` belongs to the left fragment. FASTA, FASTQ, EMBL, and GenBank inputs follow the shared sequence IO layer, and the cut position must be interior for every input record."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "The tool emits exactly two non-empty fragments per input record, preserving input record order. Fragment identifiers are derived deterministically by suffixing the original accession with `.left` and `.right`. Descriptions, molecule kind, and other record metadata are preserved through the shared `SequenceRecord` model."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs cutseq`. The generated tool page and the machine-readable validation stub at [`../validation/cutseq.validation.json`](../validation/cutseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs cutseq`. Validation currently covers a committed three-record FASTA fixture with a representative interior cut, while Rust unit and service tests cover first-boundary cuts, invalid positions, deterministic naming, and multi-record output ordering."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 scope supports only one cut position and always emits both remaining fragments. Empty fragments are not representable, so positions `0` and `length` are rejected. Interval removal and richer fragment naming policies can be added later through the same governed tool path without changing the documented coordinate convention."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic cutseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "cut_after_second_position",
+      "title": "Cut each record after the second position",
+      "description": "Splits each record in a three-record FASTA fixture after position 2 using the shared 1-based cut convention.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "position",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "cut_fragments",
+          "label": "Left and right fragments",
+          "description": "Each input record produces a `.left` fragment containing positions 1..2 and a `.right` fragment containing the remaining suffix."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "cut_after_second_position"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }
