@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "featcopy-stub-v1",
+  "document_id": "featcopy-v1",
   "tool": {
     "name": "featcopy",
     "family": "feature_tools",
-    "summary": "Copy selected feature annotations between identifier-matched compatible records",
+    "summary": "Copy selected feature annotations from annotated source records onto compatible target records",
     "legacy_names": [
       "featcopy"
     ]
@@ -14,39 +14,106 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`featcopy` is part of the exposed EMBOSS-RS `feature_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`featcopy` copies selected features from annotated source records onto matching target records using the shared EMBOSS-RS feature-selection and feature-copy helpers. In the current v1 behavior the underlying target sequence is preserved, existing target features are retained, and copied source features are appended in stable source order."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts annotated sequence records through the shared IO layer and operates on simple feature spans preserved in EMBOSS-RS feature-aware payloads."
+      "content": "The tool accepts two local inputs: an annotated source sequence set and a target sequence set. Supported selectors are `--kind`, `--name`, `--qualifier`, and `--strand`. When more than one selector is supplied they are combined conjunctively. If no selector flags are provided, all source features are considered for copying."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits transformed sequence records plus structured feature or masking summaries where appropriate."
+      "content": "The output preserves target record order and emits the target sequences in FASTA form while retaining copied annotations in the structured payload. Records are paired by stable accession identifier, both inputs must contain the same identifier set, and paired record lengths must match before any features are copied."
+    },
+    {
+      "id": "copying",
+      "kind": "notes",
+      "title": "Copy Semantics",
+      "content": "Selected source features are cloned with their names, notes, qualifiers, and locations preserved exactly and then appended to the corresponding target record. The v1 tool does not rewrite sequence residues or rebase coordinates, and it does not attempt to merge or deduplicate copied features against any pre-existing target annotations."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs featcopy`. The generated tool page and the machine-readable validation stub at [`../validation/featcopy.validation.json`](../validation/featcopy.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs featcopy`. Validation currently covers copying a selected gene feature from a committed annotated GenBank fixture onto a matching plain FASTA target. Rust service tests also cover qualifier-based copying with qualifier preservation and explicit identifier mismatch or no-match failures."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The current v1 output mode is conservative: copy selected features onto otherwise preserved target records. More elaborate feature-table export or annotation-diff workflows are deferred. Inputs with mismatched identifier sets or record lengths fail explicitly instead of being partially paired."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used as the deterministic source for featcopy validation."
+    },
+    {
+      "id": "featcopy_target_fasta",
+      "label": "Matching FASTA target fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/featcopy_target.fasta"
+      },
+      "description": "Repository-managed FASTA target fixture with the same accession and length as the annotated source."
+    }
+  ],
+  "examples": [
+    {
+      "id": "copy_selected_gene_feature_to_matching_target",
+      "title": "Copy a selected gene feature onto a matching target record",
+      "description": "Selects the `gene` feature from the annotated source fixture and appends it to the equal-length target record with the same accession.",
+      "artifact_ids": [
+        "annotated_feature_genbank",
+        "featcopy_target_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "kind",
+          "value": "gene"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "feature_copied_sequences",
+          "label": "Feature-copied target sequences",
+          "description": "The target sequence is returned unchanged at the residue level with the selected source feature appended to its annotations."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "copy_selected_gene_feature_to_matching_target"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

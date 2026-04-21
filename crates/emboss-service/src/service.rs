@@ -6677,6 +6677,61 @@ mod tests {
     }
 
     #[test]
+    fn featcopy_preserves_feature_metadata_under_qualifier_selection() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featcopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featcopy_target_fixture().display().to_string(),
+            "--qualifier".to_owned(),
+            "product=short peptide".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("featcopy should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].features().len(), 1);
+                assert_eq!(records[0].features()[0].name.as_deref(), Some("cdsA"));
+                assert_eq!(
+                    records[0].features()[0]
+                        .qualifiers
+                        .get("product")
+                        .map(String::as_str),
+                    Some("short peptide")
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn featcopy_rejects_no_matching_features() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featcopy").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featcopy_target_fixture().display().to_string(),
+            "--name".to_owned(),
+            "missing".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("missing selector should fail");
+        assert_eq!(
+            error.to_string(),
+            "featcopy did not find any features matching the requested selector"
+        );
+    }
+
+    #[test]
     fn featcopy_rejects_identifier_mismatch() {
         let service = implemented_service();
         let request = InvocationRequest::new(

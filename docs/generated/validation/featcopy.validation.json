@@ -1,6 +1,6 @@
 {
   "tool_name": "featcopy",
-  "document_id": "featcopy-initial",
+  "document_id": "featcopy-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "copy_selected_gene_feature_to_matching_target",
-      "title": "Copy selected features between identifier-matched equal-length records",
+      "title": "Copy a selected gene feature onto a matching target record",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
