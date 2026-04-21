@@ -1,6 +1,6 @@
 {
   "tool_name": "notseq",
-  "document_id": "notseq-initial",
+  "document_id": "notseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "exclude_second_record",
-      "title": "Exclude the second record from a three-sequence FASTA fixture",
+      "title": "Exclude the second record from a three-record FASTA input",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "filtered_sequences"
+        "filtered_sequence_collection"
       ],
       "provenance": [],
       "diagnostics": []

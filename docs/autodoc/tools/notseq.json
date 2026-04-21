@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "notseq-stub-v1",
+  "document_id": "notseq-v1",
   "tool": {
     "name": "notseq",
     "family": "sequence_stream",
-    "summary": "Return all sequence records except the excluded index",
+    "summary": "Exclude one sequence record by 1-based ordinal position",
     "legacy_names": [
       "notseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`notseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path instead of embedding format-specific stream logic."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 interface accepts one local sequence input path plus one exclusion index. The index is **1-based** and must refer to an existing record in the loaded input stream."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods."
+      "content": "The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs notseq`. The generated tool page and the machine-readable validation stub at [`../validation/notseq.validation.json`](../validation/notseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports exclusion by ordinal position only. Identifier-based exclusion, multiple exclusion criteria, and duplicate-identifier policies remain deferred. Excluding the only record is allowed and returns an empty output stream."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate deterministic exclusion order."
+    }
+  ],
+  "examples": [
+    {
+      "id": "exclude_second_record",
+      "title": "Exclude the second record from a three-record FASTA input",
+      "description": "Removes the middle record from a small FASTA fixture and returns the remaining records in stable source order.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "filtered_sequence_collection",
+          "label": "Filtered sequence collection",
+          "description": "A FASTA sequence collection containing the first and third records from the source fixture."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "exclude_second_record"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

@@ -1504,6 +1504,7 @@ impl EmbossService {
             ResultSummary::new("Sequence excluded from stream")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
                 .with_line(format!("Excluded index: {}", outcome.excluded_index))
+                .with_line(format!("Input records: {}", outcome.total_count))
                 .with_line(format!(
                     "Returned: {}",
                     outcome.total_count.saturating_sub(1)
@@ -5985,6 +5986,27 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert_eq!(response.result.summary.lines[1], "Excluded index: 2");
+        assert_eq!(response.result.summary.lines[2], "Input records: 3");
+        assert_eq!(response.result.summary.lines[3], "Returned: 2");
+    }
+
+    #[test]
+    fn rejects_notseq_index_out_of_range() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("notseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "4".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("out of range notseq index should fail");
+        assert!(error.to_string().contains("out of range"));
     }
 
     #[test]

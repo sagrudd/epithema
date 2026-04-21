@@ -4,11 +4,11 @@
 
 ## Summary
 
-Return all sequence records except the excluded index
+Exclude one sequence record by 1-based ordinal position
 
 ## Document Metadata
 
-- Document ID: `notseq-stub-v1`
+- Document ID: `notseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
@@ -16,34 +16,54 @@ Return all sequence records except the excluded index
 
 ## Overview
 
-`notseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path instead of embedding format-specific stream logic.
 
 ## Inputs
 
-This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it.
+The current v1 interface accepts one local sequence input path plus one exclusion index. The index is **1-based** and must refer to an existing record in the loaded input stream.
 
 ## Outputs
 
-The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods.
+The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs notseq`. The generated tool page and the machine-readable validation stub at [`../validation/notseq.validation.json`](../validation/notseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release supports exclusion by ordinal position only. Identifier-based exclusion, multiple exclusion criteria, and duplicate-identifier policies remain deferred. Excluding the only record is allowed and returns an empty output stream.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed multi-record FASTA fixture used to validate deterministic exclusion order.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Exclude the second record from a three-record FASTA input
+
+- Example ID: `exclude_second_record`
+- Description: Removes the middle record from a small FASTA fixture and returns the remaining records in stable source order.
+- Referenced artifacts: `three_record_fasta`
+- Parameters:
+  - `index` = `2`
+- Expected outputs:
+  - `filtered_sequence_collection`: Filtered sequence collection (A FASTA sequence collection containing the first and third records from the source fixture.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `exclude_second_record`
+- Compare against legacy: no
+- Require provenance capture: yes
 
