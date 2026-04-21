@@ -1446,6 +1446,7 @@ impl EmbossService {
             ResultSummary::new("Sequence stream filtered")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
                 .with_line(format!("Skipped: {}", outcome.skipped_count))
+                .with_line(format!("Input records: {}", outcome.total_count))
                 .with_line(format!(
                     "Returned: {}",
                     outcome.total_count.saturating_sub(outcome.skipped_count)
@@ -5984,6 +5985,33 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert_eq!(response.result.summary.lines[1], "Skipped: 1");
+        assert_eq!(response.result.summary.lines[2], "Input records: 3");
+        assert_eq!(response.result.summary.lines[3], "Returned: 2");
+    }
+
+    #[test]
+    fn executes_skipseq_beyond_end_as_empty_stream() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("skipseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "99".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("skipseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert!(records.is_empty());
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Skipped: 3");
+        assert_eq!(response.result.summary.lines[2], "Input records: 3");
+        assert_eq!(response.result.summary.lines[3], "Returned: 0");
     }
 
     #[test]

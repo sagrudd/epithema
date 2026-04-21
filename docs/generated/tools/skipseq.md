@@ -4,11 +4,11 @@
 
 ## Summary
 
-Skip the first N sequence records and return the rest
+Skip the first N sequence records and return the remainder
 
 ## Document Metadata
 
-- Document ID: `skipseq-stub-v1`
+- Document ID: `skipseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
@@ -16,34 +16,54 @@ Skip the first N sequence records and return the rest
 
 ## Overview
 
-`skipseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`skipseq` removes a non-negative number of leading sequence records from a local input stream and returns the remaining records in stable source order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path rather than embedding format-specific stream handling.
 
 ## Inputs
 
-This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it.
+The current v1 interface accepts one local sequence input path plus one non-negative skip count. The count is interpreted as the number of leading records to discard before emitting the remainder.
 
 ## Outputs
 
-The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods.
+The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, effective skipped count, total input count, returned record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs skipseq`. The generated tool page and the machine-readable validation stub at [`../validation/skipseq.validation.json`](../validation/skipseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs skipseq`. Validation currently covers zero-skip behavior, single-record skipping, interior skip counts, skip-all, skip-beyond-end, and malformed or empty-input failure behavior.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release supports one input path and one skip count per invocation. Negative skip counts are rejected by argument parsing. Skip counts greater than the number of records are clamped to the input length and return an empty output stream rather than failing.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed multi-record FASTA fixture used to validate stable skip behavior.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Skip the first record from a three-record FASTA input
+
+- Example ID: `skip_first_record`
+- Description: Drops the first record from a small FASTA fixture and returns the remaining suffix in original order.
+- Referenced artifacts: `three_record_fasta`
+- Parameters:
+  - `count` = `1`
+- Expected outputs:
+  - `remaining_sequence_collection`: Remaining sequence collection (A FASTA sequence collection containing the second and third records from the source fixture.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `skip_first_record`
+- Compare against legacy: no
+- Require provenance capture: yes
 

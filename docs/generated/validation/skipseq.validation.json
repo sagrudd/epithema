@@ -1,6 +1,6 @@
 {
   "tool_name": "skipseq",
-  "document_id": "skipseq-initial",
+  "document_id": "skipseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "skip_first_record",
-      "title": "Skip the first record from a three-sequence FASTA fixture",
+      "title": "Skip the first record from a three-record FASTA input",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "remaining_sequences"
+        "remaining_sequence_collection"
       ],
       "provenance": [],
       "diagnostics": []

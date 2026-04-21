@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "skipseq-stub-v1",
+  "document_id": "skipseq-v1",
   "tool": {
     "name": "skipseq",
     "family": "sequence_stream",
-    "summary": "Skip the first N sequence records and return the rest",
+    "summary": "Skip the first N sequence records and return the remainder",
     "legacy_names": [
       "skipseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`skipseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`skipseq` removes a non-negative number of leading sequence records from a local input stream and returns the remaining records in stable source order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path rather than embedding format-specific stream handling."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 interface accepts one local sequence input path plus one non-negative skip count. The count is interpreted as the number of leading records to discard before emitting the remainder."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods."
+      "content": "The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, effective skipped count, total input count, returned record count, and FASTA output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs skipseq`. The generated tool page and the machine-readable validation stub at [`../validation/skipseq.validation.json`](../validation/skipseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs skipseq`. Validation currently covers zero-skip behavior, single-record skipping, interior skip counts, skip-all, skip-beyond-end, and malformed or empty-input failure behavior."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports one input path and one skip count per invocation. Negative skip counts are rejected by argument parsing. Skip counts greater than the number of records are clamped to the input length and return an empty output stream rather than failing."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate stable skip behavior."
+    }
+  ],
+  "examples": [
+    {
+      "id": "skip_first_record",
+      "title": "Skip the first record from a three-record FASTA input",
+      "description": "Drops the first record from a small FASTA fixture and returns the remaining suffix in original order.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "count",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "remaining_sequence_collection",
+          "label": "Remaining sequence collection",
+          "description": "A FASTA sequence collection containing the second and third records from the source fixture."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "skip_first_record"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }
