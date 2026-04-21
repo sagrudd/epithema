@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "union-stub-v1",
+  "document_id": "union-v1",
   "tool": {
     "name": "union",
     "family": "sequence_transform",
-    "summary": "Concatenate multiple sequence inputs into one output stream",
+    "summary": "Combine two or more sequence inputs into one deterministic output stream",
     "legacy_names": [
       "union"
     ]
@@ -14,39 +14,95 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`union` is part of the exposed EMBOSS-RS `sequence_transform` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`union` combines two or more local sequence inputs into one output stream by stable concatenation. The first EMBOSS-RS release keeps the semantics intentionally simple: preserve input order, preserve per-input record order, and preserve duplicates exactly as they were read."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 interface requires at least two local sequence input paths. Each input is loaded through the shared EMBOSS-RS sequence readers for FASTA, FASTQ, EMBL, and GenBank."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "The tool emits one combined FASTA sequence collection through the shared output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting input count, output record count, ordering policy, duplicate policy, and FASTA output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs union`. The generated tool page and the machine-readable validation stub at [`../validation/union.validation.json`](../validation/union.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs union`. Validation currently covers two-input concatenation, duplicate-identifier preservation, too-few-input failure, and malformed or empty-input failure behavior."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not perform identifier-based or content-based deduplication. Records that share identifiers, descriptions, or sequence content are preserved as independent output records in first-seen order."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used as the leading input for deterministic union validation."
+    },
+    {
+      "id": "two_record_fasta",
+      "label": "Two-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/two_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture appended after the three-record input during union validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "concatenate_two_sequence_inputs",
+      "title": "Concatenate two FASTA inputs in stable order",
+      "description": "Appends a two-record FASTA fixture after a three-record FASTA fixture and returns the five-record combined stream in deterministic order.",
+      "artifact_ids": [
+        "three_record_fasta",
+        "two_record_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "union_sequence_collection",
+          "label": "Combined sequence collection",
+          "description": "A FASTA sequence collection containing the first input records followed by the second input records without deduplication."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "concatenate_two_sequence_inputs"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

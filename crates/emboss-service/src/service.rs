@@ -3444,6 +3444,7 @@ impl EmbossService {
             self.resolve_multiple_local_sequence_inputs(request.arguments())?;
         let input_count = inputs.len();
         let outcome = run_union(UnionParams { inputs })?;
+        let output_count = outcome.records.len();
         let output_provenance =
             ArtifactProvenance::generated_output("stdout").with_description("union FASTA output");
         let mut provenance = input_provenance;
@@ -3459,7 +3460,9 @@ impl EmbossService {
             ResultPayload::SequenceCollection(outcome.records),
             ResultSummary::new("Sequence union completed")
                 .with_line(format!("Inputs: {}", input_count))
+                .with_line(format!("Output records: {}", output_count))
                 .with_line("Ordering: preserve input order and per-input record order")
+                .with_line("Duplicate policy: preserve duplicates exactly as read")
                 .with_line("Output format: fasta"),
             report.clone(),
         )
@@ -6351,6 +6354,31 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert_eq!(response.result.summary.lines[0], "Inputs: 2");
+        assert_eq!(response.result.summary.lines[1], "Output records: 5");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Ordering: preserve input order and per-input record order"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Duplicate policy: preserve duplicates exactly as read"
+        );
+    }
+
+    #[test]
+    fn rejects_union_with_too_few_inputs() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("union").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("union should reject a single input");
+        assert!(error.to_string().contains("Usage: emboss-rs union"));
     }
 
     #[test]

@@ -1,6 +1,6 @@
 {
   "tool_name": "union",
-  "document_id": "union-initial",
+  "document_id": "union-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "union_two_sequence_inputs",
-      "title": "Concatenate two FASTA inputs in deterministic order",
+      "id": "concatenate_two_sequence_inputs",
+      "title": "Concatenate two FASTA inputs in stable order",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -29,7 +29,7 @@
         "two_record_fasta"
       ],
       "expected_output_ids": [
-        "union_sequences"
+        "union_sequence_collection"
       ],
       "provenance": [],
       "diagnostics": []
