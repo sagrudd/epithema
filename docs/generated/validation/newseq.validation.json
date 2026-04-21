@@ -1,13 +1,13 @@
 {
   "tool_name": "newseq",
-  "document_id": "newseq-initial",
+  "document_id": "newseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
     "total_case_count": 1,
     "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -17,22 +17,38 @@
   },
   "cases": [
     {
-      "id": "create_inline_sequence",
-      "title": "Create a DNA sequence from inline residues",
+      "id": "create_dna_record",
+      "title": "Create a DNA record from inline residues",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
-      "execution_status": "runnable",
+      "execution_status": "pending",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [],
       "expected_output_ids": [
-        "created_sequence"
+        "created_sequence_record"
       ],
       "provenance": [],
-      "diagnostics": []
+      "diagnostics": [
+        {
+          "severity": "warning",
+          "code": "testkit.case.no_artifacts",
+          "message": "validation case has no declared input artefacts",
+          "context": "create_dna_record"
+        }
+      ]
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": [],
+  "unresolved_gaps": [
+    "example 'create_dna_record' needs declared input artefacts before it can become runnable"
+  ],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "testkit.case.no_artifacts",
+      "message": "validation case has no declared input artefacts",
+      "context": "create_dna_record"
+    }
+  ],
   "provenance": []
 }

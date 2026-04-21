@@ -1550,6 +1550,16 @@ impl EmbossService {
                 ))
                 .with_line(format!("Length: {}", outcome.record.len()))
                 .with_line(format!("Molecule: {}", outcome.record.molecule()))
+                .with_line(format!("Alphabet: {}", outcome.record.alphabet()))
+                .with_line(format!(
+                    "Description: {}",
+                    outcome
+                        .record
+                        .metadata()
+                        .description
+                        .clone()
+                        .unwrap_or_else(|| "-".to_owned())
+                ))
                 .with_line("Output format: fasta"),
             report.clone(),
         )
@@ -5968,9 +5978,57 @@ mod tests {
                     record.metadata().description.as_deref(),
                     Some("created example")
                 );
+                assert_eq!(record.molecule().to_string(), "dna");
+                assert_eq!(record.alphabet().to_string(), "DNA alphabet");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_newseq_with_explicit_protein_molecule() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("newseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            "prot-created".to_owned(),
+            "m s t n".to_owned(),
+            "--molecule".to_owned(),
+            "protein".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("newseq should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(record) => {
+                assert_eq!(record.identifier().accession(), "prot-created");
+                assert_eq!(record.residues(), "MSTN");
+                assert_eq!(record.molecule().to_string(), "protein");
+                assert_eq!(record.alphabet().to_string(), "protein alphabet");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn newseq_rejects_invalid_residue_for_declared_molecule() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("newseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            "bad-dna".to_owned(),
+            "ACGTZ".to_owned(),
+            "--molecule".to_owned(),
+            "dna".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("newseq should reject invalid dna residue");
+        assert!(error.to_string().contains("invalid residue"));
     }
 
     #[test]

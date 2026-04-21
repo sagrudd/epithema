@@ -28,7 +28,7 @@ pub struct NewseqOutcome {
 /// Returns the `newseq` help text.
 #[must_use]
 pub fn newseq_help() -> &'static str {
-    "Usage: emboss-rs newseq <identifier> <sequence> [--description <text>] [--molecule <dna|rna|protein|unknown>]\n\nCreate a new sequence record from inline residue content and emit it as FASTA."
+    "Usage: emboss-rs newseq <identifier> <sequence> [--description <text>] [--molecule <dna|rna|protein|unknown>]\n\nCreate a new sequence record from inline residue content and emit it as FASTA. v1 requires an explicit identifier, accepts optional description text, and infers molecule kind conservatively when --molecule is omitted."
 }
 
 /// Executes `newseq`.
@@ -61,29 +61,27 @@ fn infer_molecule_kind(residues: &str) -> MoleculeKind {
         .map(|symbol| symbol.to_ascii_uppercase())
         .collect();
 
+    if uppercase.is_empty() {
+        return MoleculeKind::Unknown;
+    }
+
     let has_u = uppercase.contains('U');
     let has_t = uppercase.contains('T');
-    if has_u && !has_t {
+    if has_u && !has_t && uppercase.chars().all(is_rna_inference_symbol) {
         return MoleculeKind::Rna;
     }
-    if has_t && !has_u {
+    if has_t && !has_u && uppercase.chars().all(is_dna_inference_symbol) {
         return MoleculeKind::Dna;
     }
+    MoleculeKind::Unknown
+}
 
-    if uppercase
-        .chars()
-        .all(|symbol| matches!(symbol, 'A' | 'C' | 'G' | 'T' | 'N' | '-' | '*'))
-    {
-        return MoleculeKind::Dna;
-    }
-    if uppercase
-        .chars()
-        .all(|symbol| matches!(symbol, 'A' | 'C' | 'G' | 'U' | 'N' | '-' | '*'))
-    {
-        return MoleculeKind::Rna;
-    }
+fn is_dna_inference_symbol(symbol: char) -> bool {
+    matches!(symbol, 'A' | 'C' | 'G' | 'T' | 'N' | '-' | '*')
+}
 
-    MoleculeKind::Protein
+fn is_rna_inference_symbol(symbol: char) -> bool {
+    matches!(symbol, 'A' | 'C' | 'G' | 'U' | 'N' | '-' | '*')
 }
 
 #[cfg(test)]
@@ -104,5 +102,65 @@ mod tests {
 
         assert_eq!(outcome.record.molecule(), MoleculeKind::Dna);
         assert_eq!(outcome.record.residues(), "ACGT");
+    }
+
+    #[test]
+    fn infers_rna_for_simple_uracil_sequence() {
+        let outcome = run_newseq(NewseqParams {
+            identifier: "rna-created".to_owned(),
+            residues: "acgu".to_owned(),
+            description: None,
+            molecule: None,
+        })
+        .expect("sequence should build");
+
+        assert_eq!(outcome.record.molecule(), MoleculeKind::Rna);
+        assert_eq!(outcome.record.residues(), "ACGU");
+    }
+
+    #[test]
+    fn falls_back_to_unknown_when_inference_is_not_cleanly_nucleotide() {
+        let outcome = run_newseq(NewseqParams {
+            identifier: "protein-like".to_owned(),
+            residues: "MSTN".to_owned(),
+            description: None,
+            molecule: None,
+        })
+        .expect("sequence should build");
+
+        assert_eq!(outcome.record.molecule(), MoleculeKind::Unknown);
+        assert_eq!(outcome.record.alphabet().to_string(), "text alphabet");
+        assert_eq!(outcome.record.residues(), "MSTN");
+    }
+
+    #[test]
+    fn accepts_explicit_protein_molecule_and_description() {
+        let outcome = run_newseq(NewseqParams {
+            identifier: "prot1".to_owned(),
+            residues: "m s t n".to_owned(),
+            description: Some("created protein".to_owned()),
+            molecule: Some(MoleculeKind::Protein),
+        })
+        .expect("protein should build");
+
+        assert_eq!(outcome.record.molecule(), MoleculeKind::Protein);
+        assert_eq!(outcome.record.residues(), "MSTN");
+        assert_eq!(
+            outcome.record.metadata().description.as_deref(),
+            Some("created protein")
+        );
+    }
+
+    #[test]
+    fn rejects_invalid_residue_for_explicit_molecule() {
+        let error = run_newseq(NewseqParams {
+            identifier: "bad-dna".to_owned(),
+            residues: "ACGTZ".to_owned(),
+            description: None,
+            molecule: Some(MoleculeKind::Dna),
+        })
+        .expect_err("dna sequence should reject invalid residue");
+
+        assert!(error.to_string().contains("invalid residue"));
     }
 }
