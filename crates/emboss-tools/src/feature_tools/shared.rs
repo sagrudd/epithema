@@ -3,8 +3,24 @@ use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 use crate::sequence_stream::ToolExecutionError;
 
-pub fn effective_mask_symbol(record: &SequenceRecord, explicit: Option<char>) -> char {
-    explicit.unwrap_or(default_mask_symbol(record.molecule()))
+pub fn effective_mask_symbol(
+    tool: &str,
+    record: &SequenceRecord,
+    explicit: Option<char>,
+) -> Result<char, ToolExecutionError> {
+    let symbol = explicit.unwrap_or(default_mask_symbol(record.molecule()));
+    if !record.alphabet().allows(symbol) {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!(
+                "{tool} mask character '{symbol}' is not valid for {} sequences",
+                record.molecule()
+            ),
+        )
+        .with_code(format!("tools.{tool}.mask_char.invalid_for_molecule")));
+    }
+
+    Ok(symbol.to_ascii_uppercase())
 }
 
 pub fn default_mask_symbol(molecule: MoleculeKind) -> char {

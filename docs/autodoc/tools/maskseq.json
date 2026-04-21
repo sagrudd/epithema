@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "maskseq-stub-v1",
+  "document_id": "maskseq-v1",
   "tool": {
     "name": "maskseq",
     "family": "feature_tools",
-    "summary": "Mask explicit 1-based inclusive sequence intervals with a configurable symbol",
+    "summary": "Mask one or more explicit 1-based inclusive sequence intervals with molecule-aware default symbols",
     "legacy_names": [
       "maskseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`maskseq` is part of the exposed EMBOSS-RS `feature_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`maskseq` masks explicit sequence intervals in each input record using the shared EMBOSS-RS interval and sequence-edit foundations. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval model before applying in-place masking through the shared `mask_intervals` helper."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts annotated sequence records through the shared IO layer and operates on simple feature spans preserved in EMBOSS-RS feature-aware payloads."
+      "content": "The current v1 tool accepts a local sequence file followed by one or more `start:end` intervals. FASTA, FASTQ, EMBL, and GenBank inputs follow the shared sequence IO path. Multiple intervals are allowed and are applied deterministically in place to every input record."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits transformed sequence records plus structured feature or masking summaries where appropriate."
+      "content": "The tool emits one masked sequence record per input record, preserving identifiers, descriptions, molecule kind, and other metadata. The default mask symbol is `N` for DNA, RNA, and currently unknown molecule kinds, and `X` for protein records. A custom mask character may be supplied when it is valid for the target record alphabet."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs maskseq`. The generated tool page and the machine-readable validation stub at [`../validation/maskseq.validation.json`](../validation/maskseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs maskseq`. Validation currently covers deterministic masking of an interior interval against a committed three-record FASTA fixture. Rust tests also cover whole-sequence masking, protein default masking with `X`, and rejection of biologically invalid explicit mask symbols."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "Intervals must be valid for every input record; EMBOSS-RS does not clip partial overlaps silently. Empty intervals are not representable because coordinates are 1-based inclusive with `start <= end`. Custom mask characters are conservative: they must be compatible with the record alphabet, so a protein mask cannot use `N` and a DNA mask cannot use protein-only symbols."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic maskseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "mask_positions_two_to_three",
+      "title": "Mask positions 2 through 3 in each record",
+      "description": "Applies the same 1-based inclusive interval to each record in a three-record FASTA fixture using the default nucleotide mask symbol.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "interval",
+          "value": "2:3"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "masked_sequences",
+          "label": "Masked sequences",
+          "description": "Each output record has positions 2 through 3 replaced with `N`, while identifiers and metadata are preserved."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "mask_positions_two_to_three"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

@@ -49,7 +49,7 @@ pub fn run_maskseq(params: MaskseqParams) -> Result<MaskseqOutcome, ToolExecutio
     let records = load_sequence_records(&params.input)?
         .into_iter()
         .map(|record| {
-            let mask_symbol = effective_mask_symbol(&record, params.mask_char);
+            let mask_symbol = effective_mask_symbol("maskseq", &record, params.mask_char)?;
             mask_intervals(&record, &params.intervals, mask_symbol)
                 .map_err(|error| map_feature_error("maskseq", error))
         })
@@ -61,4 +61,101 @@ pub fn run_maskseq(params: MaskseqParams) -> Result<MaskseqOutcome, ToolExecutio
         mask_char: params.mask_char,
         records,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use emboss_core::{Interval, MoleculeKind, SequenceIdentifier, mask_intervals};
+
+    use super::{MaskseqParams, run_maskseq};
+    use crate::feature_tools::shared::effective_mask_symbol;
+    use crate::sequence_stream::SequenceInput;
+
+    fn record(id: &str, molecule: MoleculeKind, residues: &str) -> emboss_core::SequenceRecord {
+        emboss_core::SequenceRecord::new(
+            SequenceIdentifier::new(id).expect("valid identifier"),
+            molecule,
+            residues,
+        )
+        .expect("valid sequence")
+    }
+
+    #[test]
+    fn defaults_to_n_for_nucleotide_sequences() {
+        let symbol =
+            effective_mask_symbol("maskseq", &record("dna1", MoleculeKind::Dna, "ACGT"), None)
+                .expect("default mask should resolve");
+        assert_eq!(symbol, 'N');
+    }
+
+    #[test]
+    fn defaults_to_x_for_protein_sequences() {
+        let symbol = effective_mask_symbol(
+            "maskseq",
+            &record("prot1", MoleculeKind::Protein, "MA*"),
+            None,
+        )
+        .expect("default mask should resolve");
+        assert_eq!(symbol, 'X');
+    }
+
+    #[test]
+    fn accepts_valid_explicit_mask_character() {
+        let symbol = effective_mask_symbol(
+            "maskseq",
+            &record("dna1", MoleculeKind::Dna, "ACGT"),
+            Some('r'),
+        )
+        .expect("explicit mask should resolve");
+        assert_eq!(symbol, 'R');
+    }
+
+    #[test]
+    fn rejects_invalid_explicit_mask_character_for_molecule() {
+        let error = effective_mask_symbol(
+            "maskseq",
+            &record("prot1", MoleculeKind::Protein, "MA*"),
+            Some('?'),
+        )
+        .expect_err("invalid mask should fail");
+        assert_eq!(
+            error.code(),
+            Some("tools.maskseq.mask_char.invalid_for_molecule")
+        );
+    }
+
+    #[test]
+    fn rejects_missing_intervals_before_reading_input() {
+        let error = run_maskseq(MaskseqParams {
+            input: SequenceInput::new("unused.fa"),
+            intervals: Vec::new(),
+            mask_char: None,
+        })
+        .expect_err("must fail");
+        assert_eq!(error.code(), Some("tools.maskseq.interval.missing"));
+    }
+
+    #[test]
+    fn masks_entire_sequence_when_interval_spans_record() {
+        let masked = mask_intervals(
+            &record("dna1", MoleculeKind::Dna, "ACGT"),
+            &[Interval::new(0, 4).expect("valid interval")],
+            effective_mask_symbol("maskseq", &record("dna1", MoleculeKind::Dna, "ACGT"), None)
+                .expect("mask symbol"),
+        )
+        .expect("masking should succeed");
+        assert_eq!(masked.residues(), "NNNN");
+    }
+
+    #[test]
+    fn masks_protein_sequences_with_default_x() {
+        let source = record("prot1", MoleculeKind::Protein, "MA*");
+        let masked = mask_intervals(
+            &source,
+            &[Interval::new(1, 2).expect("valid interval")],
+            effective_mask_symbol("maskseq", &source, None).expect("mask symbol"),
+        )
+        .expect("masking should succeed");
+        assert_eq!(masked.residues(), "MX*");
+    }
 }

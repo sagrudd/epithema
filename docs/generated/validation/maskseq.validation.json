@@ -1,6 +1,6 @@
 {
   "tool_name": "maskseq",
-  "document_id": "maskseq-initial",
+  "document_id": "maskseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "mask_explicit_intervals",
-      "title": "Mask explicit 1-based inclusive intervals in each record",
+      "id": "mask_positions_two_to_three",
+      "title": "Mask positions 2 through 3 in each record",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",

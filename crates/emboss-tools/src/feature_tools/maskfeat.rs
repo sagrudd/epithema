@@ -51,7 +51,7 @@ pub fn run_maskfeat(params: MaskfeatParams) -> Result<MaskfeatOutcome, ToolExecu
             continue;
         }
 
-        let mask_symbol = effective_mask_symbol(&record, params.mask_char);
+        let mask_symbol = effective_mask_symbol("maskfeat", &record, params.mask_char)?;
         records.push(
             mask_selected_features(&record, &params.selector, mask_symbol)
                 .map_err(|error| map_feature_error("maskfeat", error))?,

@@ -6408,10 +6408,79 @@ mod tests {
         match &response.result.payload {
             ResultPayload::SequenceCollection(records) => {
                 assert_eq!(records[0].residues(), "ANNT");
+                assert_eq!(records[1].residues(), "TNNT");
                 assert_eq!(records[2].residues(), "GNNC");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_maskseq_whole_sequence_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "1:4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("maskseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "NNNN");
+                assert_eq!(records[1].residues(), "NNNN");
+                assert_eq!(records[2].residues(), "NNNN");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_maskseq_uses_x_for_records_classified_as_protein() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "2:2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("maskseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "MN*");
+                assert_eq!(records[1].residues(), "LX");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn maskseq_rejects_invalid_custom_mask_character_for_protein() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "2:2".to_owned(),
+            "--mask-char".to_owned(),
+            "?".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid protein mask should fail");
+        assert_eq!(
+            error.to_string(),
+            "maskseq mask character '?' is not valid for protein sequences"
+        );
     }
 
     #[test]
