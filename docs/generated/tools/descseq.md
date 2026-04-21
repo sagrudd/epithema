@@ -4,11 +4,11 @@
 
 ## Summary
 
-Replace or clear sequence record descriptions
+Report stable sequence-record descriptions and metadata summaries in tabular form
 
 ## Document Metadata
 
-- Document ID: `descseq-stub-v1`
+- Document ID: `descseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
@@ -16,34 +16,60 @@ Replace or clear sequence record descriptions
 
 ## Overview
 
-`descseq` is part of the exposed EMBOSS-RS `sequence_edit` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`descseq` reports stable per-record sequence descriptions and metadata using the shared EMBOSS-RS sequence and annotated-record models. It is useful for plain FASTA inputs and richer EMBL or GenBank inputs because it summarizes the typed metadata already carried by the core record representation instead of reparsing format-specific text ad hoc.
 
 ## Inputs
 
-This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it.
+The current v1 tool accepts one local sequence input path and preserves source record order. Plain sequence records and annotated records are both supported through the shared IO layer.
 
 ## Outputs
 
-The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction.
+The output is a stable tabular report with one row per input record. The current schema reports `ordinal`, `identifier`, `display_name`, `description`, `length`, `molecule`, `alphabet`, `feature_count`, `source`, `organism`, and `topology`. Missing metadata values are rendered as `-` in the CLI table output.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs descseq`. The generated tool page and the machine-readable validation stub at [`../validation/descseq.validation.json`](../validation/descseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs descseq`. Validation currently covers both plain multi-record FASTA input and annotated GenBank input so the reported schema is locked down for both unannotated and annotation-aware records.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The v1 output is intentionally conservative and metadata-driven. It reports only fields already represented cleanly in the shared core types and does not attempt format-specific free-text harvesting beyond those typed fields.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed plain FASTA fixture used to validate source-order summary reporting.
+
+### Annotated GenBank fixture
+
+- Artifact ID: `annotated_feature_genbank`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Notes: Repository-managed annotated GenBank fixture used to validate annotation-aware summary reporting.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Summarize plain FASTA records in stable source order
+
+- Example ID: `summarize_plain_fasta_records`
+- Description: Reports one table row per FASTA record with identifier, description, length, molecule, and alphabet fields.
+- Referenced artifacts: `three_record_fasta`
+- Expected outputs:
+  - `sequence_description_rows`: Sequence description rows (The plain sequence input is summarized as a stable per-record tabular report.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `summarize_plain_fasta_records`
+- Compare against legacy: no
+- Require provenance capture: yes
 

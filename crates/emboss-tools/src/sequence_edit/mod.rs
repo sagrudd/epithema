@@ -30,6 +30,8 @@ pub const TRIMSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 )
 .with_family(FAMILY);
 /// `descseq` descriptor.
-pub const DESCSEQ_DESCRIPTOR: ToolDescriptor =
-    ToolDescriptor::new("descseq", "replace or clear sequence record descriptions")
-        .with_family(FAMILY);
+pub const DESCSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "descseq",
+    "report stable sequence-record descriptions and metadata",
+)
+.with_family(FAMILY);

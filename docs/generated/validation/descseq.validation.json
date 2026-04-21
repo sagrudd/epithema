@@ -1,6 +1,6 @@
 {
   "tool_name": "descseq",
-  "document_id": "descseq-initial",
+  "document_id": "descseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "replace_description_text",
-      "title": "Replace sequence descriptions while preserving identifiers",
+      "id": "summarize_plain_fasta_records",
+      "title": "Summarize plain FASTA records in stable source order",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "description_updated_sequences"
+        "sequence_description_rows"
       ],
       "provenance": [],
       "diagnostics": []

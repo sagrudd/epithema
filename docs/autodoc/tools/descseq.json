@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "descseq-stub-v1",
+  "document_id": "descseq-v1",
   "tool": {
     "name": "descseq",
     "family": "sequence_edit",
-    "summary": "Replace or clear sequence record descriptions",
+    "summary": "Report stable sequence-record descriptions and metadata summaries in tabular form",
     "legacy_names": [
       "descseq"
     ]
@@ -14,39 +14,94 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`descseq` is part of the exposed EMBOSS-RS `sequence_edit` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`descseq` reports stable per-record sequence descriptions and metadata using the shared EMBOSS-RS sequence and annotated-record models. It is useful for plain FASTA inputs and richer EMBL or GenBank inputs because it summarizes the typed metadata already carried by the core record representation instead of reparsing format-specific text ad hoc."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 tool accepts one local sequence input path and preserves source record order. Plain sequence records and annotated records are both supported through the shared IO layer."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "The output is a stable tabular report with one row per input record. The current schema reports `ordinal`, `identifier`, `display_name`, `description`, `length`, `molecule`, `alphabet`, `feature_count`, `source`, `organism`, and `topology`. Missing metadata values are rendered as `-` in the CLI table output."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs descseq`. The generated tool page and the machine-readable validation stub at [`../validation/descseq.validation.json`](../validation/descseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs descseq`. Validation currently covers both plain multi-record FASTA input and annotated GenBank input so the reported schema is locked down for both unannotated and annotation-aware records."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 output is intentionally conservative and metadata-driven. It reports only fields already represented cleanly in the shared core types and does not attempt format-specific free-text harvesting beyond those typed fields."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed plain FASTA fixture used to validate source-order summary reporting."
+    },
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used to validate annotation-aware summary reporting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "summarize_plain_fasta_records",
+      "title": "Summarize plain FASTA records in stable source order",
+      "description": "Reports one table row per FASTA record with identifier, description, length, molecule, and alphabet fields.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "sequence_description_rows",
+          "label": "Sequence description rows",
+          "description": "The plain sequence input is summarized as a stable per-record tabular report."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "summarize_plain_fasta_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

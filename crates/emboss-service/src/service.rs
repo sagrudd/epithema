@@ -1795,40 +1795,64 @@ impl EmbossService {
         let input_path = params.input.path.display().to_string();
         let (input, input_provenance, input_diagnostics) =
             self.resolve_local_sequence_input(&input_path)?;
-        let outcome = run_descseq(DescseqParams {
-            input,
-            description: params.description.clone(),
-            clear: params.clear,
-        })?;
+        let outcome = run_descseq(DescseqParams { input })?;
+
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.ordinal.to_string(),
+                    row.identifier.clone(),
+                    row.display_name.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.description.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.length.to_string(),
+                    row.molecule.clone(),
+                    row.alphabet.clone(),
+                    row.feature_count.to_string(),
+                    row.source.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.organism.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.topology.clone().unwrap_or_else(|| "-".to_owned()),
+                ]
+            })
+            .collect::<Vec<_>>();
 
         let output_provenance = ArtifactProvenance::generated_output("stdout")
-            .with_description("description-updated FASTA output");
+            .with_description("sequence description table");
         let report = self.success_report(
             &request.context,
-            format!("updated descriptions for {} records", outcome.records.len()),
+            format!("reported descriptions for {} records", outcome.rows.len()),
             input_diagnostics,
             vec![input_provenance, output_provenance.clone()],
         );
-        let description_line = if params.clear {
-            "Description mode: cleared".to_owned()
-        } else {
-            format!(
-                "Description mode: replaced with '{}'",
-                params.description.as_deref().unwrap_or_default()
-            )
-        };
         let result = MethodResult::new(
             request.tool.clone(),
-            ResultPayload::SequenceCollection(outcome.records),
-            ResultSummary::new("Sequence descriptions updated")
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "ordinal".to_owned(),
+                    "identifier".to_owned(),
+                    "display_name".to_owned(),
+                    "description".to_owned(),
+                    "length".to_owned(),
+                    "molecule".to_owned(),
+                    "alphabet".to_owned(),
+                    "feature_count".to_owned(),
+                    "source".to_owned(),
+                    "organism".to_owned(),
+                    "topology".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Sequence descriptions reported")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
-                .with_line(description_line)
-                .with_line("Output format: fasta"),
+                .with_line(format!("Records: {}", outcome.rows.len()))
+                .with_line("Output format: tabular report")
+                .with_line("Ordering: source order, one row per record"),
             report.clone(),
         )
         .with_artifact(
-            ArtifactReference::new("described-sequences", ArtifactKind::Sequence)
-                .with_label("Description-updated sequences")
+            ArtifactReference::new("sequence-description-report", ArtifactKind::Table)
+                .with_label("Sequence description report")
                 .with_provenance(output_provenance),
         );
 
@@ -4652,58 +4676,12 @@ fn parse_revseq_params(arguments: &[String]) -> Result<RevseqParams, ServiceErro
 }
 
 fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceError> {
-    if arguments.is_empty() {
+    if arguments.len() != 1 {
         return Err(tool_usage_error("descseq", descseq_help()));
     }
 
-    let input = SequenceInput::new(arguments[0].clone());
-    let mut description = None;
-    let mut clear = false;
-    let mut index = 1usize;
-
-    while index < arguments.len() {
-        let argument = &arguments[index];
-        if let Some(value) = argument.strip_prefix("--description=") {
-            description = Some(value.to_owned());
-            index += 1;
-            continue;
-        }
-        if argument == "--description" {
-            let value = arguments.get(index + 1).ok_or_else(|| {
-                PlatformError::new(ErrorCategory::Validation, "missing value for --description")
-                    .with_code("service.tool.descseq.description_missing")
-            })?;
-            description = Some(value.clone());
-            index += 2;
-            continue;
-        }
-        if argument == "--clear" {
-            clear = true;
-            index += 1;
-            continue;
-        }
-
-        return Err(PlatformError::new(
-            ErrorCategory::Validation,
-            format!("unknown descseq argument '{argument}'"),
-        )
-        .with_code("service.tool.descseq.argument_unknown")
-        .with_detail(descseq_help()));
-    }
-
-    if clear == description.is_some() {
-        return Err(PlatformError::new(
-            ErrorCategory::Validation,
-            "descseq requires exactly one of --description or --clear",
-        )
-        .with_code("service.tool.descseq.mode_invalid")
-        .with_detail(descseq_help()));
-    }
-
     Ok(DescseqParams {
-        input,
-        description,
-        clear,
+        input: SequenceInput::new(arguments[0].clone()),
     })
 }
 
@@ -6373,20 +6351,56 @@ mod tests {
             ExecutionContext::default(),
             ToolName::new("descseq").expect("tool name should be valid"),
         )
-        .with_arguments(vec![
-            sequence_fixture().display().to_string(),
-            "--description".to_owned(),
-            "updated description".to_owned(),
-        ]);
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
 
         let response = service.invoke(request).expect("descseq should execute");
         match &response.result.payload {
-            ResultPayload::SequenceCollection(records) => {
+            ResultPayload::TableReport(table) => {
                 assert_eq!(
-                    records[0].metadata().description.as_deref(),
-                    Some("updated description")
+                    table.columns,
+                    vec![
+                        "ordinal",
+                        "identifier",
+                        "display_name",
+                        "description",
+                        "length",
+                        "molecule",
+                        "alphabet",
+                        "feature_count",
+                        "source",
+                        "organism",
+                        "topology",
+                    ]
                 );
-                assert_eq!(records[0].identifier().accession(), "alpha");
+                assert_eq!(table.rows[0][1], "alpha");
+                assert_eq!(table.rows[0][3], "first example");
+                assert_eq!(table.rows[0][4], "4");
+                assert_eq!(table.rows[0][5], "dna");
+                assert_eq!(table.rows[0][7], "0");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn descseq_reports_annotation_aware_metadata() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("descseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_feature_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("descseq should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][1], "FEAT1");
+                assert_eq!(table.rows[0][3], "Example annotated sequence.");
+                assert_eq!(table.rows[0][7], "2");
+                assert_eq!(table.rows[0][8], "Synthetic construct");
+                assert_eq!(table.rows[0][9], "Synthetic construct");
+                assert_eq!(table.rows[0][10], "-");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
