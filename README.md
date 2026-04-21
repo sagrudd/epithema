@@ -17,9 +17,9 @@ documentation command path, and future governed tools will execute as
 The Rust workspace also includes `emboss-r-bridge`, which provides the typed
 Rust-side contract seam for the first-class sister package `emboss-r`. The
 R-facing bridge now grows through narrow typed methods rather than CLI
-emulation and currently covers the early in-memory analytical surface for
-sequence construction/editing, translation, pattern scanning, statistics,
-alignment summaries, and the plotted `charge` profile path.
+emulation and now covers the shipped first-class R cohort for sequence
+construction/editing, feature operations, translation, pattern scanning,
+statistics, alignment summaries, and the plotted `charge` profile path.
 
 Cross-surface validation fixtures for the first-class R interface now live
 under
@@ -72,13 +72,13 @@ The next shipped cohort now covers simple cleanup and editing operations:
 
 - `emboss-rs degapseq <input>` removes `-` and `.` gap characters from each
   input record and emits FASTA.
-- `emboss-rs revseq <input>` reverses each input record and emits FASTA. This
-  v1 implementation performs plain reversal only.
+- `emboss-rs revseq <input> [--reverse-only | --complement]` reverses each
+  input record and defaults to molecule-aware reverse-complement behavior for
+  nucleotide records in auto mode.
 - `emboss-rs trimseq <input> [--left <count>] [--right <count>]` trims explicit
   residue counts from the ends of each record and emits FASTA.
-- `emboss-rs descseq <input> --description <text>` or
-  `emboss-rs descseq <input> --clear` replaces or clears sequence descriptions
-  while preserving identifiers and sequence content.
+- `emboss-rs descseq <input>` reports stable per-record description and
+  metadata summary rows for plain or annotated sequence inputs.
 
 The next shipped cohort now covers feature-driven masking, extraction, and
 annotation-copy operations:

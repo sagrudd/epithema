@@ -4,14 +4,17 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     BridgeAlignmentInput, BridgeChargeProfile, BridgeComplexityResult, BridgeCompositionRow,
-    BridgeDistanceMatrix, BridgeGcRow, BridgeMatcherSummary, BridgePatternHit,
-    BridgePepstatsResult, BridgeSequenceInput, BridgeSequenceRecord, BridgeTranslationCheck,
+    BridgeDescseqRow, BridgeDistanceMatrix, BridgeGcRow, BridgeIntervalInput,
+    BridgeMatcherSummary, BridgePatternHit, BridgePepstatsResult, BridgeSequenceInput,
+    BridgeSequenceRecord, BridgeToolSummary, BridgeTranslationCheck,
 };
 
 /// JSON bridge request envelope.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "method", content = "params", rename_all = "snake_case")]
 pub enum BridgeRequest {
+    /// List shipped governed tools from the Rust registry.
+    ListTools,
     /// Create one validated sequence record.
     NewSequence {
         /// Input sequence payload.
@@ -80,6 +83,18 @@ pub enum BridgeRequest {
     ReverseSequences {
         /// Ordered in-memory sequence records.
         records: Vec<BridgeSequenceInput>,
+        /// Optional reverse mode: `auto`, `reverse_only`, or `complement`.
+        #[serde(default)]
+        mode: Option<String>,
+    },
+    /// Mask one or more explicit intervals in each sequence.
+    MaskSequences {
+        /// Ordered in-memory sequence records.
+        records: Vec<BridgeSequenceInput>,
+        /// One or more 1-based inclusive intervals.
+        intervals: Vec<BridgeIntervalInput>,
+        /// Optional explicit mask character.
+        mask_char: Option<String>,
     },
     /// Trim explicit residue counts from sequence ends.
     TrimSequences {
@@ -152,6 +167,59 @@ pub enum BridgeRequest {
         /// Ordered in-memory protein records.
         records: Vec<BridgeSequenceInput>,
     },
+    /// In-memory `descseq`-style description summary.
+    DescribeSequences {
+        /// Ordered in-memory sequence records.
+        records: Vec<BridgeSequenceInput>,
+    },
+    /// File-backed `descseq` execution.
+    DescribeSequenceFile {
+        /// Local input path.
+        input: String,
+    },
+    /// File-backed `extractfeat` execution.
+    ExtractFeatures {
+        /// Local annotated input path.
+        input: String,
+        /// Optional feature kind selector.
+        kind: Option<String>,
+        /// Optional feature name selector.
+        name: Option<String>,
+        /// Optional qualifier selector in `key` or `key=value` form.
+        qualifier: Option<String>,
+        /// Optional strand selector.
+        strand: Option<String>,
+    },
+    /// File-backed `maskfeat` execution.
+    MaskFeatures {
+        /// Local annotated input path.
+        input: String,
+        /// Optional feature kind selector.
+        kind: Option<String>,
+        /// Optional feature name selector.
+        name: Option<String>,
+        /// Optional qualifier selector in `key` or `key=value` form.
+        qualifier: Option<String>,
+        /// Optional strand selector.
+        strand: Option<String>,
+        /// Optional explicit mask character.
+        mask_char: Option<String>,
+    },
+    /// File-backed `featcopy` execution.
+    CopyFeatures {
+        /// Local annotated source input path.
+        source: String,
+        /// Local target input path.
+        target: String,
+        /// Optional feature kind selector.
+        kind: Option<String>,
+        /// Optional feature name selector.
+        name: Option<String>,
+        /// Optional qualifier selector in `key` or `key=value` form.
+        qualifier: Option<String>,
+        /// Optional strand selector.
+        strand: Option<String>,
+    },
     /// Linguistic complexity summary.
     ComplexityProfile {
         /// One in-memory nucleotide record.
@@ -202,6 +270,11 @@ pub enum BridgeRequest {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "method", content = "result", rename_all = "snake_case")]
 pub enum BridgeResponse {
+    /// Governed tool catalog response.
+    ListTools {
+        /// Ordered shipped tool summaries.
+        tools: Vec<BridgeToolSummary>,
+    },
     /// New sequence response.
     NewSequence {
         /// Created validated record.
@@ -255,6 +328,11 @@ pub enum BridgeResponse {
     /// Reverse response.
     ReverseSequences {
         /// Reversed records.
+        records: Vec<BridgeSequenceRecord>,
+    },
+    /// Mask response.
+    MaskSequences {
+        /// Masked records.
         records: Vec<BridgeSequenceRecord>,
     },
     /// Trim response.
@@ -311,6 +389,31 @@ pub enum BridgeResponse {
     PepstatsSummary {
         /// Summary and composition rows.
         result: BridgePepstatsResult,
+    },
+    /// In-memory descseq response.
+    DescribeSequences {
+        /// Stable description rows.
+        rows: Vec<BridgeDescseqRow>,
+    },
+    /// File-backed descseq response.
+    DescribeSequenceFile {
+        /// Stable description rows.
+        rows: Vec<BridgeDescseqRow>,
+    },
+    /// Extract feature response.
+    ExtractFeatures {
+        /// Extracted feature-linked records.
+        records: Vec<BridgeSequenceRecord>,
+    },
+    /// Mask feature response.
+    MaskFeatures {
+        /// Masked annotated records.
+        records: Vec<BridgeSequenceRecord>,
+    },
+    /// Feature copy response.
+    CopyFeatures {
+        /// Updated target records with copied features.
+        records: Vec<BridgeSequenceRecord>,
     },
     /// Complexity response.
     ComplexityProfile {

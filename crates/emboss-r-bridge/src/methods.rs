@@ -4,27 +4,34 @@ use std::str::FromStr;
 
 use emboss_core::{
     Alignment, AlignmentAnalysisError, AlignmentMode, AlignmentRow, Alphabet, ComplexityError,
-    ComplexityParameters, ConsensusStrategy, DirectMatchSummary, DistanceMatrix, GcSummary,
-    MoleculeKind, NucleotidePattern, PatternError, PatternMatch, ProteinChargeError,
-    ProteinPattern, ResidueComposition, SequenceComplexity, SequenceIdentifier, SequenceMetadata,
-    SequenceRecord, TranslationError, WindowComplexity, backtranslate_ambiguous,
-    backtranslate_representative, consensus_sequence, direct_match_summary, p_distance_matrix,
-    protein_charge_profile, protein_molecular_weight, sequence_complexity,
-    sliding_window_complexity, translate_dna_frame, translate_dna_strict,
+    ComplexityParameters, ConsensusStrategy, DirectMatchSummary, DistanceMatrix, FeatureKind,
+    FeatureSelector, GcSummary, Interval, MoleculeKind, NucleotidePattern, PatternError,
+    PatternMatch, ProteinChargeError, ProteinPattern, ResidueComposition, RevseqMode,
+    SequenceComplexity, SequenceIdentifier, SequenceMetadata, SequenceRecord, SequenceTopology,
+    Strand, TranslationError, WindowComplexity, backtranslate_ambiguous,
+    backtranslate_representative, consensus_sequence, direct_match_summary, mask_intervals,
+    p_distance_matrix, protein_charge_profile, protein_molecular_weight, sequence_complexity,
+    sliding_window_complexity, transform_sequence_record, translate_dna_frame,
+    translate_dna_strict,
 };
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotProvenance,
     PlotSeries, PlotSpec, SeriesStyle,
 };
+use emboss_tools::feature_tools::{
+    ExtractfeatParams, FeatcopyParams, MaskfeatParams, run_extractfeat, run_featcopy, run_maskfeat,
+};
+use emboss_tools::sequence_edit::{DescseqParams, run_descseq};
+use emboss_tools::sequence_stream::SequenceInput;
 
 use crate::conversion::project_plot_contract;
 use crate::types::{
     BridgeAlignmentInput, BridgeAlignmentRowInput, BridgeChargeProfile, BridgeChargeWindow,
     BridgeComplexityResult, BridgeComplexitySummary, BridgeComplexityWindow, BridgeCompositionRow,
-    BridgeDistanceMatrix, BridgeGcRow, BridgeMatcherSummary, BridgePatternHit,
-    BridgePepstatsResult, BridgePepstatsSummaryRow, BridgeSequenceInput, BridgeSequenceRecord,
-    BridgeTranslationCheck,
+    BridgeDescseqRow, BridgeDistanceMatrix, BridgeFeatureSummary, BridgeGcRow,
+    BridgeIntervalInput, BridgeMatcherSummary, BridgePatternHit, BridgePepstatsResult,
+    BridgePepstatsSummaryRow, BridgeSequenceInput, BridgeSequenceRecord, BridgeTranslationCheck,
 };
 
 /// Creates a validated bridge-safe sequence record from in-memory input.
@@ -308,21 +315,54 @@ pub fn degap_sequences(
         .collect()
 }
 
-/// Reverses sequence content without reverse-complement logic.
+/// Reverses sequence content using `revseq`-style modes.
 pub fn reverse_sequences(
     inputs: &[BridgeSequenceInput],
+    mode: Option<&str>,
 ) -> Result<Vec<BridgeSequenceRecord>, PlatformError> {
+    let mode = parse_revseq_mode(mode)?;
     build_sequence_records(inputs)?
         .into_iter()
         .map(|record| {
-            let reversed: String = record.residues().chars().rev().collect();
-            let updated =
-                SequenceRecord::new(record.identifier().clone(), record.molecule(), reversed)
-                    .map_err(|error| {
-                        PlatformError::new(ErrorCategory::Validation, error.to_string())
-                            .with_code("bridge.reverse_sequences.sequence.invalid")
-                    })?
-                    .with_metadata(record.metadata().clone());
+            transform_sequence_record(&record, mode)
+                .map(|updated| project_sequence_record(&updated))
+                .map_err(map_revseq_error)
+        })
+        .collect()
+}
+
+/// Masks one or more explicit intervals in each sequence.
+pub fn mask_sequences(
+    inputs: &[BridgeSequenceInput],
+    intervals: &[BridgeIntervalInput],
+    mask_char: Option<&str>,
+) -> Result<Vec<BridgeSequenceRecord>, PlatformError> {
+    if intervals.is_empty() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "maskseq requires at least one interval",
+        )
+        .with_code("bridge.mask_sequences.interval.missing"));
+    }
+
+    let intervals = intervals
+        .iter()
+        .map(|interval| {
+            Interval::from_one_based_inclusive(interval.start, interval.end).map_err(|error| {
+                PlatformError::new(ErrorCategory::Validation, error.to_string())
+                    .with_code("bridge.mask_sequences.interval.invalid")
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    build_sequence_records(inputs)?
+        .into_iter()
+        .map(|record| {
+            let mask_symbol = effective_mask_symbol_for_record("maskseq", &record, mask_char)?;
+            let updated = mask_intervals(&record, &intervals, mask_symbol).map_err(|error| {
+                PlatformError::new(ErrorCategory::Validation, error.to_string())
+                    .with_code("bridge.mask_sequences.interval.invalid")
+            })?;
             Ok(project_sequence_record(&updated))
         })
         .collect()
@@ -648,6 +688,110 @@ pub fn pepstats_summary(
     })
 }
 
+/// Reports `descseq`-style summaries for in-memory records.
+pub fn describe_sequences(
+    inputs: &[BridgeSequenceInput],
+) -> Result<Vec<BridgeDescseqRow>, PlatformError> {
+    build_sequence_records(inputs)?
+        .into_iter()
+        .enumerate()
+        .map(|(index, record)| Ok(project_descseq_row(index + 1, &record)))
+        .collect()
+}
+
+/// Executes file-backed `descseq` and projects stable rows.
+pub fn describe_sequence_file(input: &str) -> Result<Vec<BridgeDescseqRow>, PlatformError> {
+    let outcome = run_descseq(DescseqParams {
+        input: SequenceInput::new(input),
+    })
+    .map_err(map_tool_error)?;
+
+    Ok(outcome
+        .rows
+        .into_iter()
+        .map(|row| BridgeDescseqRow {
+            ordinal: row.ordinal,
+            identifier: row.identifier,
+            display_name: row.display_name,
+            description: row.description,
+            length: row.length,
+            molecule: row.molecule,
+            alphabet: row.alphabet,
+            feature_count: row.feature_count,
+            source: row.source,
+            organism: row.organism,
+            topology: row.topology,
+        })
+        .collect())
+}
+
+/// Executes file-backed `extractfeat`.
+pub fn extract_features(
+    input: &str,
+    kind: Option<&str>,
+    name: Option<&str>,
+    qualifier: Option<&str>,
+    strand: Option<&str>,
+) -> Result<Vec<BridgeSequenceRecord>, PlatformError> {
+    let selector = build_feature_selector(kind, name, qualifier, strand)?;
+    let outcome = run_extractfeat(ExtractfeatParams {
+        input: SequenceInput::new(input),
+        selector,
+    })
+    .map_err(map_tool_error)?;
+    Ok(outcome
+        .records
+        .iter()
+        .map(|record| project_sequence_record(&record.record))
+        .collect())
+}
+
+/// Executes file-backed `maskfeat`.
+pub fn mask_features(
+    input: &str,
+    kind: Option<&str>,
+    name: Option<&str>,
+    qualifier: Option<&str>,
+    strand: Option<&str>,
+    mask_char: Option<&str>,
+) -> Result<Vec<BridgeSequenceRecord>, PlatformError> {
+    let selector = build_feature_selector(kind, name, qualifier, strand)?;
+    let outcome = run_maskfeat(MaskfeatParams {
+        input: SequenceInput::new(input),
+        selector,
+        mask_char: parse_mask_char(mask_char)?,
+    })
+    .map_err(map_tool_error)?;
+    Ok(outcome
+        .records
+        .iter()
+        .map(project_sequence_record)
+        .collect())
+}
+
+/// Executes file-backed `featcopy`.
+pub fn copy_features(
+    source: &str,
+    target: &str,
+    kind: Option<&str>,
+    name: Option<&str>,
+    qualifier: Option<&str>,
+    strand: Option<&str>,
+) -> Result<Vec<BridgeSequenceRecord>, PlatformError> {
+    let selector = build_feature_selector(kind, name, qualifier, strand)?;
+    let outcome = run_featcopy(FeatcopyParams {
+        source: SequenceInput::new(source),
+        target: SequenceInput::new(target),
+        selector,
+    })
+    .map_err(map_tool_error)?;
+    Ok(outcome
+        .records
+        .iter()
+        .map(project_sequence_record)
+        .collect())
+}
+
 /// Computes whole-sequence and optional sliding-window linguistic complexity.
 pub fn complexity_profile(
     input: BridgeSequenceInput,
@@ -801,6 +945,146 @@ fn infer_molecule_kind(residues: &str) -> MoleculeKind {
     MoleculeKind::Protein
 }
 
+fn parse_revseq_mode(mode: Option<&str>) -> Result<RevseqMode, PlatformError> {
+    match mode.unwrap_or("auto") {
+        "auto" => Ok(RevseqMode::Auto),
+        "reverse_only" | "reverse-only" => Ok(RevseqMode::ReverseOnly),
+        "complement" | "reverse_complement" | "reverse-complement" => {
+            Ok(RevseqMode::ReverseComplement)
+        }
+        other => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!(
+                "unsupported revseq mode '{other}'; expected auto, reverse_only, or complement"
+            ),
+        )
+        .with_code("bridge.reverse_sequences.mode.invalid")),
+    }
+}
+
+fn parse_mask_char(mask_char: Option<&str>) -> Result<Option<char>, PlatformError> {
+    match mask_char {
+        None => Ok(None),
+        Some(value) => {
+            let mut chars = value.chars();
+            let symbol = chars.next().ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "mask character must be a single non-empty character",
+                )
+                .with_code("bridge.mask_char.invalid")
+            })?;
+            if chars.next().is_some() {
+                return Err(PlatformError::new(
+                    ErrorCategory::Validation,
+                    "mask character must be a single character",
+                )
+                .with_code("bridge.mask_char.invalid"));
+            }
+            Ok(Some(symbol.to_ascii_uppercase()))
+        }
+    }
+}
+
+fn effective_mask_symbol_for_record(
+    tool: &str,
+    record: &SequenceRecord,
+    mask_char: Option<&str>,
+) -> Result<char, PlatformError> {
+    let explicit = parse_mask_char(mask_char)?;
+    let symbol = explicit.unwrap_or_else(|| {
+        if record.molecule().is_protein() {
+            'X'
+        } else {
+            'N'
+        }
+    });
+
+    record
+        .alphabet()
+        .validate(record.molecule(), &symbol.to_string())
+        .map_err(|error| {
+            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                .with_code(format!("bridge.{tool}.mask_char.invalid_for_molecule"))
+        })?;
+    Ok(symbol)
+}
+
+fn build_feature_selector(
+    kind: Option<&str>,
+    name: Option<&str>,
+    qualifier: Option<&str>,
+    strand: Option<&str>,
+) -> Result<FeatureSelector, PlatformError> {
+    let mut selectors = Vec::new();
+
+    if let Some(kind) = kind {
+        selectors.push(FeatureSelector::Kind(parse_feature_kind(kind)));
+    }
+    if let Some(name) = name {
+        selectors.push(FeatureSelector::Name(name.to_owned()));
+    }
+    if let Some(qualifier) = qualifier {
+        selectors.push(parse_feature_qualifier_selector(qualifier)?);
+    }
+    if let Some(strand) = strand {
+        selectors.push(FeatureSelector::Strand(parse_feature_strand(strand)?));
+    }
+
+    Ok(match selectors.len() {
+        0 => FeatureSelector::Any,
+        1 => selectors.into_iter().next().expect("selector exists"),
+        _ => FeatureSelector::All(selectors),
+    })
+}
+
+fn parse_feature_kind(value: &str) -> FeatureKind {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "gene" => FeatureKind::Gene,
+        "cds" | "coding_sequence" => FeatureKind::CodingSequence,
+        "exon" => FeatureKind::Exon,
+        "intron" => FeatureKind::Intron,
+        "region" => FeatureKind::Region,
+        "motif" => FeatureKind::Motif,
+        "repeat_region" | "repeat" => FeatureKind::RepeatRegion,
+        "misc_feature" | "misc" => FeatureKind::MiscFeature,
+        other => FeatureKind::Other(other.to_owned()),
+    }
+}
+
+fn parse_feature_qualifier_selector(value: &str) -> Result<FeatureSelector, PlatformError> {
+    let (key, qualifier_value) = match value.split_once('=') {
+        Some((key, qualifier_value)) => (key.trim(), Some(qualifier_value.trim().to_owned())),
+        None => (value.trim(), None),
+    };
+
+    if key.is_empty() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "feature qualifier selectors require a non-empty key",
+        )
+        .with_code("bridge.feature.qualifier.invalid"));
+    }
+
+    Ok(FeatureSelector::Qualifier {
+        key: key.to_owned(),
+        value: qualifier_value.filter(|value| !value.is_empty()),
+    })
+}
+
+fn parse_feature_strand(value: &str) -> Result<Strand, PlatformError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "forward" | "+" | "plus" => Ok(Strand::Forward),
+        "reverse" | "-" | "minus" => Ok(Strand::Reverse),
+        "unknown" | "." | "?" => Ok(Strand::Unknown),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "strand must be one of forward, reverse, or unknown",
+        )
+        .with_code("bridge.feature.strand.invalid")),
+    }
+}
+
 fn project_sequence_record(record: &SequenceRecord) -> BridgeSequenceRecord {
     BridgeSequenceRecord {
         identifier: record.identifier().accession().to_owned(),
@@ -815,6 +1099,58 @@ fn project_sequence_record(record: &SequenceRecord) -> BridgeSequenceRecord {
         }
         .to_owned(),
         length: record.len(),
+        feature_count: record.features().len(),
+        features: record
+            .features()
+            .iter()
+            .map(project_feature_summary)
+            .collect(),
+    }
+}
+
+fn project_feature_summary(feature: &emboss_core::Feature) -> BridgeFeatureSummary {
+    let bounds = feature.location.bounds();
+    BridgeFeatureSummary {
+        kind: feature_kind_label(&feature.kind),
+        name: feature.name.clone(),
+        start: bounds.start(),
+        end: bounds.end(),
+        strand: feature.location.strand().map(|strand| strand.to_string()),
+        span_count: feature.location.spans().len(),
+        qualifier_count: feature.qualifiers.len(),
+    }
+}
+
+fn feature_kind_label(kind: &FeatureKind) -> String {
+    match kind {
+        FeatureKind::Gene => "gene".to_owned(),
+        FeatureKind::CodingSequence => "cds".to_owned(),
+        FeatureKind::Exon => "exon".to_owned(),
+        FeatureKind::Intron => "intron".to_owned(),
+        FeatureKind::Region => "region".to_owned(),
+        FeatureKind::Motif => "motif".to_owned(),
+        FeatureKind::RepeatRegion => "repeat_region".to_owned(),
+        FeatureKind::MiscFeature => "misc_feature".to_owned(),
+        FeatureKind::Other(label) => label.clone(),
+    }
+}
+
+fn project_descseq_row(ordinal: usize, record: &SequenceRecord) -> BridgeDescseqRow {
+    BridgeDescseqRow {
+        ordinal,
+        identifier: record.identifier().accession().to_owned(),
+        display_name: record.identifier().display_name().map(ToOwned::to_owned),
+        description: record.metadata().description.clone(),
+        length: record.len(),
+        molecule: record.molecule().to_string(),
+        alphabet: record.alphabet().to_string(),
+        feature_count: record.features().len(),
+        source: record.metadata().source.clone(),
+        organism: record.metadata().organism.clone(),
+        topology: record.metadata().topology.map(|topology| match topology {
+            SequenceTopology::Linear => "linear".to_owned(),
+            SequenceTopology::Circular => "circular".to_owned(),
+        }),
     }
 }
 
@@ -1167,6 +1503,22 @@ fn map_pattern_error(error: PatternError) -> PlatformError {
         .with_code("bridge.pattern.invalid")
 }
 
+fn map_revseq_error(error: emboss_core::RevseqError) -> PlatformError {
+    let code = match error {
+        emboss_core::RevseqError::UnsupportedReverseComplement { .. } => {
+            "bridge.reverse_sequences.complement.unsupported"
+        }
+        emboss_core::RevseqError::UnsupportedResidue { .. } => {
+            "bridge.reverse_sequences.complement.residue_unsupported"
+        }
+        emboss_core::RevseqError::UnsupportedAnnotatedRecord => {
+            "bridge.reverse_sequences.features.unsupported"
+        }
+        emboss_core::RevseqError::InvalidSequence(_) => "bridge.reverse_sequences.sequence.invalid",
+    };
+    PlatformError::new(ErrorCategory::Validation, error.to_string()).with_code(code)
+}
+
 fn map_composition_error(error: emboss_core::CompositionError) -> PlatformError {
     PlatformError::new(ErrorCategory::Validation, error.to_string())
         .with_code("bridge.composition.invalid")
@@ -1182,6 +1534,10 @@ fn map_alignment_analysis_error(error: AlignmentAnalysisError) -> PlatformError 
         .with_code("bridge.alignment_analysis.invalid")
 }
 
+fn map_tool_error(error: PlatformError) -> PlatformError {
+    error
+}
+
 #[cfg(test)]
 mod tests {
     use serde_json::Value;
@@ -1189,10 +1545,18 @@ mod tests {
     use super::{
         BridgeAlignmentInput, BridgeSequenceInput, backtranslate_representative_sequences,
         charge_profile, compare_translation_sets, complexity_profile, composition_summary,
-        consensus_simple, count_gc_content, direct_match_sequences, extract_sequences,
-        fuzz_nucleotide, new_sequence, not_sequence, nth_sequence, p_distance_for_sequences,
-        sequence_count, skip_sequences,
+        consensus_simple, copy_features, count_gc_content, describe_sequence_file,
+        describe_sequences, direct_match_sequences, extract_features, extract_sequences,
+        fuzz_nucleotide, mask_features, mask_sequences, new_sequence, not_sequence,
+        nth_sequence, p_distance_for_sequences, reverse_sequences, sequence_count, skip_sequences,
     };
+
+    fn fixture(name: &str) -> String {
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
+            .display()
+            .to_string()
+    }
 
     #[test]
     fn creates_bridge_sequence_records() {
@@ -1255,6 +1619,34 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec!["a".to_owned(), "c".to_owned()]
         );
+    }
+
+    #[test]
+    fn reverses_and_masks_sequences_with_bridge_modes() {
+        let reversed = reverse_sequences(
+            &[BridgeSequenceInput {
+                identifier: Some("dna1".to_owned()),
+                sequence: "AAGT".to_owned(),
+                description: None,
+                molecule: Some("dna".to_owned()),
+            }],
+            Some("auto"),
+        )
+        .expect("reverse should succeed");
+        assert_eq!(reversed[0].sequence, "ACTT");
+
+        let masked = mask_sequences(
+            &[BridgeSequenceInput {
+                identifier: Some("dna1".to_owned()),
+                sequence: "ACGTAC".to_owned(),
+                description: None,
+                molecule: Some("dna".to_owned()),
+            }],
+            &[crate::types::BridgeIntervalInput { start: 2, end: 4 }],
+            None,
+        )
+        .expect("mask should succeed");
+        assert_eq!(masked[0].sequence, "ANNNAC");
     }
 
     #[test]
@@ -1361,6 +1753,43 @@ mod tests {
         }])
         .expect("gc should succeed");
         assert_eq!(gc[0].gc_percent, 100.0);
+    }
+
+    #[test]
+    fn reports_descseq_rows_for_memory_and_files() {
+        let in_memory = describe_sequences(&[BridgeSequenceInput {
+            identifier: Some("seq1".to_owned()),
+            sequence: "ACGT".to_owned(),
+            description: Some("example".to_owned()),
+            molecule: Some("dna".to_owned()),
+        }])
+        .expect("in-memory descseq should succeed");
+        assert_eq!(in_memory[0].identifier, "seq1");
+
+        let file_rows =
+            describe_sequence_file(&fixture("annotated_feature.gbk")).expect("file descseq");
+        assert_eq!(file_rows[0].identifier, "FEAT1");
+        assert_eq!(file_rows[0].feature_count, 2);
+    }
+
+    #[test]
+    fn bridges_feature_tools_from_local_files() {
+        let annotated = fixture("annotated_feature.gbk");
+        let target = fixture("featcopy_target.fasta");
+
+        let extracted =
+            extract_features(&annotated, Some("gene"), None, None, None).expect("extractfeat");
+        assert!(!extracted.is_empty());
+        assert!(extracted[0].feature_count >= 1);
+
+        let masked =
+            mask_features(&annotated, Some("gene"), None, None, None, None).expect("maskfeat");
+        assert_eq!(masked[0].feature_count, 2);
+
+        let copied =
+            copy_features(&annotated, &target, Some("gene"), None, None, None).expect("featcopy");
+        assert!(!copied.is_empty());
+        assert!(copied[0].feature_count >= 1);
     }
 
     #[test]

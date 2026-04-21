@@ -31,7 +31,7 @@ pub struct BridgeArtifactSummary {
 }
 
 /// Stable summary of a governed EMBOSS-RS tool for bridge exposure.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct BridgeToolSummary {
     /// Stable tool identifier exposed through the governed binary surface.
     pub name: String,
@@ -55,7 +55,7 @@ pub struct BridgeDiagnosticSummary {
 }
 
 /// Bridge-safe summary of a biological feature.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct BridgeFeatureSummary {
     /// Stable feature kind label.
     pub kind: String,
@@ -172,6 +172,15 @@ pub struct BridgePlotContract {
     pub json: String,
 }
 
+/// Bridge-safe 1-based inclusive interval input.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeIntervalInput {
+    /// 1-based inclusive start coordinate.
+    pub start: usize,
+    /// 1-based inclusive end coordinate.
+    pub end: usize,
+}
+
 /// Bridge-safe owned sequence record for the first analytical R surface.
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct BridgeSequenceRecord {
@@ -187,6 +196,10 @@ pub struct BridgeSequenceRecord {
     pub alphabet: String,
     /// Residue length.
     pub length: usize,
+    /// Number of attached features.
+    pub feature_count: usize,
+    /// Stable feature summaries attached to the record.
+    pub features: Vec<BridgeFeatureSummary>,
 }
 
 /// Bridge-safe input record for analytical method requests.
@@ -259,6 +272,33 @@ pub struct BridgePatternHit {
     pub nucleotide_end: Option<usize>,
     /// Matched text.
     pub matched: String,
+}
+
+/// One bridge-safe `descseq` row.
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub struct BridgeDescseqRow {
+    /// Stable source-order ordinal.
+    pub ordinal: usize,
+    /// Stable record identifier.
+    pub identifier: String,
+    /// Optional display name.
+    pub display_name: Option<String>,
+    /// Optional free-text description.
+    pub description: Option<String>,
+    /// Sequence length in residues.
+    pub length: usize,
+    /// Stable molecule label.
+    pub molecule: String,
+    /// Stable alphabet label.
+    pub alphabet: String,
+    /// Attached feature count.
+    pub feature_count: usize,
+    /// Optional source label.
+    pub source: Option<String>,
+    /// Optional organism label.
+    pub organism: Option<String>,
+    /// Optional topology label.
+    pub topology: Option<String>,
 }
 
 /// One bridge-safe translation-check case.

@@ -25,21 +25,22 @@ pub use health::BridgeHealth;
 pub use methods::{
     backtranslate_ambiguous_sequences, backtranslate_representative_sequences, charge_profile,
     compare_translation_sets, complexity_profile, composition_summary, consensus_ambiguous,
-    consensus_simple, count_gc_content, cut_sequences, degap_sequences, direct_match_sequences,
-    extract_sequences, fuzz_nucleotide, fuzz_protein, fuzz_translated_frames, new_sequence,
-    not_sequence, nth_sequence, p_distance_for_sequences, pepstats_summary, reverse_sequences,
-    sequence_count, skip_sequences, split_sequence_partitions, trim_sequences,
-    union_sequence_collections, update_descriptions,
+    consensus_simple, copy_features, count_gc_content, cut_sequences, degap_sequences,
+    describe_sequence_file, describe_sequences, direct_match_sequences, extract_features,
+    extract_sequences, fuzz_nucleotide, fuzz_protein, fuzz_translated_frames, mask_features,
+    mask_sequences, new_sequence, not_sequence, nth_sequence, p_distance_for_sequences,
+    pepstats_summary, reverse_sequences, sequence_count, skip_sequences,
+    split_sequence_partitions, trim_sequences, union_sequence_collections, update_descriptions,
 };
 pub use protocol::{BridgeRequest, BridgeResponse};
 pub use types::{
     BridgeAlignmentInput, BridgeAlignmentRowInput, BridgeAlignmentSummary, BridgeArtifactSummary,
     BridgeChargeProfile, BridgeChargeWindow, BridgeComplexityResult, BridgeComplexitySummary,
-    BridgeComplexityWindow, BridgeCompositionRow, BridgeDiagnosticSummary, BridgeDistanceMatrix,
-    BridgeFeatureSummary, BridgeGcRow, BridgeMatcherSummary, BridgeOperationStatus,
-    BridgePatternHit, BridgePepstatsResult, BridgePepstatsSummaryRow, BridgePlotContract,
-    BridgePlotSummary, BridgeProvenanceSummary, BridgeResultSummary, BridgeSequenceInput,
-    BridgeSequenceRecord, BridgeSequenceSummary, BridgeTableSummary, BridgeToolSummary,
-    BridgeTranslationCheck,
+    BridgeComplexityWindow, BridgeCompositionRow, BridgeDescseqRow, BridgeDiagnosticSummary,
+    BridgeDistanceMatrix, BridgeFeatureSummary, BridgeGcRow, BridgeIntervalInput,
+    BridgeMatcherSummary, BridgeOperationStatus, BridgePatternHit, BridgePepstatsResult,
+    BridgePepstatsSummaryRow, BridgePlotContract, BridgePlotSummary,
+    BridgeProvenanceSummary, BridgeResultSummary, BridgeSequenceInput, BridgeSequenceRecord,
+    BridgeSequenceSummary, BridgeTableSummary, BridgeToolSummary, BridgeTranslationCheck,
 };
 pub use version::BridgeVersion;

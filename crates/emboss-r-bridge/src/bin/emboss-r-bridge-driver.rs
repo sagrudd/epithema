@@ -6,12 +6,16 @@ use emboss_r_bridge::protocol::{BridgeRequest, BridgeResponse};
 use emboss_r_bridge::{
     backtranslate_ambiguous_sequences, backtranslate_representative_sequences, charge_profile,
     compare_translation_sets, complexity_profile, composition_summary, consensus_ambiguous,
-    consensus_simple, count_gc_content, cut_sequences, degap_sequences, direct_match_sequences,
-    extract_sequences, fuzz_nucleotide, fuzz_protein, fuzz_translated_frames, new_sequence,
-    not_sequence, nth_sequence, p_distance_for_sequences, pepstats_summary, reverse_sequences,
-    sequence_count, skip_sequences, split_sequence_partitions, trim_sequences,
-    union_sequence_collections, update_descriptions,
+    consensus_simple, copy_features, count_gc_content, cut_sequences, degap_sequences,
+    describe_sequence_file, describe_sequences, direct_match_sequences, extract_features,
+    extract_sequences, fuzz_nucleotide, fuzz_protein, fuzz_translated_frames, mask_features,
+    mask_sequences, new_sequence, not_sequence, nth_sequence, p_distance_for_sequences,
+    pepstats_summary, reverse_sequences, sequence_count, skip_sequences,
+    split_sequence_partitions, trim_sequences, union_sequence_collections, update_descriptions,
 };
+use emboss_r_bridge::list_tools;
+use emboss_service::{EmbossService, ServiceRegistry};
+use emboss_tools::governed_tool_descriptors;
 
 fn main() {
     if let Err(error) = run() {
@@ -26,6 +30,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let request: BridgeRequest = serde_json::from_str(&input)?;
 
     let response = match request {
+        BridgeRequest::ListTools => BridgeResponse::ListTools {
+            tools: list_tools(&implemented_service()),
+        },
         BridgeRequest::NewSequence { record } => BridgeResponse::NewSequence {
             record: new_sequence(record)?,
         },
@@ -68,8 +75,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         BridgeRequest::DegapSequences { records } => BridgeResponse::DegapSequences {
             records: degap_sequences(&records)?,
         },
-        BridgeRequest::ReverseSequences { records } => BridgeResponse::ReverseSequences {
-            records: reverse_sequences(&records)?,
+        BridgeRequest::ReverseSequences { records, mode } => BridgeResponse::ReverseSequences {
+            records: reverse_sequences(&records, mode.as_deref())?,
+        },
+        BridgeRequest::MaskSequences {
+            records,
+            intervals,
+            mask_char,
+        } => BridgeResponse::MaskSequences {
+            records: mask_sequences(&records, &intervals, mask_char.as_deref())?,
         },
         BridgeRequest::TrimSequences {
             records,
@@ -121,6 +135,61 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         BridgeRequest::PepstatsSummary { records } => BridgeResponse::PepstatsSummary {
             result: pepstats_summary(&records)?,
         },
+        BridgeRequest::DescribeSequences { records } => BridgeResponse::DescribeSequences {
+            rows: describe_sequences(&records)?,
+        },
+        BridgeRequest::DescribeSequenceFile { input } => BridgeResponse::DescribeSequenceFile {
+            rows: describe_sequence_file(&input)?,
+        },
+        BridgeRequest::ExtractFeatures {
+            input,
+            kind,
+            name,
+            qualifier,
+            strand,
+        } => BridgeResponse::ExtractFeatures {
+            records: extract_features(
+                &input,
+                kind.as_deref(),
+                name.as_deref(),
+                qualifier.as_deref(),
+                strand.as_deref(),
+            )?,
+        },
+        BridgeRequest::MaskFeatures {
+            input,
+            kind,
+            name,
+            qualifier,
+            strand,
+            mask_char,
+        } => BridgeResponse::MaskFeatures {
+            records: mask_features(
+                &input,
+                kind.as_deref(),
+                name.as_deref(),
+                qualifier.as_deref(),
+                strand.as_deref(),
+                mask_char.as_deref(),
+            )?,
+        },
+        BridgeRequest::CopyFeatures {
+            source,
+            target,
+            kind,
+            name,
+            qualifier,
+            strand,
+        } => BridgeResponse::CopyFeatures {
+            records: copy_features(
+                &source,
+                &target,
+                kind.as_deref(),
+                name.as_deref(),
+                qualifier.as_deref(),
+                strand.as_deref(),
+            )?,
+        },
         BridgeRequest::ComplexityProfile {
             record,
             k_min,
@@ -155,4 +224,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("{}", serde_json::to_string_pretty(&response)?);
     Ok(())
+}
+
+fn implemented_service() -> EmbossService {
+    let mut registry = ServiceRegistry::new();
+    for descriptor in governed_tool_descriptors() {
+        registry
+            .register(*descriptor)
+            .expect("governed descriptors should register without duplication");
+    }
+    EmbossService::new(registry)
 }

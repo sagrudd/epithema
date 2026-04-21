@@ -54,6 +54,12 @@ The current fixture-driven coverage spans:
 - `consambig`
 - `charge_profile`
 
+These fixtures are intentionally a curated semantic subset. The broader
+shipped Rust cohort is now callable from the first-class `emboss-r` package
+through typed bridge wrappers, while this catalogue remains the durable
+cross-surface contract for the methods that currently have checked-in semantic
+equivalence cases.
+
 ## What this does not prove
 
 This harness does not yet validate the entire method catalog, live retrieval,
