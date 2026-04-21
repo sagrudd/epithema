@@ -4,11 +4,11 @@
 
 ## Summary
 
-Select the 1-based Nth sequence record from an input set
+Select one sequence record by 1-based ordinal position
 
 ## Document Metadata
 
-- Document ID: `nthseq-stub-v1`
+- Document ID: `nthseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
@@ -16,34 +16,54 @@ Select the 1-based Nth sequence record from an input set
 
 ## Overview
 
-`nthseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`nthseq` selects exactly one sequence record from a local sequence stream by ordinal position. The tool reuses the shared EMBOSS-RS sequence loader and typed single-record result path instead of re-parsing format-specific content inside the command.
 
 ## Inputs
 
-This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it.
+The current v1 interface accepts one local sequence input path plus one selection index. The index is **1-based** and must refer to an existing record in the loaded input stream.
 
 ## Outputs
 
-The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods.
+The tool emits one selected sequence record through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, selected index, total record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs nthseq`. The generated tool page and the machine-readable validation stub at [`../validation/nthseq.validation.json`](../validation/nthseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs nthseq`. Validation currently covers first, interior, and last-record selection plus empty-input, malformed-input, and out-of-range failure behavior.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release supports ordinal selection only. Identifier-based selection, multiple returned records, and grouped reporting remain deferred. Duplicate identifiers do not affect behavior because selection is position-based.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed multi-record FASTA fixture used to validate stable ordinal selection.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Select the second record from a three-record FASTA input
+
+- Example ID: `select_second_record`
+- Description: Selects the middle record from a small FASTA fixture and returns only that sequence record.
+- Referenced artifacts: `three_record_fasta`
+- Parameters:
+  - `index` = `2`
+- Expected outputs:
+  - `selected_sequence_record`: Selected sequence record (A FASTA sequence record containing the second record from the source fixture.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `select_second_record`
+- Compare against legacy: no
+- Require provenance capture: yes
 

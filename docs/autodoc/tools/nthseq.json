@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "nthseq-stub-v1",
+  "document_id": "nthseq-v1",
   "tool": {
     "name": "nthseq",
     "family": "sequence_stream",
-    "summary": "Select the 1-based Nth sequence record from an input set",
+    "summary": "Select one sequence record by 1-based ordinal position",
     "legacy_names": [
       "nthseq"
     ]
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`nthseq` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`nthseq` selects exactly one sequence record from a local sequence stream by ordinal position. The tool reuses the shared EMBOSS-RS sequence loader and typed single-record result path instead of re-parsing format-specific content inside the command."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 interface accepts one local sequence input path plus one selection index. The index is **1-based** and must refer to an existing record in the loaded input stream."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods."
+      "content": "The tool emits one selected sequence record through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, selected index, total record count, and FASTA output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs nthseq`. The generated tool page and the machine-readable validation stub at [`../validation/nthseq.validation.json`](../validation/nthseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs nthseq`. Validation currently covers first, interior, and last-record selection plus empty-input, malformed-input, and out-of-range failure behavior."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports ordinal selection only. Identifier-based selection, multiple returned records, and grouped reporting remain deferred. Duplicate identifiers do not affect behavior because selection is position-based."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate stable ordinal selection."
+    }
+  ],
+  "examples": [
+    {
+      "id": "select_second_record",
+      "title": "Select the second record from a three-record FASTA input",
+      "description": "Selects the middle record from a small FASTA fixture and returns only that sequence record.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "selected_sequence_record",
+          "label": "Selected sequence record",
+          "description": "A FASTA sequence record containing the second record from the source fixture."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "select_second_record"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

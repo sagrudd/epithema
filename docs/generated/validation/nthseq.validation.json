@@ -1,6 +1,6 @@
 {
   "tool_name": "nthseq",
-  "document_id": "nthseq-initial",
+  "document_id": "nthseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "select_second_record",
-      "title": "Select the second record from a three-sequence FASTA fixture",
+      "title": "Select the second record from a three-record FASTA input",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "selected_sequence"
+        "selected_sequence_record"
       ],
       "provenance": [],
       "diagnostics": []

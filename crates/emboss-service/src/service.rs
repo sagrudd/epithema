@@ -5941,6 +5941,27 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert_eq!(response.result.summary.lines[1], "Selected index: 2");
+        assert_eq!(response.result.summary.lines[2], "Total records: 3");
+        assert_eq!(response.result.summary.lines[3], "Output format: fasta");
+    }
+
+    #[test]
+    fn rejects_nthseq_index_out_of_range() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("nthseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "4".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("out of range nthseq index should fail");
+        assert!(error.to_string().contains("out of range"));
     }
 
     #[test]
