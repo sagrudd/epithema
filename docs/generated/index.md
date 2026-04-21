@@ -8,6 +8,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 :maxdepth: 1
 :caption: Generated Tools
 
+cohort_validation
 tools/aligncopy
 tools/aligncopypair
 tools/backtranambig

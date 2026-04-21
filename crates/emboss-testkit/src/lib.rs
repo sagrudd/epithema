@@ -19,4 +19,11 @@ pub use evidence::{
     EvidenceSourceKind, ExecutionStatus, ToolValidationCase,
 };
 pub use projection::{derive_validation_report, write_validation_report_json};
-pub use report::{ToolValidationReport, ValidationContext, ValidationEvidenceSummary};
+pub use report::{
+    CohortDocumentationRecord, CohortDocumentationStatus, CohortEvidenceLevel, CohortGapCode,
+    CohortMethodGap, CohortMethodValidationRecord, CohortValidationReport,
+    CohortValidationSummary, ToolValidationReport, ValidationContext,
+    ValidationEvidenceSummary, derive_shipped_cohort_validation_report,
+    render_cohort_validation_markdown, write_cohort_validation_markdown,
+    write_cohort_validation_report_json,
+};

@@ -1,0 +1,1280 @@
+{
+  "schema_version": 1,
+  "cohort_id": "shipped-method-cohort",
+  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "summary": {
+    "total_method_count": 46,
+    "documentation_complete_count": 46,
+    "validation_stub_count": 46,
+    "documented_only_count": 1,
+    "declared_evidence_count": 1,
+    "harvested_evidence_count": 0,
+    "executable_evidence_count": 44,
+    "compared_evidence_count": 0,
+    "gapped_method_count": 46
+  },
+  "methods": [
+    {
+      "tool_name": "aligncopy",
+      "family": "alignment_tools",
+      "summary": "copy a single alignment unchanged through the shared alignment IO path",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'aligncopy' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'aligncopy' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "aligncopypair",
+      "family": "alignment_tools",
+      "summary": "copy a single pairwise alignment unchanged and reject non-pairwise inputs",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'aligncopypair' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'aligncopypair' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "infoalign",
+      "family": "alignment_tools",
+      "summary": "report row counts, column counts, and per-row gap statistics for an alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'infoalign' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'infoalign' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "extractalign",
+      "family": "alignment_tools",
+      "summary": "extract rows and an optional 1-based inclusive column range from an alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'extractalign' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'extractalign' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "runinfo",
+      "family": "archive_tools",
+      "summary": "normalize ENA or SRA archive metadata for one accession-backed archive object",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'runinfo' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'runinfo' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "runget",
+      "family": "archive_tools",
+      "summary": "discover a normalized public-run manifest through the governed archive acquisition seam",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'runget' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'runget' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "matcher",
+      "family": "alignment_analysis",
+      "summary": "deterministic ungapped pairwise similarity summary",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'matcher' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'matcher' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "distmat",
+      "family": "alignment_analysis",
+      "summary": "pairwise p-distance matrix for equal-length sequence sets",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'distmat' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'distmat' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "cons",
+      "family": "alignment_analysis",
+      "summary": "simple majority consensus from an alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'cons' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'cons' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "consambig",
+      "family": "alignment_analysis",
+      "summary": "ambiguity-aware consensus from an alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'consambig' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'consambig' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "needle",
+      "family": "pairwise_alignment",
+      "summary": "perform deterministic global pairwise alignment between exactly one query and one target",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'needle' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'needle' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "needleall",
+      "family": "pairwise_alignment",
+      "summary": "perform deterministic many-vs-many global pairwise alignment and report comparison summaries",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'needleall' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'needleall' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "seqret",
+      "family": "retrieval_tools",
+      "summary": "normalize local sequence inputs or retrieve one accession-backed sequence",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'seqret' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'seqret' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "refseqget",
+      "family": "retrieval_tools",
+      "summary": "retrieve one provider-backed reference sequence through the governed acquisition seam",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'refseqget' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'refseqget' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "newseq",
+      "family": "sequence_stream",
+      "summary": "create a new sequence record from supplied residues",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "declared_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'newseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'newseq' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'newseq' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "example 'create_dna_record' needs declared input artefacts before it can become runnable"
+        }
+      ]
+    },
+    {
+      "tool_name": "seqcount",
+      "family": "sequence_stream",
+      "summary": "count sequence records in an input stream",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'seqcount' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'seqcount' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "notseq",
+      "family": "sequence_stream",
+      "summary": "return all sequence records except the excluded index",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'notseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'notseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "nthseq",
+      "family": "sequence_stream",
+      "summary": "select the 1-based Nth sequence record from an input set",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'nthseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'nthseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "skipseq",
+      "family": "sequence_stream",
+      "summary": "skip the first N sequence records and return the rest",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'skipseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'skipseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "degapseq",
+      "family": "sequence_edit",
+      "summary": "remove '-' and '.' gap characters from sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'degapseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'degapseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "revseq",
+      "family": "sequence_edit",
+      "summary": "reverse sequence content record by record",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'revseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'revseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "trimseq",
+      "family": "sequence_edit",
+      "summary": "trim explicit residue counts from the left and right ends of sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'trimseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'trimseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "descseq",
+      "family": "sequence_edit",
+      "summary": "report stable sequence-record descriptions and metadata",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'descseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'descseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "maskseq",
+      "family": "feature_tools",
+      "summary": "mask explicit 1-based inclusive sequence intervals with a configurable symbol",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'maskseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'maskseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "maskfeat",
+      "family": "feature_tools",
+      "summary": "mask selected simple feature spans while preserving annotations in the result payload",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'maskfeat' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'maskfeat' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "extractfeat",
+      "family": "feature_tools",
+      "summary": "extract selected simple feature spans into rebased sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'extractfeat' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'extractfeat' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "featcopy",
+      "family": "feature_tools",
+      "summary": "copy selected feature annotations between identifier-matched compatible records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'featcopy' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'featcopy' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "cai",
+      "family": "codon_tools",
+      "summary": "report deterministic codon adaptation index values against a reference profile",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'cai' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'cai' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "chips",
+      "family": "codon_tools",
+      "summary": "report per-record and aggregate codon usage counts and frequencies",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'chips' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'chips' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "codcmp",
+      "family": "codon_tools",
+      "summary": "compare codon usage between two coding-sequence or codon-profile sources",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'codcmp' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'codcmp' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "codcopy",
+      "family": "codon_tools",
+      "summary": "normalize coding-sequence or codon-profile input into a reusable codon profile",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'codcopy' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'codcopy' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "fuzznuc",
+      "family": "pattern_tools",
+      "summary": "scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'fuzznuc' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'fuzznuc' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "fuzzpro",
+      "family": "pattern_tools",
+      "summary": "scan protein sequences for deterministic literal motifs with X wildcard support",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'fuzzpro' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'fuzzpro' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "fuzztran",
+      "family": "pattern_tools",
+      "summary": "scan forward translated nucleotide frames for deterministic protein motifs",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'fuzztran' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'fuzztran' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "charge",
+      "family": "protein_plots",
+      "summary": "report a sliding-window protein charge profile and emit a line-plot contract",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'charge' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'charge' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'charge' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'charge' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'charge' needs at least one declared example to establish validation evidence"
+        }
+      ]
+    },
+    {
+      "tool_name": "complex",
+      "family": "sequence_stats",
+      "summary": "report whole-sequence and sliding-window nucleotide linguistic complexity",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'complex' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'complex' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "compseq",
+      "family": "sequence_stats",
+      "summary": "report per-record and aggregate residue composition counts and frequencies",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'compseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'compseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "geecee",
+      "family": "sequence_stats",
+      "summary": "report per-record and aggregate GC statistics for nucleotide sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'geecee' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'geecee' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "pepstats",
+      "family": "sequence_stats",
+      "summary": "report basic protein composition, length, and molecular-weight statistics",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'pepstats' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'pepstats' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "backtranseq",
+      "family": "translation_tools",
+      "summary": "back-translate protein sequences to deterministic representative DNA codons",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'backtranseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'backtranseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "backtranambig",
+      "family": "translation_tools",
+      "summary": "back-translate protein sequences to ambiguous DNA codon representations",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'backtranambig' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'backtranambig' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "checktrans",
+      "family": "translation_tools",
+      "summary": "strictly compare frame-1 DNA translation against expected protein sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'checktrans' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'checktrans' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "extractseq",
+      "family": "sequence_transform",
+      "summary": "extract a 1-based inclusive region from each input sequence record",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'extractseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'extractseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "cutseq",
+      "family": "sequence_transform",
+      "summary": "cut each input sequence record into left and right fragments at a position",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'cutseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'cutseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "union",
+      "family": "sequence_transform",
+      "summary": "concatenate multiple sequence inputs into one output stream",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'union' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'union' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "splitter",
+      "family": "sequence_transform",
+      "summary": "partition an input sequence stream into deterministic fixed-size chunks",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'splitter' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'splitter' has no compared validation evidence yet"
+        }
+      ]
+    }
+  ]
+}

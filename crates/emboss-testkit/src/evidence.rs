@@ -8,12 +8,16 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "snake_case")]
 pub enum EvidenceSourceKind {
     /// Human-curated autodoc content.
+    #[serde(alias = "curated")]
     CuratedAutodoc,
     /// Legacy-derived autodoc content.
+    #[serde(alias = "legacy_harvested")]
     LegacyHarvestedAutodoc,
     /// Mixed curated and legacy-derived content.
+    #[serde(alias = "mixed")]
     MixedAutodoc,
     /// Future executed EMBOSS-RS run evidence.
+    #[serde(alias = "executed")]
     ExecutedRun,
 }
 
@@ -46,6 +50,7 @@ pub enum ExecutionStatus {
 #[serde(rename_all = "snake_case")]
 pub enum ComparisonStatus {
     /// No comparison has been requested.
+    #[serde(alias = "not_compared")]
     NotRequested,
     /// Comparison is intended but has not yet been run.
     Pending,
@@ -119,8 +124,10 @@ pub struct ToolValidationCase {
     /// Stable case identifier.
     pub id: String,
     /// Human-readable case title.
+    #[serde(default)]
     pub title: String,
     /// Declaration source for this case.
+    #[serde(default = "default_evidence_source_kind", alias = "source_kind")]
     pub evidence_source: EvidenceSourceKind,
     /// Whether the case is declared or harvested.
     pub declaration_status: EvidenceDeclarationStatus,
@@ -129,6 +136,7 @@ pub struct ToolValidationCase {
     /// Current comparison status.
     pub comparison_status: ComparisonStatus,
     /// Whether this case is required by the document-level validation block.
+    #[serde(default = "default_required_case")]
     pub required: bool,
     /// Referenced artefacts from the autodoc declaration.
     #[serde(default)]
@@ -142,4 +150,12 @@ pub struct ToolValidationCase {
     /// Non-fatal notes about the case.
     #[serde(default)]
     pub diagnostics: Vec<EvidenceNote>,
+}
+
+fn default_evidence_source_kind() -> EvidenceSourceKind {
+    EvidenceSourceKind::CuratedAutodoc
+}
+
+fn default_required_case() -> bool {
+    true
 }

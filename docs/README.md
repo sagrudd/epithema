@@ -49,6 +49,21 @@ By default these reports are written under `docs/generated/validation/` as
 machine-readable JSON. They represent declared and harvested evidence only; they
 do not imply that the corresponding cases were executed or compared yet.
 
+A cohort-level report across the shipped governed registry can also be derived:
+
+```bash
+make cohort-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/shipped_cohort.validation.json`
+- `docs/generated/cohort_validation.md`
+
+The cohort report uses the actual shipped tool registry as its source of truth
+and records documentation completeness, validation-stub presence, evidence
+maturity, and visible gaps per tool.
+
 At this stage generated pages include validated narrative content, declared
 artefacts, declared example stubs, provenance, and transformation notes when
 available. Tool execution, acquisition, and acceptance reporting remain

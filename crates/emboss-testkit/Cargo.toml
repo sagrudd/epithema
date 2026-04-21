@@ -13,6 +13,7 @@ emboss-diagnostics.workspace = true
 emboss-docgen.workspace = true
 emboss-fixtures.workspace = true
 emboss-r-bridge.workspace = true
+emboss-tools.workspace = true
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 

@@ -290,6 +290,7 @@ dependencies = [
  "emboss-docgen",
  "emboss-fixtures",
  "emboss-r-bridge",
+ "emboss-tools",
  "serde",
  "serde_json",
 ]

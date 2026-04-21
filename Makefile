@@ -11,7 +11,7 @@ DOCS_LIVE_PORT ?= 8000
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh release-build release-test release-docs release-container release-check
+.PHONY: help build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh cohort-report release-build release-test release-docs release-container release-check
 
 help:
 	@printf "%s\n" \
@@ -21,6 +21,7 @@ help:
 		"  make docs        Build the Sphinx documentation site" \
 		"  make autodoc-stubs   Refresh committed autodoc JSON inputs for the exposed tool registry" \
 		"  make autodoc-refresh Refresh generated tool Markdown pages from the committed autodoc inputs" \
+		"  make cohort-report   Refresh the shipped cohort validation report JSON and Markdown outputs" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
 		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
@@ -82,6 +83,11 @@ autodoc-refresh: autodoc-stubs
 		printf "%s\n" "Refreshing $$doc"; \
 		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs >/dev/null; \
 	done
+
+cohort-report:
+	$(RUSTCARGO) run -p emboss-testkit --example write_shipped_cohort_validation_report -- \
+		--json docs/generated/validation/shipped_cohort.validation.json \
+		--markdown docs/generated/cohort_validation.md
 
 lint-docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b dummy $(DOCS_DIR) $(DOCS_BUILD_DIR)/lint
