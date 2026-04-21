@@ -7069,11 +7069,28 @@ mod tests {
             ResultPayload::TableReport(table) => {
                 assert_eq!(table.rows.len(), 2);
                 assert_eq!(table.rows[0][0], "nucA");
+                assert_eq!(table.rows[0][1], "ACGN");
+                assert_eq!(table.rows[0][2], "forward");
                 assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[0][4], "4");
                 assert_eq!(table.rows[1][5], "ACGT");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
+        assert_eq!(response.result.summary.lines[1], "Pattern: ACGN");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Coordinate convention: 1-based inclusive"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Strand policy: forward only"
+        );
+        assert_eq!(response.result.summary.lines[4], "Hits: 2");
     }
 
     #[test]
@@ -7137,6 +7154,55 @@ mod tests {
         ]);
 
         assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn rejects_protein_input_for_fuzznuc() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzznuc").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "ACG".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("protein input should fail for fuzznuc");
+        assert!(error.to_string().contains("expects nucleotide input"));
+    }
+
+    #[test]
+    fn reports_overlapping_fuzznuc_hits() {
+        let service = implemented_service();
+        let temp = std::env::temp_dir().join(format!(
+            "emboss-rs-fuzznuc-overlap-{}.fasta",
+            std::process::id()
+        ));
+        std::fs::write(&temp, ">ovl\nATATA\n").expect("overlap fixture should be written");
+
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzznuc").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![temp.display().to_string(), "ATA".to_owned()]);
+
+        let response = service.invoke(request).expect("fuzznuc should execute");
+        std::fs::remove_file(temp).ok();
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "ovl");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[0][4], "3");
+                assert_eq!(table.rows[1][3], "3");
+                assert_eq!(table.rows[1][4], "5");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

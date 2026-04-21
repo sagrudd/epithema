@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "fuzznuc-stub-v1",
+  "document_id": "fuzznuc-v1",
   "tool": {
     "name": "fuzznuc",
     "family": "pattern_tools",
-    "summary": "Scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
+    "summary": "Search nucleotide sequences for deterministic exact or IUPAC-ambiguous motifs",
     "legacy_names": [
       "fuzznuc"
     ]
@@ -14,39 +14,90 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`fuzznuc` is part of the exposed EMBOSS-RS `pattern_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`fuzznuc` searches nucleotide sequence records for one forward-strand motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact nucleotide symbols plus IUPAC ambiguity codes, no gaps, no indels, and no reverse-strand search."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts nucleotide or protein sequence inputs plus a deterministic pattern specification defined by the implemented method parameters."
+      "content": "The current v1 interface accepts one local nucleotide sequence input path and one motif string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected."
+    },
+    {
+      "id": "pattern_model",
+      "kind": "notes",
+      "title": "Pattern Model",
+      "content": "Supported motif syntax is exact nucleotide text plus standard IUPAC ambiguity symbols such as `N`, `R`, `Y`, `W`, and `S`. Pattern and subject sequences are normalized case-insensitively. Overlapping matches are reported. Subject ambiguity symbols also participate conservatively, so a subject symbol only matches when its possible residues are a subset of the pattern symbol set."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits deterministic pattern-hit tables with explicit coordinates, frames, or matched motifs as appropriate to the tool."
+      "content": "The tool emits a stable table report with one row per hit. Columns are `record`, `pattern`, `strand`, `start`, `end`, and `matched`. Coordinates are user-facing 1-based inclusive. The current strand policy is always `forward`."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs fuzznuc`. The generated tool page and the machine-readable validation stub at [`../validation/fuzznuc.validation.json`](../validation/fuzznuc.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs fuzznuc`. Validation currently covers exact and ambiguity-aware matching, overlapping matches, no-hit behavior, invalid-pattern failure, and protein-input rejection."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not implement the historical EMBOSS fuzzy-expression language, mismatches, gaps, or reverse-complement scanning. Empty patterns are rejected during parsing."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "nucleotide_pattern_fixture",
+      "label": "Nucleotide pattern fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic nucleotide motif validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "iupac_forward_search",
+      "title": "Search a nucleotide fixture with an IUPAC motif",
+      "description": "Demonstrates deterministic forward-only searching with an ambiguity-aware nucleotide pattern and stable hit ordering.",
+      "artifact_ids": [
+        "nucleotide_pattern_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "value": "ACGN"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "nucleotide_pattern_hits",
+          "label": "Forward-strand nucleotide motif hits",
+          "description": "A stable table report containing one row per ambiguity-aware match with 1-based inclusive coordinates."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "Codex",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "iupac_forward_search"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

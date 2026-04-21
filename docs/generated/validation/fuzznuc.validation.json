@@ -1,6 +1,6 @@
 {
   "tool_name": "fuzznuc",
-  "document_id": "fuzznuc-initial",
+  "document_id": "fuzznuc-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,18 +17,18 @@
   },
   "cases": [
     {
-      "id": "scan_nucleotide_records_with_iupac_pattern",
-      "title": "Report forward-strand hits for a deterministic nucleotide pattern",
+      "id": "iupac_forward_search",
+      "title": "Search a nucleotide fixture with an IUPAC motif",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [
-        "nucleotide_fasta"
+        "nucleotide_pattern_fixture"
       ],
       "expected_output_ids": [
-        "fuzznuc_hit_report"
+        "nucleotide_pattern_hits"
       ],
       "provenance": [],
       "diagnostics": []
