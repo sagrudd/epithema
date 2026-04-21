@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "fuzztran-stub-v1",
+  "document_id": "fuzztran-v1",
   "tool": {
     "name": "fuzztran",
     "family": "pattern_tools",
-    "summary": "Scan forward translated nucleotide frames for deterministic protein motifs",
+    "summary": "Search translated nucleotide frames for deterministic protein motifs",
     "legacy_names": [
       "fuzztran"
     ]
@@ -14,39 +14,96 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`fuzztran` is part of the exposed EMBOSS-RS `pattern_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`fuzztran` translates nucleotide sequence records in the three forward reading frames and searches those translated amino-acid strings for one deterministic protein-like motif. The EMBOSS-RS v1 surface keeps the translation model intentionally narrow: standard genetic code only, forward frames 1-3 only, and no reverse-complement frame search."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts nucleotide or protein sequence inputs plus a deterministic pattern specification defined by the implemented method parameters."
+      "content": "The current v1 interface accepts one local nucleotide sequence input path and one protein-pattern string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected."
+    },
+    {
+      "id": "translation_model",
+      "kind": "notes",
+      "title": "Translation Model",
+      "content": "Translation uses the shared EMBOSS-RS standard-code DNA frame helper. Forward frames 1, 2, and 3 are scanned. Trailing partial codons are ignored. Stop codons are translated as `*` and remain searchable as ordinary translated symbols. Ambiguous or otherwise unsupported codons currently fail translation rather than being expanded conservatively."
+    },
+    {
+      "id": "pattern_model",
+      "kind": "notes",
+      "title": "Pattern Model",
+      "content": "The protein motif syntax is shared with `fuzzpro`: exact amino-acid symbols plus `X` as a single-residue wildcard. Matching is case-insensitive. Overlapping translated matches are reported."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits deterministic pattern-hit tables with explicit coordinates, frames, or matched motifs as appropriate to the tool."
+      "content": "The tool emits a stable table report with one row per translated hit. Columns are `record`, `pattern`, `frame`, `aa_start`, `aa_end`, `nt_start`, `nt_end`, and `matched`. Both amino-acid and nucleotide coordinates are user-facing 1-based inclusive."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs fuzztran`. The generated tool page and the machine-readable validation stub at [`../validation/fuzztran.validation.json`](../validation/fuzztran.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs fuzztran`. Validation currently covers a forward-frame match, overlapping translated hits, no-hit behavior, invalid-pattern failure, protein-input rejection, and translation failure on ambiguous codons."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not implement reverse-strand scanning, alternative genetic codes, ambiguity-aware codon expansion, gaps, or the broader historical EMBOSS fuzzy-expression language."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "coding_fixture",
+      "label": "Coding nucleotide fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture used for deterministic translated-pattern validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "forward_frame_search",
+      "title": "Search forward translated frames with a protein motif",
+      "description": "Demonstrates deterministic forward-frame translation and motif search with amino-acid and nucleotide coordinate reporting.",
+      "artifact_ids": [
+        "coding_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "value": "MA"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "translated_pattern_hits",
+          "label": "Translated motif hits",
+          "description": "A stable table report containing frame-aware translated hits with 1-based inclusive amino-acid and nucleotide coordinates."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "forward_frame_search"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

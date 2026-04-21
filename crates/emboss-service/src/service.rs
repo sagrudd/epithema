@@ -7150,12 +7150,30 @@ mod tests {
             ResultPayload::TableReport(table) => {
                 assert_eq!(table.rows.len(), 1);
                 assert_eq!(table.rows[0][0], "cdsA");
+                assert_eq!(table.rows[0][1], "MA");
                 assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[0][4], "2");
                 assert_eq!(table.rows[0][5], "1");
+                assert_eq!(table.rows[0][6], "6");
                 assert_eq!(table.rows[0][7], "MA");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+        );
+        assert_eq!(response.result.summary.lines[1], "Pattern: MA");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Frame policy: forward frames 1-3"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Coordinate convention: 1-based inclusive"
+        );
+        assert_eq!(response.result.summary.lines[4], "Hits: 1");
     }
 
     #[test]
@@ -7189,6 +7207,21 @@ mod tests {
     }
 
     #[test]
+    fn rejects_invalid_fuzztran_pattern() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzztran").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            "M?".to_owned(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
     fn rejects_nucleotide_input_for_fuzzpro() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -7204,6 +7237,24 @@ mod tests {
             .invoke(request)
             .expect_err("nucleotide input should fail for fuzzpro");
         assert!(error.to_string().contains("expects protein input"));
+    }
+
+    #[test]
+    fn rejects_protein_input_for_fuzztran() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzztran").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "MA".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("protein input should fail for fuzztran");
+        assert!(error.to_string().contains("expects nucleotide input"));
     }
 
     #[test]
@@ -7235,6 +7286,65 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn reports_overlapping_fuzztran_hits() {
+        let service = implemented_service();
+        let temp = std::env::temp_dir().join(format!(
+            "emboss-rs-fuzztran-overlap-{}.fasta",
+            std::process::id()
+        ));
+        std::fs::write(&temp, ">ovl\nATGGCTATGGCTATG\n")
+            .expect("overlap fixture should be written");
+
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzztran").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![temp.display().to_string(), "MAM".to_owned()]);
+
+        let response = service.invoke(request).expect("fuzztran should execute");
+        std::fs::remove_file(temp).ok();
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "ovl");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[0][4], "3");
+                assert_eq!(table.rows[0][5], "1");
+                assert_eq!(table.rows[0][6], "9");
+                assert_eq!(table.rows[1][3], "3");
+                assert_eq!(table.rows[1][4], "5");
+                assert_eq!(table.rows[1][5], "7");
+                assert_eq!(table.rows[1][6], "15");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn rejects_ambiguous_translation_for_fuzztran() {
+        let service = implemented_service();
+        let temp = std::env::temp_dir().join(format!(
+            "emboss-rs-fuzztran-ambiguous-{}.fasta",
+            std::process::id()
+        ));
+        std::fs::write(&temp, ">amb\nATGNNNTAA\n").expect("ambiguous fixture should be written");
+
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzztran").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![temp.display().to_string(), "MX".to_owned()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("ambiguous translation should fail");
+        std::fs::remove_file(temp).ok();
+        assert!(error.to_string().contains("invalid codon"));
     }
 
     #[test]

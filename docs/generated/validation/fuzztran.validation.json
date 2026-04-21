@@ -1,6 +1,6 @@
 {
   "tool_name": "fuzztran",
-  "document_id": "fuzztran-initial",
+  "document_id": "fuzztran-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,18 +17,18 @@
   },
   "cases": [
     {
-      "id": "scan_forward_translated_frames_for_protein_pattern",
-      "title": "Report forward-frame translated hits and mapped nucleotide coordinates",
+      "id": "forward_frame_search",
+      "title": "Search forward translated frames with a protein motif",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [
-        "coding_dna_fasta"
+        "coding_fixture"
       ],
       "expected_output_ids": [
-        "fuzztran_hit_report"
+        "translated_pattern_hits"
       ],
       "provenance": [],
       "diagnostics": []
