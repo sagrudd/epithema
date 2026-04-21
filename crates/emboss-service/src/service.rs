@@ -1318,12 +1318,14 @@ impl EmbossService {
         let (input, input_provenance, input_diagnostics) =
             self.resolve_local_sequence_input(&input)?;
         let outcome = run_seqcount(SeqcountParams { input })?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("sequence count report");
 
         let report = self.success_report(
             &request.context,
             format!("counted {} sequence records", outcome.count),
             input_diagnostics,
-            vec![input_provenance],
+            vec![input_provenance, output_provenance.clone()],
         );
         let result = MethodResult::new(
             request.tool.clone(),
@@ -1336,8 +1338,14 @@ impl EmbossService {
             )),
             ResultSummary::new("Sequence count completed")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
-                .with_line(format!("Records: {}", outcome.count)),
+                .with_line(format!("Records: {}", outcome.count))
+                .with_line("Output format: tabular report"),
             report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("sequence-count-report", ArtifactKind::Table)
+                .with_label("Sequence count report")
+                .with_provenance(output_provenance),
         );
 
         Ok(InvocationResponse::completed(
@@ -5625,10 +5633,35 @@ mod tests {
         assert_eq!(response.status, crate::InvocationStatus::Completed);
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
+                assert_eq!(table.columns, vec!["input", "count"]);
+                assert!(table.rows[0][0].ends_with("three_records.fasta"));
                 assert_eq!(table.rows[0][1], "3");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn seqcount_rejects_malformed_input() {
+        let path = std::env::temp_dir().join(format!(
+            "emboss-rs-seqcount-malformed-{}.fasta",
+            std::process::id()
+        ));
+        std::fs::write(&path, "ACGT\n").expect("fixture should write");
+
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqcount").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![path.display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("seqcount should reject malformed input");
+        assert!(error.to_string().contains("invalid fasta content"));
+
+        let _ = std::fs::remove_file(path);
     }
 
     #[test]

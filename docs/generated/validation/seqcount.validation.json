@@ -1,6 +1,6 @@
 {
   "tool_name": "seqcount",
-  "document_id": "seqcount-initial",
+  "document_id": "seqcount-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,8 +17,8 @@
   },
   "cases": [
     {
-      "id": "count_three_record_fasta",
-      "title": "Count records in a three-sequence FASTA fixture",
+      "id": "count_three_fasta_records",
+      "title": "Count records in a three-record FASTA input",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
@@ -28,7 +28,7 @@
         "three_record_fasta"
       ],
       "expected_output_ids": [
-        "sequence_count_table"
+        "sequence_count_report"
       ],
       "provenance": [],
       "diagnostics": []

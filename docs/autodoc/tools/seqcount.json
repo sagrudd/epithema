@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "seqcount-stub-v1",
+  "document_id": "seqcount-v1",
   "tool": {
     "name": "seqcount",
     "family": "sequence_stream",
-    "summary": "Count sequence records in an input stream",
+    "summary": "Count sequence records in one local sequence input",
     "legacy_names": [
       "seqcount"
     ]
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`seqcount` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`seqcount` counts sequence records through the shared EMBOSS-RS sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 interface accepts one local sequence input path. Input format is inferred from extension when possible and otherwise from leading file content through the shared sequence-stream detection path."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods."
+      "content": "The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard EMBOSS-RS result summary lines describing the input path, record count, and tabular output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seqcount`. The generated tool page and the machine-readable validation stub at [`../validation/seqcount.validation.json`](../validation/seqcount.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports one input path per invocation. Multiple-input aggregation and per-input grouped reporting remain deferred. Empty or malformed inputs fail clearly instead of returning an implicit zero count."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate deterministic counting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "count_three_fasta_records",
+      "title": "Count records in a three-record FASTA input",
+      "description": "Counts a small multi-record FASTA fixture and returns one stable table row with the source path and record count.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "sequence_count_report",
+          "label": "Sequence count report",
+          "description": "A single-row table report containing the input path and the deterministic record count."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "count_three_fasta_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

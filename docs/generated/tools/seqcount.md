@@ -4,11 +4,11 @@
 
 ## Summary
 
-Count sequence records in an input stream
+Count sequence records in one local sequence input
 
 ## Document Metadata
 
-- Document ID: `seqcount-stub-v1`
+- Document ID: `seqcount-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
@@ -16,34 +16,52 @@ Count sequence records in an input stream
 
 ## Overview
 
-`seqcount` is part of the exposed EMBOSS-RS `sequence_stream` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`seqcount` counts sequence records through the shared EMBOSS-RS sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs.
 
 ## Inputs
 
-This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it.
+The current v1 interface accepts one local sequence input path. Input format is inferred from extension when possible and otherwise from leading file content through the shared sequence-stream detection path.
 
 ## Outputs
 
-The current implementation emits normalized sequence records or simple structured counts for stream-oriented sequence selection methods.
+The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard EMBOSS-RS result summary lines describing the input path, record count, and tabular output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqcount`. The generated tool page and the machine-readable validation stub at [`../validation/seqcount.validation.json`](../validation/seqcount.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release supports one input path per invocation. Multiple-input aggregation and per-input grouped reporting remain deferred. Empty or malformed inputs fail clearly instead of returning an implicit zero count.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed multi-record FASTA fixture used to validate deterministic counting.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Count records in a three-record FASTA input
+
+- Example ID: `count_three_fasta_records`
+- Description: Counts a small multi-record FASTA fixture and returns one stable table row with the source path and record count.
+- Referenced artifacts: `three_record_fasta`
+- Expected outputs:
+  - `sequence_count_report`: Sequence count report (A single-row table report containing the input path and the deterministic record count.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `count_three_fasta_records`
+- Compare against legacy: no
+- Require provenance capture: yes
 
