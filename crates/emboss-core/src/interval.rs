@@ -22,6 +22,15 @@ impl Interval {
         Ok(Self { start, end })
     }
 
+    /// Creates a zero-based half-open interval from 1-based inclusive coordinates.
+    pub fn from_one_based_inclusive(start: usize, end: usize) -> Result<Self, DomainError> {
+        if start == 0 || end == 0 {
+            return Err(DomainError::InvalidInterval { start, end });
+        }
+
+        Self::new(start - 1, end)
+    }
+
     /// Returns the inclusive start position.
     #[must_use]
     pub fn start(self) -> usize {
@@ -80,6 +89,18 @@ mod tests {
     #[test]
     fn rejects_empty_interval() {
         assert!(Interval::new(4, 4).is_err());
+    }
+
+    #[test]
+    fn converts_one_based_inclusive_coordinates() {
+        let interval = Interval::from_one_based_inclusive(2, 5).expect("valid interval");
+        assert_eq!(interval, Interval::new(1, 5).expect("valid interval"));
+    }
+
+    #[test]
+    fn rejects_zero_one_based_coordinates() {
+        assert!(Interval::from_one_based_inclusive(0, 3).is_err());
+        assert!(Interval::from_one_based_inclusive(1, 0).is_err());
     }
 
     #[test]

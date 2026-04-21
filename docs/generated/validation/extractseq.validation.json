@@ -1,6 +1,6 @@
 {
   "tool_name": "extractseq",
-  "document_id": "extractseq-initial",
+  "document_id": "extractseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -18,7 +18,7 @@
   "cases": [
     {
       "id": "extract_region_two_to_three",
-      "title": "Extract a 1-based inclusive region from each record",
+      "title": "Extract positions 2 through 3 from each record",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",

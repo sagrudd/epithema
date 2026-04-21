@@ -169,7 +169,16 @@ pub fn extract_sequences(
                 .with_code("bridge.extract_sequences.coordinates.out_of_range"));
             }
 
-            let subsequence = &record.residues()[start - 1..end];
+            let interval = emboss_core::Interval::from_one_based_inclusive(start, end).map_err(
+                |error| {
+                    PlatformError::new(ErrorCategory::Validation, error.to_string())
+                        .with_code("bridge.extract_sequences.interval.invalid")
+                },
+            )?;
+            let subsequence = record.subsequence(interval).map_err(|error| {
+                PlatformError::new(ErrorCategory::Validation, error.to_string())
+                    .with_code("bridge.extract_sequences.interval.invalid")
+            })?;
             let extracted =
                 SequenceRecord::new(record.identifier().clone(), record.molecule(), subsequence)
                     .map_err(|error| {

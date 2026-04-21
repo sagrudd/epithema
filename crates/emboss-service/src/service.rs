@@ -6013,9 +6013,103 @@ mod tests {
             ResultPayload::SequenceCollection(records) => {
                 assert_eq!(records.len(), 3);
                 assert_eq!(records[0].residues(), "CG");
+                assert_eq!(records[1].residues(), "TT");
+                assert_eq!(records[2].residues(), "GC");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn extracts_full_length_region_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "1".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("extractseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ACGT");
+                assert_eq!(records[1].residues(), "TTTT");
+                assert_eq!(records[2].residues(), "GGCC");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn extracts_boundary_region_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "1".to_owned(),
+            "1".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("extractseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "A");
+                assert_eq!(records[1].residues(), "T");
+                assert_eq!(records[2].residues(), "G");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn extractseq_rejects_out_of_range_coordinates() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "2".to_owned(),
+            "5".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("out-of-range coordinates should fail");
+        assert_eq!(
+            error.to_string(),
+            "requested region 2..5 is out of range for sequence 'alpha' of length 4"
+        );
+    }
+
+    #[test]
+    fn extractseq_rejects_start_greater_than_end() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("extractseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "4".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("inverted coordinates should fail");
+        assert_eq!(
+            error.to_string(),
+            "extractseq requires 1-based inclusive coordinates with start <= end"
+        );
     }
 
     #[test]

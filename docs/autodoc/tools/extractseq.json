@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "extractseq-stub-v1",
+  "document_id": "extractseq-v1",
   "tool": {
     "name": "extractseq",
     "family": "sequence_transform",
-    "summary": "Extract a 1-based inclusive region from each input sequence record",
+    "summary": "Extract one contiguous 1-based inclusive region from each input sequence record",
     "legacy_names": [
       "extractseq"
     ]
@@ -14,39 +14,88 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`extractseq` is part of the exposed EMBOSS-RS `sequence_transform` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`extractseq` extracts the same contiguous region from every input sequence record using the shared EMBOSS-RS interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current v1 tool accepts a local sequence file plus `start` and `end` coordinates. FASTA, FASTQ, EMBL, and GenBank inputs follow the shared sequence IO layer. The requested interval must be valid for every input record in the file."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "The tool emits one extracted sequence record per input record, preserving input order, identifiers, descriptions, and molecule kind. Extraction is generic across nucleotide and protein records because it operates on the shared `SequenceRecord` abstraction."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractseq`. The generated tool page and the machine-readable validation stub at [`../validation/extractseq.validation.json`](../validation/extractseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs extractseq`. Validation currently covers interior extraction against a committed multi-record FASTA fixture. Boundary cases, full-length extraction, and invalid coordinate handling are covered by Rust tests in the tool and service layers."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 scope extracts a single contiguous interval only. Coordinates must be supplied as 1-based inclusive values with `start <= end`. Empty ranges are therefore not representable. If any record is shorter than the requested region, the run fails clearly instead of truncating silently."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic extractseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "extract_region_two_to_three",
+      "title": "Extract positions 2 through 3 from each record",
+      "description": "Applies the same 1-based inclusive interval to each record in a multi-record FASTA fixture.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "start",
+          "value": "2"
+        },
+        {
+          "name": "end",
+          "value": "3"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "extracted_sequences",
+          "label": "Extracted subsequences",
+          "description": "Each output record contains positions 2 through 3 from the corresponding input record."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "extract_region_two_to_three"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }
