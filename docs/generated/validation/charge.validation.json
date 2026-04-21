@@ -1,26 +1,31 @@
 {
-  "document_id": "charge-minimal",
   "tool_name": "charge",
+  "document_id": "charge-stub-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "declared_case_count": 1,
+    "total_case_count": 0,
+    "declared_case_count": 0,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
+    "runnable_case_count": 0,
     "executed_case_count": 0,
     "compared_case_count": 0,
-    "total_case_count": 1
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
   },
-  "cases": [
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'charge' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
     {
-      "id": "charge-default-window-profile",
-      "declaration_status": "declared",
-      "source_kind": "curated",
-      "execution_status": "pending",
-      "comparison_status": "not_compared",
-      "notes": [
-        "Compute a single-record protein charge profile using the v1 residue-charge model and emit both a tabular report and a line-plot contract payload."
-      ]
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "charge"
     }
   ],
-  "unresolved_gaps": [],
-  "diagnostics": []
+  "provenance": []
 }

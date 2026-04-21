@@ -16,23 +16,27 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 
 ## Overview
 
-`charge` is part of the exposed EMBOSS-RS `protein_plots` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`charge` is the first production plotting vertical slice in EMBOSS-RS. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis.
 
 ## Inputs
 
-This tool accepts exactly one protein sequence record for the current v1 plotted analytical path and computes plot-ready analytical data in Rust.
+This tool accepts exactly one protein sequence record. v1 uses a fixed residue-charge model in Rust, requires protein-compatible residues, and treats the window and step arguments as positive counts over the original sequence.
 
 ## Outputs
 
-The current implementation emits both a structured analytical report and a formal plot-contract payload consumed by the R rendering surface.
+The implementation emits two coordinated outputs: a structured analytical table of window starts, ends, lengths, and mean charges, plus a typed line-plot contract payload. The plot contract is consumed by the sister `emboss-r` package, which owns rendering.
+
+## Plotting Integration
+
+Rust does not render figures. The formal contract emitted by `charge` is the canonical handoff to R. In `emboss-r`, `charge_profile()` returns a structured result object carrying both the analytical data frame and the parsed plot contract, and `plot()` or `render_charge_plot()` renders the governed line plot with `ggplot2`.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs charge`. The generated tool page and the machine-readable validation stub at [`../validation/charge.validation.json`](../validation/charge.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs charge`. Rust service tests validate the analytical result and the canonical checked-in plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+v1 supports the charge profile only for one protein record at a time. Rendering remains intentionally R-owned, so non-graphical Rust and CLI workflows remain usable without R. Additional plot-capable methods should follow this contract-and-renderer pattern rather than adding Rust-side graphics code.
 
 ## Declared Artifacts
 
@@ -44,6 +48,6 @@ No examples are declared for this autodoc document.
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
 
