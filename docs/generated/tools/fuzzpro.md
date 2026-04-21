@@ -4,11 +4,11 @@
 
 ## Summary
 
-Scan protein sequences for deterministic literal motifs with X wildcard support
+Search protein sequences for deterministic exact or wildcard motifs
 
 ## Document Metadata
 
-- Document ID: `fuzzpro-stub-v1`
+- Document ID: `fuzzpro-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
@@ -16,34 +16,58 @@ Scan protein sequences for deterministic literal motifs with X wildcard support
 
 ## Overview
 
-`fuzzpro` is part of the exposed EMBOSS-RS `pattern_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`fuzzpro` searches protein sequence records for one linear motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact amino-acid symbols plus `X` as a one-residue wildcard, no gaps, no indels, and no full historical EMBOSS fuzzy-expression language.
 
 ## Inputs
 
-This tool accepts nucleotide or protein sequence inputs plus a deterministic pattern specification defined by the implemented method parameters.
+The current v1 interface accepts one local protein sequence input path and one motif string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as nucleotide are rejected.
+
+## Pattern Model
+
+Supported motif syntax is exact amino-acid text plus `X` as a single-residue wildcard. Pattern and subject sequences are normalized case-insensitively. Overlapping matches are reported. Subject residues are interpreted literally in v1; there is no protein ambiguity-class expansion beyond the wildcard.
 
 ## Outputs
 
-The current implementation emits deterministic pattern-hit tables with explicit coordinates, frames, or matched motifs as appropriate to the tool.
+The tool emits a stable table report with one row per hit. Columns are `record`, `pattern`, `start`, `end`, and `matched`. Coordinates are user-facing 1-based inclusive.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs fuzzpro`. The generated tool page and the machine-readable validation stub at [`../validation/fuzzpro.validation.json`](../validation/fuzzpro.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs fuzzpro`. Validation currently covers exact and wildcard matching, overlapping matches, no-hit behavior, invalid-pattern failure, and nucleotide-input rejection.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release does not implement character classes, mismatches, gaps, or the broader historical EMBOSS fuzzy-pattern language. Empty patterns are rejected during parsing.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Protein pattern fixture
+
+- Artifact ID: `protein_pattern_fixture`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/protein_records.fasta`
+- Notes: Repository-managed FASTA fixture used for deterministic protein motif validation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Search a protein fixture with a wildcard motif
+
+- Example ID: `wildcard_forward_search`
+- Description: Demonstrates deterministic protein motif searching with the `X` one-residue wildcard and stable hit ordering.
+- Referenced artifacts: `protein_pattern_fixture`
+- Parameters:
+  - `pattern` = `MX`
+- Expected outputs:
+  - `protein_pattern_hits`: Protein motif hits (A stable table report containing one row per protein motif hit with 1-based inclusive coordinates.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `wildcard_forward_search`
+- Compare against legacy: no
+- Require provenance capture: yes
 

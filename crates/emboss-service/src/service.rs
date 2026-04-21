@@ -7110,10 +7110,27 @@ mod tests {
             ResultPayload::TableReport(table) => {
                 assert_eq!(table.rows.len(), 1);
                 assert_eq!(table.rows[0][0], "protA");
+                assert_eq!(table.rows[0][1], "MX");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "2");
                 assert_eq!(table.rows[0][4], "MA");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/protein_records.fasta")
+        );
+        assert_eq!(response.result.summary.lines[1], "Pattern: MX");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Coordinate convention: 1-based inclusive"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Pattern syntax: exact residues with X wildcard"
+        );
+        assert_eq!(response.result.summary.lines[4], "Hits: 1");
     }
 
     #[test]
@@ -7154,6 +7171,70 @@ mod tests {
         ]);
 
         assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn rejects_invalid_fuzzpro_pattern() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzzpro").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            protein_fixture().display().to_string(),
+            "M?".to_owned(),
+        ]);
+
+        assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn rejects_nucleotide_input_for_fuzzpro() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzzpro").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "MX".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("nucleotide input should fail for fuzzpro");
+        assert!(error.to_string().contains("expects protein input"));
+    }
+
+    #[test]
+    fn reports_overlapping_fuzzpro_hits() {
+        let service = implemented_service();
+        let temp = std::env::temp_dir().join(format!(
+            "emboss-rs-fuzzpro-overlap-{}.fasta",
+            std::process::id()
+        ));
+        std::fs::write(&temp, ">ovl\nMAMAM\n").expect("overlap fixture should be written");
+
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("fuzzpro").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![temp.display().to_string(), "MAM".to_owned()]);
+
+        let response = service.invoke(request).expect("fuzzpro should execute");
+        std::fs::remove_file(temp).ok();
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "ovl");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "3");
+                assert_eq!(table.rows[1][2], "3");
+                assert_eq!(table.rows[1][3], "5");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

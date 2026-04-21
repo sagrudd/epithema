@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "fuzzpro-stub-v1",
+  "document_id": "fuzzpro-v1",
   "tool": {
     "name": "fuzzpro",
     "family": "pattern_tools",
-    "summary": "Scan protein sequences for deterministic literal motifs with X wildcard support",
+    "summary": "Search protein sequences for deterministic exact or wildcard motifs",
     "legacy_names": [
       "fuzzpro"
     ]
@@ -14,39 +14,90 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`fuzzpro` is part of the exposed EMBOSS-RS `pattern_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`fuzzpro` searches protein sequence records for one linear motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact amino-acid symbols plus `X` as a one-residue wildcard, no gaps, no indels, and no full historical EMBOSS fuzzy-expression language."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts nucleotide or protein sequence inputs plus a deterministic pattern specification defined by the implemented method parameters."
+      "content": "The current v1 interface accepts one local protein sequence input path and one motif string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as nucleotide are rejected."
+    },
+    {
+      "id": "pattern_model",
+      "kind": "notes",
+      "title": "Pattern Model",
+      "content": "Supported motif syntax is exact amino-acid text plus `X` as a single-residue wildcard. Pattern and subject sequences are normalized case-insensitively. Overlapping matches are reported. Subject residues are interpreted literally in v1; there is no protein ambiguity-class expansion beyond the wildcard."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits deterministic pattern-hit tables with explicit coordinates, frames, or matched motifs as appropriate to the tool."
+      "content": "The tool emits a stable table report with one row per hit. Columns are `record`, `pattern`, `start`, `end`, and `matched`. Coordinates are user-facing 1-based inclusive."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs fuzzpro`. The generated tool page and the machine-readable validation stub at [`../validation/fuzzpro.validation.json`](../validation/fuzzpro.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs fuzzpro`. Validation currently covers exact and wildcard matching, overlapping matches, no-hit behavior, invalid-pattern failure, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not implement character classes, mismatches, gaps, or the broader historical EMBOSS fuzzy-pattern language. Empty patterns are rejected during parsing."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "protein_pattern_fixture",
+      "label": "Protein pattern fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/protein_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic protein motif validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "wildcard_forward_search",
+      "title": "Search a protein fixture with a wildcard motif",
+      "description": "Demonstrates deterministic protein motif searching with the `X` one-residue wildcard and stable hit ordering.",
+      "artifact_ids": [
+        "protein_pattern_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "value": "MX"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "protein_pattern_hits",
+          "label": "Protein motif hits",
+          "description": "A stable table report containing one row per protein motif hit with 1-based inclusive coordinates."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "wildcard_forward_search"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

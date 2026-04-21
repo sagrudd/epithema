@@ -43,7 +43,7 @@ pub struct FuzzproOutcome {
 /// Returns `fuzzpro` help text.
 #[must_use]
 pub fn fuzzpro_help() -> &'static str {
-    "Usage: emboss-rs fuzzpro <protein-input> <pattern>\n\nSearch protein sequence records for a deterministic literal pattern. Supported pattern syntax is exact amino-acid symbols plus X as a single-residue wildcard. User-facing hit coordinates are reported as 1-based inclusive."
+    "Usage: emboss-rs fuzzpro <protein-input> <pattern>\n\nSearch protein sequence records for a deterministic literal pattern. Supported pattern syntax is exact amino-acid symbols plus X as a single-residue wildcard. Overlapping matches are reported. User-facing hit coordinates are reported as 1-based inclusive."
 }
 
 /// Executes `fuzzpro`.
@@ -95,5 +95,82 @@ fn build_hit(record_id: &str, pattern: &str, hit: PatternMatch) -> FuzzproHit {
         start: hit.start(),
         end: hit.end(),
         matched: hit.matched().to_owned(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{FuzzproParams, run_fuzzpro};
+    use crate::sequence_stream::SequenceInput;
+    use emboss_core::ProteinPattern;
+    use std::fs;
+
+    fn write_temp_sequence_file(name: &str, contents: &str) -> std::path::PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "emboss-rs-fuzzpro-{name}-{}-{}.fasta",
+            std::process::id(),
+            std::thread::current().name().unwrap_or("main")
+        ));
+        fs::write(&path, contents).expect("temporary sequence fixture should be written");
+        path
+    }
+
+    fn fixture(name: &str) -> std::path::PathBuf {
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
+    }
+
+    #[test]
+    fn reports_exact_and_wildcard_matches_in_stable_order() {
+        let outcome = run_fuzzpro(FuzzproParams {
+            input: SequenceInput::new(fixture("protein_records.fasta")),
+            pattern: ProteinPattern::parse("MX").expect("pattern should parse"),
+        })
+        .expect("fuzzpro should succeed");
+
+        assert_eq!(outcome.hits.len(), 1);
+        assert_eq!(outcome.hits[0].record_id, "protA");
+        assert_eq!(outcome.hits[0].start, 0);
+        assert_eq!(outcome.hits[0].end, 2);
+        assert_eq!(outcome.hits[0].matched, "MA");
+    }
+
+    #[test]
+    fn reports_overlapping_matches() {
+        let path = write_temp_sequence_file("overlap", ">ovl\nMAMAM\n");
+        let outcome = run_fuzzpro(FuzzproParams {
+            input: SequenceInput::new(path.clone()),
+            pattern: ProteinPattern::parse("MAM").expect("pattern should parse"),
+        })
+        .expect("fuzzpro should succeed");
+        fs::remove_file(path).ok();
+
+        assert_eq!(outcome.hits.len(), 2);
+        assert_eq!(outcome.hits[0].start, 0);
+        assert_eq!(outcome.hits[0].end, 3);
+        assert_eq!(outcome.hits[1].start, 2);
+        assert_eq!(outcome.hits[1].end, 5);
+    }
+
+    #[test]
+    fn returns_no_hits_when_pattern_is_absent() {
+        let outcome = run_fuzzpro(FuzzproParams {
+            input: SequenceInput::new(fixture("protein_records.fasta")),
+            pattern: ProteinPattern::parse("QQQ").expect("pattern should parse"),
+        })
+        .expect("fuzzpro should succeed");
+
+        assert!(outcome.hits.is_empty());
+    }
+
+    #[test]
+    fn rejects_nucleotide_input() {
+        let error = run_fuzzpro(FuzzproParams {
+            input: SequenceInput::new(fixture("three_records.fasta")),
+            pattern: ProteinPattern::parse("MX").expect("pattern should parse"),
+        })
+        .expect_err("nucleotide input should fail");
+
+        assert!(error.to_string().contains("expects protein input"));
     }
 }
