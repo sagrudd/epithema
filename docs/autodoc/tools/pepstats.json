@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "pepstats-stub-v1",
+  "document_id": "pepstats-v1",
   "tool": {
     "name": "pepstats",
     "family": "sequence_stats",
-    "summary": "Report basic protein composition, length, and molecular-weight statistics",
+    "summary": "Report deterministic protein summary statistics for sequence records",
     "legacy_names": [
       "pepstats"
     ]
@@ -14,39 +14,85 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`pepstats` is part of the exposed EMBOSS-RS `sequence_stats` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`pepstats` reports a conservative first-release set of protein statistics for each input record. The EMBOSS-RS v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts nucleotide or protein sequence records through the shared sequence IO abstraction and emits structured analytical summaries rather than bespoke CLI-only text."
+      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured per-record and aggregate statistics tables suitable for CLI rendering, testing, and later R projection."
+      "content": "The tool emits a stable table report with columns `section`, `record`, `metric_or_residue`, `value_or_count`, `frequency`, and `notes`. `section=summary` rows report scalar metrics such as sequence length and molecular weight. `section=composition` rows report residue counts and frequencies."
+    },
+    {
+      "id": "metric_model",
+      "kind": "notes",
+      "title": "Metric Model",
+      "content": "Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared EMBOSS-RS average residue masses with one water molecule added once per chain."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs pepstats`. The generated tool page and the machine-readable validation stub at [`../validation/pepstats.validation.json`](../validation/pepstats.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs pepstats`. Validation currently covers protein summary rows, composition frequencies, stop-symbol handling, unsupported ambiguous-residue failure for mass estimation, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not estimate isoelectric point, extinction coefficient, or advanced residue-class summaries. Ambiguous protein symbols that are not supported by the shared molecular-weight helper, such as `X` or `Z`, cause the run to fail instead of being approximated."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "protein_stats_fixture",
+      "label": "Protein statistics fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/protein_stats_records.fasta"
+      },
+      "description": "Repository-managed protein fixture used for deterministic pepstats validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "protein_summary_statistics",
+      "title": "Compute per-record protein statistics",
+      "description": "Reports scalar summary metrics and per-residue composition rows for a small protein fixture.",
+      "artifact_ids": [
+        "protein_stats_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "pepstats_report",
+          "label": "Protein statistics table",
+          "description": "A stable table containing per-record summary metrics and amino-acid composition frequencies."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "curated_by": "OpenAI Codex",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "protein_summary_statistics"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

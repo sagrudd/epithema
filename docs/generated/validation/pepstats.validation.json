@@ -1,6 +1,6 @@
 {
   "tool_name": "pepstats",
-  "document_id": "pepstats-initial",
+  "document_id": "pepstats-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,15 +17,15 @@
   },
   "cases": [
     {
-      "id": "report_basic_protein_summary_statistics",
-      "title": "Summarize protein composition, length, and molecular weight",
+      "id": "protein_summary_statistics",
+      "title": "Compute per-record protein statistics",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [
-        "protein_fasta"
+        "protein_stats_fixture"
       ],
       "expected_output_ids": [
         "pepstats_report"

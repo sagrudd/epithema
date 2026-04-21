@@ -7719,6 +7719,35 @@ mod tests {
         let response = service.invoke(request).expect("pepstats should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "section",
+                        "record",
+                        "metric_or_residue",
+                        "value_or_count",
+                        "frequency",
+                        "notes"
+                    ]
+                );
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "summary"
+                        && row[1] == "pepA"
+                        && row[2] == "sequence_length"
+                        && row[3] == "3"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "summary"
+                        && row[1] == "pepA"
+                        && row[2] == "residue_length"
+                        && row[3] == "2"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "summary"
+                        && row[1] == "pepA"
+                        && row[2] == "stop_count"
+                        && row[3] == "1"
+                }));
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "summary"
                         && row[1] == "pepA"
@@ -7726,11 +7755,47 @@ mod tests {
                         && row[3] == "220.287"
                 }));
                 assert!(table.rows.iter().any(|row| {
-                    row[0] == "composition" && row[1] == "pepA" && row[2] == "M" && row[3] == "1"
+                    row[0] == "composition"
+                        && row[1] == "pepA"
+                        && row[2] == "M"
+                        && row[3] == "1"
+                        && row[4] == "0.3333"
                 }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta")
+        );
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Mass convention: average residue masses plus one water molecule"
+        );
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Stop symbols are excluded from residue_length and mass"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "pI estimation: deferred in v1"
+        );
+        assert_eq!(response.result.summary.lines[4], "Records: 2");
+    }
+
+    #[test]
+    fn rejects_nucleotide_input_for_pepstats() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepstats").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("nucleotide input should fail for pepstats");
+        assert!(error.to_string().contains("expects protein input"));
     }
 
     #[test]
