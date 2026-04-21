@@ -1,6 +1,6 @@
 {
   "tool_name": "compseq",
-  "document_id": "compseq-initial",
+  "document_id": "compseq-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,18 +17,18 @@
   },
   "cases": [
     {
-      "id": "report_per_record_and_aggregate_residue_composition",
-      "title": "Summarize residue counts and frequencies across sequence records",
+      "id": "per_record_and_aggregate_composition",
+      "title": "Compute per-record and aggregate composition",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
       "artifact_ids": [
-        "sequence_input"
+        "nucleotide_pattern_fixture"
       ],
       "expected_output_ids": [
-        "composition_report"
+        "composition_table"
       ],
       "provenance": [],
       "diagnostics": []

@@ -7254,7 +7254,7 @@ mod tests {
         let error = service
             .invoke(request)
             .expect_err("protein input should fail for fuzztran");
-        assert!(error.to_string().contains("expects nucleotide input"));
+        assert!(error.to_string().contains("invalid codon"));
     }
 
     #[test]
@@ -7408,6 +7408,18 @@ mod tests {
         let response = service.invoke(request).expect("compseq should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "scope",
+                        "record",
+                        "molecule",
+                        "length",
+                        "residue",
+                        "count",
+                        "frequency"
+                    ]
+                );
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record" && row[1] == "nucA" && row[4] == "N" && row[5] == "1"
                 }));
@@ -7416,6 +7428,49 @@ mod tests {
                         .rows
                         .iter()
                         .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" })
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Scope: per-record plus aggregate summary"
+        );
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Gap policy: '-' is ignored"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Frequency denominator: all non-gap normalized residue symbols"
+        );
+        assert_eq!(response.result.summary.lines[4], "Records: 2");
+    }
+
+    #[test]
+    fn executes_compseq_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("compseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![protein_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("compseq should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "record" && row[1] == "protA" && row[4] == "*" && row[5] == "1"
+                }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[4] == "L" && row[5] == "1" })
                 );
             }
             payload => panic!("unexpected payload: {payload:?}"),

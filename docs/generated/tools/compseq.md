@@ -4,11 +4,11 @@
 
 ## Summary
 
-Report per-record and aggregate residue composition counts and frequencies
+Report deterministic residue composition counts and frequencies for sequence records
 
 ## Document Metadata
 
-- Document ID: `compseq-stub-v1`
+- Document ID: `compseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
@@ -16,34 +16,56 @@ Report per-record and aggregate residue composition counts and frequencies
 
 ## Overview
 
-`compseq` is part of the exposed EMBOSS-RS `sequence_stats` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`compseq` reports residue composition for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 surface intentionally keeps the report deterministic and simple: count normalized non-gap symbols, preserve ambiguity or stop symbols as observed, and compute frequencies over the non-gap denominator only.
 
 ## Inputs
 
-This tool accepts nucleotide or protein sequence records through the shared sequence IO abstraction and emits structured analytical summaries rather than bespoke CLI-only text.
+The current v1 interface accepts one local sequence input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank, and may contain nucleotide, protein, or mixed record sets.
 
 ## Outputs
 
-The current implementation emits structured per-record and aggregate statistics tables suitable for CLI rendering, testing, and later R projection.
+The tool emits a stable table report with columns `scope`, `record`, `molecule`, `length`, `residue`, `count`, and `frequency`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed` in the first release.
+
+## Statistics Model
+
+Residues are normalized case-insensitively before counting. Gap symbols `-` are ignored and excluded from the frequency denominator. All other normalized symbols, including ambiguity codes such as `N` and stop symbols such as `*`, are counted exactly as observed. Frequencies are reported as fractions over all non-gap symbols in the corresponding record or aggregate set.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs compseq`. The generated tool page and the machine-readable validation stub at [`../validation/compseq.validation.json`](../validation/compseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs compseq`. Validation currently covers nucleotide composition, protein composition, ambiguity and stop-symbol handling, per-record plus aggregate reporting, and empty-input failure.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release does not infer richer chemistry-aware residue classes or reject mixed record sets. Composition is purely symbol-based after shared sequence normalization.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Nucleotide composition fixture
+
+- Artifact ID: `nucleotide_pattern_fixture`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta`
+- Notes: Repository-managed nucleotide fixture used for deterministic composition validation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Compute per-record and aggregate composition
+
+- Example ID: `per_record_and_aggregate_composition`
+- Description: Reports normalized residue counts and frequencies for each input record plus one aggregate summary across the whole input set.
+- Referenced artifacts: `nucleotide_pattern_fixture`
+- Expected outputs:
+  - `composition_table`: Residue composition table (A stable tabular report containing per-record and aggregate residue counts and non-gap frequencies.)
 
 ## Provenance
 
-- Curated by: emboss-rs autodoc stub generator
+- Curated by: emboss-rs maintainers
 - Source references: none declared
+
+## Validation Intent
+
+- Required examples: `per_record_and_aggregate_composition`
+- Compare against legacy: no
+- Require provenance capture: yes
 
