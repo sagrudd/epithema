@@ -18,6 +18,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 
 cohort_validation
 governance_alignment
+cohort_health
 """
 
 FOOTER = "```\n"

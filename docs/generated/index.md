@@ -10,6 +10,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 
 cohort_validation
 governance_alignment
+cohort_health
 tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair

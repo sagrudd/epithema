@@ -17,7 +17,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -30,6 +30,7 @@ help:
 		"  make anchor-validation Refresh executed-and-compared validation reports for the acceptance anchors" \
 		"  make cohort-report   Refresh the shipped cohort validation report JSON and Markdown outputs" \
 		"  make governance-report Refresh the governance/backlog versus shipped-registry alignment report" \
+		"  make cohort-health-report Refresh the standing roadmap reprioritization gate report" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
 		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
@@ -86,6 +87,7 @@ release-generated-check:
 	$(MAKE) generated-index-normalize PYTHON=$(PYTHON)
 	$(MAKE) cohort-report
 	$(MAKE) governance-report
+	$(MAKE) cohort-health-report
 	git diff --exit-code -- docs/generated
 
 release-build:
@@ -145,6 +147,11 @@ governance-report:
 	$(RUSTCARGO) run -p emboss-testkit --example write_governance_alignment_report -- \
 		--json docs/generated/validation/governance_alignment.json \
 		--markdown docs/generated/governance_alignment.md
+
+cohort-health-report:
+	$(RUSTCARGO) run -p emboss-testkit --example write_cohort_health_report -- \
+		--json docs/generated/validation/cohort_health.json \
+		--markdown docs/generated/cohort_health.md
 
 anchor-validation:
 	$(RUSTCARGO) run -p emboss-testkit --example write_acceptance_anchor_reports -- \

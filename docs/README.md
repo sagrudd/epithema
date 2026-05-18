@@ -86,6 +86,22 @@ This refreshes both:
 - `docs/generated/validation/governance_alignment.json`
 - `docs/generated/governance_alignment.md`
 
+```bash
+make cohort-health-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/cohort_health.json`
+- `docs/generated/cohort_health.md`
+
+The cohort-health gate turns the cohort and governance reports into a standing
+reprioritization check. It makes three things explicit:
+
+- which family currently carries the largest retained backlog
+- which shipped family currently carries the largest below-compared evidence burden
+- whether the release-candidate readiness report has fallen behind the generated cohort state
+
 The governance-alignment report uses the governance appendix as the backlog
 source of truth and makes three things explicit:
 

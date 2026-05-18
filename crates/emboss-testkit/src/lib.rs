@@ -6,6 +6,7 @@
 //! declared examples have already been run.
 
 pub mod anchor;
+pub mod cohort_health;
 pub mod cross_surface;
 pub mod evidence;
 pub mod governance;
@@ -15,6 +16,12 @@ pub mod report;
 pub use anchor::{
     AcceptanceAnchorSpec, acceptance_anchor_specs, derive_acceptance_anchor_report,
     write_acceptance_anchor_reports,
+};
+pub use cohort_health::{
+    CohortHealthRecommendation, CohortHealthReport, CohortHealthSignal,
+    CohortHealthSignalCode, CohortHealthSignalSeverity, CohortHealthSummary,
+    derive_cohort_health_report, render_cohort_health_markdown,
+    write_cohort_health_markdown, write_cohort_health_report_json,
 };
 pub use cross_surface::{
     CrossSurfaceExpected, CrossSurfaceFixtureCase, CrossSurfaceFixtureCatalog,
