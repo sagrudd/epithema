@@ -26,7 +26,7 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`."
+      "content": "The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`. When the filtered aggregate is nonempty, EMBOSS-RS also emits a governed categorical bar-plot contract for the aggregate counts."
     },
     {
       "id": "counting_model",
@@ -35,10 +35,16 @@
       "content": "Words are counted from overlapping windows of length `word_size` in the normalized residue string. Windows containing `-` are skipped and tracked through `skipped_gap_windows`. All other symbols, including ambiguity codes or stop symbols, are treated literally. Frequencies are computed over counted windows after gap-window exclusion."
     },
     {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Governed Plotting",
+      "content": "Rust does not render figures. For `wordcount`, the governed v1 plotting surface is an aggregate-only categorical bar-contract keyed by exact words and counts after `min_count` filtering. Rendering remains owned by the sister `emboss-r` package."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs wordcount`. Validation currently covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, and stable service-level table emission."
+      "content": "This method is implemented and exposed through `emboss-rs wordcount`. Validation currently covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and canonical aggregate bar-plot contract emission."
     },
     {
       "id": "caveats",
@@ -62,6 +68,21 @@
         "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used to validate deterministic overlapping word counts."
+    },
+    {
+      "id": "wordcount_plot_contract",
+      "label": "Canonical aggregate wordcount bar-plot contract fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"
+      },
+      "description": "Repository-managed canonical categorical bar-contract emitted by the governed `wordcount` plotting surface."
     }
   ],
   "examples": [
@@ -70,7 +91,8 @@
       "title": "Count overlapping sequence words",
       "description": "Counts overlapping size-2 words across a committed three-record FASTA fixture and emits per-record plus aggregate rows.",
       "artifact_ids": [
-        "three_record_fasta"
+        "three_record_fasta",
+        "wordcount_plot_contract"
       ],
       "parameters": [
         {
@@ -83,6 +105,11 @@
           "id": "wordcount_table",
           "label": "Sequence word-count table",
           "description": "A stable tabular report with overlapping word counts and frequencies after gap-window exclusion."
+        },
+        {
+          "id": "wordcount_plot",
+          "label": "Aggregate wordcount bar-plot contract",
+          "description": "A typed categorical bar-plot contract for aggregate word counts after `min_count` filtering."
         }
       ],
       "legacy_reference": {

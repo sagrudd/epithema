@@ -25,10 +25,12 @@
       "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
-        "three_record_fasta"
+        "three_record_fasta",
+        "wordcount_plot_contract"
       ],
       "expected_output_ids": [
-        "wordcount_table"
+        "wordcount_table",
+        "wordcount_plot"
       ],
       "provenance": [
         {

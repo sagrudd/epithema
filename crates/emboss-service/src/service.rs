@@ -5941,7 +5941,7 @@ impl EmbossService {
             return Ok(self.help_response(request, descriptor, wordcount_help()));
         }
 
-        let params = parse_wordcount_params(request.arguments())?;
+        let (params, plot_contract_out) = parse_wordcount_params(request.arguments())?;
         let input_path = params.input.path.display().to_string();
         let (input, input_provenance, input_diagnostics) =
             self.resolve_local_sequence_input(&input_path)?;
@@ -5985,16 +5985,15 @@ impl EmbossService {
             ]);
         }
 
-        let report = self.success_report(
+        let status_message = format!("reported sequence words for {} records", outcome.records.len());
+        let mut provenance = vec![input_provenance];
+        let mut report = self.success_report(
             &request.context,
-            format!(
-                "reported sequence words for {} records",
-                outcome.records.len()
-            ),
-            input_diagnostics,
-            vec![input_provenance],
+            status_message.clone(),
+            input_diagnostics.clone(),
+            Vec::new(),
         );
-        let result = MethodResult::new(
+        let mut result = MethodResult::new(
             request.tool.clone(),
             ResultPayload::TableReport(TableReport::new(
                 vec![
@@ -6015,9 +6014,53 @@ impl EmbossService {
                 .with_line("Gap policy: windows containing '-' are skipped")
                 .with_line(format!("Word size: {}", outcome.word_size))
                 .with_line(format!("Minimum reported count: {}", outcome.min_count))
-                .with_line(format!("Records: {}", outcome.records.len())),
+                .with_line(format!("Records: {}", outcome.records.len()))
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
             report.clone(),
         );
+
+        if let Some(plot) = outcome.plot.clone() {
+            result = result.with_plot(plot.clone());
+            if let Some(path) = &plot_contract_out {
+                let json = plot.to_json_pretty().map_err(|error| {
+                    PlatformError::new(
+                        ErrorCategory::Validation,
+                        format!("failed to serialize wordcount plot contract: {error}"),
+                    )
+                    .with_code("service.wordcount.plot.serialize_failed")
+                })?;
+                std::fs::write(path, json).map_err(|error| {
+                    PlatformError::new(
+                        ErrorCategory::Configuration,
+                        format!(
+                            "failed to write wordcount plot contract to {}",
+                            path.display()
+                        ),
+                    )
+                    .with_code("service.wordcount.plot.write_failed")
+                    .with_detail(error.to_string())
+                })?;
+                let plot_provenance =
+                    ArtifactProvenance::generated_output(path.display().to_string())
+                        .with_description("wordcount plot contract");
+                provenance.push(plot_provenance.clone());
+                result = result.with_artifact(
+                    ArtifactReference::new("wordcount-plot-contract", ArtifactKind::Auxiliary)
+                        .with_label("Wordcount plot contract")
+                        .with_local_path(path)
+                        .with_provenance(plot_provenance),
+                );
+            }
+        }
+
+        report = self.success_report(&request.context, status_message, input_diagnostics, provenance);
+        result.report = report.clone();
 
         Ok(InvocationResponse::completed(
             request.context,
@@ -8652,7 +8695,9 @@ fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceEr
     })
 }
 
-fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, ServiceError> {
+fn parse_wordcount_params(
+    arguments: &[String],
+) -> Result<(WordcountParams, Option<PathBuf>), ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("wordcount", wordcount_help()));
     }
@@ -8660,6 +8705,7 @@ fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, Servi
     let input = SequenceInput::new(arguments[0].clone());
     let mut word_size = None;
     let mut min_count = 1usize;
+    let mut plot_contract_out = None;
     let mut index = 1usize;
 
     while index < arguments.len() {
@@ -8699,6 +8745,24 @@ fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, Servi
             continue;
         }
 
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.wordcount.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
         return Err(PlatformError::new(
             ErrorCategory::Validation,
             format!("unknown wordcount argument '{argument}'"),
@@ -8707,11 +8771,14 @@ fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, Servi
         .with_detail(wordcount_help()));
     }
 
-    Ok(WordcountParams {
-        input,
-        word_size: word_size.ok_or_else(|| tool_usage_error("wordcount", wordcount_help()))?,
-        min_count,
-    })
+    Ok((
+        WordcountParams {
+            input,
+            word_size: word_size.ok_or_else(|| tool_usage_error("wordcount", wordcount_help()))?,
+            min_count,
+        },
+        plot_contract_out,
+    ))
 }
 
 fn parse_oddcomp_params(arguments: &[String]) -> Result<OddcompParams, ServiceError> {
@@ -9712,6 +9779,11 @@ mod tests {
     fn gapped_sequence_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/gapped_records.fasta")
+    }
+
+    fn wordcount_plot_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/wordcount_plot_contract.json")
     }
 
     fn annotated_feature_fixture() -> std::path::PathBuf {
@@ -13157,6 +13229,45 @@ mod tests {
             response.result.summary.lines[1],
             "Word model: overlapping normalized windows"
         );
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("wordcount should attach an aggregate plot payload");
+        assert_eq!(plot.kind.as_str(), "bar");
+    }
+
+    #[test]
+    fn wordcount_writes_canonical_plot_contract_fixture() {
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-wordcount-plot-{}.json",
+            std::process::id()
+        ));
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wordcount").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--word-size".to_owned(),
+            "2".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("wordcount should execute");
+        let emitted = std::fs::read_to_string(&output_path)
+            .expect("wordcount should write a plot contract");
+        let canonical = std::fs::read_to_string(wordcount_plot_fixture())
+            .expect("canonical wordcount plot contract should be readable");
+        std::fs::remove_file(&output_path).ok();
+
+        assert_eq!(emitted, canonical);
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "wordcount-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
     }
 
     #[test]

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "kind": "bar",
+  "metadata": {
+    "id": "wordcount_aggregate_2",
+    "title": "Aggregate word counts",
+    "subtitle": "Word size 2, minimum count 1, counted windows 9",
+    "provenance": {
+      "tool": "wordcount",
+      "method": "run_wordcount",
+      "source_artifact_ids": [
+        "table:wordcount-aggregate"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Word",
+    "scale_hint": "categorical"
+  },
+  "y_axis": {
+    "label": "Count",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "aggregate_counts",
+      "label": "Aggregate counts",
+      "legend_label": "Aggregate counts",
+      "semantic_group": "wordcount",
+      "x": {
+        "type": "text",
+        "values": [
+          "AC",
+          "CC",
+          "CG",
+          "GC",
+          "GG",
+          "GT",
+          "TT"
+        ]
+      },
+      "y": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.0
+      ],
+      "style": {
+        "geometry_hint": "bar",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

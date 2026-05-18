@@ -3,6 +3,11 @@
 use std::collections::BTreeMap;
 
 use emboss_core::MoleculeKind;
+use emboss_diagnostics::{ErrorCategory, PlatformError};
+use emboss_plot_contract::{
+    AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
+    PlotProvenance, PlotSeries, PlotSpec, SeriesStyle,
+};
 
 use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
 
@@ -33,7 +38,7 @@ pub struct WordcountRecord {
 }
 
 /// Structured `wordcount` outcome.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct WordcountOutcome {
     /// Source input.
     pub input: SequenceInput,
@@ -45,12 +50,14 @@ pub struct WordcountOutcome {
     pub records: Vec<WordcountRecord>,
     /// Aggregate counts across all records.
     pub aggregate: WordcountRecord,
+    /// Optional aggregate plot contract when there are reportable rows.
+    pub plot: Option<PlotPayload>,
 }
 
 /// Returns `wordcount` help text.
 #[must_use]
 pub fn wordcount_help() -> &'static str {
-    "Usage: emboss-rs wordcount <input> --word-size <count> [--min-count <count>]\n\nCount overlapping normalized sequence words in one or more records. v1 reports both per-record and aggregate counts, treats words as exact normalized substrings, skips windows containing gap symbols '-', and outputs rows in stable lexicographic word order."
+    "Usage: emboss-rs wordcount <input> --word-size <count> [--min-count <count>] [--plot-contract-out <path>]\n\nCount overlapping normalized sequence words in one or more records. v1 reports both per-record and aggregate counts, treats words as exact normalized substrings, skips windows containing gap symbols '-', outputs rows in stable lexicographic word order, and emits an aggregate categorical bar-plot contract when the filtered aggregate is nonempty."
 }
 
 /// Executes `wordcount`.
@@ -85,13 +92,76 @@ pub fn run_wordcount(params: WordcountParams) -> Result<WordcountOutcome, ToolEx
         }
     }
 
+    let plot = build_wordcount_plot(params.word_size, params.min_count, &aggregate)?;
+
     Ok(WordcountOutcome {
         input: params.input,
         word_size: params.word_size,
         min_count: params.min_count,
         records,
         aggregate,
+        plot,
     })
+}
+
+fn build_wordcount_plot(
+    word_size: usize,
+    min_count: usize,
+    aggregate: &WordcountRecord,
+) -> Result<Option<PlotPayload>, ToolExecutionError> {
+    let words = aggregate
+        .counts
+        .iter()
+        .filter(|(_, count)| **count >= min_count)
+        .map(|(word, _)| word.clone())
+        .collect::<Vec<_>>();
+    if words.is_empty() {
+        return Ok(None);
+    }
+
+    let counts = words
+        .iter()
+        .map(|word| aggregate.counts.get(word).copied().unwrap_or_default() as f64)
+        .collect::<Vec<_>>();
+
+    let plot = PlotSpec::new(
+        PlotKind::Bar,
+        PlotMetadata::new(
+            format!("wordcount_aggregate_{word_size}"),
+            "Aggregate word counts",
+        )
+        .with_subtitle(format!(
+            "Word size {word_size}, minimum count {min_count}, counted windows {}",
+            aggregate.counted_windows
+        ))
+        .with_provenance(PlotProvenance {
+            tool: Some("wordcount".to_owned()),
+            method: Some("run_wordcount".to_owned()),
+            source_artifact_ids: vec!["table:wordcount-aggregate".to_owned()],
+        }),
+        PlotAxis::new("Word").with_scale_hint(AxisScaleHint::Categorical),
+        PlotAxis::new("Count").with_scale_hint(AxisScaleHint::Linear),
+        vec![
+            PlotSeries::new(
+                "aggregate_counts",
+                "Aggregate counts",
+                DataVector::Text(words),
+                counts,
+            )
+            .with_legend_label("Aggregate counts")
+            .with_semantic_group("wordcount")
+            .with_style(
+                SeriesStyle::empty()
+                    .with_geometry_hint(GeometryHint::Bar)
+                    .with_color_role("primary"),
+            ),
+        ],
+    );
+    plot.validate().map_err(|error| {
+        PlatformError::new(ErrorCategory::Validation, error.to_string())
+            .with_code("tools.wordcount.plot.invalid")
+    })?;
+    Ok(Some(plot))
 }
 
 fn count_windows(sequence: &str, word_size: usize) -> (usize, usize, BTreeMap<String, usize>) {
@@ -147,6 +217,7 @@ mod tests {
         assert_eq!(outcome.records[0].counted_windows, 3);
         assert_eq!(outcome.aggregate.counts.get("TT"), Some(&3));
         assert!((word_frequency(&outcome.records[1], "TT") - 1.0).abs() < 1e-9);
+        assert!(outcome.plot.is_some());
     }
 
     #[test]
@@ -179,5 +250,6 @@ mod tests {
 
         assert!(outcome.records.iter().all(|record| record.counts.is_empty()));
         assert!(outcome.aggregate.counts.is_empty());
+        assert!(outcome.plot.is_none());
     }
 }
