@@ -316,3 +316,187 @@ Current baseline for this next tier:
       - validation-stub generation
       - cohort-report inclusion
       - honest release-note wording
+
+## Next Tier Task Map
+
+This next tier is derived from the current generated reports, not from stale
+pre-implementation assumptions.
+
+Current basis at the time this tier was written:
+
+- shipped methods: `90`
+- compared-evidence methods: `21`
+- executable-evidence methods: `69`
+- methods with harvested legacy provenance recorded: `47`
+- retained backlog still unshipped: `6`
+- largest retained backlog family:
+  - `Core Retain — Sequence editing and manipulation`
+- weakest shipped evidence family:
+  - `Core Retain — Basic sequence IO and conversion`
+
+31. Close the remaining retained sequence-editing backlog.
+    - The retained governance backlog is now entirely:
+      - `biosed`
+      - `makenucseq`
+      - `makeprotseq`
+      - `msbar`
+      - `trimest`
+      - `vectorstrip`
+    - Treat this as the highest implementation priority until retained backlog
+      reaches `0`.
+    - Keep method logic in method-associated `.rs` files and avoid creating a
+      second sequence-editing abstraction layer unless it is genuinely shared.
+
+32. Deepen compared evidence in the weakest shipped family first.
+    - The cohort-health gate now identifies `Core Retain — Basic sequence IO and
+      conversion` as the largest below-compared burden.
+    - Prioritise compared anchors for methods such as:
+      - `newseq`
+      - `seqcount`
+      - `notseq`
+      - `nthseq`
+      - `skipseq`
+      - `listor`
+      - `skipredundant`
+      - `extractseq`
+      - `cutseq`
+      - `union`
+      - `pasteseq`
+      - `splitter`
+      - `merger`
+      - `megamerger`
+      - `sizeseq`
+      - `shuffleseq`
+    - Focus on stable expected-output fixtures and real legacy provenance where
+      it exists.
+
+33. Raise the harvested-legacy footprint beyond the current anchor cohort.
+    - `47` methods now record harvested legacy provenance, but this remains
+      concentrated in curated and anchor-backed families.
+    - Extend harvested legacy references to strong executable-but-not-compared
+      methods family by family.
+    - Prefer historically meaningful references over placeholder URLs.
+
+34. Convert the remaining executable-only alignment family methods to compared evidence.
+    - Prioritise:
+      - `aligncopy`
+      - `aligncopypair`
+      - `infoalign`
+      - `extractalign`
+      - `matcher`
+      - `distmat`
+      - `cons`
+      - `consambig`
+      - `needleall`
+      - `diffseq`
+      - `edialign`
+      - `nthseqset`
+    - This should complete the alignment utility and summary surface as a
+      comparatively strong evidence family.
+
+35. Convert the retrieval and archive family from executable-only to compared evidence where feasible.
+    - Prioritise:
+      - `runinfo`
+      - `runget`
+      - `refseqget`
+    - Keep mocked-provider seams explicit and do not imply live-provider
+      equivalence unless the comparison really exercises that path.
+
+36. Strengthen the feature-tools family with compared anchors and harvested provenance.
+    - Prioritise:
+      - `featcopy`
+      - `coderet`
+      - `featmerge`
+      - `featreport`
+      - `feattext`
+      - `splitsource`
+      - `twofeat`
+      - `maskambignuc`
+      - `maskambigprot`
+    - Feature-rich methods are user-visible and structurally easy to regress,
+      so evidence depth here pays off quickly.
+
+37. Deepen codon and protein-statistics acceptance beyond current spot checks.
+    - Prioritise compared or harvested evidence for:
+      - `cai`
+      - `chips`
+      - `codcmp`
+      - `codcopy`
+      - `aaindexextract`
+      - `infobase`
+      - `inforesidue`
+      - `oddcomp`
+      - `iep`
+      - `pepdigest`
+      - `wordcount`
+    - Keep scientific assumptions explicit and do not broaden metric scope
+      unless required by real use cases.
+
+38. Deepen the pattern and repeat family from executable-heavy to comparison-backed.
+    - Prioritise:
+      - `preg`
+      - `patmatdb`
+      - `wordmatch`
+      - `wordfinder`
+      - `dreg`
+      - `palindrome`
+      - `einverted`
+      - `seqmatchall`
+    - Use stable coordinate tables and overlapping-hit semantics consistently.
+
+39. Complete the restriction and recoding family as an evidence-backed rework surface.
+    - Prioritise:
+      - `recoder`
+      - `silent`
+    - Add compared fixtures that demonstrate exact site removal/creation and
+      stable synonymous-edit ordering.
+
+40. Revisit governed plotting from the evidence side before adding more plot-capable methods.
+    - The current Rust-side plotting surface is:
+      - `charge`
+      - `pepwindow`
+      - `wordcount`
+    - Before adding new plot contracts, strengthen docs and validation around
+      contract stability and deterministic emitted payloads.
+    - Only then consider the next narrow candidate such as `dan`.
+
+41. Add a generated “comparison coverage” report alongside the cohort report.
+    - The current cohort report distinguishes evidence levels, but it does not
+      yet make family-by-family compared coverage easy to scan.
+    - Add a small typed report or section that surfaces:
+      - compared count by family
+      - executable-only count by family
+      - harvested-but-not-compared count by family
+    - Use it to drive evidence prioritization after each sweep.
+
+42. Add a generated “retained backlog closure” report or section.
+    - Once the retained backlog falls below `10`, each remaining method becomes
+      strategically important.
+    - Surface for each unshipped retained method:
+      - governance family
+      - nearest implemented Rust family
+      - recommended next sweep
+      - whether the blocker is implementation, validation, or documentation
+
+43. Tighten release gating after retained backlog reaches `0`.
+    - Once all retained methods are shipped, raise the bar from “docs and stubs”
+      to stronger evidence requirements for new releases.
+    - Candidate future gate:
+      - no new shipped family may land without at least one compared anchor
+      - no release note may claim a family without a generated cohort entry
+      - no drift between `cohort_health`, `governance_alignment`, and
+        release-facing docs
+
+44. Reassess the governance appendix after retained backlog closure.
+    - Once the six retained backlog methods are implemented, review whether the
+      remaining `rework` set should be narrowed, expanded, or reordered.
+    - Keep this as a governance pass, not a silent code change.
+
+45. Carry the same roadmap discipline into the next planning cycle.
+    - After Task `44`, extend this roadmap again from generated evidence and
+      backlog truth rather than from memory.
+    - Future roadmap updates must continue to:
+      - preserve honest documentation
+      - keep changes scoped
+      - commit and push after changed prompts
+      - avoid touching unrelated code when implementing method or evidence work
