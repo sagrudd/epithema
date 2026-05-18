@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 88,
-    "documentation_complete_count": 88,
-    "validation_stub_count": 88,
+    "total_method_count": 90,
+    "documentation_complete_count": 90,
+    "validation_stub_count": 90,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 67,
+    "executable_evidence_count": 69,
     "compared_evidence_count": 21,
-    "gapped_method_count": 67
+    "gapped_method_count": 69
   },
   "methods": [
     {
@@ -1458,6 +1458,52 @@
         {
           "code": "validation_report_gap",
           "message": "example 'pepwindow_profile_example' needs a legacy reference before comparison can run"
+        }
+      ]
+    },
+    {
+      "tool_name": "recoder",
+      "family": "restriction_tools",
+      "summary": "report synonymous single-codon edits that remove exact forward-strand restriction sites",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'recoder' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "silent",
+      "family": "restriction_tools",
+      "summary": "report synonymous single-codon edits that create exact forward-strand restriction sites",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'silent' has no compared validation evidence yet"
         }
       ]
     },

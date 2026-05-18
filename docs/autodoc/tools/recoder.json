@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "recoder-v1",
+  "tool": {
+    "name": "recoder",
+    "family": "restriction_tools",
+    "summary": "Report synonymous single-codon edits that remove exact forward-strand restriction sites",
+    "legacy_names": [
+      "recoder"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`recoder` reports conservative synonymous single-codon edits that remove an exact canonical DNA restriction site from a coding sequence while preserving translation. EMBOSS-RS v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local coding-DNA input path plus one canonical DNA site string. Inputs must validate as strict coding sequences under the standard genetic code, with canonical DNA codons and no internal stops. RNA residues, ambiguous nucleotides, and non-coding inputs are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `site`, `occurrence`, `site_start`, `site_end`, `codon_index`, `codon_start`, `codon_end`, `amino_acid`, `original_codon`, `replacement_codon`, and `mutated_sequence`."
+    },
+    {
+      "id": "model",
+      "kind": "notes",
+      "title": "Model",
+      "content": "This first release considers only exact forward-strand site matches and only single-codon synonymous substitutions. A candidate is reported only when the target site occurrence is removed and total exact site count decreases after the edit."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs recoder`. Validation currently covers deterministic synonymous removal candidates against a committed coding-DNA fixture and non-coding-input rejection."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not model enzyme databases, reverse-complement matching, multi-edit optimization, codon-usage optimization, or feature-coordinate remapping. It is intentionally limited to canonical DNA site strings of length at least four."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "recoder_fixture",
+      "label": "Restriction-site removal coding fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/recoder_records.fasta"
+      },
+      "description": "Repository-managed coding-DNA fixture containing one exact EcoRI site in-frame."
+    }
+  ],
+  "examples": [
+    {
+      "id": "remove_exact_ecori_site_with_synonymous_edits",
+      "title": "Report synonymous edits that remove an EcoRI site",
+      "description": "Loads a committed coding-DNA fixture and reports deterministic single-codon synonymous edits that remove the exact site `GAATTC`.",
+      "artifact_ids": [
+        "recoder_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "site",
+          "value": "GAATTC"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "recoder_candidates",
+          "label": "Restriction-site removal candidate table",
+          "description": "A stable tabular report containing one row per synonymous single-codon edit that removes the exact target site."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS recoder application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/recoder.acd",
+        "invocation": "recoder -sequence recoder_records.fasta -site GAATTC -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS recoder application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/recoder.acd",
+        "invocation": "recoder -sequence recoder_records.fasta -site GAATTC -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "remove_exact_ecori_site_with_synonymous_edits"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

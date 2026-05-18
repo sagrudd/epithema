@@ -76,6 +76,7 @@ tools/pepstats
 tools/pepwindow
 tools/preg
 tools/prettyseq
+tools/recoder
 tools/refseqget
 tools/revseq
 tools/runget
@@ -84,6 +85,7 @@ tools/seqcount
 tools/seqmatchall
 tools/seqret
 tools/shuffleseq
+tools/silent
 tools/sizeseq
 tools/skipredundant
 tools/skipseq

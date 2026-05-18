@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "silent-v1",
+  "tool": {
+    "name": "silent",
+    "family": "restriction_tools",
+    "summary": "Report synonymous single-codon edits that create exact forward-strand restriction sites",
+    "legacy_names": [
+      "silent"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`silent` reports conservative synonymous single-codon edits that create an exact canonical DNA restriction site in a coding sequence while preserving translation. EMBOSS-RS v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local coding-DNA input path plus one canonical DNA site string. Inputs must validate as strict coding sequences under the standard genetic code, with canonical DNA codons and no internal stops. RNA residues, ambiguous nucleotides, and non-coding inputs are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `site`, `site_start`, `site_end`, `codon_index`, `codon_start`, `codon_end`, `amino_acid`, `original_codon`, `replacement_codon`, and `mutated_sequence`."
+    },
+    {
+      "id": "model",
+      "kind": "notes",
+      "title": "Model",
+      "content": "This first release considers only exact forward-strand site matches and only single-codon synonymous substitutions. A candidate is reported only when the edit creates one new exact site occurrence that was absent from the original sequence."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs silent`. Validation currently covers deterministic synonymous creation candidates against a committed coding-DNA fixture and non-coding-input rejection."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not model enzyme databases, reverse-complement matching, multi-edit optimization, codon-usage optimization, or feature-coordinate remapping. It is intentionally limited to canonical DNA site strings of length at least four."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "silent_fixture",
+      "label": "Restriction-site creation coding fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/silent_records.fasta"
+      },
+      "description": "Repository-managed coding-DNA fixture that is one synonymous codon edit away from an exact EcoRI site."
+    }
+  ],
+  "examples": [
+    {
+      "id": "create_exact_ecori_site_with_synonymous_edit",
+      "title": "Report a synonymous edit that creates an EcoRI site",
+      "description": "Loads a committed coding-DNA fixture and reports deterministic single-codon synonymous edits that create the exact site `GAATTC`.",
+      "artifact_ids": [
+        "silent_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "site",
+          "value": "GAATTC"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "silent_candidates",
+          "label": "Restriction-site creation candidate table",
+          "description": "A stable tabular report containing one row per synonymous single-codon edit that creates the exact target site."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS silent application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/silent.acd",
+        "invocation": "silent -sequence silent_records.fasta -site GAATTC -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS silent application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/silent.acd",
+        "invocation": "silent -sequence silent_records.fasta -site GAATTC -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "create_exact_ecori_site_with_synonymous_edit"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

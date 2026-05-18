@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `88`
-- Documentation-complete methods: `88`
-- Methods with validation stubs: `88`
+- Methods in cohort: `90`
+- Documentation-complete methods: `90`
+- Methods with validation stubs: `90`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `67`
+- Methods with executable validation: `69`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `67`
+- Methods with visible gaps: `69`
 
 ## Evidence Level Definitions
 
@@ -86,6 +86,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `wordfinder` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
+| `recoder` | `restriction_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `silent` | `restriction_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `aaindexextract` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `complex` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -167,6 +169,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `wordfinder`: `missing_compared_evidence`
 - `charge`: `missing_compared_evidence`, `validation_report_gap`
 - `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
+- `recoder`: `missing_compared_evidence`
+- `silent`: `missing_compared_evidence`
 - `aaindexextract`: `missing_compared_evidence`
 - `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `dan`: `missing_compared_evidence`

@@ -8,17 +8,17 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `88`
-- Shipped tools with governance mapping: `88`
-- Retained backlog still unshipped: `8`
-- Shipped tools with curated autodoc: `88`
-- Shipped tools with executable or compared evidence: `88`
+- Shipped tools: `90`
+- Shipped tools with governance mapping: `90`
+- Retained backlog still unshipped: `6`
+- Shipped tools with curated autodoc: `90`
+- Shipped tools with executable or compared evidence: `90`
 - Shipped tools with compared evidence: `21`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
-- Shipped retain methods: `82`
+- Shipped retain methods: `84`
 - Shipped rework methods: `6`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
@@ -46,14 +46,13 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 0 | upgrade shipped retained methods to compared evidence |
 | Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 4 | 4 | 1 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Restriction-enzyme design and analysis | 2 | 0 | 2 | 0 | 0 | 0 | prioritise retained backlog closure (2 remaining) |
+| Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 2 | 2 | 0 | upgrade shipped retained methods to compared evidence |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — Modern archive-scale raw data ingestion | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 
 ## Recommended Next Governed Sweeps
 
 - **Core Retain — Sequence editing and manipulation**: prioritise retained backlog closure (6 remaining). Retained backlog: `biosed`, `makenucseq`, `makeprotseq`, `msbar`, `trimest`, `vectorstrip`
-- **Modernize — Rework — Restriction-enzyme design and analysis**: prioritise retained backlog closure (2 remaining). Retained backlog: `recoder`, `silent`
 
 ## Retained Backlog
 
@@ -63,8 +62,6 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - `msbar` — retain — Core Retain — Sequence editing and manipulation
 - `trimest` — retain — Core Retain — Sequence editing and manipulation
 - `vectorstrip` — retain — Core Retain — Sequence editing and manipulation
-- `recoder` — retain — Modernize — Rework — Restriction-enzyme design and analysis
-- `silent` — retain — Modernize — Rework — Restriction-enzyme design and analysis
 
 ## Shipped Methods Without Governance Mapping
 
@@ -133,6 +130,8 @@ All shipped methods are mapped in the governance appendix.
 | `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `charge` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `pepwindow` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
+| `recoder` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `executable_evidence` |
+| `silent` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `executable_evidence` |
 | `aaindexextract` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
 | `complex` | `sequence_stats` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `compseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |

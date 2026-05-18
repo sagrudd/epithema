@@ -60,6 +60,9 @@ use emboss_tools::pattern_tools::{
 use emboss_tools::protein_plots::{
     ChargeParams, PepwindowParams, charge_help, pepwindow_help, run_charge, run_pepwindow,
 };
+use emboss_tools::restriction_tools::{
+    RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
+};
 use emboss_tools::retrieval_tools::{
     RefseqgetParams, SeqretParams, SeqretSource, refseqget_help, run_refseqget, run_seqret,
     seqret_help,
@@ -320,6 +323,8 @@ impl EmbossService {
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
+            "recoder" => self.invoke_recoder(request, descriptor),
+            "silent" => self.invoke_silent(request, descriptor),
             "aaindexextract" => self.invoke_aaindexextract(request, descriptor),
             "complex" => self.invoke_complex(request, descriptor),
             "compseq" => self.invoke_compseq(request, descriptor),
@@ -5489,6 +5494,174 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_recoder(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, recoder_help()));
+        }
+
+        let params = parse_recoder_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_recoder(RecoderParams {
+            input,
+            site: params.site,
+        })?;
+
+        let rows = outcome
+            .candidates
+            .iter()
+            .map(|candidate| {
+                vec![
+                    candidate.record_id.clone(),
+                    outcome.site.clone(),
+                    candidate.occurrence_index.to_string(),
+                    candidate.edit.site_start.to_string(),
+                    candidate.edit.site_end.to_string(),
+                    candidate.edit.codon_index.to_string(),
+                    candidate.edit.codon_start.to_string(),
+                    candidate.edit.codon_end.to_string(),
+                    candidate.edit.amino_acid.to_string(),
+                    candidate.edit.original_codon.clone(),
+                    candidate.edit.replacement_codon.clone(),
+                    candidate.edit.mutated_sequence.clone(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported {} synonymous restriction-site removal candidates",
+                outcome.candidates.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "site".to_owned(),
+                    "occurrence".to_owned(),
+                    "site_start".to_owned(),
+                    "site_end".to_owned(),
+                    "codon_index".to_owned(),
+                    "codon_start".to_owned(),
+                    "codon_end".to_owned(),
+                    "amino_acid".to_owned(),
+                    "original_codon".to_owned(),
+                    "replacement_codon".to_owned(),
+                    "mutated_sequence".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Restriction-site removal candidates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Site: {}", outcome.site))
+                .with_line("Model: synonymous single-codon disruption of exact forward DNA sites")
+                .with_line("Coding validation: strict canonical DNA CDS with optional terminal stop")
+                .with_line(format!("Candidates: {}", outcome.candidates.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_silent(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, silent_help()));
+        }
+
+        let params = parse_silent_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_silent(SilentParams {
+            input,
+            site: params.site,
+        })?;
+
+        let rows = outcome
+            .candidates
+            .iter()
+            .map(|candidate| {
+                vec![
+                    candidate.record_id.clone(),
+                    outcome.site.clone(),
+                    candidate.edit.site_start.to_string(),
+                    candidate.edit.site_end.to_string(),
+                    candidate.edit.codon_index.to_string(),
+                    candidate.edit.codon_start.to_string(),
+                    candidate.edit.codon_end.to_string(),
+                    candidate.edit.amino_acid.to_string(),
+                    candidate.edit.original_codon.clone(),
+                    candidate.edit.replacement_codon.clone(),
+                    candidate.edit.mutated_sequence.clone(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported {} synonymous restriction-site creation candidates",
+                outcome.candidates.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "site".to_owned(),
+                    "site_start".to_owned(),
+                    "site_end".to_owned(),
+                    "codon_index".to_owned(),
+                    "codon_start".to_owned(),
+                    "codon_end".to_owned(),
+                    "amino_acid".to_owned(),
+                    "original_codon".to_owned(),
+                    "replacement_codon".to_owned(),
+                    "mutated_sequence".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Restriction-site creation candidates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Site: {}", outcome.site))
+                .with_line("Model: synonymous single-codon creation of exact forward DNA sites")
+                .with_line("Coding validation: strict canonical DNA CDS with optional terminal stop")
+                .with_line(format!("Candidates: {}", outcome.candidates.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_iep(
         &self,
         request: InvocationRequest,
@@ -8630,6 +8803,28 @@ fn parse_pepdigest_protease(value: &str) -> Result<PepdigestProtease, ServiceErr
     })
 }
 
+fn parse_recoder_params(arguments: &[String]) -> Result<RecoderParams, ServiceError> {
+    let [input, site]: [String; 2] = arguments
+        .to_vec()
+        .try_into()
+        .map_err(|_| tool_usage_error("recoder", recoder_help()))?;
+    Ok(RecoderParams {
+        input: SequenceInput::new(input),
+        site,
+    })
+}
+
+fn parse_silent_params(arguments: &[String]) -> Result<SilentParams, ServiceError> {
+    let [input, site]: [String; 2] = arguments
+        .to_vec()
+        .try_into()
+        .map_err(|_| tool_usage_error("silent", silent_help()))?;
+    Ok(SilentParams {
+        input: SequenceInput::new(input),
+        site,
+    })
+}
+
 fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceError> {
     if arguments.len() < 2 {
         return Err(tool_usage_error("maskseq", maskseq_help()));
@@ -9347,6 +9542,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "palindrome" => palindrome_help(),
         "preg" => preg_help(),
         "patmatdb" => patmatdb_help(),
+        "recoder" => recoder_help(),
+        "silent" => silent_help(),
         "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
@@ -9605,6 +9802,16 @@ mod tests {
     fn pepdigest_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/pepdigest_records.fasta")
+    }
+
+    fn recoder_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/recoder_records.fasta")
+    }
+
+    fn silent_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/silent_records.fasta")
     }
 
     fn oddcomp_fixture() -> std::path::PathBuf {
@@ -13647,6 +13854,137 @@ mod tests {
             .invoke(request)
             .expect_err("nucleotide input should fail for pepdigest");
         assert!(error.to_string().contains("expects protein input"));
+    }
+
+    #[test]
+    fn executes_recoder_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("recoder").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            recoder_fixture().display().to_string(),
+            "GAATTC".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("recoder should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "site",
+                        "occurrence",
+                        "site_start",
+                        "site_end",
+                        "codon_index",
+                        "codon_start",
+                        "codon_end",
+                        "amino_acid",
+                        "original_codon",
+                        "replacement_codon",
+                        "mutated_sequence",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "recoderA");
+                assert_eq!(table.rows[0][1], "GAATTC");
+                assert_eq!(table.rows[0][3], "7");
+                assert_eq!(table.rows[0][9], "GAA");
+                assert_eq!(table.rows[0][10], "GAG");
+                assert_eq!(table.rows[1][9], "TTC");
+                assert_eq!(table.rows[1][10], "TTT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Site: GAATTC"
+        );
+    }
+
+    #[test]
+    fn executes_silent_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("silent").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            silent_fixture().display().to_string(),
+            "GAATTC".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("silent should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "site",
+                        "site_start",
+                        "site_end",
+                        "codon_index",
+                        "codon_start",
+                        "codon_end",
+                        "amino_acid",
+                        "original_codon",
+                        "replacement_codon",
+                        "mutated_sequence",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "silentA");
+                assert_eq!(table.rows[0][1], "GAATTC");
+                assert_eq!(table.rows[0][2], "7");
+                assert_eq!(table.rows[0][8], "GAG");
+                assert_eq!(table.rows[0][9], "GAA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Site: GAATTC"
+        );
+    }
+
+    #[test]
+    fn rejects_noncoding_input_for_recoder() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("recoder").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            nucleotide_pattern_fixture().display().to_string(),
+            "GAATTC".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("noncoding input should fail for recoder");
+        assert!(error.to_string().contains("strict coding DNA input"));
+    }
+
+    #[test]
+    fn rejects_noncoding_input_for_silent() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("silent").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            nucleotide_pattern_fixture().display().to_string(),
+            "GAATTC".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("noncoding input should fail for silent");
+        assert!(error.to_string().contains("strict coding DNA input"));
     }
 
     #[test]

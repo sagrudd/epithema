@@ -10,6 +10,7 @@ pub mod feature_tools;
 pub mod pairwise_alignment;
 pub mod pattern_tools;
 pub mod protein_plots;
+pub mod restriction_tools;
 pub mod retrieval_tools;
 pub mod sequence_edit;
 pub mod sequence_stats;
@@ -138,6 +139,8 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         pattern_tools::WORDFINDER_DESCRIPTOR,
         protein_plots::CHARGE_DESCRIPTOR,
         protein_plots::PEPWINDOW_DESCRIPTOR,
+        restriction_tools::RECODER_DESCRIPTOR,
+        restriction_tools::SILENT_DESCRIPTOR,
         sequence_stats::AAINDEXEXTRACT_DESCRIPTOR,
         sequence_stats::COMPLEX_DESCRIPTOR,
         sequence_stats::COMPSEQ_DESCRIPTOR,
@@ -248,6 +251,8 @@ mod tests {
                 "wordfinder",
                 "charge",
                 "pepwindow",
+                "recoder",
+                "silent",
                 "aaindexextract",
                 "complex",
                 "compseq",

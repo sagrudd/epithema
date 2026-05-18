@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 88,
-    "shipped_with_governance_mapping_count": 88,
-    "shipped_retain_count": 82,
+    "shipped_tool_count": 90,
+    "shipped_with_governance_mapping_count": 90,
+    "shipped_retain_count": 84,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 8,
-    "shipped_curated_autodoc_count": 88,
-    "shipped_executable_or_better_count": 88,
+    "retained_backlog_count": 6,
+    "shipped_curated_autodoc_count": 90,
+    "shipped_executable_or_better_count": 90,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -551,6 +551,24 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "recoder",
+      "shipped_family": "restriction_tools",
+      "shipped_summary": "report synonymous single-codon edits that remove exact forward-strand restriction sites",
+      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "silent",
+      "shipped_family": "restriction_tools",
+      "shipped_summary": "report synonymous single-codon edits that create exact forward-strand restriction sites",
+      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "aaindexextract",
       "shipped_family": "sequence_stats",
       "shipped_summary": "report one governed built-in amino-acid property table",
@@ -1032,16 +1050,13 @@
     {
       "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
       "retained_total": 2,
-      "retained_shipped": 0,
-      "retained_backlog": 2,
-      "shipped_curated_autodoc": 0,
-      "shipped_executable_or_better": 0,
+      "retained_shipped": 2,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 2,
+      "shipped_executable_or_better": 2,
       "shipped_compared": 0,
-      "recommendation": "prioritise retained backlog closure (2 remaining)",
-      "retained_backlog_tools": [
-        "recoder",
-        "silent"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Strategic Add — HMM and probabilistic homology workflows",
@@ -1102,18 +1117,6 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Remove vectors from the ends of nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "recoder",
-      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
-      "decision": "retain",
-      "description": "Find restriction sites to remove (mutate) with no translation change"
-    },
-    {
-      "tool_name": "silent",
-      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
-      "decision": "retain",
-      "description": "Find restriction sites to insert (mutate) with no translation change"
     }
   ],
   "shipped_without_governance_mapping": []
