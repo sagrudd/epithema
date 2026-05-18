@@ -42,7 +42,13 @@ The v1 molecule policy is intentionally conservative. When `--molecule` is omitt
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Inline DNA creation case fixture
+
+- Artifact ID: `newseq_create_dna_record_case`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/newseq_create_dna_record_case.md`
+- Notes: Repository-managed case note for the inline DNA creation example used to validate the governed `newseq` surface.
 
 ## Declared Examples
 
@@ -50,7 +56,7 @@ No artifacts are declared for this autodoc document.
 
 - Example ID: `create_dna_record`
 - Description: Builds one DNA sequence record with an explicit identifier, description, and declared molecule kind.
-- Referenced artifacts: none declared
+- Referenced artifacts: `newseq_create_dna_record_case`
 - Parameters:
   - `identifier` = `created`
   - `sequence` = `ACGTAC`

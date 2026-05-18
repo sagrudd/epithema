@@ -41,13 +41,31 @@
       "content": "The v1 molecule policy is intentionally conservative. When `--molecule` is omitted, EMBOSS-RS infers DNA or RNA only from unambiguous nucleotide residue sets and otherwise falls back to `unknown` rather than guessing protein. Identifier omission is not supported in v1."
     }
   ],
-  "artifacts": [],
+  "artifacts": [
+    {
+      "id": "newseq_create_dna_record_case",
+      "label": "Inline DNA creation case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/newseq_create_dna_record_case.md"
+      },
+      "description": "Repository-managed case note for the inline DNA creation example used to validate the governed `newseq` surface."
+    }
+  ],
   "examples": [
     {
       "id": "create_dna_record",
       "title": "Create a DNA record from inline residues",
       "description": "Builds one DNA sequence record with an explicit identifier, description, and declared molecule kind.",
-      "artifact_ids": [],
+      "artifact_ids": [
+        "newseq_create_dna_record_case"
+      ],
       "parameters": [
         {
           "name": "identifier",

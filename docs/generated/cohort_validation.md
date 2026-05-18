@@ -9,9 +9,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documentation-complete methods: `60`
 - Methods with validation stubs: `60`
 - Documented-only methods: `0`
-- Methods with declared evidence only: `1`
+- Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `46`
+- Methods with executable validation: `47`
 - Methods with compared evidence: `13`
 - Methods with visible gaps: `47`
 
@@ -42,7 +42,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `water` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `newseq` | `sequence_stream` | `declared_evidence` | `yes` | `yes` | `no` | `no` | `no` | `4` |
+| `newseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `seqcount` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `notseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `nthseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -103,7 +103,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `water`: `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `newseq`: `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `newseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `seqcount`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `notseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `nthseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

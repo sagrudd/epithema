@@ -7,9 +7,9 @@
     "documentation_complete_count": 60,
     "validation_stub_count": 60,
     "documented_only_count": 0,
-    "declared_evidence_count": 1,
+    "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 46,
+    "executable_evidence_count": 47,
     "compared_evidence_count": 13,
     "gapped_method_count": 47
   },
@@ -409,9 +409,9 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "declared_evidence",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
         {
@@ -419,16 +419,8 @@
           "message": "tool 'newseq' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'newseq' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'newseq' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "example 'create_dna_record' needs declared input artefacts before it can become runnable"
         }
       ]
     },

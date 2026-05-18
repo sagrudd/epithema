@@ -7,7 +7,7 @@
     "total_case_count": 1,
     "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 0,
+    "runnable_case_count": 1,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -21,34 +21,20 @@
       "title": "Create a DNA record from inline residues",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
-      "execution_status": "pending",
+      "execution_status": "runnable",
       "comparison_status": "not_requested",
       "required": true,
-      "artifact_ids": [],
+      "artifact_ids": [
+        "newseq_create_dna_record_case"
+      ],
       "expected_output_ids": [
         "created_sequence_record"
       ],
       "provenance": [],
-      "diagnostics": [
-        {
-          "severity": "warning",
-          "code": "testkit.case.no_artifacts",
-          "message": "validation case has no declared input artefacts",
-          "context": "create_dna_record"
-        }
-      ]
+      "diagnostics": []
     }
   ],
-  "unresolved_gaps": [
-    "example 'create_dna_record' needs declared input artefacts before it can become runnable"
-  ],
-  "diagnostics": [
-    {
-      "severity": "warning",
-      "code": "testkit.case.no_artifacts",
-      "message": "validation case has no declared input artefacts",
-      "context": "create_dna_record"
-    }
-  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
   "provenance": []
 }
