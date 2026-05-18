@@ -23,6 +23,7 @@ pub mod feature_selector;
 pub mod global_alignment;
 pub mod identifier;
 pub mod interval;
+pub mod local_alignment;
 pub mod metadata;
 pub mod molecule;
 pub mod pattern;
@@ -63,6 +64,10 @@ pub use global_alignment::{
 };
 pub use identifier::SequenceIdentifier;
 pub use interval::Interval;
+pub use local_alignment::{
+    LocalAlignmentError, LocalAlignmentScoring, LocalPairwiseAlignmentResult,
+    LocalPairwiseAlignmentSummary, local_align,
+};
 pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
 pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern};

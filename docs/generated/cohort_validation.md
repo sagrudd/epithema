@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `50`
-- Documentation-complete methods: `50`
-- Methods with validation stubs: `50`
+- Methods in cohort: `51`
+- Documentation-complete methods: `51`
+- Methods with validation stubs: `51`
 - Documented-only methods: `12`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `31`
+- Methods with executable validation: `32`
 - Methods with compared evidence: `6`
-- Methods with visible gaps: `44`
+- Methods with visible gaps: `45`
 
 ## Evidence Level Definitions
 
@@ -39,6 +39,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `consambig` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `needle` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `needleall` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `water` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `newseq` | `sequence_stream` | `declared_evidence` | `yes` | `yes` | `no` | `no` | `no` | `4` |
@@ -91,6 +92,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `cons`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `water`: `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `newseq`: `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `seqcount`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

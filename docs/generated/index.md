@@ -59,4 +59,5 @@ tools/tranalign
 tools/transeq
 tools/trimseq
 tools/union
+tools/water
 ```

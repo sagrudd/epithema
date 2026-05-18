@@ -39,7 +39,8 @@ use emboss_tools::feature_tools::{
     run_maskseq,
 };
 use emboss_tools::pairwise_alignment::{
-    NeedleParams, NeedleallParams, needle_help, needleall_help, run_needle, run_needleall,
+    NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
+    run_needleall, run_water, water_help,
 };
 use emboss_tools::pattern_tools::{
     FuzznucParams, FuzzproParams, FuzztranParams, fuzznuc_help, fuzzpro_help, fuzztran_help,
@@ -248,6 +249,7 @@ impl EmbossService {
             "consambig" => self.invoke_consambig(request, descriptor),
             "needle" => self.invoke_needle(request, descriptor),
             "needleall" => self.invoke_needleall(request, descriptor),
+            "water" => self.invoke_water(request, descriptor),
             "seqret" => self.invoke_seqret(request, descriptor),
             "refseqget" => self.invoke_refseqget(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
@@ -630,6 +632,82 @@ impl EmbossService {
                 .with_line(format!(
                     "Identity: {} ({}%)",
                     summary.identity_count, summary.identity_percent
+                ))
+                .with_line(format!(
+                    "Gap penalties: open={} extend={}",
+                    outcome.gap_open, outcome.gap_extend
+                ))
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_water(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, water_help()));
+        }
+
+        let params = parse_needle_params("water", request.arguments(), water_help())?;
+        let (query, query_provenance, query_diagnostics) =
+            self.resolve_local_sequence_input(&params.query.path.display().to_string())?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&params.target.path.display().to_string())?;
+        let outcome = run_water(WaterParams {
+            query,
+            target,
+            gap_open: params.gap_open,
+            gap_extend: params.gap_extend,
+        })?;
+
+        let mut diagnostics = query_diagnostics;
+        diagnostics.extend(target_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            "computed local pairwise alignment".to_owned(),
+            diagnostics,
+            vec![query_provenance, target_provenance],
+        );
+        let summary = &outcome.result.summary;
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.result.alignment),
+            ResultSummary::new("Local alignment computed")
+                .with_line(format!("Query: {}", outcome.query.path.display()))
+                .with_line(format!("Target: {}", outcome.target.path.display()))
+                .with_line(format!(
+                    "Mode: {}",
+                    match summary.mode {
+                        emboss_core::AlignmentMode::Nucleotide => "nucleotide",
+                        emboss_core::AlignmentMode::Protein => "protein",
+                    }
+                ))
+                .with_line(format!("Score: {}", summary.score))
+                .with_line(format!("Aligned length: {}", summary.aligned_length))
+                .with_line(format!(
+                    "Identity: {} ({}%)",
+                    summary.identity_count, summary.identity_percent
+                ))
+                .with_line(format!(
+                    "Query span: {}-{}",
+                    summary.query_start + 1,
+                    summary.query_end
+                ))
+                .with_line(format!(
+                    "Target span: {}-{}",
+                    summary.target_start + 1,
+                    summary.target_end
                 ))
                 .with_line(format!(
                     "Gap penalties: open={} extend={}",
@@ -5439,6 +5517,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "consambig" => consambig_help(),
         "needle" => needle_help(),
         "needleall" => needleall_help(),
+        "water" => water_help(),
         "seqret" => seqret_help(),
         "refseqget" => refseqget_help(),
         "runinfo" => runinfo_help(),
@@ -5510,18 +5589,18 @@ mod tests {
     fn resolves_registered_tool_to_placeholder_response() {
         let mut registry = ServiceRegistry::new();
         registry
-            .register(ToolDescriptor::new("water", "local alignment placeholder"))
+            .register(ToolDescriptor::new("customtool", "custom placeholder"))
             .expect("registration should succeed");
 
         let service = EmbossService::new(registry);
         let request = InvocationRequest::new(
             ExecutionContext::for_origin(InvocationOrigin::Cli),
-            ToolName::new("water").expect("tool name should be valid"),
+            ToolName::new("customtool").expect("tool name should be valid"),
         );
 
         let response = service.invoke(request).expect("tool should resolve");
-        assert_eq!(response.descriptor.name, "water");
-        assert_eq!(response.tool.as_str(), "water");
+        assert_eq!(response.descriptor.name, "customtool");
+        assert_eq!(response.tool.as_str(), "customtool");
         assert_eq!(
             response.report.outcome.status,
             OutcomeStatus::NotImplemented
@@ -5696,6 +5775,16 @@ mod tests {
     fn needle_target_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/needle_target.fasta")
+    }
+
+    fn water_query_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/water_query.fasta")
+    }
+
+    fn water_target_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/water_target.fasta")
     }
 
     fn needleall_queries_fixture() -> std::path::PathBuf {
@@ -6082,6 +6171,45 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_water_against_singleton_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("water").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            water_query_fixture().display().to_string(),
+            water_target_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("water should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 2);
+                assert_eq!(alignment.rows()[0].aligned(), "ACGTA");
+                assert_eq!(alignment.rows()[1].aligned(), "ACGTA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Query span: 3-7")
+        );
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Target span: 3-7")
+        );
     }
 
     #[test]
