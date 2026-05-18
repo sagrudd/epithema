@@ -1,6 +1,6 @@
 # v1.0.0 Release-Candidate Readiness
 
-Status date: 2026-04-21
+Status date: 2026-05-18
 
 ## Recommendation
 
@@ -9,7 +9,9 @@ Status date: 2026-04-21
 This audit found no repository-level blocker in the Rust workspace, docs path,
 or release automation that should prevent a conservative release-candidate cut.
 The remaining gaps are evidence-depth and operational cutover items, not
-missing method exposure or broken packaging mechanics.
+missing method exposure or broken packaging mechanics. The current candidate
+should be interpreted as release-mechanically ready with partial biological
+acceptance depth, not as a claim of full historical EMBOSS equivalence.
 
 ## Audited Shipped Cohort
 
@@ -52,6 +54,7 @@ shipped cohort is:
 - `fuzzpro`
 - `fuzztran`
 - `charge`
+- `pepwindow`
 - `complex`
 - `compseq`
 - `geecee`
@@ -59,22 +62,37 @@ shipped cohort is:
 - `backtranseq`
 - `backtranambig`
 - `checktrans`
+- `transeq`
+- `getorf`
+- `prettyseq`
+- `tranalign`
 - `extractseq`
 - `cutseq`
 - `union`
 - `splitter`
+- `water`
+- `coderet`
+- `featmerge`
+- `featreport`
+- `feattext`
+- `infoseq`
+- `wordcount`
+- `cusp`
+- `dan`
 
 ## Readiness Summary
 
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All 46 shipped methods are documented and present in the generated docs index.
-- All 46 shipped methods have a checked-in validation stub.
+- All 60 shipped methods are documented and present in the generated docs index.
+- All 60 shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
+- The governance-alignment report is present in both JSON and Markdown forms.
 - Release tasks now cover:
   - version-alignment verification
   - generated-doc/evidence freshness verification
+  - governance-registry alignment reporting
   - release-mode Rust build
   - docs build for release
   - Linux release bundle assembly
@@ -88,14 +106,14 @@ shipped cohort is:
 ### Ready With Known Limitations
 
 - Evidence depth is uneven across the shipped cohort.
-  - `20` methods currently show `executable_evidence`
+  - `13` methods currently show `compared_evidence`
+  - `42` methods currently show `executable_evidence`
   - `1` method shows `declared_evidence`
-  - `25` methods remain at `documented_only`
+  - `4` methods remain at `documented_only`
 - No shipped method yet records harvested historical evidence in the cohort
   report.
-- No shipped method yet records compared-against-expected evidence in the
-  cohort report.
-- The first plotting slice remains limited to `charge`, by design.
+- Plotting remains intentionally narrow, with `charge` and `pepwindow` as the
+  only governed plot-contract producers.
 - The R surface is first-class and real, but it is still a curated subset of
   the full Rust registry rather than exhaustive parity across retrieval/archive
   methods.
@@ -124,6 +142,15 @@ shipped cohort is:
 - Basis: the shipped cohort report is generated at:
   - `docs/generated/validation/shipped_cohort.validation.json`
   - `docs/generated/cohort_validation.md`
+
+### Governance-to-registry alignment
+
+- Status: `complete`
+- Basis: the governance alignment report is generated at:
+  - `docs/generated/validation/governance_alignment.json`
+  - `docs/generated/governance_alignment.md`
+  and currently shows `60/60` shipped methods mapped into the governance
+  appendix.
 
 ### Workspace and test health
 
@@ -159,18 +186,15 @@ shipped cohort is:
 
 ### Missing validation depth
 
-- `25` methods remain at `documented_only` in the cohort report:
-  - `aligncopy`, `aligncopypair`, `infoalign`, `extractalign`
-  - `runinfo`, `runget`
-  - `matcher`, `distmat`, `cons`, `consambig`
-  - `needleall`
-  - `seqret`, `refseqget`
-  - `degapseq`, `trimseq`
-  - `cai`, `chips`, `codcmp`, `codcopy`
-  - `charge`, `complex`
-  - `backtranseq`, `backtranambig`, `checktrans`
+- `4` methods remain at `documented_only` in the cohort report:
+  - `degapseq`
+  - `trimseq`
+  - `complex`
   - `splitter`
 - `newseq` is only at `declared_evidence`.
+- `47` shipped methods still have one or more visible evidence gaps, because
+  executable evidence without harvested or compared grounding is still treated
+  as partial.
 
 ### Legacy harvesting remains partial
 
@@ -178,16 +202,18 @@ shipped cohort is:
 - This is acceptable for an RC, but it remains the main credibility gap for a
   later post-`1.0.0` acceptance-hardening phase.
 
-### Comparison-based acceptance remains absent
+### Comparison-based acceptance remains partial
 
-- The cohort report still records `0` methods with compared evidence.
-- The current validation foundation is structurally ready, but the expected
-  output comparison layer is not yet populated across the cohort.
+- The cohort report now records `13` methods with compared evidence.
+- The comparison framework is therefore real and reusable, but it is still not
+  populated across most of the shipped cohort.
 
 ### Plotting limitations
 
-- `charge` remains the only end-to-end plot-producing analytical path.
-- This is in scope for `1.0.0` and not treated as a blocker.
+- `charge` and `pepwindow` are the only end-to-end plot-producing analytical
+  paths.
+- Plotting is intentionally narrow and R-owned; this remains in scope for
+  `1.0.0` and is not treated as a blocker.
 
 ### R surface limitations
 
@@ -208,10 +234,11 @@ shipped cohort is:
 
 - No new repository-level code defect required a release-blocking fix in this
   prompt.
-- The practical validation rerun did surface one transient generated-docs race:
-  `docs/generated/index.md` must retain the `cohort_validation` entry before a
-  strict Sphinx pass. Re-running the existing generated-index normalization
-  step resolved that cleanly, and the release-generated check now passes again.
+- The broader hardening phase did surface two small documentation/reporting
+  defects that are now resolved:
+  - generated index normalization now retains `cohort_validation`
+  - shipped `runinfo` and `runget` are now represented in the governance
+    appendix and in the generated governance-alignment report
 - The main output of this audit is therefore the explicit readiness and gap
   report, not another round of release automation changes.
 

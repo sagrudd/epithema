@@ -38,3 +38,6 @@ package. Until that cutover, changes accumulate under `Unreleased`.
 
 ### Notes
 - `1.0.0` is reserved for the coordinated release with `emboss-r` `1.0.0`.
+- The release remains governed by the RC readiness and evidence reports under
+  `docs/release/` and `docs/generated/`; shipped-method count alone is not used
+  as a proxy for biological acceptance completeness.
