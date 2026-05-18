@@ -1,13 +1,13 @@
 {
   "tool_name": "splitter",
-  "document_id": "splitter-stub-v1",
-  "source_mode": "registry_stub",
-  "evidence_source": "registry_stub_autodoc",
+  "document_id": "splitter-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 0,
-    "declared_case_count": 0,
+    "total_case_count": 1,
+    "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 0,
+    "runnable_case_count": 1,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,17 +15,26 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [],
-  "unresolved_gaps": [
-    "tool 'splitter' needs at least one declared example to establish validation evidence"
-  ],
-  "diagnostics": [
+  "cases": [
     {
-      "severity": "warning",
-      "code": "testkit.report.no_cases",
-      "message": "autodoc document does not declare any validation cases",
-      "context": "splitter"
+      "id": "split_three_records_into_two_partitions",
+      "title": "Partition a three-record FASTA stream into chunks of two records",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "expected_output_ids": [
+        "sequence_partitions"
+      ],
+      "provenance": [],
+      "diagnostics": []
     }
   ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
   "provenance": []
 }

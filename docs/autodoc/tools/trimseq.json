@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "trimseq-stub-v1",
+  "document_id": "trimseq-v1",
   "tool": {
     "name": "trimseq",
     "family": "sequence_edit",
@@ -14,39 +14,88 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`trimseq` is part of the exposed EMBOSS-RS `sequence_edit` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`trimseq` removes an explicit number of residues from the left and right ends of each input record. The EMBOSS-RS v1 implementation keeps the model narrow and deterministic: trimming is by residue count, applied uniformly to every record, and rejected if the requested total would exhaust a sequence."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current tool accepts one local sequence input plus optional `--left` and `--right` counts. Counts are non-negative and default to zero. Multi-record inputs are supported, and the same trim counts are applied to every record in input order."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "Output is a normalized sequence collection rendered through the shared result and CLI layers. Trimmed records retain their original identifiers, descriptions, and molecule metadata when the resulting sequence remains valid."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs trimseq`. The generated tool page and the machine-readable validation stub at [`../validation/trimseq.validation.json`](../validation/trimseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs trimseq`. Validation currently covers representative left-and-right trimming against a committed FASTA fixture, while Rust service tests cover deterministic output ordering and exhaustion rejection."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 scope trims only fixed residue counts and does not implement motif-based clipping, adapter discovery, or quality-aware trimming. If `--left` plus `--right` would remove all residues from a record, the tool fails rather than emitting an empty sequence."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic trimseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "trim_one_residue_from_each_end",
+      "title": "Trim one residue from the left and right ends of each record",
+      "description": "Runs `trimseq` against the committed three-record FASTA fixture with one residue removed from each end of every input record.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "--left",
+          "value": "1"
+        },
+        {
+          "name": "--right",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "trimmed_sequences",
+          "label": "Trimmed sequence output",
+          "description": "Stable FASTA output in which `alpha` becomes `CG`, `beta` becomes `TT`, and `gamma` becomes `GC`."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "trim_one_residue_from_each_end"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

@@ -8,10 +8,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods in cohort: `60`
 - Documentation-complete methods: `60`
 - Methods with validation stubs: `60`
-- Documented-only methods: `4`
+- Documented-only methods: `0`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `42`
+- Methods with executable validation: `46`
 - Methods with compared evidence: `13`
 - Methods with visible gaps: `47`
 
@@ -47,9 +47,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `notseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `nthseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `skipseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `degapseq` | `sequence_edit` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `degapseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `trimseq` | `sequence_edit` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `descseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -69,7 +69,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `fuzztran` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
-| `complex` | `sequence_stats` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `complex` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `geecee` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -86,7 +86,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `extractseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cutseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `union` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `splitter` | `sequence_transform` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `splitter` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 
 ## Visible Gaps
 
@@ -108,9 +108,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `notseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `nthseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `skipseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `degapseq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `trimseq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `trimseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `descseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
@@ -128,7 +128,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `fuzztran`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `charge`: `missing_compared_evidence`, `validation_report_gap`
 - `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
-- `complex`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `dan`: `missing_compared_evidence`
 - `geecee`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `infoseq`: `missing_compared_evidence`
@@ -136,4 +136,4 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `union`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `splitter`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `splitter`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

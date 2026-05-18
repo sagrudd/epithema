@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "splitter-stub-v1",
+  "document_id": "splitter-v1",
   "tool": {
     "name": "splitter",
     "family": "sequence_transform",
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`splitter` is part of the exposed EMBOSS-RS `sequence_transform` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`splitter` partitions an input record stream into fixed-size groups while preserving input order. The EMBOSS-RS v1 implementation models this as deterministic sequence partitions rather than as side-effectful file fan-out, which keeps the method reusable through the shared service and bridge layers."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current interface accepts one local sequence input and one positive `chunk-size`. Multi-record sequence inputs are supported through the shared sequence IO path. A chunk size of `1` produces one record per partition, while the final partition may be smaller than the requested chunk size."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "The service payload is a deterministic partitioned sequence result in which outer partition ordering and inner record ordering both follow the original input stream. CLI rendering remains sequence-oriented rather than creating multiple output files in v1."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs splitter`. The generated tool page and the machine-readable validation stub at [`../validation/splitter.validation.json`](../validation/splitter.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs splitter`. Validation currently covers deterministic partition sizes against a committed three-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not create numbered output files or support multiple simultaneous chunking policies. It reports logical partitions only, and it rejects chunk sizes smaller than `1`."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture used for deterministic splitter validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "split_three_records_into_two_partitions",
+      "title": "Partition a three-record FASTA stream into chunks of two records",
+      "description": "Runs `splitter` against the committed three-record FASTA fixture with chunk size `2`, producing one two-record partition and one final single-record partition.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "chunk-size",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "sequence_partitions",
+          "label": "Deterministic sequence partitions",
+          "description": "A stable partition result containing records `alpha` and `beta` in the first chunk and `gamma` in the second chunk."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "split_three_records_into_two_partitions"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

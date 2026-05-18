@@ -6,10 +6,10 @@
     "total_method_count": 60,
     "documentation_complete_count": 60,
     "validation_stub_count": 60,
-    "documented_only_count": 4,
+    "documented_only_count": 0,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 42,
+    "executable_evidence_count": 46,
     "compared_evidence_count": 13,
     "gapped_method_count": 47
   },
@@ -552,30 +552,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'degapseq' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'degapseq' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'degapseq' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'degapseq' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'degapseq' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -618,30 +606,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'trimseq' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'trimseq' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'trimseq' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'trimseq' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'trimseq' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -1132,30 +1108,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'complex' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'complex' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'complex' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'complex' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'complex' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -1510,30 +1474,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'splitter' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'splitter' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'splitter' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'splitter' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'splitter' needs at least one declared example to establish validation evidence"
         }
       ]
     }

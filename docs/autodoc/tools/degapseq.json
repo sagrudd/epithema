@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "degapseq-stub-v1",
+  "document_id": "degapseq-v1",
   "tool": {
     "name": "degapseq",
     "family": "sequence_edit",
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`degapseq` is part of the exposed EMBOSS-RS `sequence_edit` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`degapseq` removes gap markers from sequence records and emits the normalized residue stream through the shared EMBOSS-RS sequence model. The v1 implementation is intentionally literal: only `-` and `.` are stripped, record ordering is preserved, and no alignment-aware coordinate bookkeeping is attempted."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts local sequence records or in-memory sequence payloads through the shared sequence IO abstraction. Record ordering is deterministic and preserved unless the method explicitly transforms it."
+      "content": "The current tool accepts local sequence inputs through the governed sequence IO path. Multi-record inputs are supported. FASTA is the primary exercised format in the current validation path, while other sequence formats depend on the shared IO readers."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence records after applying the documented record-level transformation or extraction."
+      "content": "Output is a normalized sequence collection rendered through the shared result and CLI layers. Identifiers, descriptions, and preserved record metadata remain attached to each transformed sequence record."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs degapseq`. The generated tool page and the machine-readable validation stub at [`../validation/degapseq.validation.json`](../validation/degapseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs degapseq`. Validation currently covers deterministic gap removal against a committed two-record FASTA fixture, and the Rust service path is exercised against the same repository-managed input."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release strips only the explicit gap characters `-` and `.`. It does not preserve alignment column structure or emit an annotated alignment result, so it should be treated as a sequence-normalization step rather than as alignment editing."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "gapped_records_fasta",
+      "label": "Two-record gapped FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/gapped_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture containing explicit `-` and `.` gap markers for deterministic degapseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "remove_gap_markers",
+      "title": "Remove explicit gap markers from a committed FASTA fixture",
+      "description": "Runs `degapseq` against a repository-managed two-record FASTA fixture and removes `-` and `.` while preserving record order.",
+      "artifact_ids": [
+        "gapped_records_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "degapped_sequences",
+          "label": "Gap-free sequence output",
+          "description": "Stable FASTA output with `ACGT` and `TTA` as the normalized residues for the two fixture records."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "remove_gap_markers"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }
