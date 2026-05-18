@@ -1,0 +1,102 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "featreport-v1",
+  "tool": {
+    "name": "featreport",
+    "family": "feature_tools",
+    "summary": "Report selected features as a stable tabular summary",
+    "legacy_names": [
+      "featreport"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`featreport` summarizes selected features from annotated EMBL or GenBank records into a stable, machine-friendly table. It reuses the shared EMBOSS-RS feature-selection seam and preserves source-record order followed by feature order."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current v1 tool accepts one annotated EMBL or GenBank input plus optional `--kind`, `--name`, `--qualifier`, and `--strand` selectors. Selectors combine conjunctively when more than one is supplied, and if none are supplied all features are reported."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a stable table report with one row per selected feature. v1 exposes record identifier, feature kind, normalized location string, 1-based bounds, strand, optional name, and qualifier count."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs featreport`. Rust tests currently cover stable ordering, service invocation, and no-match handling through the shared feature-selection and reporting path."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 table is intentionally summary-oriented rather than a full lossless feature-table projection. Multi-span features are reported through a normalized location string, and the report does not attempt to preserve source flatfile formatting."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used for deterministic featreport validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_all_features",
+      "title": "Report all features from an annotated record",
+      "description": "Summarizes the two features present in the committed annotated GenBank fixture.",
+      "artifact_ids": [
+        "annotated_feature_genbank"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "feature_report",
+          "label": "Feature report",
+          "description": "One table row is emitted per feature in stable input order."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS featreport application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featreport.acd",
+        "invocation": "featreport -sequence annotated_feature.gbk -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS featreport application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featreport.acd",
+        "invocation": "featreport -sequence annotated_feature.gbk -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_all_features"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

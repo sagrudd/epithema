@@ -1,0 +1,102 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "feattext-v1",
+  "tool": {
+    "name": "feattext",
+    "family": "feature_tools",
+    "summary": "Render selected features as normalized feature-table text",
+    "legacy_names": [
+      "feattext"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`feattext` renders selected features from annotated EMBL or GenBank records as normalized feature-table text. It reuses the shared EMBOSS-RS feature-selection model and emits a deterministic textual view of the current structured feature representation."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current v1 tool accepts one annotated EMBL or GenBank input plus optional `--kind`, `--name`, `--qualifier`, and `--strand` selectors. Selectors combine conjunctively, and if none are supplied all features are rendered."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a text report grouped by source record, with an `ID` header, a normalized `FEATURES             Location/Qualifiers` block, and one rendered feature entry per selected feature. Output ordering is stable by source record and feature order."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs feattext`. Rust tests currently cover normalized rendering, service invocation, and selector-driven no-match handling against committed annotated fixtures."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 output is intentionally a governed normalized rendering, not a byte-for-byte recovery of the original source flatfile text. Feature names are rendered through the EMBOSS-RS structured model, and qualifiers are emitted in stable key order."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used for deterministic feattext validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "render_normalized_feature_text",
+      "title": "Render normalized feature text from an annotated record",
+      "description": "Renders the committed annotated GenBank fixture into the governed normalized feature-text view.",
+      "artifact_ids": [
+        "annotated_feature_genbank"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "feature_text",
+          "label": "Normalized feature table",
+          "description": "A normalized feature-table text block is emitted for the selected features."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS feattext application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/feattext.acd",
+        "invocation": "feattext -sequence annotated_feature.gbk -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS feattext application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/feattext.acd",
+        "invocation": "feattext -sequence annotated_feature.gbk -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "render_normalized_feature_text"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

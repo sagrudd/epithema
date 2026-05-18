@@ -1,0 +1,118 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "featmerge-v1",
+  "tool": {
+    "name": "featmerge",
+    "family": "feature_tools",
+    "summary": "Merge selected right-hand features into identifier-matched annotated records",
+    "legacy_names": [
+      "featmerge"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`featmerge` merges selected features from a right-hand annotated input into identifier-matched left-hand annotated records using the shared EMBOSS-RS feature-copy and annotated-record seams. The left-hand residues and metadata are preserved, and exact duplicate features are skipped deterministically."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current v1 tool accepts two annotated EMBL or GenBank inputs plus optional feature selectors. Record pairing is by exact identifier set, paired lengths must match, and selectors apply only to right-hand features before the merge."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "One output FASTA record is emitted per left-hand record in stable input order. Left-hand features are preserved first, admitted right-hand features are appended in stable source order, and exact duplicate features are not re-added."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs featmerge`. Rust tests currently cover successful merges, deterministic duplicate skipping, no-merge failure when a selector admits only duplicates, and service invocation against committed annotated fixtures."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 merge is structural rather than source-textual: it preserves the normalized EMBOSS-RS feature model, not original flatfile formatting. Record pairing is strict, duplicate identifiers are rejected, and more elaborate overlap reconciliation is intentionally deferred."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "annotated_merge_left",
+      "label": "Left-hand annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed left-hand annotated fixture used for feature-merge validation."
+    },
+    {
+      "id": "annotated_merge_right",
+      "label": "Right-hand annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_merge_right.gbk"
+      },
+      "description": "Repository-managed right-hand annotated fixture containing one duplicate feature and one mergeable feature."
+    }
+  ],
+  "examples": [
+    {
+      "id": "merge_right_annotations",
+      "title": "Merge selected right-hand annotations into left-hand records",
+      "description": "Merges the right-hand annotated fixture into the left-hand record set and admits only the non-duplicate right-hand feature.",
+      "artifact_ids": [
+        "annotated_merge_left",
+        "annotated_merge_right"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "merged_feature_sequences",
+          "label": "Feature-merged sequences",
+          "description": "The left-hand record is preserved and one non-duplicate feature is appended from the right-hand record."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS featmerge application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featmerge.acd",
+        "invocation": "featmerge -left annotated_feature.gbk -right annotated_merge_right.gbk -outseq stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS featmerge application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featmerge.acd",
+        "invocation": "featmerge -left annotated_feature.gbk -right annotated_merge_right.gbk -outseq stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "merge_right_annotations"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

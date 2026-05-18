@@ -19,6 +19,7 @@ tools/checktrans
 tools/chips
 tools/codcmp
 tools/codcopy
+tools/coderet
 tools/complex
 tools/compseq
 tools/cons
@@ -31,6 +32,9 @@ tools/extractalign
 tools/extractfeat
 tools/extractseq
 tools/featcopy
+tools/featmerge
+tools/featreport
+tools/feattext
 tools/fuzznuc
 tools/fuzzpro
 tools/fuzztran

@@ -34,9 +34,11 @@ use emboss_tools::codon_tools::{
     codcopy_help, render_profile_rows, run_cai, run_chips, run_codcmp, run_codcopy,
 };
 use emboss_tools::feature_tools::{
-    ExtractfeatParams, FeatcopyParams, MaskfeatParams, MaskseqParams, extractfeat_help,
-    featcopy_help, maskfeat_help, maskseq_help, run_extractfeat, run_featcopy, run_maskfeat,
-    run_maskseq,
+    CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
+    FeattextParams, MaskfeatParams, MaskseqParams, coderet_help, extractfeat_help,
+    featcopy_help, featmerge_help, featreport_help, feattext_help, maskfeat_help, maskseq_help,
+    run_coderet, run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext,
+    run_maskfeat, run_maskseq,
 };
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
@@ -265,6 +267,10 @@ impl EmbossService {
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
             "featcopy" => self.invoke_featcopy(request, descriptor),
+            "coderet" => self.invoke_coderet(request, descriptor),
+            "featmerge" => self.invoke_featmerge(request, descriptor),
+            "featreport" => self.invoke_featreport(request, descriptor),
+            "feattext" => self.invoke_feattext(request, descriptor),
             "cai" => self.invoke_cai(request, descriptor),
             "chips" => self.invoke_chips(request, descriptor),
             "codcmp" => self.invoke_codcmp(request, descriptor),
@@ -2216,6 +2222,258 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("feature-copied-sequences", ArtifactKind::Sequence)
                 .with_label("Feature-copied sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_coderet(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, coderet_help()));
+        }
+
+        let params = parse_coderet_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_coderet(CoderetParams {
+            input,
+            selector: params.selector.clone(),
+            translate: params.translate,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout").with_description(
+            if outcome.translate {
+                "coding-feature translated FASTA output"
+            } else {
+                "coding-feature extracted FASTA output"
+            },
+        );
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "returned {} coding-feature-derived records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Coding-feature retrieval completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line(format!("Translate: {}", outcome.translate))
+                .with_line(format!(
+                    "Returned records: {}",
+                    outcome.extracted_record_count
+                ))
+                .with_line(if outcome.translate {
+                    "Output format: fasta protein records"
+                } else {
+                    "Output format: fasta nucleotide records"
+                }),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("coderet-sequences", ArtifactKind::Sequence)
+                .with_label("Coding-feature-derived sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_featmerge(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, featmerge_help()));
+        }
+
+        let params = parse_featmerge_params(request.arguments())?;
+        let left_path = params.left.path.display().to_string();
+        let right_path = params.right.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (left, left_provenance, mut left_diagnostics) =
+            self.resolve_local_sequence_input(&left_path)?;
+        let (right, right_provenance, right_diagnostics) =
+            self.resolve_local_sequence_input(&right_path)?;
+        left_diagnostics.extend(right_diagnostics);
+        let outcome = run_featmerge(FeatmergeParams {
+            left,
+            right,
+            selector: params.selector.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("merged-feature FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "merged {} selected right-hand features across {} records",
+                outcome.merged_feature_count,
+                outcome.records.len()
+            ),
+            left_diagnostics,
+            vec![left_provenance, right_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Feature merge completed")
+                .with_line(format!("Left: {}", outcome.left.path.display()))
+                .with_line(format!("Right: {}", outcome.right.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line(format!(
+                    "Merged right-hand features: {}",
+                    outcome.merged_feature_count
+                ))
+                .with_line(
+                    "Compatibility: pair by identifier, require equal lengths, skip exact duplicate features",
+                )
+                .with_line("Output format: fasta (merged annotations retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("merged-feature-sequences", ArtifactKind::Sequence)
+                .with_label("Feature-merged sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_featreport(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, featreport_help()));
+        }
+
+        let params = parse_featreport_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_featreport(FeatreportParams {
+            input,
+            selector: params.selector.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("feature summary table");
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} selected features", outcome.rows.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "kind".to_owned(),
+                    "location".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "strand".to_owned(),
+                    "name".to_owned(),
+                    "qualifier_count".to_owned(),
+                ],
+                outcome.rows,
+            )),
+            ResultSummary::new("Feature report completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line("Ordering: stable source-record order then feature order")
+                .with_line("Output format: governed table report"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("feature-report", ArtifactKind::Table)
+                .with_label("Feature report")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_feattext(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, feattext_help()));
+        }
+
+        let params = parse_feattext_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let selector_summary = describe_selector(&params.selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_feattext(FeattextParams {
+            input,
+            selector: params.selector.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("normalized feature-table text");
+        let report = self.success_report(
+            &request.context,
+            "rendered normalized feature-table text",
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TextReport(TextReport::new(outcome.body).with_title("feattext")),
+            ResultSummary::new("Feature text rendering completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selector: {selector_summary}"))
+                .with_line("Rendering: normalized feature-table text, not source-exact recovery"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("feature-text", ArtifactKind::FeatureTable)
+                .with_label("Normalized feature table")
                 .with_provenance(output_provenance),
         );
 
@@ -5257,6 +5515,112 @@ fn parse_featcopy_params(arguments: &[String]) -> Result<FeatcopyParams, Service
     })
 }
 
+fn parse_coderet_params(arguments: &[String]) -> Result<CoderetParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("coderet", coderet_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut translate = false;
+    let mut selector_arguments = Vec::new();
+
+    for argument in &arguments[1..] {
+        if argument == "--translate" {
+            translate = true;
+        } else {
+            selector_arguments.push(argument.clone());
+        }
+    }
+
+    let (selector, mask_char) =
+        parse_feature_selector_flags("coderet", &selector_arguments, false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "coderet does not accept --mask-char",
+        )
+        .with_code("service.tool.coderet.mask_char_unsupported")
+        .with_detail(coderet_help()));
+    }
+
+    let selector = if matches!(selector, FeatureSelector::Any) {
+        FeatureSelector::Kind(FeatureKind::CodingSequence)
+    } else {
+        selector
+    };
+
+    Ok(CoderetParams {
+        input,
+        selector,
+        translate,
+    })
+}
+
+fn parse_featmerge_params(arguments: &[String]) -> Result<FeatmergeParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("featmerge", featmerge_help()));
+    }
+
+    let left = SequenceInput::new(arguments[0].clone());
+    let right = SequenceInput::new(arguments[1].clone());
+    let (selector, mask_char) =
+        parse_feature_selector_flags("featmerge", &arguments[2..], false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "featmerge does not accept --mask-char",
+        )
+        .with_code("service.tool.featmerge.mask_char_unsupported")
+        .with_detail(featmerge_help()));
+    }
+
+    Ok(FeatmergeParams {
+        left,
+        right,
+        selector,
+    })
+}
+
+fn parse_featreport_params(arguments: &[String]) -> Result<FeatreportParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("featreport", featreport_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let (selector, mask_char) =
+        parse_feature_selector_flags("featreport", &arguments[1..], false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "featreport does not accept --mask-char",
+        )
+        .with_code("service.tool.featreport.mask_char_unsupported")
+        .with_detail(featreport_help()));
+    }
+
+    Ok(FeatreportParams { input, selector })
+}
+
+fn parse_feattext_params(arguments: &[String]) -> Result<FeattextParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("feattext", feattext_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let (selector, mask_char) =
+        parse_feature_selector_flags("feattext", &arguments[1..], false)?;
+    if mask_char.is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "feattext does not accept --mask-char",
+        )
+        .with_code("service.tool.feattext.mask_char_unsupported")
+        .with_detail(feattext_help()));
+    }
+
+    Ok(FeattextParams { input, selector })
+}
+
 fn parse_feature_selector_flags(
     tool: &str,
     arguments: &[String],
@@ -5529,6 +5893,10 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "maskfeat" => maskfeat_help(),
         "extractfeat" => extractfeat_help(),
         "featcopy" => featcopy_help(),
+        "coderet" => coderet_help(),
+        "featmerge" => featmerge_help(),
+        "featreport" => featreport_help(),
+        "feattext" => feattext_help(),
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
@@ -5695,6 +6063,11 @@ mod tests {
     fn featcopy_target_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/featcopy_target.fasta")
+    }
+
+    fn featmerge_right_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/annotated_merge_right.gbk")
     }
 
     fn featcopy_mismatch_fixture() -> std::path::PathBuf {
@@ -7448,6 +7821,140 @@ mod tests {
         ]);
 
         assert!(service.invoke(request).is_err());
+    }
+
+    #[test]
+    fn executes_coderet_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("coderet").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_feature_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("coderet should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "FEAT1:8-10:cdsA");
+                assert_eq!(records[0].residues(), "TAC");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn coderet_supports_strict_translation() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("coderet").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--translate".to_owned(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("translated coderet should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].molecule(), MoleculeKind::Protein);
+                assert_eq!(records[0].identifier().accession(), "FEAT1:8-10:cdsA.pep");
+                assert_eq!(records[0].residues(), "Y");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_featmerge_against_matching_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featmerge").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featmerge_right_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("featmerge should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].features().len(), 3);
+                assert_eq!(records[0].features()[2].name.as_deref(), Some("exonA"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn featmerge_rejects_when_no_selected_features_are_admitted() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featmerge").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            featmerge_right_fixture().display().to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("fully duplicated right-side selection should fail");
+        assert_eq!(
+            error.to_string(),
+            "featmerge did not admit any selected right-hand features after deterministic deduplication"
+        );
+    }
+
+    #[test]
+    fn executes_featreport_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("featreport").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_feature_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("featreport should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.columns[0], "record");
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "FEAT1");
+                assert_eq!(table.rows[0][1], "gene");
+                assert_eq!(table.rows[1][1], "CDS");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_feattext_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("feattext").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![annotated_feature_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("feattext should execute");
+        match &response.result.payload {
+            ResultPayload::TextReport(report) => {
+                assert!(report.body.contains("ID   FEAT1"));
+                assert!(report.body.contains("FEATURES             Location/Qualifiers"));
+                assert!(report.body.contains("/product=\"short peptide\""));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `51`
-- Documentation-complete methods: `51`
-- Methods with validation stubs: `51`
+- Methods in cohort: `55`
+- Documentation-complete methods: `55`
+- Methods with validation stubs: `55`
 - Documented-only methods: `12`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `32`
+- Methods with executable validation: `36`
 - Methods with compared evidence: `6`
-- Methods with visible gaps: `45`
+- Methods with visible gaps: `49`
 
 ## Evidence Level Definitions
 
@@ -55,6 +55,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `featcopy` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `coderet` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `featmerge` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `featreport` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `codcmp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -105,6 +109,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `descseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `coderet`: `missing_compared_evidence`
+- `featmerge`: `missing_compared_evidence`
+- `featreport`: `missing_compared_evidence`
+- `feattext`: `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 51,
-    "documentation_complete_count": 51,
-    "validation_stub_count": 51,
+    "total_method_count": 55,
+    "documentation_complete_count": 55,
+    "validation_stub_count": 55,
     "documented_only_count": 12,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 32,
+    "executable_evidence_count": 36,
     "compared_evidence_count": 6,
-    "gapped_method_count": 45
+    "gapped_method_count": 49
   },
   "methods": [
     {
@@ -759,6 +759,98 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'featcopy' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "coderet",
+      "family": "feature_tools",
+      "summary": "extract selected simple coding features and optionally translate them",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'coderet' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "featmerge",
+      "family": "feature_tools",
+      "summary": "merge selected feature annotations between identifier-matched annotated records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'featmerge' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "featreport",
+      "family": "feature_tools",
+      "summary": "report selected features in a stable tabular summary",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'featreport' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "feattext",
+      "family": "feature_tools",
+      "summary": "render selected features as normalized feature-table text",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'feattext' has no compared validation evidence yet"
         }
       ]
     },

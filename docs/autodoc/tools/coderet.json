@@ -1,0 +1,107 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "coderet-v1",
+  "tool": {
+    "name": "coderet",
+    "family": "feature_tools",
+    "summary": "Extract selected simple coding features and optionally translate them",
+    "legacy_names": [
+      "coderet"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`coderet` extracts simple coding-feature regions from annotated EMBL or GenBank records using the shared EMBOSS-RS feature-selection and extraction seam. In v1 it defaults to CDS selection when no selector flags are supplied, and can optionally translate each extracted region with the standard genetic code."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current v1 tool accepts one annotated EMBL or GenBank input plus optional `--translate`, `--kind`, `--name`, `--qualifier`, and `--strand` flags. Feature selectors combine conjunctively when more than one is supplied. If no selector flags are present, `coderet` defaults conservatively to `--kind cds`."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "Without `--translate`, one nucleotide FASTA record is emitted per selected simple feature in stable source and feature order. With `--translate`, each extracted region is translated strictly in frame 1 and emitted as a protein FASTA record with a `.pep` identifier suffix."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs coderet`. Rust tests currently cover default CDS extraction, strict translation, no-match handling through the shared feature-extraction seam, and service-layer invocation against committed annotated fixtures."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 scope supports only simple single-span feature locations. Joined or otherwise complex locations fail clearly through the shared feature-extraction layer. Translation is strict and does not attempt alternative codes, frame inference, or tolerant CDS repair."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "annotated_feature_genbank",
+      "label": "Annotated GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture used for deterministic coderet validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "translate_default_cds_selection",
+      "title": "Translate the default CDS selection",
+      "description": "Uses the default CDS selector and translates the extracted coding region into a protein FASTA record.",
+      "artifact_ids": [
+        "annotated_feature_genbank"
+      ],
+      "parameters": [
+        {
+          "name": "translate",
+          "value": "true"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "coderet_sequences",
+          "label": "Coding-feature-derived sequences",
+          "description": "One translated protein record is emitted for the CDS feature in the fixture."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS coderet application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/coderet.acd",
+        "invocation": "coderet -sequence annotated_feature.gbk -translate -outseq stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS coderet application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/coderet.acd",
+        "invocation": "coderet -sequence annotated_feature.gbk -translate -outseq stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "translate_default_cds_selection"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}
