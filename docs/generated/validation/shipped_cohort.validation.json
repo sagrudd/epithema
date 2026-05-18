@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 59,
-    "documentation_complete_count": 59,
-    "validation_stub_count": 59,
-    "documented_only_count": 12,
+    "total_method_count": 60,
+    "documentation_complete_count": 60,
+    "validation_stub_count": 60,
+    "documented_only_count": 11,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 40,
+    "executable_evidence_count": 42,
     "compared_evidence_count": 6,
-    "gapped_method_count": 53
+    "gapped_method_count": 54
   },
   "methods": [
     {
@@ -1078,30 +1078,45 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
-      "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'charge' has no declared validation cases"
-        },
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'charge' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_executable_evidence",
-          "message": "tool 'charge' has no runnable or executed validation case yet"
-        },
         {
           "code": "missing_compared_evidence",
           "message": "tool 'charge' has no compared validation evidence yet"
         },
         {
           "code": "validation_report_gap",
-          "message": "tool 'charge' needs at least one declared example to establish validation evidence"
+          "message": "example 'charge_profile_example' needs a legacy reference before comparison can run"
+        }
+      ]
+    },
+    {
+      "tool_name": "pepwindow",
+      "family": "protein_plots",
+      "summary": "report a sliding-window protein hydropathy profile and emit a line-plot contract",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'pepwindow' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "example 'pepwindow_profile_example' needs a legacy reference before comparison can run"
         }
       ]
     },

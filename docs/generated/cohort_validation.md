@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `59`
-- Documentation-complete methods: `59`
-- Methods with validation stubs: `59`
-- Documented-only methods: `12`
+- Methods in cohort: `60`
+- Documentation-complete methods: `60`
+- Methods with validation stubs: `60`
+- Documented-only methods: `11`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `40`
+- Methods with executable validation: `42`
 - Methods with compared evidence: `6`
-- Methods with visible gaps: `53`
+- Methods with visible gaps: `54`
 
 ## Evidence Level Definitions
 
@@ -67,7 +67,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `fuzznuc` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzzpro` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzztran` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `charge` | `protein_plots` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
+| `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `complex` | `sequence_stats` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
@@ -125,7 +126,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `fuzznuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzzpro`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzztran`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `charge`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `charge`: `missing_compared_evidence`, `validation_report_gap`
+- `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
 - `complex`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `dan`: `missing_compared_evidence`
 - `geecee`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

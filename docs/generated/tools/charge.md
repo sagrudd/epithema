@@ -8,7 +8,7 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 
 ## Document Metadata
 
-- Document ID: `charge-stub-v1`
+- Document ID: `charge-v1`
 - Schema version: `emboss-rs.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `protein_plots`
@@ -16,7 +16,7 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 
 ## Evidence Status
 
-- Declared evidence baseline: `documented_only`
+- Declared evidence baseline: `declared_evidence`
 - Machine-readable validation report: [`../validation/charge.validation.json`](../validation/charge.validation.json)
 - This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
 
@@ -46,14 +46,46 @@ v1 supports the charge profile only for one protein record at a time. Rendering 
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Protein fixture for governed charge validation
+
+- Artifact ID: `charge_fixture`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/charge_protein.fasta`
+- Notes: Repository-managed protein fixture used for deterministic charge-profile validation.
+
+### Canonical charge line-plot contract fixture
+
+- Artifact ID: `charge_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/charge_plot_contract.json`
+- Notes: Repository-managed canonical line-plot contract fixture emitted by the governed charge implementation.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Compute a deterministic protein charge profile and emit a line-plot contract
+
+- Example ID: `charge_profile_example`
+- Description: Reports deterministic sliding-window charge rows from the committed protein fixture and emits the canonical governed line-plot contract.
+- Referenced artifacts: `charge_fixture`, `charge_plot_contract`
+- Parameters:
+  - `window` = `5`
+  - `step` = `1`
+- Expected outputs:
+  - `charge_profile_table`: Charge profile table (Stable sliding-window charge rows plus a canonical line-plot contract derived from the same governed output.)
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS charge application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd`)
+
+## Declared Validation Intent
+
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `charge_profile_example`
+- Future legacy comparison requested: yes
+- Future execution must capture provenance: yes
 

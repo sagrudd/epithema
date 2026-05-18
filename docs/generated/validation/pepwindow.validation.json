@@ -1,6 +1,6 @@
 {
-  "tool_name": "charge",
-  "document_id": "charge-v1",
+  "tool_name": "pepwindow",
+  "document_id": "pepwindow-v1",
   "source_mode": "curated",
   "evidence_source": "curated_autodoc",
   "summary": {
@@ -17,25 +17,25 @@
   },
   "cases": [
     {
-      "id": "charge_profile_example",
-      "title": "Compute a deterministic protein charge profile and emit a line-plot contract",
+      "id": "pepwindow_profile_example",
+      "title": "Compute a deterministic protein hydropathy profile and emit a line-plot contract",
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
       "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
-        "charge_fixture",
-        "charge_plot_contract"
+        "pepwindow_fixture",
+        "pepwindow_plot_contract"
       ],
       "expected_output_ids": [
-        "charge_profile_table"
+        "pepwindow_table"
       ],
       "provenance": [
         {
-          "source": "EMBOSS charge application",
-          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
-          "invocation": "charge -sequence charge_protein.fasta -winsize 5 -graph data"
+          "source": "EMBOSS pepwindow application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepwindow.acd",
+          "invocation": "pepwindow -sequence pepwindow_protein.fasta -winsize 5 -step 2 -graph data"
         }
       ],
       "diagnostics": [
@@ -43,27 +43,27 @@
           "severity": "warning",
           "code": "testkit.case.missing_legacy_reference",
           "message": "legacy comparison is requested but this example has no explicit legacy reference",
-          "context": "charge_profile_example"
+          "context": "pepwindow_profile_example"
         }
       ]
     }
   ],
   "unresolved_gaps": [
-    "example 'charge_profile_example' needs a legacy reference before comparison can run"
+    "example 'pepwindow_profile_example' needs a legacy reference before comparison can run"
   ],
   "diagnostics": [
     {
       "severity": "warning",
       "code": "testkit.case.missing_legacy_reference",
       "message": "legacy comparison is requested but this example has no explicit legacy reference",
-      "context": "charge_profile_example"
+      "context": "pepwindow_profile_example"
     }
   ],
   "provenance": [
     {
-      "source": "EMBOSS charge application",
-      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
-      "invocation": "charge -sequence charge_protein.fasta -winsize 5 -graph data"
+      "source": "EMBOSS pepwindow application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepwindow.acd",
+      "invocation": "pepwindow -sequence pepwindow_protein.fasta -winsize 5 -step 2 -graph data"
     }
   ]
 }

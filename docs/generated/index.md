@@ -53,6 +53,7 @@ tools/newseq
 tools/notseq
 tools/nthseq
 tools/pepstats
+tools/pepwindow
 tools/prettyseq
 tools/refseqget
 tools/revseq

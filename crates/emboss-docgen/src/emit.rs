@@ -120,6 +120,7 @@ fn regenerate_index(output_root: &Path) -> Result<(), std::io::Error> {
     );
     content.push_str("## Contents\n\n");
     content.push_str("```{toctree}\n:maxdepth: 1\n:caption: Generated Tools\n\n");
+    content.push_str("cohort_validation\n");
 
     for page in &pages {
         content.push_str(&format!("tools/{page}\n"));

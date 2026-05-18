@@ -35,7 +35,9 @@ Plot-ready analytical outputs should target the typed JSON-serializable
 package, which consumes that contract for governed plot families such as line,
 scatter, and bar plots. The first production end-to-end plotting slice is
 `charge`: Rust computes the analytical profile and emits the contract, while
-`emboss-r` renders the plot.
+`emboss-r` renders the plot. The next governed plot-family method is
+`pepwindow`, which now emits the same kind of typed line contract from Rust and
+remains ready for its sibling R renderer.
 
 Release engineering guidance now lives under
 [docs/release/](./docs/release/index.md). The coordinated first stable release
@@ -213,6 +215,14 @@ The first end-to-end plot-producing tool now available is:
   computes a sliding-window mean protein charge profile, emits a structured
   report, and can write the canonical typed line-plot contract JSON for
   rendering through the sister `emboss-r` package.
+
+The next governed Rust-side plot-contract method now available is:
+
+- `emboss-rs pepwindow <protein-input> [--window <length>] [--step <length>] [--plot-contract-out <path>]`
+  computes a sliding-window Kyte-Doolittle hydropathy profile, emits a
+  structured report, and can write the canonical typed line-plot contract JSON.
+  Rendering for this method remains intentionally R-owned and is a follow-on
+  task for the sister `emboss-r` package.
 
 The provider layer now also supports formal library/service-backed single
 sequence retrieval for provider-qualified accession inputs. The initial

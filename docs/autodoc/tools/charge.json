@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "charge-stub-v1",
+  "document_id": "charge-v1",
   "tool": {
     "name": "charge",
     "family": "protein_plots",
@@ -47,12 +47,82 @@
       "content": "v1 supports the charge profile only for one protein record at a time. Rendering remains intentionally R-owned, so non-graphical Rust and CLI workflows remain usable without R. Additional plot-capable methods should follow this contract-and-renderer pattern rather than adding Rust-side graphics code."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "charge_fixture",
+      "label": "Protein fixture for governed charge validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/charge_protein.fasta"
+      },
+      "description": "Repository-managed protein fixture used for deterministic charge-profile validation."
+    },
+    {
+      "id": "charge_plot_contract",
+      "label": "Canonical charge line-plot contract fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/charge_plot_contract.json"
+      },
+      "description": "Repository-managed canonical line-plot contract fixture emitted by the governed charge implementation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "charge_profile_example",
+      "title": "Compute a deterministic protein charge profile and emit a line-plot contract",
+      "description": "Reports deterministic sliding-window charge rows from the committed protein fixture and emits the canonical governed line-plot contract.",
+      "artifact_ids": [
+        "charge_fixture",
+        "charge_plot_contract"
+      ],
+      "parameters": [
+        {
+          "name": "window",
+          "value": "5"
+        },
+        {
+          "name": "step",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "charge_profile_table",
+          "label": "Charge profile table",
+          "description": "Stable sliding-window charge rows plus a canonical line-plot contract derived from the same governed output."
+        }
+      ]
+    }
+  ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS charge application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
+        "invocation": "charge -sequence charge_protein.fasta -winsize 5 -graph data"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "charge_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

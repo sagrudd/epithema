@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "pepwindow_pepwindow_example",
+    "title": "Hydropathy profile for pepwindow_example",
+    "subtitle": "Window 5 step 2",
+    "provenance": {
+      "tool": "pepwindow",
+      "method": "protein_hydropathy_profile",
+      "source_artifact_ids": [
+        "table:pepwindow-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Mean hydropathy",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "pepwindow_profile",
+      "label": "Hydropathy profile",
+      "legend_label": "Hydropathy profile",
+      "semantic_group": "hydropathy",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          3.0,
+          5.0,
+          7.0,
+          9.0,
+          11.0,
+          13.0,
+          15.0,
+          17.0,
+          19.0
+        ]
+      },
+      "y": [
+        0.12000000000000006,
+        1.98,
+        1.92,
+        2.8200000000000003,
+        3.4,
+        1.5599999999999996,
+        0.33999999999999997,
+        -1.1199999999999999,
+        -0.5599999999999999,
+        -0.4800000000000001
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}
