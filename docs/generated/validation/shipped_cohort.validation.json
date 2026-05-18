@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 64,
-    "documentation_complete_count": 64,
-    "validation_stub_count": 64,
+    "total_method_count": 68,
+    "documentation_complete_count": 68,
+    "validation_stub_count": 68,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 43,
+    "executable_evidence_count": 47,
     "compared_evidence_count": 21,
-    "gapped_method_count": 43
+    "gapped_method_count": 47
   },
   "methods": [
     {
@@ -645,6 +645,60 @@
       "unresolved_gaps": []
     },
     {
+      "tool_name": "maskambignuc",
+      "family": "feature_tools",
+      "summary": "mask nucleotide ambiguity residues with N while preserving record order",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'maskambignuc' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'maskambignuc' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "maskambigprot",
+      "family": "feature_tools",
+      "summary": "mask conservative protein ambiguity residues with X while preserving record order",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'maskambigprot' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'maskambigprot' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "maskfeat",
       "family": "feature_tools",
       "summary": "mask selected simple feature spans while preserving annotations in the result payload",
@@ -805,6 +859,33 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'feattext' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "twofeat",
+      "family": "feature_tools",
+      "summary": "report neighbouring feature pairs that satisfy conservative selector and distance rules",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'twofeat' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'twofeat' has no compared validation evidence yet"
         }
       ]
     },
@@ -1391,6 +1472,33 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'union' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "pasteseq",
+      "family": "sequence_transform",
+      "summary": "insert one sequence into another at a deterministic 1-based position",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'pasteseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'pasteseq' has no compared validation evidence yet"
         }
       ]
     },

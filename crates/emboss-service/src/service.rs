@@ -36,10 +36,11 @@ use emboss_tools::codon_tools::{
 };
 use emboss_tools::feature_tools::{
     CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
-    FeattextParams, MaskfeatParams, MaskseqParams, coderet_help, extractfeat_help,
-    featcopy_help, featmerge_help, featreport_help, feattext_help, maskfeat_help, maskseq_help,
-    run_coderet, run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext,
-    run_maskfeat, run_maskseq,
+    FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams, MaskseqParams,
+    TwofeatParams, coderet_help, extractfeat_help, featcopy_help, featmerge_help, featreport_help,
+    feattext_help, maskambignuc_help, maskambigprot_help, maskfeat_help, maskseq_help, run_coderet,
+    run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext, run_maskambignuc,
+    run_maskambigprot, run_maskfeat, run_maskseq, run_twofeat, twofeat_help,
 };
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
@@ -72,15 +73,15 @@ use emboss_tools::sequence_stream::{
     run_nthseq, run_seqcount, run_skipseq, seqcount_help, skipseq_help,
 };
 use emboss_tools::sequence_transform::{
-    CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, ShuffleseqParams,
-    SizeseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help, megamerger_help,
-    merger_help, run_cutseq, run_extractseq, run_megamerger, run_merger, run_shuffleseq,
-    run_sizeseq, run_splitter, run_union, shuffleseq_help, sizeseq_help, splitter_help,
-    union_help,
+    CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, PasteseqParams,
+    ShuffleseqParams, SizeseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
+    megamerger_help, merger_help, pasteseq_help, run_cutseq, run_extractseq, run_megamerger,
+    run_merger, run_pasteseq, run_shuffleseq, run_sizeseq, run_splitter, run_union,
+    shuffleseq_help, sizeseq_help, splitter_help, union_help,
 };
 use emboss_tools::translation_tools::{
     BacktranambigParams, BacktranseqParams, ChecktransParams, GetorfParams, PrettyseqParams,
-    TranalignParams, TranslationFrameSelection, TranseqParams, backtranambig_help,
+    TranalignParams, TranseqParams, TranslationFrameSelection, backtranambig_help,
     backtranseq_help, checktrans_help, getorf_help, prettyseq_help, run_backtranambig,
     run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign, run_transeq,
     tranalign_help, transeq_help,
@@ -273,6 +274,8 @@ impl EmbossService {
             "descseq" => self.invoke_descseq(request, descriptor),
             "infoseq" => self.invoke_infoseq(request, descriptor),
             "maskseq" => self.invoke_maskseq(request, descriptor),
+            "maskambignuc" => self.invoke_maskambignuc(request, descriptor),
+            "maskambigprot" => self.invoke_maskambigprot(request, descriptor),
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
             "featcopy" => self.invoke_featcopy(request, descriptor),
@@ -280,6 +283,7 @@ impl EmbossService {
             "featmerge" => self.invoke_featmerge(request, descriptor),
             "featreport" => self.invoke_featreport(request, descriptor),
             "feattext" => self.invoke_feattext(request, descriptor),
+            "twofeat" => self.invoke_twofeat(request, descriptor),
             "cai" => self.invoke_cai(request, descriptor),
             "chips" => self.invoke_chips(request, descriptor),
             "cusp" => self.invoke_cusp(request, descriptor),
@@ -306,6 +310,7 @@ impl EmbossService {
             "extractseq" => self.invoke_extractseq(request, descriptor),
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
+            "pasteseq" => self.invoke_pasteseq(request, descriptor),
             "splitter" => self.invoke_splitter(request, descriptor),
             "merger" => self.invoke_merger(request, descriptor),
             "megamerger" => self.invoke_megamerger(request, descriptor),
@@ -2031,7 +2036,10 @@ impl EmbossService {
 
         let report = self.success_report(
             &request.context,
-            format!("reported basic sequence information for {} records", outcome.rows.len()),
+            format!(
+                "reported basic sequence information for {} records",
+                outcome.rows.len()
+            ),
             input_diagnostics,
             vec![input_provenance],
         );
@@ -2132,6 +2140,121 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_maskambignuc(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, maskambignuc_help()));
+        }
+
+        let input =
+            parse_maskambig_params("maskambignuc", request.arguments(), maskambignuc_help())?;
+        let input_path = input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_maskambignuc(MaskambignucParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("ambiguity-masked FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "masked {} ambiguous nucleotide residues across {} records",
+                outcome.masked_residue_count,
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Nucleotide ambiguity masking completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Masked ambiguity residues: {}",
+                    outcome.masked_residue_count
+                ))
+                .with_line("Mask rule: conservative nucleotide ambiguity symbols -> N")
+                .with_line("Output format: fasta (annotations retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new(
+                "ambiguity-masked-nucleotide-sequences",
+                ArtifactKind::Sequence,
+            )
+            .with_label("Ambiguity-masked nucleotide sequences")
+            .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_maskambigprot(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, maskambigprot_help()));
+        }
+
+        let input =
+            parse_maskambig_params("maskambigprot", request.arguments(), maskambigprot_help())?;
+        let input_path = input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_maskambigprot(MaskambigprotParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("ambiguity-masked protein FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "masked {} ambiguous protein residues across {} records",
+                outcome.masked_residue_count,
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Protein ambiguity masking completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Masked ambiguity residues: {}",
+                    outcome.masked_residue_count
+                ))
+                .with_line("Mask rule: conservative protein ambiguity symbols -> X")
+                .with_line("Output format: fasta (annotations retained in payload)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("ambiguity-masked-protein-sequences", ArtifactKind::Sequence)
+                .with_label("Ambiguity-masked protein sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_maskfeat(
         &self,
         request: InvocationRequest,
@@ -2184,6 +2307,87 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("feature-masked-sequences", ArtifactKind::Sequence)
                 .with_label("Feature-masked sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_twofeat(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, twofeat_help()));
+        }
+
+        let params = parse_twofeat_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let a_selector_summary = describe_selector(&params.a_selector);
+        let b_selector_summary = describe_selector(&params.b_selector);
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_twofeat(TwofeatParams {
+            input,
+            a_selector: params.a_selector.clone(),
+            b_selector: params.b_selector.clone(),
+            min_range: params.min_range,
+            max_range: params.max_range,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("neighbouring feature-pair report");
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} neighbouring feature pairs", outcome.rows.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "a_kind".to_owned(),
+                    "a_location".to_owned(),
+                    "a_start".to_owned(),
+                    "a_end".to_owned(),
+                    "a_strand".to_owned(),
+                    "a_name".to_owned(),
+                    "b_kind".to_owned(),
+                    "b_location".to_owned(),
+                    "b_start".to_owned(),
+                    "b_end".to_owned(),
+                    "b_strand".to_owned(),
+                    "b_name".to_owned(),
+                    "gap".to_owned(),
+                    "relation".to_owned(),
+                    "strand_relation".to_owned(),
+                ],
+                outcome.rows,
+            )),
+            ResultSummary::new("Neighbouring feature pair report completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("A selector: {a_selector_summary}"))
+                .with_line(format!("B selector: {b_selector_summary}"))
+                .with_line(format!(
+                    "Distance constraints: {}",
+                    describe_range_constraints(outcome.min_range, outcome.max_range)
+                ))
+                .with_line("Neighbour rule: adjacent features in source order")
+                .with_line("Output format: governed table report"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("feature-pair-report", ArtifactKind::Table)
+                .with_label("Neighbouring feature pair report")
                 .with_provenance(output_provenance),
         );
 
@@ -2347,13 +2551,12 @@ impl EmbossService {
             translate: params.translate,
         })?;
 
-        let output_provenance = ArtifactProvenance::generated_output("stdout").with_description(
-            if outcome.translate {
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description(if outcome.translate {
                 "coding-feature translated FASTA output"
             } else {
                 "coding-feature extracted FASTA output"
-            },
-        );
+            });
         let report = self.success_report(
             &request.context,
             format!(
@@ -2708,8 +2911,8 @@ impl EmbossService {
             self.resolve_local_sequence_input(&input)?;
         let outcome = run_getorf(GetorfParams { input })?;
 
-        let output_provenance = ArtifactProvenance::generated_output("stdout")
-            .with_description("ORF FASTA output");
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("ORF FASTA output");
         let report = self.success_report(
             &request.context,
             format!("extracted {} ORFs", outcome.records.len()),
@@ -2764,7 +2967,10 @@ impl EmbossService {
             .with_description("pretty-formatted nucleotide and translation report");
         let report = self.success_report(
             &request.context,
-            format!("rendered pretty sequence view for {} records", outcome.record_count),
+            format!(
+                "rendered pretty sequence view for {} records",
+                outcome.record_count
+            ),
             input_diagnostics,
             vec![input_provenance, output_provenance.clone()],
         );
@@ -2783,7 +2989,9 @@ impl EmbossService {
                     }
                 ))
                 .with_line(format!("Width: {}", outcome.width))
-                .with_line("Translation policy: forward frame only, trailing partial codons ignored")
+                .with_line(
+                    "Translation policy: forward frame only, trailing partial codons ignored",
+                )
                 .with_line(format!("Records: {}", outcome.record_count)),
             report.clone(),
         )
@@ -2830,7 +3038,10 @@ impl EmbossService {
             .with_description("codon-projected Stockholm alignment");
         let report = self.success_report(
             &request.context,
-            format!("projected {} aligned rows into codon space", outcome.alignment.row_count()),
+            format!(
+                "projected {} aligned rows into codon space",
+                outcome.alignment.row_count()
+            ),
             diagnostics,
             vec![
                 alignment_provenance,
@@ -3280,7 +3491,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write pepwindow plot contract to {}", path.display()),
+                    format!(
+                        "failed to write pepwindow plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.pepwindow.plot.write_failed")
                 .with_detail(error.to_string())
@@ -3546,7 +3760,10 @@ impl EmbossService {
 
         let report = self.success_report(
             &request.context,
-            format!("reported codon usage tables for {} records", outcome.records.len()),
+            format!(
+                "reported codon usage tables for {} records",
+                outcome.records.len()
+            ),
             input_diagnostics,
             vec![input_provenance],
         );
@@ -4234,7 +4451,10 @@ impl EmbossService {
 
         let report = self.success_report(
             &request.context,
-            format!("reported sequence words for {} records", outcome.records.len()),
+            format!(
+                "reported sequence words for {} records",
+                outcome.records.len()
+            ),
             input_diagnostics,
             vec![input_provenance],
         );
@@ -4536,6 +4756,70 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_pasteseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, pasteseq_help()));
+        }
+
+        let params = parse_pasteseq_params(request.arguments())?;
+        let main_path = params.asequence.path.display().to_string();
+        let insert_path = params.bsequence.path.display().to_string();
+        let (asequence, a_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&main_path)?;
+        let (bsequence, b_provenance, b_diagnostics) =
+            self.resolve_local_sequence_input(&insert_path)?;
+        diagnostics.extend(b_diagnostics);
+        let outcome = run_pasteseq(PasteseqParams {
+            asequence,
+            bsequence,
+            position: params.position,
+        })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("pasted FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "inserted one sequence into '{}' at position {}",
+                outcome.record.identifier().accession(),
+                outcome.position
+            ),
+            diagnostics,
+            vec![a_provenance, b_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.record),
+            ResultSummary::new("Sequence insertion completed")
+                .with_line(format!("Main input: {}", outcome.asequence.path.display()))
+                .with_line(format!(
+                    "Inserted input: {}",
+                    outcome.bsequence.path.display()
+                ))
+                .with_line(format!("Insert after position: {}", outcome.position))
+                .with_line("Coordinate convention: 1-based, with 0 meaning before the start")
+                .with_line("Output format: fasta (feature annotations dropped in v1)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("pasted-sequence", ArtifactKind::Sequence)
+                .with_label("Pasted sequence")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_splitter(
         &self,
         request: InvocationRequest,
@@ -4618,11 +4902,7 @@ impl EmbossService {
             &request.context,
             "merged two overlapping sequence inputs",
             diagnostics,
-            vec![
-                left_provenance,
-                right_provenance,
-                output_provenance.clone(),
-            ],
+            vec![left_provenance, right_provenance, output_provenance.clone()],
         );
         let result = MethodResult::new(
             request.tool.clone(),
@@ -4677,11 +4957,7 @@ impl EmbossService {
             &request.context,
             "merged two overlapping DNA inputs",
             diagnostics,
-            vec![
-                left_provenance,
-                right_provenance,
-                output_provenance.clone(),
-            ],
+            vec![left_provenance, right_provenance, output_provenance.clone()],
         );
         let result = MethodResult::new(
             request.tool.clone(),
@@ -4770,7 +5046,8 @@ impl EmbossService {
         }
 
         let (input_path, seed) = parse_shuffleseq_params(&request.arguments)?;
-        let (input, input_provenance, diagnostics) = self.resolve_local_sequence_input(&input_path)?;
+        let (input, input_provenance, diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
         let outcome = run_shuffleseq(ShuffleseqParams { input, seed })?;
 
         let output_provenance = ArtifactProvenance::generated_output("stdout")
@@ -6216,6 +6493,18 @@ fn parse_shuffleseq_params(arguments: &[String]) -> Result<(String, u64), Servic
     Ok((input, seed))
 }
 
+fn parse_pasteseq_params(arguments: &[String]) -> Result<PasteseqParams, ServiceError> {
+    let [asequence, bsequence, position]: [String; 3] = arguments
+        .to_vec()
+        .try_into()
+        .map_err(|_| tool_usage_error("pasteseq", pasteseq_help()))?;
+    Ok(PasteseqParams {
+        asequence: SequenceInput::new(asequence),
+        bsequence: SequenceInput::new(bsequence),
+        position: parse_non_negative_count("pasteseq", &position)?,
+    })
+}
+
 fn parse_revseq_params(arguments: &[String]) -> Result<RevseqParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("revseq", revseq_help()));
@@ -6393,6 +6682,18 @@ fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceEr
     })
 }
 
+fn parse_maskambig_params(
+    tool: &str,
+    arguments: &[String],
+    help: &str,
+) -> Result<SequenceInput, ServiceError> {
+    let [input]: [String; 1] = arguments
+        .to_vec()
+        .try_into()
+        .map_err(|_| tool_usage_error(tool, help))?;
+    Ok(SequenceInput::new(input))
+}
+
 fn parse_maskfeat_params(arguments: &[String]) -> Result<MaskfeatParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("maskfeat", maskfeat_help()));
@@ -6500,8 +6801,7 @@ fn parse_featmerge_params(arguments: &[String]) -> Result<FeatmergeParams, Servi
 
     let left = SequenceInput::new(arguments[0].clone());
     let right = SequenceInput::new(arguments[1].clone());
-    let (selector, mask_char) =
-        parse_feature_selector_flags("featmerge", &arguments[2..], false)?;
+    let (selector, mask_char) = parse_feature_selector_flags("featmerge", &arguments[2..], false)?;
     if mask_char.is_some() {
         return Err(PlatformError::new(
             ErrorCategory::Validation,
@@ -6524,8 +6824,7 @@ fn parse_featreport_params(arguments: &[String]) -> Result<FeatreportParams, Ser
     }
 
     let input = SequenceInput::new(arguments[0].clone());
-    let (selector, mask_char) =
-        parse_feature_selector_flags("featreport", &arguments[1..], false)?;
+    let (selector, mask_char) = parse_feature_selector_flags("featreport", &arguments[1..], false)?;
     if mask_char.is_some() {
         return Err(PlatformError::new(
             ErrorCategory::Validation,
@@ -6544,8 +6843,7 @@ fn parse_feattext_params(arguments: &[String]) -> Result<FeattextParams, Service
     }
 
     let input = SequenceInput::new(arguments[0].clone());
-    let (selector, mask_char) =
-        parse_feature_selector_flags("feattext", &arguments[1..], false)?;
+    let (selector, mask_char) = parse_feature_selector_flags("feattext", &arguments[1..], false)?;
     if mask_char.is_some() {
         return Err(PlatformError::new(
             ErrorCategory::Validation,
@@ -6556,6 +6854,189 @@ fn parse_feattext_params(arguments: &[String]) -> Result<FeattextParams, Service
     }
 
     Ok(FeattextParams { input, selector })
+}
+
+fn parse_twofeat_params(arguments: &[String]) -> Result<TwofeatParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("twofeat", twofeat_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut min_range = None;
+    let mut max_range = None;
+    let mut a_selectors = Vec::new();
+    let mut b_selectors = Vec::new();
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--min-range=") {
+            min_range = Some(parse_non_negative_count("twofeat", value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--min-range" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --min-range")
+                    .with_code("service.tool.twofeat.min_range_missing")
+            })?;
+            min_range = Some(parse_non_negative_count("twofeat", value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--max-range=") {
+            max_range = Some(parse_non_negative_count("twofeat", value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--max-range" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --max-range")
+                    .with_code("service.tool.twofeat.max_range_missing")
+            })?;
+            max_range = Some(parse_non_negative_count("twofeat", value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--a-kind=") {
+            a_selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 1;
+            continue;
+        }
+        if argument == "--a-kind" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --a-kind")
+                    .with_code("service.tool.twofeat.a_kind_missing")
+            })?;
+            a_selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--a-name=") {
+            a_selectors.push(FeatureSelector::Name(value.to_owned()));
+            index += 1;
+            continue;
+        }
+        if argument == "--a-name" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --a-name")
+                    .with_code("service.tool.twofeat.a_name_missing")
+            })?;
+            a_selectors.push(FeatureSelector::Name(value.clone()));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--a-qualifier=") {
+            a_selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--a-qualifier" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --a-qualifier")
+                    .with_code("service.tool.twofeat.a_qualifier_missing")
+            })?;
+            a_selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--a-strand=") {
+            a_selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 1;
+            continue;
+        }
+        if argument == "--a-strand" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --a-strand")
+                    .with_code("service.tool.twofeat.a_strand_missing")
+            })?;
+            a_selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--b-kind=") {
+            b_selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 1;
+            continue;
+        }
+        if argument == "--b-kind" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --b-kind")
+                    .with_code("service.tool.twofeat.b_kind_missing")
+            })?;
+            b_selectors.push(FeatureSelector::Kind(parse_feature_kind(value)));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--b-name=") {
+            b_selectors.push(FeatureSelector::Name(value.to_owned()));
+            index += 1;
+            continue;
+        }
+        if argument == "--b-name" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --b-name")
+                    .with_code("service.tool.twofeat.b_name_missing")
+            })?;
+            b_selectors.push(FeatureSelector::Name(value.clone()));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--b-qualifier=") {
+            b_selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--b-qualifier" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --b-qualifier")
+                    .with_code("service.tool.twofeat.b_qualifier_missing")
+            })?;
+            b_selectors.push(parse_feature_qualifier_selector(value)?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--b-strand=") {
+            b_selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 1;
+            continue;
+        }
+        if argument == "--b-strand" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --b-strand")
+                    .with_code("service.tool.twofeat.b_strand_missing")
+            })?;
+            b_selectors.push(FeatureSelector::Strand(parse_feature_strand(value)?));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown twofeat argument '{argument}'"),
+        )
+        .with_code("service.tool.twofeat.argument_unknown")
+        .with_detail(twofeat_help()));
+    }
+
+    let a_selector = match a_selectors.len() {
+        0 => FeatureSelector::Any,
+        1 => a_selectors.remove(0),
+        _ => FeatureSelector::All(a_selectors),
+    };
+    let b_selector = match b_selectors.len() {
+        0 => FeatureSelector::Any,
+        1 => b_selectors.remove(0),
+        _ => FeatureSelector::All(b_selectors),
+    };
+
+    Ok(TwofeatParams {
+        input,
+        a_selector,
+        b_selector,
+        min_range,
+        max_range,
+    })
 }
 
 fn parse_feature_selector_flags(
@@ -6762,6 +7243,15 @@ fn mask_char_summary(mask_char: Option<char>) -> String {
     }
 }
 
+fn describe_range_constraints(min_range: Option<usize>, max_range: Option<usize>) -> String {
+    match (min_range, max_range) {
+        (None, None) => "none".to_owned(),
+        (Some(minimum), None) => format!("min={minimum}"),
+        (None, Some(maximum)) => format!("max={maximum}"),
+        (Some(minimum), Some(maximum)) => format!("min={minimum}, max={maximum}"),
+    }
+}
+
 fn describe_selector(selector: &FeatureSelector) -> String {
     match selector {
         FeatureSelector::Any => "all features".to_owned(),
@@ -6824,6 +7314,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
         "infoseq" => infoseq_help(),
+        "maskambignuc" => maskambignuc_help(),
+        "maskambigprot" => maskambigprot_help(),
         "aligncopy" => aligncopy_help(),
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
@@ -6835,6 +7327,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "featmerge" => featmerge_help(),
         "featreport" => featreport_help(),
         "feattext" => feattext_help(),
+        "twofeat" => twofeat_help(),
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
@@ -6855,6 +7348,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "megamerger" => megamerger_help(),
         "sizeseq" => sizeseq_help(),
         "shuffleseq" => shuffleseq_help(),
+        "pasteseq" => pasteseq_help(),
         _ => "",
     }
 }
@@ -7134,6 +7628,26 @@ mod tests {
     fn sizeseq_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/sizeseq_records.fasta")
+    }
+
+    fn ambiguous_nucleotide_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/ambiguous_nucleotide_records.fasta")
+    }
+
+    fn ambiguous_protein_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/ambiguous_protein_records.fasta")
+    }
+
+    fn pasteseq_main_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/pasteseq_main.fasta")
+    }
+
+    fn pasteseq_insert_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/pasteseq_insert.fasta")
     }
 
     fn needleall_queries_fixture() -> std::path::PathBuf {
@@ -8296,7 +8810,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert_eq!(response.result.summary.lines[4], "Molecule policy: DNA only");
+        assert_eq!(
+            response.result.summary.lines[4],
+            "Molecule policy: DNA only"
+        );
     }
 
     #[test]
@@ -8319,7 +8836,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert_eq!(response.result.summary.lines[1], "Ordering: descending length, stable ties");
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Ordering: descending length, stable ties"
+        );
     }
 
     #[test]
@@ -8345,6 +8865,30 @@ mod tests {
             payload => panic!("unexpected payload: {payload:?}"),
         }
         assert_eq!(response.result.summary.lines[1], "Seed: 7");
+    }
+
+    #[test]
+    fn executes_pasteseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pasteseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            pasteseq_main_fixture().display().to_string(),
+            pasteseq_insert_fixture().display().to_string(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("pasteseq should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(record) => {
+                assert_eq!(record.identifier().accession(), "paste_main");
+                assert_eq!(record.residues(), "ACTTGT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[2], "Insert after position: 2");
     }
 
     #[test]
@@ -8646,6 +9190,56 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_maskambignuc_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskambignuc").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![ambiguous_nucleotide_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("maskambignuc should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].residues(), "ACGTNNN");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Mask rule: conservative nucleotide ambiguity symbols -> N"
+        );
+    }
+
+    #[test]
+    fn executes_maskambigprot_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("maskambigprot").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![ambiguous_protein_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("maskambigprot should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].residues(), "MXXXXUO-*");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Mask rule: conservative protein ambiguity symbols -> X"
+        );
     }
 
     #[test]
@@ -9049,6 +9643,36 @@ mod tests {
     }
 
     #[test]
+    fn executes_twofeat_against_annotated_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("twofeat").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            annotated_feature_fixture().display().to_string(),
+            "--a-kind".to_owned(),
+            "gene".to_owned(),
+            "--b-kind".to_owned(),
+            "cds".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("twofeat should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.columns[0], "record");
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "FEAT1");
+                assert_eq!(table.rows[0][1], "gene");
+                assert_eq!(table.rows[0][7], "CDS");
+                assert_eq!(table.rows[0][13], "1");
+                assert_eq!(table.rows[0][14], "separated");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
     fn executes_feattext_against_annotated_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -9061,7 +9685,11 @@ mod tests {
         match &response.result.payload {
             ResultPayload::TextReport(report) => {
                 assert!(report.body.contains("ID   FEAT1"));
-                assert!(report.body.contains("FEATURES             Location/Qualifiers"));
+                assert!(
+                    report
+                        .body
+                        .contains("FEATURES             Location/Qualifiers")
+                );
                 assert!(report.body.contains("/product=\"short peptide\""));
             }
             payload => panic!("unexpected payload: {payload:?}"),
@@ -9160,7 +9788,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert_eq!(response.result.summary.lines[1], "Frame policy: forward frames 1-3");
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Frame policy: forward frames 1-3"
+        );
         assert_eq!(
             response.result.summary.lines[2],
             "ORF policy: ATG start to first in-frame stop, stop codon included"
@@ -9745,10 +10376,7 @@ mod tests {
                         && row[6] == "0.333333"
                 }));
                 assert!(table.rows.iter().any(|row| {
-                    row[0] == "aggregate"
-                        && row[1] == "ALL"
-                        && row[4] == "TT"
-                        && row[5] == "3"
+                    row[0] == "aggregate" && row[1] == "ALL" && row[4] == "TT" && row[5] == "3"
                 }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
@@ -10055,7 +10683,10 @@ mod tests {
         let error = service
             .invoke(request)
             .expect_err("unsupported residues should fail");
-        assert_eq!(error.code(), Some("tools.pepwindow.input.unsupported_residue"));
+        assert_eq!(
+            error.code(),
+            Some("tools.pepwindow.input.unsupported_residue")
+        );
     }
 
     #[test]
@@ -10264,16 +10895,10 @@ mod tests {
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
                 assert!(table.rows.iter().any(|row| {
-                    row[0] == "record"
-                        && row[1] == "ref_pref"
-                        && row[2] == "CTT"
-                        && row[4] == "3"
+                    row[0] == "record" && row[1] == "ref_pref" && row[2] == "CTT" && row[4] == "3"
                 }));
                 assert!(table.rows.iter().any(|row| {
-                    row[0] == "aggregate"
-                        && row[1] == "ALL"
-                        && row[2] == "ATG"
-                        && row[4] == "2"
+                    row[0] == "aggregate" && row[1] == "ALL" && row[2] == "ATG" && row[4] == "2"
                 }));
                 assert_eq!(table.rows.len(), 61 * 3);
             }

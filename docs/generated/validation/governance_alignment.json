@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 64,
-    "shipped_with_governance_mapping_count": 64,
-    "shipped_retain_count": 58,
+    "shipped_tool_count": 68,
+    "shipped_with_governance_mapping_count": 68,
+    "shipped_retain_count": 62,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 32,
-    "shipped_curated_autodoc_count": 64,
-    "shipped_executable_or_better_count": 64,
+    "retained_backlog_count": 28,
+    "shipped_curated_autodoc_count": 68,
+    "shipped_executable_or_better_count": 68,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -245,6 +245,24 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "maskambignuc",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "mask nucleotide ambiguity residues with N while preserving record order",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "maskambigprot",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "mask conservative protein ambiguity residues with X while preserving record order",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "maskfeat",
       "shipped_family": "feature_tools",
       "shipped_summary": "mask selected simple feature spans while preserving annotations in the result payload",
@@ -303,6 +321,15 @@
       "shipped_family": "feature_tools",
       "shipped_summary": "render selected features as normalized feature-table text",
       "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "twofeat",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "report neighbouring feature pairs that satisfy conservative selector and distance rules",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "executable_evidence"
@@ -551,6 +578,15 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "pasteseq",
+      "shipped_family": "sequence_transform",
+      "shipped_summary": "insert one sequence into another at a deterministic 1-based position",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "splitter",
       "shipped_family": "sequence_transform",
       "shipped_summary": "partition an input sequence stream into deterministic fixed-size chunks",
@@ -655,25 +691,21 @@
     {
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "retained_total": 23,
-      "retained_shipped": 11,
-      "retained_backlog": 12,
-      "shipped_curated_autodoc": 11,
-      "shipped_executable_or_better": 11,
+      "retained_shipped": 15,
+      "retained_backlog": 8,
+      "shipped_curated_autodoc": 15,
+      "shipped_executable_or_better": 15,
       "shipped_compared": 2,
-      "recommendation": "prioritise retained backlog closure (12 remaining)",
+      "recommendation": "prioritise retained backlog closure (8 remaining)",
       "retained_backlog_tools": [
         "biosed",
         "listor",
         "makenucseq",
         "makeprotseq",
-        "maskambignuc",
-        "maskambigprot",
         "msbar",
-        "pasteseq",
         "skipredundant",
         "trimest",
-        "vectorstrip",
-        "twofeat"
+        "vectorstrip"
       ]
     },
     {
@@ -917,28 +949,10 @@
       "description": "Create random protein sequences"
     },
     {
-      "tool_name": "maskambignuc",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Mask all ambiguity characters in nucleotide sequences with N"
-    },
-    {
-      "tool_name": "maskambigprot",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Mask all ambiguity characters in protein sequences with X"
-    },
-    {
       "tool_name": "msbar",
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Mutate a sequence"
-    },
-    {
-      "tool_name": "pasteseq",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Insert one sequence into another"
     },
     {
       "tool_name": "skipredundant",
@@ -957,12 +971,6 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Remove vectors from the ends of nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "twofeat",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Find neighbouring pairs of features in sequence(s)"
     },
     {
       "tool_name": "diffseq",

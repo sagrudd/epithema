@@ -1,15 +1,18 @@
 //! Feature-driven masking, extraction, and annotation-copy tool cohort.
 
-mod extractfeat;
 mod coderet;
+mod extractfeat;
 mod featcopy;
 mod featmerge;
 mod featreport;
 mod feattext;
+mod maskambignuc;
+mod maskambigprot;
 mod maskfeat;
 mod maskseq;
 mod render;
 mod shared;
+mod twofeat;
 
 use crate::ToolDescriptor;
 
@@ -21,8 +24,15 @@ pub use featcopy::{FeatcopyOutcome, FeatcopyParams, featcopy_help, run_featcopy}
 pub use featmerge::{FeatmergeOutcome, FeatmergeParams, featmerge_help, run_featmerge};
 pub use featreport::{FeatreportOutcome, FeatreportParams, featreport_help, run_featreport};
 pub use feattext::{FeattextOutcome, FeattextParams, feattext_help, run_feattext};
+pub use maskambignuc::{
+    MaskambignucOutcome, MaskambignucParams, maskambignuc_help, run_maskambignuc,
+};
+pub use maskambigprot::{
+    MaskambigprotOutcome, MaskambigprotParams, maskambigprot_help, run_maskambigprot,
+};
 pub use maskfeat::{MaskfeatOutcome, MaskfeatParams, maskfeat_help, run_maskfeat};
 pub use maskseq::{MaskseqOutcome, MaskseqParams, maskseq_help, run_maskseq};
+pub use twofeat::{TwofeatOutcome, TwofeatParams, run_twofeat, twofeat_help};
 
 /// `maskseq` descriptor.
 pub const MASKSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
@@ -34,6 +44,18 @@ pub const MASKSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const MASKFEAT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "maskfeat",
     "mask selected simple feature spans while preserving annotations in the result payload",
+)
+.with_family(FAMILY);
+/// `maskambignuc` descriptor.
+pub const MASKAMBIGNUC_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "maskambignuc",
+    "mask nucleotide ambiguity residues with N while preserving record order",
+)
+.with_family(FAMILY);
+/// `maskambigprot` descriptor.
+pub const MASKAMBIGPROT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "maskambigprot",
+    "mask conservative protein ambiguity residues with X while preserving record order",
 )
 .with_family(FAMILY);
 /// `extractfeat` descriptor.
@@ -70,5 +92,11 @@ pub const FEATREPORT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const FEATTEXT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "feattext",
     "render selected features as normalized feature-table text",
+)
+.with_family(FAMILY);
+/// `twofeat` descriptor.
+pub const TWOFEAT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "twofeat",
+    "report neighbouring feature pairs that satisfy conservative selector and distance rules",
 )
 .with_family(FAMILY);

@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "maskambignuc-v1",
+  "tool": {
+    "name": "maskambignuc",
+    "family": "feature_tools",
+    "summary": "Mask nucleotide ambiguity residues with N while preserving record order",
+    "legacy_names": [
+      "maskambignuc"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`maskambignuc` rewrites conservative nucleotide ambiguity symbols to `N` through the shared sequence-record model. The EMBOSS-RS v1 implementation is deliberately narrow: it accepts nucleotide records only, preserves record order and annotations, and leaves canonical `A/C/G/T/U` residues unchanged."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current tool accepts one local sequence input through the governed IO layer. FASTA is the primary exercised format in validation. Protein inputs are rejected, and ambiguity detection is limited to the common nucleotide ambiguity symbols already accepted by the shared alphabet model."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a FASTA sequence collection through the shared result path. Each output record preserves the input identifier and attached metadata, and annotations remain attached in the payload because masking is done in place."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs maskambignuc`. Validation currently covers deterministic masking against a committed nucleotide FASTA fixture and explicit rejection of non-nucleotide inputs in the Rust tool layer."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release masks only the conservative ambiguity set `N/R/Y/S/W/K/M/B/D/H/V`. Gap markers and stop symbols are left unchanged, and the method does not attempt ambiguity-aware feature-coordinate reporting beyond preserving existing annotations."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "ambiguous_nucleotide_fasta",
+      "label": "Ambiguous nucleotide FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/ambiguous_nucleotide_records.fasta"
+      },
+      "description": "Repository-managed nucleotide FASTA fixture containing conservative ambiguity symbols for deterministic masking validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "mask_nucleotide_ambiguities",
+      "title": "Mask conservative nucleotide ambiguity symbols with N",
+      "description": "Runs `maskambignuc` against a committed FASTA fixture and rewrites ambiguity residues while leaving canonical nucleotides unchanged.",
+      "artifact_ids": [
+        "ambiguous_nucleotide_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "masked_nucleotide_sequences",
+          "label": "Ambiguity-masked nucleotide FASTA output",
+          "description": "Stable FASTA output where the fixture residue string `ACGTRYN` becomes `ACGTNNN`."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "mask_nucleotide_ambiguities"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -4,6 +4,7 @@ mod cutseq;
 mod extractseq;
 mod megamerger;
 mod merger;
+mod pasteseq;
 mod shared;
 mod shuffleseq;
 mod sizeseq;
@@ -18,6 +19,7 @@ pub use cutseq::{CutseqOutcome, CutseqParams, cutseq_help, run_cutseq};
 pub use extractseq::{ExtractseqOutcome, ExtractseqParams, extractseq_help, run_extractseq};
 pub use megamerger::{MegamergerOutcome, MegamergerParams, megamerger_help, run_megamerger};
 pub use merger::{MergerOutcome, MergerParams, merger_help, run_merger};
+pub use pasteseq::{PasteseqOutcome, PasteseqParams, pasteseq_help, run_pasteseq};
 pub use shuffleseq::{ShuffleseqOutcome, ShuffleseqParams, run_shuffleseq, shuffleseq_help};
 pub use sizeseq::{SizeseqOutcome, SizeseqParams, run_sizeseq, sizeseq_help};
 pub use splitter::{SplitterOutcome, SplitterParams, run_splitter, splitter_help};
@@ -39,6 +41,12 @@ pub const CUTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const UNION_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "union",
     "concatenate multiple sequence inputs into one output stream",
+)
+.with_family(FAMILY);
+/// `pasteseq` descriptor.
+pub const PASTESEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "pasteseq",
+    "insert one sequence into another at a deterministic 1-based position",
 )
 .with_family(FAMILY);
 /// `splitter` descriptor.

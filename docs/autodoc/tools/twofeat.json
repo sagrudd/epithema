@@ -1,0 +1,101 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "twofeat-v1",
+  "tool": {
+    "name": "twofeat",
+    "family": "feature_tools",
+    "summary": "Report neighbouring feature pairs that satisfy conservative selector and distance rules",
+    "legacy_names": [
+      "twofeat"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`twofeat` reports neighbouring feature pairs from annotated sequence records. EMBOSS-RS v1 defines neighbours conservatively as adjacent features in source order, supports the existing selector model for the left and right features independently, and emits a governed table report instead of a feature-rewriting payload."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one annotated EMBL or GenBank input. Left-side selectors use `--a-kind`, `--a-name`, `--a-qualifier`, and `--a-strand`; right-side selectors use the corresponding `--b-*` flags. Optional `--min-range` and `--max-range` constrain the nearest-end gap between adjacent features."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report through the shared result layer. Rows preserve source-record order and adjacent feature-pair order, and include per-feature kind, location, name, nearest-end gap, relation, and strand-relation fields."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs twofeat`. Validation currently covers deterministic reporting of one adjacent `gene`/`CDS` pair from a committed annotated fixture, plus distance-filter rejection in the Rust tool layer."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not attempt the broader historical EMBOSS neighbourhood model. It considers only adjacent features in source order, reports distance from nearest feature bounds, and does not support inter-record pairing, complex interval geometry metrics, or richer pair-scoring rules."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "annotated_feature_gbk",
+      "label": "Annotated feature GenBank fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture containing one `gene` followed by one `CDS`, used for deterministic neighbouring-feature reporting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_gene_cds_neighbour_pair",
+      "title": "Report one neighbouring gene/CDS pair",
+      "description": "Runs `twofeat` against a committed annotated GenBank fixture with explicit left and right feature selectors for `gene` and `cds`.",
+      "artifact_ids": [
+        "annotated_feature_gbk"
+      ],
+      "parameters": [
+        {
+          "name": "a-kind",
+          "value": "gene"
+        },
+        {
+          "name": "b-kind",
+          "value": "cds"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "neighbouring_feature_pair_report",
+          "label": "Neighbouring feature pair table",
+          "description": "A governed table with one row for the adjacent `gene` then `CDS` pair, a gap of `1`, and a `separated` relation."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_gene_cds_neighbour_pair"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

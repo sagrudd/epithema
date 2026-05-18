@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `64`
-- Documentation-complete methods: `64`
-- Methods with validation stubs: `64`
+- Methods in cohort: `68`
+- Documentation-complete methods: `68`
+- Methods with validation stubs: `68`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `43`
+- Methods with executable validation: `47`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `43`
+- Methods with visible gaps: `47`
 
 ## Evidence Level Definitions
 
@@ -52,6 +52,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `descseq` | `sequence_edit` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `maskambignuc` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `maskambigprot` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `featcopy` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -59,6 +61,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `featmerge` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `featreport` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `twofeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cusp` | `codon_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -86,6 +89,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `extractseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cutseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `union` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `pasteseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `splitter` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `merger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `megamerger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -114,12 +118,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `trimseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `maskambignuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `maskambigprot`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `coderet`: `missing_compared_evidence`
 - `featmerge`: `missing_compared_evidence`
 - `featreport`: `missing_compared_evidence`
 - `feattext`: `missing_compared_evidence`
+- `twofeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
@@ -132,6 +139,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `union`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `pasteseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `splitter`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `merger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `megamerger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

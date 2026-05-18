@@ -45,6 +45,8 @@ tools/geecee
 tools/getorf
 tools/infoalign
 tools/infoseq
+tools/maskambignuc
+tools/maskambigprot
 tools/maskfeat
 tools/maskseq
 tools/matcher
@@ -55,6 +57,7 @@ tools/needleall
 tools/newseq
 tools/notseq
 tools/nthseq
+tools/pasteseq
 tools/pepstats
 tools/pepwindow
 tools/prettyseq
@@ -71,6 +74,7 @@ tools/splitter
 tools/tranalign
 tools/transeq
 tools/trimseq
+tools/twofeat
 tools/union
 tools/water
 tools/wordcount

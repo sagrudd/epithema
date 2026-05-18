@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "maskambigprot-v1",
+  "tool": {
+    "name": "maskambigprot",
+    "family": "feature_tools",
+    "summary": "Mask conservative protein ambiguity residues with X while preserving record order",
+    "legacy_names": [
+      "maskambigprot"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`maskambigprot` rewrites a conservative set of protein ambiguity symbols to `X` using the shared sequence-record model. EMBOSS-RS v1 keeps the scope explicit: only protein records are accepted, record order is preserved, and canonical amino-acid symbols remain unchanged."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current tool accepts one local protein sequence input through the governed IO layer. FASTA is the primary exercised format in validation. Nucleotide inputs are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a FASTA sequence collection through the shared result path. Identifiers and metadata are preserved, and attached annotations remain present in the payload because masking is performed directly on the existing residue coordinates."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs maskambigprot`. Validation currently covers deterministic masking of an ambiguous protein FASTA fixture and explicit rejection of nucleotide input in the Rust tool layer."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release masks only `B`, `J`, `X`, and `Z`. It does not treat `O` or `U` as ambiguity symbols, and it leaves gap or stop markers unchanged."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "ambiguous_protein_fasta",
+      "label": "Ambiguous protein FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/ambiguous_protein_records.fasta"
+      },
+      "description": "Repository-managed protein FASTA fixture containing conservative ambiguity residues for deterministic masking validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "mask_protein_ambiguities",
+      "title": "Mask conservative protein ambiguity symbols with X",
+      "description": "Runs `maskambigprot` against a committed protein FASTA fixture and rewrites ambiguity residues while leaving canonical amino-acid symbols unchanged.",
+      "artifact_ids": [
+        "ambiguous_protein_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "masked_protein_sequences",
+          "label": "Ambiguity-masked protein FASTA output",
+          "description": "Stable FASTA output where the fixture residue string `MBJZXUO-*` becomes `MXXXXUO-*`."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "mask_protein_ambiguities"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "pasteseq-v1",
+  "tool": {
+    "name": "pasteseq",
+    "family": "sequence_transform",
+    "summary": "Insert one sequence into another at a deterministic 1-based position",
+    "legacy_names": [
+      "pasteseq"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`pasteseq` inserts exactly one sequence record into exactly one main sequence record after a user-supplied position. The EMBOSS-RS v1 implementation is intentionally conservative: it performs a direct insertion only, does not attempt feature-coordinate remapping, and emits one merged sequence record."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts two local sequence inputs, each containing exactly one record, plus a position argument. Position `0` inserts before the start of the main sequence and position `length(main)` inserts at the end. The two records must have the same inferred molecule kind."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits one merged FASTA sequence record through the shared result path. EMBOSS-RS v1 preserves the identifier and metadata of the main sequence input but drops feature annotations instead of emitting incorrect shifted coordinates."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs pasteseq`. Validation currently covers deterministic insertion against committed one-record FASTA fixtures and molecule-mismatch rejection in the Rust tool layer."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release supports only single-record inputs and exact in-memory insertion. It does not preserve or remap feature annotations, does not support accession retrieval inputs, and does not attempt overlap-aware merge behavior."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "pasteseq_main_fasta",
+      "label": "Pasteseq main FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/pasteseq_main.fasta"
+      },
+      "description": "Repository-managed main FASTA fixture used as the insertion target for deterministic pasteseq validation."
+    },
+    {
+      "id": "pasteseq_insert_fasta",
+      "label": "Pasteseq inserted FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/pasteseq_insert.fasta"
+      },
+      "description": "Repository-managed one-record FASTA fixture inserted into the main sequence during deterministic pasteseq validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "insert_short_sequence_after_position_two",
+      "title": "Insert one short sequence after position two",
+      "description": "Runs `pasteseq` against committed main and inserted FASTA fixtures and emits one merged sequence record after position `2`.",
+      "artifact_ids": [
+        "pasteseq_main_fasta",
+        "pasteseq_insert_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "position",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "pasted_sequence_record",
+          "label": "Merged inserted sequence record",
+          "description": "A FASTA sequence record with residues `ACTTGT` and the main-sequence identifier preserved."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "insert_short_sequence_after_position_two"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}
