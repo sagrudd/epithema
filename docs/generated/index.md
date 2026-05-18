@@ -35,6 +35,7 @@ tools/fuzznuc
 tools/fuzzpro
 tools/fuzztran
 tools/geecee
+tools/getorf
 tools/infoalign
 tools/maskfeat
 tools/maskseq
@@ -45,6 +46,7 @@ tools/newseq
 tools/notseq
 tools/nthseq
 tools/pepstats
+tools/prettyseq
 tools/refseqget
 tools/revseq
 tools/runget
@@ -53,6 +55,8 @@ tools/seqcount
 tools/seqret
 tools/skipseq
 tools/splitter
+tools/tranalign
+tools/transeq
 tools/trimseq
 tools/union
 ```

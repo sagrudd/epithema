@@ -1,0 +1,31 @@
+{
+  "tool_name": "getorf",
+  "document_id": "getorf-stub-v1",
+  "source_mode": "registry_stub",
+  "evidence_source": "registry_stub_autodoc",
+  "summary": {
+    "total_case_count": 0,
+    "declared_case_count": 0,
+    "harvested_case_count": 0,
+    "runnable_case_count": 0,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [],
+  "unresolved_gaps": [
+    "tool 'getorf' needs at least one declared example to establish validation evidence"
+  ],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "testkit.report.no_cases",
+      "message": "autodoc document does not declare any validation cases",
+      "context": "getorf"
+    }
+  ],
+  "provenance": []
+}

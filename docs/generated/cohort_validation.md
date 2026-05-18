@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `46`
-- Documentation-complete methods: `46`
-- Methods with validation stubs: `46`
-- Documented-only methods: `8`
+- Methods in cohort: `50`
+- Documentation-complete methods: `50`
+- Methods with validation stubs: `50`
+- Documented-only methods: `12`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
 - Methods with executable validation: `31`
 - Methods with compared evidence: `6`
-- Methods with visible gaps: `40`
+- Methods with visible gaps: `44`
 
 ## Evidence Level Definitions
 
@@ -69,6 +69,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `backtranseq` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `backtranambig` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `checktrans` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `transeq` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `getorf` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `prettyseq` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `tranalign` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `extractseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cutseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `union` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -112,6 +116,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `backtranseq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `backtranambig`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `checktrans`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `transeq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `getorf`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `prettyseq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `tranalign`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `union`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

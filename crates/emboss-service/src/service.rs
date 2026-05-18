@@ -68,8 +68,11 @@ use emboss_tools::sequence_transform::{
     run_cutseq, run_extractseq, run_splitter, run_union, splitter_help, union_help,
 };
 use emboss_tools::translation_tools::{
-    BacktranambigParams, BacktranseqParams, ChecktransParams, backtranambig_help, backtranseq_help,
-    checktrans_help, run_backtranambig, run_backtranseq, run_checktrans,
+    BacktranambigParams, BacktranseqParams, ChecktransParams, GetorfParams, PrettyseqParams,
+    TranalignParams, TranslationFrameSelection, TranseqParams, backtranambig_help,
+    backtranseq_help, checktrans_help, getorf_help, prettyseq_help, run_backtranambig,
+    run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign, run_transeq,
+    tranalign_help, transeq_help,
 };
 
 use crate::ServiceDocumentationAcquisition;
@@ -275,6 +278,10 @@ impl EmbossService {
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
             "backtranambig" => self.invoke_backtranambig(request, descriptor),
             "checktrans" => self.invoke_checktrans(request, descriptor),
+            "transeq" => self.invoke_transeq(request, descriptor),
+            "getorf" => self.invoke_getorf(request, descriptor),
+            "prettyseq" => self.invoke_prettyseq(request, descriptor),
+            "tranalign" => self.invoke_tranalign(request, descriptor),
             "extractseq" => self.invoke_extractseq(request, descriptor),
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
@@ -2183,6 +2190,245 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("backtranslated-sequences", ArtifactKind::Sequence)
                 .with_label("Representative back-translated sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_transeq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, transeq_help()));
+        }
+
+        let params = parse_transeq_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_transeq(TranseqParams {
+            input,
+            frame: params.frame,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("translated protein FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("translated {} protein records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Forward translation completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Frame selection: {}",
+                    match outcome.frame {
+                        TranslationFrameSelection::Frame1 => "frame 1",
+                        TranslationFrameSelection::Frame2 => "frame 2",
+                        TranslationFrameSelection::Frame3 => "frame 3",
+                        TranslationFrameSelection::AllForward => "all forward frames",
+                    }
+                ))
+                .with_line("Genetic code: standard")
+                .with_line("Trailing partial codons: ignored")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("translated-sequences", ArtifactKind::Sequence)
+                .with_label("Translated protein sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_getorf(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, getorf_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("getorf", getorf_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_getorf(GetorfParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("ORF FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("extracted {} ORFs", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Forward ORF extraction completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Frame policy: forward frames 1-3")
+                .with_line("ORF policy: ATG start to first in-frame stop, stop codon included")
+                .with_line(format!("ORFs: {}", outcome.cases.len()))
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("orf-sequences", ArtifactKind::Sequence)
+                .with_label("Extracted ORF sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_prettyseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, prettyseq_help()));
+        }
+
+        let params = parse_prettyseq_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_prettyseq(PrettyseqParams {
+            input,
+            frame: params.frame,
+            width: params.width,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("pretty-formatted nucleotide and translation report");
+        let report = self.success_report(
+            &request.context,
+            format!("rendered pretty sequence view for {} records", outcome.record_count),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TextReport(TextReport::new(outcome.body).with_title("prettyseq")),
+            ResultSummary::new("Pretty sequence report rendered")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Frame: {}",
+                    match outcome.frame {
+                        TranslationFrameSelection::Frame1 => "1",
+                        TranslationFrameSelection::Frame2 => "2",
+                        TranslationFrameSelection::Frame3 => "3",
+                        TranslationFrameSelection::AllForward => "all",
+                    }
+                ))
+                .with_line(format!("Width: {}", outcome.width))
+                .with_line("Translation policy: forward frame only, trailing partial codons ignored")
+                .with_line(format!("Records: {}", outcome.record_count)),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("prettyseq-report", ArtifactKind::Text)
+                .with_label("Pretty sequence report")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_tranalign(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, tranalign_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("tranalign", tranalign_help()))?;
+        let (protein_alignment, alignment_provenance, mut diagnostics) =
+            self.resolve_local_alignment_input(&arguments[0])?;
+        let (nucleotide_input, nucleotide_provenance, nucleotide_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[1])?;
+        diagnostics.extend(nucleotide_diagnostics);
+        let outcome = run_tranalign(TranalignParams {
+            protein_alignment,
+            nucleotide_input,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("codon-projected Stockholm alignment");
+        let report = self.success_report(
+            &request.context,
+            format!("projected {} aligned rows into codon space", outcome.alignment.row_count()),
+            diagnostics,
+            vec![
+                alignment_provenance,
+                nucleotide_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Codon alignment projected")
+                .with_line(format!(
+                    "Protein alignment: {}",
+                    outcome.protein_alignment.path.display()
+                ))
+                .with_line(format!(
+                    "Nucleotide input: {}",
+                    outcome.nucleotide_input.path.display()
+                ))
+                .with_line("Compatibility: exact identifier pairing and strict frame-1 translation")
+                .with_line("Gap policy: protein gaps become triple-nucleotide gaps")
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("codon-alignment", ArtifactKind::Alignment)
+                .with_label("Projected codon alignment")
                 .with_provenance(output_provenance),
         );
 
@@ -4330,6 +4576,122 @@ fn parse_charge_params(
     ))
 }
 
+fn parse_transeq_params(arguments: &[String]) -> Result<TranseqParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("transeq", transeq_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut frame = TranslationFrameSelection::Frame1;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--frame=") {
+            frame = parse_translation_frame("transeq", value, true)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--frame" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --frame")
+                    .with_code("service.tool.transeq.frame_missing")
+            })?;
+            frame = parse_translation_frame("transeq", value, true)?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown transeq argument '{argument}'"),
+        )
+        .with_code("service.tool.transeq.argument_unknown")
+        .with_detail(transeq_help()));
+    }
+
+    Ok(TranseqParams { input, frame })
+}
+
+fn parse_prettyseq_params(arguments: &[String]) -> Result<PrettyseqParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("prettyseq", prettyseq_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut frame = TranslationFrameSelection::Frame1;
+    let mut width = 60usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--frame=") {
+            frame = parse_translation_frame("prettyseq", value, false)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--frame" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --frame")
+                    .with_code("service.tool.prettyseq.frame_missing")
+            })?;
+            frame = parse_translation_frame("prettyseq", value, false)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--width=") {
+            width = parse_positive_count("prettyseq", value, "--width")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--width" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --width")
+                    .with_code("service.tool.prettyseq.width_missing")
+            })?;
+            width = parse_positive_count("prettyseq", value, "--width")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown prettyseq argument '{argument}'"),
+        )
+        .with_code("service.tool.prettyseq.argument_unknown")
+        .with_detail(prettyseq_help()));
+    }
+
+    Ok(PrettyseqParams {
+        input,
+        frame,
+        width,
+    })
+}
+
+fn parse_translation_frame(
+    tool: &str,
+    value: &str,
+    allow_all: bool,
+) -> Result<TranslationFrameSelection, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "1" | "frame1" | "frame-1" => Ok(TranslationFrameSelection::Frame1),
+        "2" | "frame2" | "frame-2" => Ok(TranslationFrameSelection::Frame2),
+        "3" | "frame3" | "frame-3" => Ok(TranslationFrameSelection::Frame3),
+        "all" if allow_all => Ok(TranslationFrameSelection::AllForward),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            if allow_all {
+                "translation frame must be one of 1, 2, 3, or all"
+            } else {
+                "translation frame must be one of 1, 2, or 3"
+            },
+        )
+        .with_code(format!("service.tool.{tool}.frame_invalid"))
+        .with_detail(value.to_owned())),
+    }
+}
+
 fn parse_extractalign_params(arguments: &[String]) -> Result<ExtractalignParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("extractalign", extractalign_help()));
@@ -5364,6 +5726,16 @@ mod tests {
     fn checktrans_invalid_codon_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/checktrans_invalid_codon.fasta")
+    }
+
+    fn getorf_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/getorf_records.fasta")
+    }
+
+    fn tranalign_protein_alignment_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/tranalign_protein_alignment.sto")
     }
 
     fn implemented_service() -> EmbossService {
@@ -6990,6 +7362,119 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_transeq_against_matching_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("transeq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            "--frame".to_owned(),
+            "1".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("transeq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 2);
+                assert_eq!(records[0].identifier().accession(), "cdsA.frame1");
+                assert_eq!(records[0].residues(), "MA*");
+                assert_eq!(records[1].identifier().accession(), "cdsB.frame1");
+                assert_eq!(records[1].residues(), "LS");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+        );
+        assert_eq!(response.result.summary.lines[1], "Frame selection: frame 1");
+        assert_eq!(response.result.summary.lines[2], "Genetic code: standard");
+    }
+
+    #[test]
+    fn executes_getorf_against_orf_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("getorf").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![getorf_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("getorf should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 2);
+                assert_eq!(records[0].residues(), "ATGAAATAG");
+                assert_eq!(records[1].residues(), "ATGCCCTAA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Frame policy: forward frames 1-3");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "ORF policy: ATG start to first in-frame stop, stop codon included"
+        );
+        assert_eq!(response.result.summary.lines[3], "ORFs: 2");
+    }
+
+    #[test]
+    fn executes_prettyseq_against_matching_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("prettyseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            checktrans_nucleotide_fixture().display().to_string(),
+            "--width".to_owned(),
+            "9".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("prettyseq should execute");
+        match &response.result.payload {
+            ResultPayload::TextReport(report) => {
+                assert!(report.body.contains(">cdsA"));
+                assert!(report.body.contains("FRAME 1"));
+                assert!(report.body.contains("NT     1 ATGGCTTAA     9"));
+                assert!(report.body.contains("AA     1 MA*     3"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Frame: 1");
+        assert_eq!(response.result.summary.lines[2], "Width: 9");
+    }
+
+    #[test]
+    fn executes_tranalign_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("tranalign").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            tranalign_protein_alignment_fixture().display().to_string(),
+            checktrans_nucleotide_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("tranalign should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 2);
+                assert_eq!(alignment.rows()[0].identifier().accession(), "cdsA");
+                assert_eq!(alignment.rows()[0].aligned(), "ATGGCT---");
+                assert_eq!(alignment.rows()[1].aligned(), "---CTTTCT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Compatibility: exact identifier pairing and strict frame-1 translation"
+        );
     }
 
     #[test]

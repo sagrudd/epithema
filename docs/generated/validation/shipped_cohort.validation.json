@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 46,
-    "documentation_complete_count": 46,
-    "validation_stub_count": 46,
-    "documented_only_count": 8,
+    "total_method_count": 50,
+    "documentation_complete_count": 50,
+    "validation_stub_count": 50,
+    "documented_only_count": 12,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
     "executable_evidence_count": 31,
     "compared_evidence_count": 6,
-    "gapped_method_count": 40
+    "gapped_method_count": 44
   },
   "methods": [
     {
@@ -1183,6 +1183,162 @@
         {
           "code": "validation_report_gap",
           "message": "tool 'checktrans' needs at least one declared example to establish validation evidence"
+        }
+      ]
+    },
+    {
+      "tool_name": "transeq",
+      "family": "translation_tools",
+      "summary": "translate nucleotide sequences in forward reading frames",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'transeq' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'transeq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'transeq' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'transeq' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'transeq' needs at least one declared example to establish validation evidence"
+        }
+      ]
+    },
+    {
+      "tool_name": "getorf",
+      "family": "translation_tools",
+      "summary": "extract stop-bounded forward ORFs from nucleotide sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'getorf' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'getorf' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'getorf' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'getorf' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'getorf' needs at least one declared example to establish validation evidence"
+        }
+      ]
+    },
+    {
+      "tool_name": "prettyseq",
+      "family": "translation_tools",
+      "summary": "render nucleotide sequences with a translated frame-oriented text view",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'prettyseq' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'prettyseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'prettyseq' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'prettyseq' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'prettyseq' needs at least one declared example to establish validation evidence"
+        }
+      ]
+    },
+    {
+      "tool_name": "tranalign",
+      "family": "translation_tools",
+      "summary": "project aligned proteins onto matching coding-sequence codon alignments",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'tranalign' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'tranalign' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'tranalign' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'tranalign' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'tranalign' needs at least one declared example to establish validation evidence"
         }
       ]
     },
