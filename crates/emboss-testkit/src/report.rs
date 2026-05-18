@@ -205,6 +205,8 @@ pub struct CohortValidationSummary {
     pub declared_evidence_count: usize,
     /// Methods with harvested evidence.
     pub harvested_evidence_count: usize,
+    /// Methods with any harvested legacy provenance, regardless of highest evidence tier.
+    pub harvested_legacy_presence_count: usize,
     /// Methods with executable validation.
     pub executable_evidence_count: usize,
     /// Methods with compared validation.
@@ -324,6 +326,9 @@ impl CohortValidationSummary {
             if method.validation_stub_present {
                 summary.validation_stub_count += 1;
             }
+            if method.harvested_legacy_evidence_present {
+                summary.harvested_legacy_presence_count += 1;
+            }
             match method.evidence_level {
                 CohortEvidenceLevel::DocumentedOnly => summary.documented_only_count += 1,
                 CohortEvidenceLevel::DeclaredEvidence => summary.declared_evidence_count += 1,
@@ -420,7 +425,7 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
     );
     rendered.push_str("## Summary\n\n");
     rendered.push_str(&format!(
-        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Documented-only methods: `{}`\n- Methods with declared evidence only: `{}`\n- Methods with harvested legacy evidence: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with visible gaps: `{}`\n\n",
+        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Documented-only methods: `{}`\n- Methods with declared evidence only: `{}`\n- Methods at harvested-evidence maturity: `{}`\n- Methods with harvested legacy provenance recorded: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with visible gaps: `{}`\n\n",
         report.registry_source,
         report.summary.total_method_count,
         report.summary.documentation_complete_count,
@@ -428,6 +433,7 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
         report.summary.documented_only_count,
         report.summary.declared_evidence_count,
         report.summary.harvested_evidence_count,
+        report.summary.harvested_legacy_presence_count,
         report.summary.executable_evidence_count,
         report.summary.compared_evidence_count,
         report.summary.gapped_method_count

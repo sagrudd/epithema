@@ -9,6 +9,7 @@
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
+    "harvested_legacy_presence_count": 47,
     "executable_evidence_count": 69,
     "compared_evidence_count": 21,
     "gapped_method_count": 69

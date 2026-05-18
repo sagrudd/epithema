@@ -10,7 +10,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with validation stubs: `90`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
-- Methods with harvested legacy evidence: `0`
+- Methods at harvested-evidence maturity: `0`
+- Methods with harvested legacy provenance recorded: `47`
 - Methods with executable validation: `69`
 - Methods with compared evidence: `21`
 - Methods with visible gaps: `69`

@@ -107,6 +107,8 @@ pub struct GovernanceAlignmentSummary {
     pub shipped_curated_autodoc_count: usize,
     /// Shipped tools with executable or compared evidence.
     pub shipped_executable_or_better_count: usize,
+    /// Shipped tools with harvested legacy provenance recorded.
+    pub shipped_harvested_legacy_presence_count: usize,
     /// Shipped tools with compared evidence.
     pub shipped_compared_count: usize,
     /// Shipped tools still at documented-only evidence level.
@@ -317,7 +319,7 @@ pub fn render_governance_alignment_markdown(report: &GovernanceAlignmentReport) 
 
     rendered.push_str("## Summary\n\n");
     rendered.push_str(&format!(
-        "- Governance source: `{}`\n- Registry source: `{}`\n- Governed mapped tools: `{}`\n- Governed retained tools: `{}`\n- Shipped tools: `{}`\n- Shipped tools with governance mapping: `{}`\n- Retained backlog still unshipped: `{}`\n- Shipped tools with curated autodoc: `{}`\n- Shipped tools with executable or compared evidence: `{}`\n- Shipped tools with compared evidence: `{}`\n- Shipped tools still documented-only: `{}`\n\n",
+        "- Governance source: `{}`\n- Registry source: `{}`\n- Governed mapped tools: `{}`\n- Governed retained tools: `{}`\n- Shipped tools: `{}`\n- Shipped tools with governance mapping: `{}`\n- Retained backlog still unshipped: `{}`\n- Shipped tools with curated autodoc: `{}`\n- Shipped tools with executable or compared evidence: `{}`\n- Shipped tools with harvested legacy provenance: `{}`\n- Shipped tools with compared evidence: `{}`\n- Shipped tools still documented-only: `{}`\n\n",
         report.governance_source,
         report.registry_source,
         report.summary.governed_tool_count,
@@ -327,6 +329,7 @@ pub fn render_governance_alignment_markdown(report: &GovernanceAlignmentReport) 
         report.summary.retained_backlog_count,
         report.summary.shipped_curated_autodoc_count,
         report.summary.shipped_executable_or_better_count,
+        report.summary.shipped_harvested_legacy_presence_count,
         report.summary.shipped_compared_count,
         report.summary.shipped_documented_only_count,
     ));
@@ -500,6 +503,15 @@ impl GovernanceAlignmentSummary {
                 CohortEvidenceLevel::ExecutableEvidence | CohortEvidenceLevel::ComparedEvidence
             ) {
                 summary.shipped_executable_or_better_count += 1;
+            }
+            if cohort
+                .methods
+                .iter()
+                .find(|cohort_method| cohort_method.tool_name == method.tool_name)
+                .map(|cohort_method| cohort_method.harvested_legacy_evidence_present)
+                .unwrap_or(false)
+            {
+                summary.shipped_harvested_legacy_presence_count += 1;
             }
             if method.evidence_level == CohortEvidenceLevel::ComparedEvidence {
                 summary.shipped_compared_count += 1;

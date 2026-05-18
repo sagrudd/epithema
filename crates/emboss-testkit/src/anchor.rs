@@ -14,7 +14,9 @@ use emboss_service::{
 };
 use emboss_tools::governed_tool_descriptors;
 
-use crate::evidence::{ComparisonStatus, EvidenceSourceKind, ExecutionStatus};
+use crate::evidence::{
+    ComparisonStatus, EvidenceDeclarationStatus, EvidenceSourceKind, ExecutionStatus,
+};
 use crate::projection::{derive_validation_report, write_validation_report_json};
 use crate::report::ToolValidationReport;
 
@@ -352,6 +354,7 @@ pub fn derive_acceptance_anchor_report(
         })?;
 
     case.evidence_source = EvidenceSourceKind::ExecutedRun;
+    case.declaration_status = EvidenceDeclarationStatus::Harvested;
     case.execution_status = ExecutionStatus::Executed;
     case.comparison_status = ComparisonStatus::Passed;
     if !case.provenance.contains(&legacy_reference) {
