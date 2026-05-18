@@ -1,0 +1,107 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "dreg-v1",
+  "tool": {
+    "name": "dreg",
+    "family": "pattern_tools",
+    "summary": "scan nucleotide sequences with deterministic bounded regular expressions",
+    "legacy_names": [
+      "dreg"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`dreg` searches nucleotide sequence records with a bounded regular expression. EMBOSS-RS v1 applies a Rust regular expression case-insensitively to normalized nucleotide residues and reports overlapping forward-strand matches only."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local nucleotide input and one regular-expression pattern. Protein-classified inputs are rejected. Unknown-classified residues are treated literally in the subject sequence; there is no ambiguity-expansion layer."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a deterministic table with record identifier, pattern text, 1-based inclusive start and end coordinates, and the matched normalized residue slice."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs dreg`. Validation currently covers overlapping regex hits against a committed nucleotide FASTA fixture through the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not search reverse complements, does not expose EMBOSS-era fuzzy mismatch semantics, and rejects empty or zero-width regular expressions."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "dreg_records_fasta",
+      "label": "Dreg nucleotide FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/dreg_records.fasta"
+      },
+      "description": "Repository-managed nucleotide FASTA fixture containing one record with overlapping `ATA` matches."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_overlapping_regex_hits",
+      "title": "Report overlapping forward-strand regex hits",
+      "description": "Runs `dreg` against a committed nucleotide FASTA fixture and reports overlapping `ATA` matches from the forward sequence.",
+      "artifact_ids": [
+        "dreg_records_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "value": "ATA"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "dreg_hit_table",
+          "label": "Overlapping nucleotide regex hit table",
+          "description": "Two overlapping hits are reported from record `dregA` with 1-based inclusive coordinates."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS dreg application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dreg.acd",
+        "invocation": "dreg -sequence dreg_records.fasta -pattern ATA -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS dreg application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dreg.acd",
+        "invocation": "dreg -sequence dreg_records.fasta -pattern ATA -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_overlapping_regex_hits"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

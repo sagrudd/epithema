@@ -1,0 +1,111 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "einverted-v1",
+  "tool": {
+    "name": "einverted",
+    "family": "pattern_tools",
+    "summary": "report exact inverted-repeat arms with bounded spacer length in nucleotide sequences",
+    "legacy_names": [
+      "einverted"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`einverted` reports exact inverted-repeat arms in nucleotide sequence records. EMBOSS-RS v1 searches for exact reverse-complement arm pairs with a bounded spacer and reports overlapping hits deterministically."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local nucleotide input plus optional minimum arm length and maximum spacer length. Protein and unknown-classified inputs are rejected because the search depends on reverse-complement semantics."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a deterministic table with record identifier, left and right arm coordinates, spacer length, arm length, and the two exact arm sequences."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs einverted`. Validation currently covers exact 4-residue inverted-repeat arm detection with bounded spacer length against a committed nucleotide FASTA fixture."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not score mismatches, bulges, or thermodynamic stability. It reports exact arm pairs only and leaves higher-order ranking for future work."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "einverted_records_fasta",
+      "label": "Einverted nucleotide FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/einverted_records.fasta"
+      },
+      "description": "Repository-managed nucleotide FASTA fixture containing exact inverted-repeat arms with bounded spacer length."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_exact_inverted_repeat_arms",
+      "title": "Report exact inverted-repeat arms with bounded spacer length",
+      "description": "Runs `einverted` against a committed nucleotide FASTA fixture and reports deterministic exact reverse-complement arm pairs with a minimum arm length of 4 and a maximum spacer length of 2.",
+      "artifact_ids": [
+        "einverted_records_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "min_arm_length",
+          "value": "4"
+        },
+        {
+          "name": "max_gap_length",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "einverted_hit_table",
+          "label": "Exact inverted-repeat hit table",
+          "description": "The committed fixture yields deterministic overlapping exact arm-pair rows, including one 4-residue arm pair with a 2-residue spacer."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS einverted application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd",
+        "invocation": "einverted -sequence einverted_records.fasta -threshold 0 -gap 2 -match 1 -mismatch -1 -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS einverted application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd",
+        "invocation": "einverted -sequence einverted_records.fasta -threshold 0 -gap 2 -match 1 -mismatch -1 -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_exact_inverted_repeat_arms"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

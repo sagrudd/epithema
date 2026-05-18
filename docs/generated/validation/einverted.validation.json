@@ -1,0 +1,52 @@
+{
+  "tool_name": "einverted",
+  "document_id": "einverted-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_exact_inverted_repeat_arms",
+      "title": "Report exact inverted-repeat arms with bounded spacer length",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "einverted_records_fasta"
+      ],
+      "expected_output_ids": [
+        "einverted_hit_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS einverted application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd",
+          "invocation": "einverted -sequence einverted_records.fasta -threshold 0 -gap 2 -match 1 -mismatch -1 -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS einverted application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd",
+      "invocation": "einverted -sequence einverted_records.fasta -threshold 0 -gap 2 -match 1 -mismatch -1 -outfile stdout"
+    }
+  ]
+}

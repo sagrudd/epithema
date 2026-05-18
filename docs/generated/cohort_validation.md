@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `74`
-- Documentation-complete methods: `74`
-- Methods with validation stubs: `74`
+- Methods in cohort: `78`
+- Documentation-complete methods: `78`
+- Methods with validation stubs: `78`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `53`
+- Methods with executable validation: `57`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `53`
+- Methods with visible gaps: `57`
 
 ## Evidence Level Definitions
 
@@ -69,11 +69,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `cusp` | `codon_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `codcmp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `codcopy` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `dreg` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `einverted` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `fuzznuc` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `fuzzpro` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `fuzztran` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `palindrome` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `preg` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `patmatdb` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `seqmatchall` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `wordmatch` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `wordfinder` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
@@ -139,8 +143,12 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `dreg`: `missing_compared_evidence`
+- `einverted`: `missing_compared_evidence`
+- `palindrome`: `missing_compared_evidence`
 - `preg`: `missing_compared_evidence`
 - `patmatdb`: `missing_compared_evidence`
+- `seqmatchall`: `missing_compared_evidence`
 - `wordmatch`: `missing_compared_evidence`
 - `wordfinder`: `missing_compared_evidence`
 - `charge`: `missing_compared_evidence`, `validation_report_gap`

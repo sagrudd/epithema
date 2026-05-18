@@ -32,7 +32,9 @@ tools/degapseq
 tools/descseq
 tools/diffseq
 tools/distmat
+tools/dreg
 tools/edialign
+tools/einverted
 tools/extractalign
 tools/extractfeat
 tools/extractseq
@@ -59,6 +61,7 @@ tools/needleall
 tools/newseq
 tools/notseq
 tools/nthseq
+tools/palindrome
 tools/pasteseq
 tools/patmatdb
 tools/pepstats
@@ -70,6 +73,7 @@ tools/revseq
 tools/runget
 tools/runinfo
 tools/seqcount
+tools/seqmatchall
 tools/seqret
 tools/shuffleseq
 tools/sizeseq

@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 74,
-    "shipped_with_governance_mapping_count": 74,
-    "shipped_retain_count": 68,
+    "shipped_tool_count": 78,
+    "shipped_with_governance_mapping_count": 78,
+    "shipped_retain_count": 72,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 22,
-    "shipped_curated_autodoc_count": 74,
-    "shipped_executable_or_better_count": 74,
+    "retained_backlog_count": 18,
+    "shipped_curated_autodoc_count": 78,
+    "shipped_executable_or_better_count": 78,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -398,6 +398,24 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "dreg",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan nucleotide sequences with deterministic bounded regular expressions",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "einverted",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "report exact inverted-repeat arms with bounded spacer length in nucleotide sequences",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "fuzznuc",
       "shipped_family": "pattern_tools",
       "shipped_summary": "scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
@@ -425,6 +443,15 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "palindrome",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "report exact reverse-complement palindromic regions in nucleotide sequences",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "preg",
       "shipped_family": "pattern_tools",
       "shipped_summary": "scan protein sequences with deterministic bounded regular expressions",
@@ -437,6 +464,15 @@
       "tool_name": "patmatdb",
       "shipped_family": "pattern_tools",
       "shipped_summary": "scan protein sequences with a local deterministic motif database",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "seqmatchall",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "report all-against-all maximal exact shared regions across a sequence set",
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
@@ -762,18 +798,13 @@
     {
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "retained_total": 12,
-      "retained_shipped": 8,
-      "retained_backlog": 4,
-      "shipped_curated_autodoc": 8,
-      "shipped_executable_or_better": 8,
+      "retained_shipped": 12,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 12,
+      "shipped_executable_or_better": 12,
       "shipped_compared": 3,
-      "recommendation": "prioritise retained backlog closure (4 remaining)",
-      "retained_backlog_tools": [
-        "dreg",
-        "einverted",
-        "palindrome",
-        "seqmatchall"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Defer — Ontology command group",
@@ -1042,30 +1073,6 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "decision": "retain",
       "description": "Identify proteins with specified sequence word composition"
-    },
-    {
-      "tool_name": "dreg",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Regular expression search of nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "einverted",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Find inverted repeats in nucleotide sequences"
-    },
-    {
-      "tool_name": "palindrome",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Find inverted repeats in nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "seqmatchall",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "All-against-all word comparison of a sequence set"
     },
     {
       "tool_name": "recoder",

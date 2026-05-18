@@ -1,0 +1,107 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "seqmatchall-v1",
+  "tool": {
+    "name": "seqmatchall",
+    "family": "pattern_tools",
+    "summary": "report all-against-all maximal exact shared regions across a sequence set",
+    "legacy_names": [
+      "seqmatchall"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`seqmatchall` reports maximal exact ungapped shared regions for every record pair in one sequence set. EMBOSS-RS v1 compares each pair once in input order and emits every exact region meeting the minimum word size."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local sequence set plus an optional minimum word size. Molecule compatibility is enforced pairwise through the shared exact-word infrastructure."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a deterministic table with left and right record identifiers, 1-based inclusive coordinates in both records, match length, and the exact shared region."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs seqmatchall`. Validation currently covers one committed three-record FASTA fixture whose three pairings each yield the same maximal 4-residue exact region."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release reports exact ungapped regions only. It does not perform heuristic seeding, gapped extension, or EMBOSS-era scoring beyond maximal exact region extraction."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "seqmatchall_records_fasta",
+      "label": "Seqmatchall multi-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/seqmatchall_records.fasta"
+      },
+      "description": "Repository-managed three-record FASTA fixture used for deterministic all-against-all exact-region reporting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_all_against_all_exact_regions",
+      "title": "Report all-against-all maximal exact regions",
+      "description": "Runs `seqmatchall` against a committed three-record FASTA fixture with a minimum word size of 4.",
+      "artifact_ids": [
+        "seqmatchall_records_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "word_size",
+          "value": "4"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "seqmatchall_hit_table",
+          "label": "All-against-all exact shared-region table",
+          "description": "Three pairwise rows are reported, each carrying the shared exact region `ACGT` with stable pair ordering."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS seqmatchall application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqmatchall.acd",
+        "invocation": "seqmatchall -sequence seqmatchall_records.fasta -wordsize 4 -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS seqmatchall application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqmatchall.acd",
+        "invocation": "seqmatchall -sequence seqmatchall_records.fasta -wordsize 4 -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_all_against_all_exact_regions"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

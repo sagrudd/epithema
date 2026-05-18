@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 74,
-    "documentation_complete_count": 74,
-    "validation_stub_count": 74,
+    "total_method_count": 78,
+    "documentation_complete_count": 78,
+    "validation_stub_count": 78,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 53,
+    "executable_evidence_count": 57,
     "compared_evidence_count": 21,
-    "gapped_method_count": 53
+    "gapped_method_count": 57
   },
   "methods": [
     {
@@ -1062,6 +1062,52 @@
       ]
     },
     {
+      "tool_name": "dreg",
+      "family": "pattern_tools",
+      "summary": "scan nucleotide sequences with deterministic bounded regular expressions",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'dreg' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "einverted",
+      "family": "pattern_tools",
+      "summary": "report exact inverted-repeat arms with bounded spacer length in nucleotide sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'einverted' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "fuzznuc",
       "family": "pattern_tools",
       "summary": "scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
@@ -1116,6 +1162,29 @@
       "unresolved_gaps": []
     },
     {
+      "tool_name": "palindrome",
+      "family": "pattern_tools",
+      "summary": "report exact reverse-complement palindromic regions in nucleotide sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'palindrome' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "preg",
       "family": "pattern_tools",
       "summary": "scan protein sequences with deterministic bounded regular expressions",
@@ -1158,6 +1227,29 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'patmatdb' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "seqmatchall",
+      "family": "pattern_tools",
+      "summary": "report all-against-all maximal exact shared regions across a sequence set",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'seqmatchall' has no compared validation evidence yet"
         }
       ]
     },

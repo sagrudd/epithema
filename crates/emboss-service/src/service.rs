@@ -48,10 +48,12 @@ use emboss_tools::pairwise_alignment::{
     run_needleall, run_water, water_help,
 };
 use emboss_tools::pattern_tools::{
-    FuzznucParams, FuzzproParams, FuzztranParams, PatmatdbParams, PregParams, WordfinderParams,
-    WordmatchParams, fuzznuc_help, fuzzpro_help, fuzztran_help, patmatdb_help, preg_help,
-    run_fuzznuc, run_fuzzpro, run_fuzztran, run_patmatdb, run_preg, run_wordfinder,
-    run_wordmatch, wordfinder_help, wordmatch_help,
+    DregParams, EinvertedParams, FuzznucParams, FuzzproParams, FuzztranParams, PalindromeParams,
+    PatmatdbParams, PregParams, SeqmatchallParams, WordfinderParams, WordmatchParams, dreg_help,
+    einverted_help, fuzznuc_help, fuzzpro_help, fuzztran_help, palindrome_help, patmatdb_help,
+    preg_help, run_dreg, run_einverted, run_fuzznuc, run_fuzzpro, run_fuzztran, run_palindrome,
+    run_patmatdb, run_preg, run_seqmatchall, run_wordfinder, run_wordmatch, seqmatchall_help,
+    wordfinder_help, wordmatch_help,
 };
 use emboss_tools::protein_plots::{
     ChargeParams, PepwindowParams, charge_help, pepwindow_help, run_charge, run_pepwindow,
@@ -294,11 +296,15 @@ impl EmbossService {
             "cusp" => self.invoke_cusp(request, descriptor),
             "codcmp" => self.invoke_codcmp(request, descriptor),
             "codcopy" => self.invoke_codcopy(request, descriptor),
+            "dreg" => self.invoke_dreg(request, descriptor),
+            "einverted" => self.invoke_einverted(request, descriptor),
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
             "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
             "fuzztran" => self.invoke_fuzztran(request, descriptor),
+            "palindrome" => self.invoke_palindrome(request, descriptor),
             "preg" => self.invoke_preg(request, descriptor),
             "patmatdb" => self.invoke_patmatdb(request, descriptor),
+            "seqmatchall" => self.invoke_seqmatchall(request, descriptor),
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
@@ -3521,6 +3527,152 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_dreg(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, dreg_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("dreg", dreg_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let outcome = run_dreg(DregParams {
+            input,
+            pattern: parse_nucleotide_regex("dreg", &arguments[1])?,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} nucleotide regex hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.pattern.clone(),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "pattern".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Nucleotide regular-expression search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Pattern: {}", outcome.pattern))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Pattern model: bounded Rust regex over nucleotide residues")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_einverted(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, einverted_help()));
+        }
+
+        let cli = parse_einverted_params(request.arguments())?;
+        let input_argument = cli.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_argument)?;
+        let outcome = run_einverted(EinvertedParams {
+            input,
+            min_arm_length: cli.min_arm_length,
+            max_gap_length: cli.max_gap_length,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} exact inverted repeats", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    (hit.left_start + 1).to_string(),
+                    hit.left_end.to_string(),
+                    (hit.right_start + 1).to_string(),
+                    hit.right_end.to_string(),
+                    hit.gap_length.to_string(),
+                    hit.left_arm.len().to_string(),
+                    hit.left_arm.clone(),
+                    hit.right_arm.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "left_start".to_owned(),
+                    "left_end".to_owned(),
+                    "right_start".to_owned(),
+                    "right_end".to_owned(),
+                    "gap_length".to_owned(),
+                    "arm_length".to_owned(),
+                    "left_arm".to_owned(),
+                    "right_arm".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Exact inverted-repeat search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Minimum arm length: {}", outcome.min_arm_length))
+                .with_line(format!("Maximum gap length: {}", outcome.max_gap_length))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_patmatdb(
         &self,
         request: InvocationRequest,
@@ -3579,6 +3731,149 @@ impl EmbossService {
                 .with_line(format!("Database: {}", outcome.database.display()))
                 .with_line("Coordinate convention: 1-based inclusive")
                 .with_line(format!("Motifs loaded: {}", outcome.motifs.len()))
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_palindrome(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, palindrome_help()));
+        }
+
+        let cli = parse_palindrome_params(request.arguments())?;
+        let input_argument = cli.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_argument)?;
+        let outcome = run_palindrome(PalindromeParams {
+            input,
+            min_length: cli.min_length,
+            max_length: cli.max_length,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} palindromic windows", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.len().to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "length".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Palindrome search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Minimum length: {}", outcome.min_length))
+                .with_line(format!("Maximum length: {}", outcome.max_length))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_seqmatchall(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, seqmatchall_help()));
+        }
+
+        let cli = parse_seqmatchall_params(request.arguments())?;
+        let input_argument = cli.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_argument)?;
+        let outcome = run_seqmatchall(SeqmatchallParams {
+            input,
+            word_size: cli.word_size,
+        })?;
+
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.left_id.clone(),
+                    hit.right_id.clone(),
+                    (hit.left_start + 1).to_string(),
+                    hit.left_end.to_string(),
+                    (hit.right_start + 1).to_string(),
+                    hit.right_end.to_string(),
+                    hit.matched.len().to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported {} all-against-all exact shared regions",
+                outcome.hits.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "left".to_owned(),
+                    "right".to_owned(),
+                    "left_start".to_owned(),
+                    "left_end".to_owned(),
+                    "right_start".to_owned(),
+                    "right_end".to_owned(),
+                    "length".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("All-against-all exact shared-region search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Minimum word size: {}", outcome.word_size))
+                .with_line("Coordinate convention: 1-based inclusive")
                 .with_line(format!("Hits: {}", outcome.hits.len())),
             report.clone(),
         );
@@ -6152,6 +6447,134 @@ fn parse_protein_regex(
     })
 }
 
+fn parse_nucleotide_regex(
+    tool: &str,
+    value: &str,
+) -> Result<emboss_tools::pattern_tools::CompiledNucleotideRegex, ServiceError> {
+    emboss_tools::pattern_tools::CompiledNucleotideRegex::parse(value).map_err(|error| {
+        PlatformError::new(ErrorCategory::Validation, error.to_string())
+            .with_code(format!("service.tool.{tool}.pattern.regex_invalid"))
+    })
+}
+
+fn parse_palindrome_params(arguments: &[String]) -> Result<PalindromeParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("palindrome", palindrome_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut min_length = 4usize;
+    let mut max_length = 12usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--min-length=") {
+            min_length = parse_positive_count("palindrome", value, "--min-length")?;
+            index += 1;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--max-length=") {
+            max_length = parse_positive_count("palindrome", value, "--max-length")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--min-length" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --min-length")
+                    .with_code("service.tool.palindrome.min_length_missing")
+            })?;
+            min_length = parse_positive_count("palindrome", value, "--min-length")?;
+            index += 2;
+            continue;
+        }
+        if argument == "--max-length" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --max-length")
+                    .with_code("service.tool.palindrome.max_length_missing")
+            })?;
+            max_length = parse_positive_count("palindrome", value, "--max-length")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown palindrome argument '{argument}'"),
+        )
+        .with_code("service.tool.palindrome.argument_unknown")
+        .with_detail(palindrome_help()));
+    }
+
+    Ok(PalindromeParams {
+        input,
+        min_length,
+        max_length,
+    })
+}
+
+fn parse_einverted_params(arguments: &[String]) -> Result<EinvertedParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("einverted", einverted_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut min_arm_length = 4usize;
+    let mut max_gap_length = 3usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--min-arm-length=") {
+            min_arm_length = parse_positive_count("einverted", value, "--min-arm-length")?;
+            index += 1;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--max-gap-length=") {
+            max_gap_length = parse_non_negative_count("einverted", value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--min-arm-length" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --min-arm-length",
+                )
+                .with_code("service.tool.einverted.min_arm_length_missing")
+            })?;
+            min_arm_length = parse_positive_count("einverted", value, "--min-arm-length")?;
+            index += 2;
+            continue;
+        }
+        if argument == "--max-gap-length" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --max-gap-length",
+                )
+                .with_code("service.tool.einverted.max_gap_length_missing")
+            })?;
+            max_gap_length = parse_non_negative_count("einverted", value)?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown einverted argument '{argument}'"),
+        )
+        .with_code("service.tool.einverted.argument_unknown")
+        .with_detail(einverted_help()));
+    }
+
+    Ok(EinvertedParams {
+        input,
+        min_arm_length,
+        max_gap_length,
+    })
+}
+
 fn parse_patmatdb_params(arguments: &[String]) -> Result<PatmatdbParams, ServiceError> {
     if arguments.len() != 2 {
         return Err(tool_usage_error("patmatdb", patmatdb_help()));
@@ -6245,6 +6668,43 @@ fn parse_wordfinder_params(arguments: &[String]) -> Result<WordfinderParams, Ser
         targets,
         word_size,
     })
+}
+
+fn parse_seqmatchall_params(arguments: &[String]) -> Result<SeqmatchallParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("seqmatchall", seqmatchall_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut word_size = 4usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--word-size=") {
+            word_size = parse_positive_count("seqmatchall", value, "--word-size")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--word-size" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --word-size")
+                    .with_code("service.tool.seqmatchall.word_size_missing")
+            })?;
+            word_size = parse_positive_count("seqmatchall", value, "--word-size")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown seqmatchall argument '{argument}'"),
+        )
+        .with_code("service.tool.seqmatchall.argument_unknown")
+        .with_detail(seqmatchall_help()));
+    }
+
+    Ok(SeqmatchallParams { input, word_size })
 }
 
 fn parse_codcopy_params(arguments: &[String]) -> Result<CodcopyParams, ServiceError> {
@@ -8011,11 +8471,15 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "featreport" => featreport_help(),
         "feattext" => feattext_help(),
         "twofeat" => twofeat_help(),
+        "dreg" => dreg_help(),
+        "einverted" => einverted_help(),
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
+        "palindrome" => palindrome_help(),
         "preg" => preg_help(),
         "patmatdb" => patmatdb_help(),
+        "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
         "charge" => charge_help(),
@@ -8420,6 +8884,26 @@ mod tests {
     fn wordfinder_targets_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/wordfinder_targets.fasta")
+    }
+
+    fn dreg_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/dreg_records.fasta")
+    }
+
+    fn palindrome_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/palindrome_records.fasta")
+    }
+
+    fn einverted_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/einverted_records.fasta")
+    }
+
+    fn seqmatchall_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/seqmatchall_records.fasta")
     }
 
     fn implemented_service() -> EmbossService {
@@ -11061,6 +11545,87 @@ mod tests {
     }
 
     #[test]
+    fn executes_dreg_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("dreg").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![dreg_fixture().display().to_string(), "ATA".to_owned()]);
+
+        let response = service.invoke(request).expect("dreg should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "dregA");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "3");
+                assert_eq!(table.rows[1][2], "3");
+                assert_eq!(table.rows[1][3], "5");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_palindrome_against_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("palindrome").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            palindrome_fixture().display().to_string(),
+            "--min-length".to_owned(),
+            "6".to_owned(),
+            "--max-length".to_owned(),
+            "6".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("palindrome should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(!table.rows.is_empty());
+                assert_eq!(table.rows[0][0], "palA");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "6");
+                assert_eq!(table.rows[0][4], "ATGCAT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_einverted_against_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("einverted").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            einverted_fixture().display().to_string(),
+            "--min-arm-length".to_owned(),
+            "4".to_owned(),
+            "--max-gap-length".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("einverted should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(!table.rows.is_empty());
+                assert_eq!(table.rows[0][0], "invA");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][3], "7");
+                assert_eq!(table.rows[0][5], "2");
+                assert_eq!(table.rows[0][7], "ATGC");
+                assert_eq!(table.rows[0][8], "GCAT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
     fn executes_patmatdb_against_fixtures() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -11079,6 +11644,35 @@ mod tests {
                 assert_eq!(table.rows[0][0], "patmatA");
                 assert_eq!(table.rows[0][1], "motif_a");
                 assert_eq!(table.rows[1][1], "motif_b");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_seqmatchall_against_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqmatchall").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            seqmatchall_fixture().display().to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("seqmatchall should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[0][0], "sm_a");
+                assert_eq!(table.rows[0][1], "sm_b");
+                assert_eq!(table.rows[1][1], "sm_c");
+                assert_eq!(table.rows[2][0], "sm_b");
+                assert_eq!(table.rows[2][1], "sm_c");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
