@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "runinfo-stub-v1",
+  "document_id": "runinfo-v1",
   "tool": {
     "name": "runinfo",
     "family": "archive_tools",
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`runinfo` is part of the exposed EMBOSS-RS `archive_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`runinfo` normalizes archive metadata for one accession-backed public run object. In v1 it resolves one provider-qualified ENA or SRA accession through the governed archive-provider seam and emits a stable table-oriented metadata summary."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This archive-facing tool accepts one governed ENA/SRA-style archive accession through the shared input-resolution seam. Provider qualification and bare-accession behaviour follow the documented archive acquisition policy for the implemented v1 subset."
+      "content": "The current interface accepts exactly one provider-qualified archive accession such as `ena:ERR123456` or `sra:SRR123456`. Local file inputs and inline literals are rejected deliberately because `runinfo` is an archive lookup tool, not a file parser."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured archive metadata or normalized public-run manifest rows. Direct acquisition support is method-specific and explicitly documented where available."
+      "content": "The result is a stable table report plus provider-summary lines. ENA-backed runs currently normalize into table rows that distinguish available artifact classes such as FASTQ payloads. SRA-backed lookups currently return provider-tagged summary output with narrower normalized table coverage."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs runinfo`. The generated tool page and the machine-readable validation stub at [`../validation/runinfo.validation.json`](../validation/runinfo.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs runinfo`. Rust service coverage includes mocked ENA run metadata normalization and mocked SRA run metadata lookup. Those tests prove the current provider seams without claiming that harvested live-provider evidence has been checked in yet."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 surface is intentionally conservative. `runinfo` does not accept local files, free-text metadata blobs, or download requests. ENA normalization is currently richer than SRA normalization, so provider-specific result breadth is not yet symmetrical."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "runinfo_mocked_ena_case",
+      "label": "Mocked ENA runinfo case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/runinfo_ena_err123456_case.md"
+      },
+      "description": "Repository-managed case note for the mocked ENA metadata normalization path used in Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "normalize_ena_run_metadata",
+      "title": "Normalize ENA public run metadata into a stable table report",
+      "description": "Resolves a provider-qualified ENA run accession and returns the current governed metadata table and provider summary.",
+      "artifact_ids": [
+        "runinfo_mocked_ena_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "ena_run_metadata_table",
+          "label": "Normalized ENA run metadata table",
+          "description": "A stable table report whose first rows describe the available ENA FASTQ artifact class and associated manifest fields."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "normalize_ena_run_metadata"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

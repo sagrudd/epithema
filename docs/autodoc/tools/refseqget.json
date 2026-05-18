@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "refseqget-stub-v1",
+  "document_id": "refseqget-v1",
   "tool": {
     "name": "refseqget",
     "family": "retrieval_tools",
-    "summary": "Retrieve one provider-backed reference sequence through the governed acquisition seam",
+    "summary": "Retrieve one provider-qualified reference sequence accession through the governed provider seam",
     "legacy_names": [
       "refseqget"
     ]
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`refseqget` is part of the exposed EMBOSS-RS `retrieval_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`refseqget` is the accession-only retrieval counterpart to `seqret`. It resolves one provider-qualified reference sequence accession through the governed sequence-provider seam and returns a single normalized sequence record."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This retrieval tool accepts one governed input reference. Depending on the method, that may be a local sequence file, a provider-qualified accession, or a conservatively inferable accession accepted by the shared acquisition seam."
+      "content": "The current v1 interface accepts exactly one provider-qualified accession, for example `ncbi:protein:NP_000537.3`. Local file inputs are rejected deliberately, and inline literal sequence text is not accepted by the service path."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence content together with structured retrieval provenance routed through the shared acquisition layer."
+      "content": "The result is one normalized sequence record with retrieval provenance attached to the shared record metadata. The method is intended for accession-backed reference retrieval, not general file normalization."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs refseqget`. The generated tool page and the machine-readable validation stub at [`../validation/refseqget.validation.json`](../validation/refseqget.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs refseqget`. The accession-backed retrieval seam is covered in Rust service tests with a mocked NCBI FASTA response, and local-file rejection is also tested explicitly."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The current curated evidence is seam-oriented rather than live-network acceptance evidence. `refseqget` does not currently accept local inputs, free-text sequence literals, or loosely specified bare accessions, and the first release intentionally keeps the provider contract narrower than historical EMBOSS breadth."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "refseqget_mocked_provider_case",
+      "label": "Mocked NCBI retrieval case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/refseqget_ncbi_np_000537_3_case.md"
+      },
+      "description": "Repository-managed case note for the mocked NCBI provider-qualified retrieval used in Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "retrieve_provider_qualified_reference_sequence",
+      "title": "Retrieve a provider-qualified reference sequence accession",
+      "description": "Resolves an explicitly qualified NCBI protein accession through the governed provider seam and returns one normalized sequence record.",
+      "artifact_ids": [
+        "refseqget_mocked_provider_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "retrieved_reference_sequence",
+          "label": "Retrieved reference sequence",
+          "description": "A single normalized sequence record carrying the expected accession and `ncbi` source provenance."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "retrieve_provider_qualified_reference_sequence"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

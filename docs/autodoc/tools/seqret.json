@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "seqret-stub-v1",
+  "document_id": "seqret-v1",
   "tool": {
     "name": "seqret",
     "family": "retrieval_tools",
-    "summary": "Normalize local sequence inputs or retrieve one accession-backed sequence",
+    "summary": "Normalize local sequence inputs or retrieve one provider-backed sequence accession",
     "legacy_names": [
       "seqret"
     ]
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`seqret` is part of the exposed EMBOSS-RS `retrieval_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`seqret` is the current EMBOSS-RS sequence retrieval and normalization entry point. In v1 it supports two real paths: reading a local sequence file through the shared sequence IO layer, or retrieving one provider-qualified accession through the governed provider seam and returning the result as normalized sequence records."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This retrieval tool accepts one governed input reference. Depending on the method, that may be a local sequence file, a provider-qualified accession, or a conservatively inferable accession accepted by the shared acquisition seam."
+      "content": "The current interface accepts exactly one governed input reference. Local sequence files are supported. Provider-backed accessions are supported when they are explicitly qualified, for example `ena:AB000263`. Bare accessions that could resolve through more than one provider are rejected conservatively, and inline literal sequence text is not supported in the `seqret` service path."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized sequence content together with structured retrieval provenance routed through the shared acquisition layer."
+      "content": "The result is a normalized sequence collection rendered through the shared sequence output path. Local multi-record inputs preserve input record order. Provider-backed retrieval currently returns the fetched record with provenance attached to the core sequence metadata."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seqret`. The generated tool page and the machine-readable validation stub at [`../validation/seqret.validation.json`](../validation/seqret.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs seqret`. The local-file normalization path is exercised directly against a committed FASTA fixture. The provider-backed accession path is also implemented and covered in Rust service tests using mocked remote retrieval so the retrieval seam is executable without claiming that live network acceptance evidence has been harvested yet."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release is intentionally narrow. `seqret` is not yet a broad accession-inference or free-text input tool. Ambiguous bare accessions are rejected, inline sequence literals are unsupported in the service layer, and the current curated evidence proves the governed seam and normalization behavior rather than historical EMBOSS parity across all retrieval modes."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate local normalization and preserved record ordering."
+    }
+  ],
+  "examples": [
+    {
+      "id": "normalize_local_fasta_records",
+      "title": "Normalize a local multi-record FASTA input",
+      "description": "Loads the committed three-record FASTA fixture through the shared sequence reader and returns the same three records as a normalized sequence collection.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "normalized_local_sequence_collection",
+          "label": "Normalized local sequence collection",
+          "description": "A three-record output collection that preserves the source order and stable record identifiers."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "normalize_local_fasta_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }
