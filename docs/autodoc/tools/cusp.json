@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "cusp-v1",
+  "tool": {
+    "name": "cusp",
+    "family": "codon_tools",
+    "summary": "Create complete per-record and aggregate codon usage tables from coding sequences",
+    "legacy_names": [
+      "cusp"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`cusp` creates codon-usage tables from coding nucleotide sequences. The EMBOSS-RS v1 surface uses the shared strict coding-sequence validation already established for the codon-analysis family and emits one complete 61-sense-codon table per record plus one aggregate table across all records."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local nucleotide input path. Inputs are loaded through the shared sequence readers and validated as strict in-frame coding sequences. One terminal stop codon is allowed and excluded from the profile; internal stops, ambiguous codons, and non-triplet lengths are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `scope`, `record`, `codon`, `amino_acid`, `count`, `frequency`, and `terminal_stop`. Unlike the lighter `chips` report, `cusp` emits all 61 sense codons for every record and for the aggregate summary, including zero-count rows."
+    },
+    {
+      "id": "counting_model",
+      "kind": "notes",
+      "title": "Counting Model",
+      "content": "Codons are normalized to DNA space before counting. Frequencies are reported over sense codons only. Terminal stop codons are tracked separately for per-record rows and never contribute to the codon counts or frequencies."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs cusp`. Validation currently covers strict coding-sequence acceptance, complete per-record and aggregate 61-codon table emission, and stable service-level reporting against committed coding fixtures."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not implement alternative genetic codes or richer codon-bias statistics beyond counts and frequencies. It uses the standard genetic code only."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "codon_reference_fixture",
+      "label": "Coding reference FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+      },
+      "description": "Repository-managed coding-sequence fixture used to validate deterministic codon-table generation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_complete_codon_usage_table",
+      "title": "Report a complete codon-usage table",
+      "description": "Loads a committed coding-sequence fixture and emits one complete 61-sense-codon table per record plus one aggregate table.",
+      "artifact_ids": [
+        "codon_reference_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "cusp_table",
+          "label": "Codon usage table",
+          "description": "A stable tabular report containing complete per-record and aggregate sense-codon rows, including zero-count codons."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS cusp application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cusp.acd",
+        "invocation": "cusp -sequence codon_reference.fasta -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS cusp application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cusp.acd",
+        "invocation": "cusp -sequence codon_reference.fasta -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_complete_codon_usage_table"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

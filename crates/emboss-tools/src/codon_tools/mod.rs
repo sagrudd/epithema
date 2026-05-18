@@ -2,6 +2,7 @@
 
 mod cai;
 mod chips;
+mod cusp;
 mod codcmp;
 mod codcopy;
 mod shared;
@@ -12,6 +13,7 @@ const FAMILY: &str = "codon_tools";
 
 pub use cai::{CaiOutcome, CaiParams, cai_help, run_cai};
 pub use chips::{ChipsOutcome, ChipsParams, chips_help, run_chips};
+pub use cusp::{CuspOutcome, CuspParams, cusp_help, run_cusp};
 pub use codcmp::{CodcmpOutcome, CodcmpParams, codcmp_help, run_codcmp};
 pub use codcopy::{CodcopyOutcome, CodcopyParams, codcopy_help, run_codcopy};
 pub use shared::render_profile_rows;
@@ -26,6 +28,12 @@ pub const CAI_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const CHIPS_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "chips",
     "report per-record and aggregate codon usage counts and frequencies",
+)
+.with_family(FAMILY);
+/// `cusp` descriptor.
+pub const CUSP_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "cusp",
+    "create complete per-record and aggregate codon usage tables from coding sequences",
 )
 .with_family(FAMILY);
 /// `codcmp` descriptor.

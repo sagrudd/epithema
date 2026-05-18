@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `55`
-- Documentation-complete methods: `55`
-- Methods with validation stubs: `55`
+- Methods in cohort: `59`
+- Documentation-complete methods: `59`
+- Methods with validation stubs: `59`
 - Documented-only methods: `12`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `36`
+- Methods with executable validation: `40`
 - Methods with compared evidence: `6`
-- Methods with visible gaps: `49`
+- Methods with visible gaps: `53`
 
 ## Evidence Level Definitions
 
@@ -61,6 +61,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `cusp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `codcmp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `codcopy` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzznuc` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -69,8 +70,11 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `charge` | `protein_plots` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `complex` | `sequence_stats` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `geecee` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `infoseq` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `pepstats` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `wordcount` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `backtranseq` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `backtranambig` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `checktrans` | `translation_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
@@ -115,6 +119,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `feattext`: `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `cusp`: `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzznuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
@@ -122,7 +127,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `fuzztran`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `charge`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `complex`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `dan`: `missing_compared_evidence`
 - `geecee`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `infoseq`: `missing_compared_evidence`
+- `wordcount`: `missing_compared_evidence`
 - `backtranseq`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `backtranambig`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `checktrans`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`

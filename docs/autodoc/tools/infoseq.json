@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "infoseq-v1",
+  "tool": {
+    "name": "infoseq",
+    "family": "sequence_stats",
+    "summary": "Report stable basic metadata and length summaries for sequence records",
+    "legacy_names": [
+      "infoseq"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`infoseq` reports one stable summary row per input record. The EMBOSS-RS v1 surface is intentionally narrower than historical EMBOSS formatting switches: it keeps one governed table shape with identifier, optional display name, length, molecule, alphabet, optional GC percentage for nucleotide-like inputs, feature count, and selected descriptive metadata."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local sequence input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Plain sequence records and richer annotated records are both supported."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `ordinal`, `identifier`, `display_name`, `length`, `molecule`, `alphabet`, `gc_percent`, `feature_count`, `description`, and `organism`. GC percentage is reported only for nucleotide-like records with at least one canonical nucleotide symbol; other records emit `-` in the rendered table."
+    },
+    {
+      "id": "statistics_model",
+      "kind": "notes",
+      "title": "Statistics Model",
+      "content": "Rows preserve source record order. Length is the normalized residue length after shared sequence parsing. GC percentage reuses the governed canonical-symbol model already used by `geecee`: only canonical A/C/G/T/U symbols contribute to the denominator, and non-nucleotide or non-canonical-only records omit the value."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs infoseq`. Validation currently covers plain FASTA metadata reporting, annotation-aware feature counts and organism metadata, and stable per-record table emission through the shared service layer."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not reproduce the large historical EMBOSS column-selection surface such as `-only`, `-heading`, or delimiter switching. It provides one governed table schema only."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed multi-record FASTA fixture used to validate stable basic metadata reporting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_basic_sequence_information",
+      "title": "Report basic sequence information",
+      "description": "Loads a committed multi-record FASTA fixture and emits one stable summary row per record.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "infoseq_table",
+          "label": "Sequence information table",
+          "description": "A stable tabular report with identifier, length, molecule, alphabet, GC percentage, and selected descriptive metadata."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS infoseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoseq.acd",
+        "invocation": "infoseq -sequence three_records.fasta -stdout yes"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS infoseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoseq.acd",
+        "invocation": "infoseq -sequence three_records.fasta -stdout yes"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_basic_sequence_information"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

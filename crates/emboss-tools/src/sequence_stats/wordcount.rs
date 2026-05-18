@@ -1,0 +1,183 @@
+//! `wordcount` implementation.
+
+use std::collections::BTreeMap;
+
+use emboss_core::MoleculeKind;
+
+use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
+
+/// Typed parameters for `wordcount`.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct WordcountParams {
+    /// Local sequence input path.
+    pub input: SequenceInput,
+    /// Word size in normalized residues.
+    pub word_size: usize,
+    /// Minimum count threshold for output rows.
+    pub min_count: usize,
+}
+
+/// Per-record overlapping word counts.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct WordcountRecord {
+    /// Stable record identifier.
+    pub record_id: String,
+    /// Molecule classification.
+    pub molecule: MoleculeKind,
+    /// Counted overlapping windows excluding skipped windows.
+    pub counted_windows: usize,
+    /// Windows skipped because they contained gaps.
+    pub skipped_gap_windows: usize,
+    /// Stable lexicographic word counts.
+    pub counts: BTreeMap<String, usize>,
+}
+
+/// Structured `wordcount` outcome.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct WordcountOutcome {
+    /// Source input.
+    pub input: SequenceInput,
+    /// Requested word size.
+    pub word_size: usize,
+    /// Minimum count threshold for report rows.
+    pub min_count: usize,
+    /// Per-record counts.
+    pub records: Vec<WordcountRecord>,
+    /// Aggregate counts across all records.
+    pub aggregate: WordcountRecord,
+}
+
+/// Returns `wordcount` help text.
+#[must_use]
+pub fn wordcount_help() -> &'static str {
+    "Usage: emboss-rs wordcount <input> --word-size <count> [--min-count <count>]\n\nCount overlapping normalized sequence words in one or more records. v1 reports both per-record and aggregate counts, treats words as exact normalized substrings, skips windows containing gap symbols '-', and outputs rows in stable lexicographic word order."
+}
+
+/// Executes `wordcount`.
+pub fn run_wordcount(params: WordcountParams) -> Result<WordcountOutcome, ToolExecutionError> {
+    let records = load_sequence_records(&params.input)?
+        .into_iter()
+        .map(|record| {
+            let (counted_windows, skipped_gap_windows, counts) =
+                count_windows(record.residues(), params.word_size);
+            WordcountRecord {
+                record_id: record.identifier().accession().to_owned(),
+                molecule: record.molecule(),
+                counted_windows,
+                skipped_gap_windows,
+                counts,
+            }
+        })
+        .collect::<Vec<_>>();
+
+    let mut aggregate = WordcountRecord {
+        record_id: "ALL".to_owned(),
+        molecule: MoleculeKind::Unknown,
+        counted_windows: 0,
+        skipped_gap_windows: 0,
+        counts: BTreeMap::new(),
+    };
+    for record in &records {
+        aggregate.counted_windows += record.counted_windows;
+        aggregate.skipped_gap_windows += record.skipped_gap_windows;
+        for (word, count) in &record.counts {
+            *aggregate.counts.entry(word.clone()).or_insert(0) += count;
+        }
+    }
+
+    Ok(WordcountOutcome {
+        input: params.input,
+        word_size: params.word_size,
+        min_count: params.min_count,
+        records,
+        aggregate,
+    })
+}
+
+fn count_windows(sequence: &str, word_size: usize) -> (usize, usize, BTreeMap<String, usize>) {
+    let bytes = sequence.as_bytes();
+    if bytes.len() < word_size {
+        return (0, 0, BTreeMap::new());
+    }
+
+    let mut counted_windows = 0usize;
+    let mut skipped_gap_windows = 0usize;
+    let mut counts = BTreeMap::new();
+
+    for start in 0..=bytes.len() - word_size {
+        let word = &sequence[start..start + word_size];
+        if word.contains('-') {
+            skipped_gap_windows += 1;
+            continue;
+        }
+        counted_windows += 1;
+        *counts.entry(word.to_owned()).or_insert(0) += 1;
+    }
+
+    (counted_windows, skipped_gap_windows, counts)
+}
+
+/// Returns the frequency for a counted word.
+#[must_use]
+pub fn word_frequency(record: &WordcountRecord, word: &str) -> f64 {
+    if record.counted_windows == 0 {
+        return 0.0;
+    }
+    record.counts.get(word).copied().unwrap_or_default() as f64 / record.counted_windows as f64
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{WordcountParams, run_wordcount, word_frequency};
+    use crate::sequence_stream::SequenceInput;
+
+    #[test]
+    fn counts_overlapping_words_per_record_and_aggregate() {
+        let outcome = run_wordcount(WordcountParams {
+            input: SequenceInput::new(
+                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
+            ),
+            word_size: 2,
+            min_count: 1,
+        })
+        .expect("wordcount should execute");
+
+        assert_eq!(outcome.records.len(), 3);
+        assert_eq!(outcome.records[0].counts.get("AC"), Some(&1));
+        assert_eq!(outcome.records[0].counted_windows, 3);
+        assert_eq!(outcome.aggregate.counts.get("TT"), Some(&3));
+        assert!((word_frequency(&outcome.records[1], "TT") - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn skips_gap_windows() {
+        let outcome = run_wordcount(WordcountParams {
+            input: SequenceInput::new(
+                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/gapped_records.fasta",
+            ),
+            word_size: 2,
+            min_count: 1,
+        })
+        .expect("wordcount should execute");
+
+        assert_eq!(outcome.records.len(), 2);
+        assert_eq!(outcome.records[0].skipped_gap_windows, 2);
+        assert_eq!(outcome.records[0].counted_windows, 3);
+        assert_eq!(outcome.records[0].counts.get("G."), Some(&1));
+    }
+
+    #[test]
+    fn returns_empty_counts_when_word_is_longer_than_sequence() {
+        let outcome = run_wordcount(WordcountParams {
+            input: SequenceInput::new(
+                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
+            ),
+            word_size: 10,
+            min_count: 1,
+        })
+        .expect("wordcount should execute");
+
+        assert!(outcome.records.iter().all(|record| record.counts.is_empty()));
+        assert!(outcome.aggregate.counts.is_empty());
+    }
+}

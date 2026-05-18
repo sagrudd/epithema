@@ -1,24 +1,44 @@
 #!/usr/bin/env python3
-"""Ensure the generated docs index includes the cohort validation page."""
+"""Normalize the generated docs index against the current tool page set."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 
+HEADER = """# Generated Tool Documentation
+
+This section contains Markdown pages generated from validated `emboss-rs autodoc` inputs. These files are deterministic documentation source artefacts intended for Sphinx ingestion.
+
+## Contents
+
+```{toctree}
+:maxdepth: 1
+:caption: Generated Tools
+
+cohort_validation
+"""
+
+FOOTER = "```\n"
+
+
 def main() -> int:
-    path = Path("docs/generated/index.md")
-    lines = path.read_text().splitlines()
-    if "cohort_validation" in lines:
-        return 0
+    root = Path("docs/generated")
+    tools_root = root / "tools"
+    if not tools_root.exists():
+        raise SystemExit("docs/generated/tools does not exist")
 
-    for index, line in enumerate(lines):
-        if line.startswith("tools/"):
-            lines.insert(index, "cohort_validation")
-            path.write_text("\n".join(lines) + "\n")
-            return 0
+    pages = sorted(
+        path.stem
+        for path in tools_root.glob("*.md")
+        if path.is_file() and path.stem != "index"
+    )
+    if not pages:
+        raise SystemExit("docs/generated/tools does not contain any tool pages")
 
-    raise SystemExit("docs/generated/index.md does not contain any tool entries")
+    content = HEADER + "".join(f"tools/{page}\n" for page in pages) + FOOTER
+    (root / "index.md").write_text(content)
+    return 0
 
 
 if __name__ == "__main__":

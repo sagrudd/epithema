@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 55,
-    "documentation_complete_count": 55,
-    "validation_stub_count": 55,
+    "total_method_count": 59,
+    "documentation_complete_count": 59,
+    "validation_stub_count": 59,
     "documented_only_count": 12,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 36,
+    "executable_evidence_count": 40,
     "compared_evidence_count": 6,
-    "gapped_method_count": 49
+    "gapped_method_count": 53
   },
   "methods": [
     {
@@ -909,6 +909,29 @@
       ]
     },
     {
+      "tool_name": "cusp",
+      "family": "codon_tools",
+      "summary": "create complete per-record and aggregate codon usage tables from coding sequences",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'cusp' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "codcmp",
       "family": "codon_tools",
       "summary": "compare codon usage between two coding-sequence or codon-profile sources",
@@ -1140,6 +1163,29 @@
       "unresolved_gaps": []
     },
     {
+      "tool_name": "dan",
+      "family": "sequence_stats",
+      "summary": "report conservative whole-sequence or sliding-window melting estimates",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'dan' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "geecee",
       "family": "sequence_stats",
       "summary": "report per-record and aggregate GC statistics for nucleotide sequences",
@@ -1167,6 +1213,29 @@
       ]
     },
     {
+      "tool_name": "infoseq",
+      "family": "sequence_stats",
+      "summary": "report stable basic metadata and length summaries for sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'infoseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "pepstats",
       "family": "sequence_stats",
       "summary": "report basic protein composition, length, and molecular-weight statistics",
@@ -1183,6 +1252,29 @@
       "executable_validation_present": true,
       "compared_validation_present": true,
       "unresolved_gaps": []
+    },
+    {
+      "tool_name": "wordcount",
+      "family": "sequence_stats",
+      "summary": "count overlapping normalized sequence words with stable per-record and aggregate reporting",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'wordcount' has no compared validation evidence yet"
+        }
+      ]
     },
     {
       "tool_name": "backtranseq",

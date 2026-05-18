@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "dan-v1",
+  "tool": {
+    "name": "dan",
+    "family": "sequence_stats",
+    "summary": "Report conservative whole-sequence or sliding-window melting estimates",
+    "legacy_names": [
+      "dan"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`dan` reports conservative nucleic-acid melting estimates for one or more nucleotide records. The EMBOSS-RS v1 surface keeps the model intentionally narrow: one whole-record row by default, optional sliding windows through `--window` and `--step`, canonical residues only, and one simple deterministic melting-temperature estimate."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local nucleotide input path plus optional windowing flags. DNA and RNA records are supported. Non-nucleotide records, ambiguous residues, and gap symbols are rejected because the first-release melting model only supports canonical A/C/G/T/U sequences."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `window_index`, `start`, `end`, `length`, `gc_percent`, and `tm_celsius`. Coordinates are user-facing 1-based inclusive start/end values. When no window is supplied, each record yields exactly one row spanning the full sequence."
+    },
+    {
+      "id": "thermodynamic_model",
+      "kind": "notes",
+      "title": "Thermodynamic Model",
+      "content": "The first release uses a simple deterministic hybrid estimate: short windows below 14 residues use the Wallace rule `2*(A+T/U) + 4*(G+C)`, while longer windows use a basic GC-length estimate `64.9 + 41*(GC - 16.4)/length`. Salt concentration, formamide, mismatch adjustment, thermodynamic DeltaG/DeltaH/DeltaS reporting, and plot output are deferred."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs dan`. Validation currently covers whole-record reporting, sliding-window reporting, RNA acceptance, canonical-residue enforcement, and deterministic service-level table output."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release is intentionally much narrower than historical EMBOSS `dan`. It does not implement the broader concentration/product/thermodynamic option surface, and it does not emit a plot contract in this prompt."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "three_record_fasta",
+      "label": "Three-record FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed canonical DNA fixture used to validate deterministic whole-record and sliding-window melting estimates."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_sliding_window_tm",
+      "title": "Report sliding-window melting estimates",
+      "description": "Scans a committed DNA fixture with a size-2 window and reports one row per window with GC percentage and estimated melting temperature.",
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "--window",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "dan_table",
+          "label": "Melting-estimate table",
+          "description": "A stable tabular report with one row per whole-record or sliding-window interval and a conservative melting estimate."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS dan application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dan.acd",
+        "invocation": "dan -sequence three_records.fasta -windowsize 2 -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS dan application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dan.acd",
+        "invocation": "dan -sequence three_records.fasta -windowsize 2 -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_sliding_window_tm"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

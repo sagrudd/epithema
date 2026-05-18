@@ -30,8 +30,9 @@ use emboss_tools::archive_tools::{
     RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
 };
 use emboss_tools::codon_tools::{
-    CaiParams, ChipsParams, CodcmpParams, CodcopyParams, cai_help, chips_help, codcmp_help,
-    codcopy_help, render_profile_rows, run_cai, run_chips, run_codcmp, run_codcopy,
+    CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
+    codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai, run_chips, run_codcmp,
+    run_codcopy, run_cusp,
 };
 use emboss_tools::feature_tools::{
     CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
@@ -58,8 +59,10 @@ use emboss_tools::sequence_edit::{
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
 };
 use emboss_tools::sequence_stats::{
-    ComplexParams, CompseqParams, GeeceeParams, PepstatsParams, complex_help, compseq_help,
-    geecee_help, pepstats_help, run_complex, run_compseq, run_geecee, run_pepstats,
+    ComplexParams, CompseqParams, DanParams, GeeceeParams, InfoseqParams, PepstatsParams,
+    WordcountParams, complex_help, compseq_help, dan_help, geecee_help, infoseq_help,
+    pepstats_help, run_complex, run_compseq, run_dan, run_geecee, run_infoseq, run_pepstats,
+    run_wordcount, word_frequency, wordcount_help,
 };
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
@@ -263,6 +266,7 @@ impl EmbossService {
             "revseq" => self.invoke_revseq(request, descriptor),
             "trimseq" => self.invoke_trimseq(request, descriptor),
             "descseq" => self.invoke_descseq(request, descriptor),
+            "infoseq" => self.invoke_infoseq(request, descriptor),
             "maskseq" => self.invoke_maskseq(request, descriptor),
             "maskfeat" => self.invoke_maskfeat(request, descriptor),
             "extractfeat" => self.invoke_extractfeat(request, descriptor),
@@ -273,6 +277,7 @@ impl EmbossService {
             "feattext" => self.invoke_feattext(request, descriptor),
             "cai" => self.invoke_cai(request, descriptor),
             "chips" => self.invoke_chips(request, descriptor),
+            "cusp" => self.invoke_cusp(request, descriptor),
             "codcmp" => self.invoke_codcmp(request, descriptor),
             "codcopy" => self.invoke_codcopy(request, descriptor),
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
@@ -281,7 +286,9 @@ impl EmbossService {
             "charge" => self.invoke_charge(request, descriptor),
             "complex" => self.invoke_complex(request, descriptor),
             "compseq" => self.invoke_compseq(request, descriptor),
+            "dan" => self.invoke_dan(request, descriptor),
             "geecee" => self.invoke_geecee(request, descriptor),
+            "wordcount" => self.invoke_wordcount(request, descriptor),
             "pepstats" => self.invoke_pepstats(request, descriptor),
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
             "backtranambig" => self.invoke_backtranambig(request, descriptor),
@@ -1976,6 +1983,82 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_infoseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, infoseq_help()));
+        }
+
+        let params = parse_infoseq_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_infoseq(InfoseqParams { input })?;
+
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.ordinal.to_string(),
+                    row.identifier.clone(),
+                    row.display_name.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.length.to_string(),
+                    row.molecule.clone(),
+                    row.alphabet.clone(),
+                    row.gc_percent
+                        .map(|gc| format!("{gc:.2}"))
+                        .unwrap_or_else(|| "-".to_owned()),
+                    row.feature_count.to_string(),
+                    row.description.clone().unwrap_or_else(|| "-".to_owned()),
+                    row.organism.clone().unwrap_or_else(|| "-".to_owned()),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported basic sequence information for {} records", outcome.rows.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "ordinal".to_owned(),
+                    "identifier".to_owned(),
+                    "display_name".to_owned(),
+                    "length".to_owned(),
+                    "molecule".to_owned(),
+                    "alphabet".to_owned(),
+                    "gc_percent".to_owned(),
+                    "feature_count".to_owned(),
+                    "description".to_owned(),
+                    "organism".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Basic sequence information reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Scope: one stable row per input record")
+                .with_line("GC policy: reported only for nucleotide-like records")
+                .with_line(format!("Records: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_maskseq(
         &self,
         request: InvocationRequest,
@@ -3284,6 +3367,95 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_cusp(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, cusp_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("cusp", cusp_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_cusp(CuspParams { input })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            for codon in emboss_core::sense_codons() {
+                rows.push(vec![
+                    "record".to_owned(),
+                    record.record_id.clone(),
+                    codon.to_owned(),
+                    emboss_core::amino_acid_for_sense_codon(codon)
+                        .expect("sense codon should have amino acid")
+                        .to_string(),
+                    record.profile.count_for(codon).to_string(),
+                    format!("{:.6}", record.profile.frequency_for(codon)),
+                    record
+                        .terminal_stop
+                        .clone()
+                        .unwrap_or_else(|| "-".to_owned()),
+                ]);
+            }
+        }
+        for codon in emboss_core::sense_codons() {
+            rows.push(vec![
+                "aggregate".to_owned(),
+                "ALL".to_owned(),
+                codon.to_owned(),
+                emboss_core::amino_acid_for_sense_codon(codon)
+                    .expect("sense codon should have amino acid")
+                    .to_string(),
+                outcome.aggregate.count_for(codon).to_string(),
+                format!("{:.6}", outcome.aggregate.frequency_for(codon)),
+                "-".to_owned(),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported codon usage tables for {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "codon".to_owned(),
+                    "amino_acid".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                    "terminal_stop".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Codon usage table reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Scope: complete 61-sense-codon rows per record plus aggregate")
+                .with_line("Coding policy: strict in-frame coding sequences only")
+                .with_line("Stop policy: one terminal stop allowed and excluded from profile")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_codcopy(
         &self,
         request: InvocationRequest,
@@ -3614,6 +3786,88 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_dan(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, dan_help()));
+        }
+
+        let params = parse_dan_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_dan(DanParams {
+            input,
+            window: params.window,
+            step: params.step,
+        })?;
+
+        let rows = outcome
+            .windows
+            .iter()
+            .map(|window| {
+                vec![
+                    window.record_id.clone(),
+                    window.window_index.to_string(),
+                    (window.start + 1).to_string(),
+                    window.end.to_string(),
+                    (window.end - window.start).to_string(),
+                    format!("{:.2}", window.gc.gc_percent()),
+                    format!("{:.2}", window.tm_celsius),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported melting estimates for {} windows",
+                outcome.windows.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "window_index".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "length".to_owned(),
+                    "gc_percent".to_owned(),
+                    "tm_celsius".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Melting estimates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Model: conservative Wallace/GC-length hybrid estimate")
+                .with_line("Residue policy: canonical A/C/G/T/U only")
+                .with_line(format!(
+                    "Windowing: {}",
+                    outcome
+                        .window
+                        .map(|window| format!("window={window} step={}", outcome.step))
+                        .unwrap_or_else(|| "whole-record summaries".to_owned())
+                ))
+                .with_line(format!("Rows: {}", outcome.windows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_geecee(
         &self,
         request: InvocationRequest,
@@ -3786,6 +4040,99 @@ impl EmbossService {
                 .with_line("Mass convention: average residue masses plus one water molecule")
                 .with_line("Stop symbols are excluded from residue_length and mass")
                 .with_line("pI estimation: deferred in v1")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_wordcount(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, wordcount_help()));
+        }
+
+        let params = parse_wordcount_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_wordcount(WordcountParams {
+            input,
+            word_size: params.word_size,
+            min_count: params.min_count,
+        })?;
+
+        let mut rows = Vec::new();
+        for record in &outcome.records {
+            for (word, count) in &record.counts {
+                if *count < outcome.min_count {
+                    continue;
+                }
+                rows.push(vec![
+                    "record".to_owned(),
+                    record.record_id.clone(),
+                    record.molecule.as_str().to_owned(),
+                    outcome.word_size.to_string(),
+                    word.clone(),
+                    count.to_string(),
+                    format!("{:.6}", word_frequency(record, word)),
+                    record.skipped_gap_windows.to_string(),
+                ]);
+            }
+        }
+        for (word, count) in &outcome.aggregate.counts {
+            if *count < outcome.min_count {
+                continue;
+            }
+            rows.push(vec![
+                "aggregate".to_owned(),
+                "ALL".to_owned(),
+                "mixed".to_owned(),
+                outcome.word_size.to_string(),
+                word.clone(),
+                count.to_string(),
+                format!("{:.6}", word_frequency(&outcome.aggregate, word)),
+                outcome.aggregate.skipped_gap_windows.to_string(),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported sequence words for {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "scope".to_owned(),
+                    "record".to_owned(),
+                    "molecule".to_owned(),
+                    "word_size".to_owned(),
+                    "word".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                    "skipped_gap_windows".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Sequence word counts reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Word model: overlapping normalized windows")
+                .with_line("Gap policy: windows containing '-' are skipped")
+                .with_line(format!("Word size: {}", outcome.word_size))
+                .with_line(format!("Minimum reported count: {}", outcome.min_count))
                 .with_line(format!("Records: {}", outcome.records.len())),
             report.clone(),
         );
@@ -4686,6 +5033,16 @@ fn parse_newseq_params(arguments: &[String]) -> Result<NewseqParams, ServiceErro
     })
 }
 
+fn parse_infoseq_params(arguments: &[String]) -> Result<InfoseqParams, ServiceError> {
+    if arguments.len() != 1 {
+        return Err(tool_usage_error("infoseq", infoseq_help()));
+    }
+
+    Ok(InfoseqParams {
+        input: SequenceInput::new(arguments[0].clone()),
+    })
+}
+
 fn parse_molecule(value: &str) -> Result<MoleculeKind, ServiceError> {
     MoleculeKind::from_str(value).map_err(|_| {
         PlatformError::new(
@@ -4828,6 +5185,62 @@ fn parse_complex_params(arguments: &[String]) -> Result<ComplexParams, ServiceEr
         input,
         k_min: k_min.ok_or_else(|| tool_usage_error("complex", complex_help()))?,
         k_max: k_max.ok_or_else(|| tool_usage_error("complex", complex_help()))?,
+        window,
+        step,
+    })
+}
+
+fn parse_dan_params(arguments: &[String]) -> Result<DanParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("dan", dan_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut window = None;
+    let mut step = 1usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--window=") {
+            window = Some(parse_positive_count("dan", value, "--window")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --window")
+                    .with_code("service.tool.dan.window_missing")
+            })?;
+            window = Some(parse_positive_count("dan", value, "--window")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--step=") {
+            step = parse_positive_count("dan", value, "--step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --step")
+                    .with_code("service.tool.dan.step_missing")
+            })?;
+            step = parse_positive_count("dan", value, "--step")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown dan argument '{argument}'"),
+        )
+        .with_code("service.tool.dan.argument_unknown")
+        .with_detail(dan_help()));
+    }
+
+    Ok(DanParams {
+        input,
         window,
         step,
     })
@@ -5406,6 +5819,68 @@ fn parse_descseq_params(arguments: &[String]) -> Result<DescseqParams, ServiceEr
     })
 }
 
+fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("wordcount", wordcount_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut word_size = None;
+    let mut min_count = 1usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument
+            .strip_prefix("--word-size=")
+            .or_else(|| argument.strip_prefix("--wordsize="))
+        {
+            word_size = Some(parse_positive_count("wordcount", value, "--word-size")?);
+            index += 1;
+            continue;
+        }
+        if argument == "--word-size" || argument == "--wordsize" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --word-size")
+                    .with_code("service.tool.wordcount.word_size_missing")
+            })?;
+            word_size = Some(parse_positive_count("wordcount", value, "--word-size")?);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument
+            .strip_prefix("--min-count=")
+            .or_else(|| argument.strip_prefix("--mincount="))
+        {
+            min_count = parse_positive_count("wordcount", value, "--min-count")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--min-count" || argument == "--mincount" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --min-count")
+                    .with_code("service.tool.wordcount.min_count_missing")
+            })?;
+            min_count = parse_positive_count("wordcount", value, "--min-count")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown wordcount argument '{argument}'"),
+        )
+        .with_code("service.tool.wordcount.argument_unknown")
+        .with_detail(wordcount_help()));
+    }
+
+    Ok(WordcountParams {
+        input,
+        word_size: word_size.ok_or_else(|| tool_usage_error("wordcount", wordcount_help()))?,
+        min_count,
+    })
+}
+
 fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceError> {
     if arguments.len() < 2 {
         return Err(tool_usage_error("maskseq", maskseq_help()));
@@ -5886,6 +6361,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "refseqget" => refseqget_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
+        "infoseq" => infoseq_help(),
         "aligncopy" => aligncopy_help(),
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
@@ -5903,9 +6379,12 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "charge" => charge_help(),
         "complex" => complex_help(),
         "compseq" => compseq_help(),
+        "dan" => dan_help(),
         "geecee" => geecee_help(),
         "pepstats" => pepstats_help(),
+        "wordcount" => wordcount_help(),
         "chips" => chips_help(),
+        "cusp" => cusp_help(),
         "codcopy" => codcopy_help(),
         "cai" => cai_help(),
         "codcmp" => codcmp_help(),
@@ -7470,6 +7949,47 @@ mod tests {
     }
 
     #[test]
+    fn executes_infoseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infoseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("infoseq should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "ordinal",
+                        "identifier",
+                        "display_name",
+                        "length",
+                        "molecule",
+                        "alphabet",
+                        "gc_percent",
+                        "feature_count",
+                        "description",
+                        "organism",
+                    ]
+                );
+                assert_eq!(table.rows[0][1], "alpha");
+                assert_eq!(table.rows[0][3], "4");
+                assert_eq!(table.rows[0][4], "dna");
+                assert_eq!(table.rows[0][6], "50.00");
+                assert_eq!(table.rows[0][8], "first example");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Scope: one stable row per input record"
+        );
+    }
+
+    #[test]
     fn executes_maskseq_against_real_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -8598,6 +9118,116 @@ mod tests {
     }
 
     #[test]
+    fn executes_wordcount_against_sequence_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wordcount").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--word-size".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("wordcount should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "scope",
+                        "record",
+                        "molecule",
+                        "word_size",
+                        "word",
+                        "count",
+                        "frequency",
+                        "skipped_gap_windows",
+                    ]
+                );
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "record"
+                        && row[1] == "alpha"
+                        && row[4] == "AC"
+                        && row[5] == "1"
+                        && row[6] == "0.333333"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "aggregate"
+                        && row[1] == "ALL"
+                        && row[4] == "TT"
+                        && row[5] == "3"
+                }));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Word model: overlapping normalized windows"
+        );
+    }
+
+    #[test]
+    fn executes_dan_against_sequence_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("dan").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--window".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("dan should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "window_index",
+                        "start",
+                        "end",
+                        "length",
+                        "gc_percent",
+                        "tm_celsius",
+                    ]
+                );
+                assert_eq!(table.rows[0][0], "alpha");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "2");
+                assert_eq!(table.rows[0][4], "2");
+                assert_eq!(table.rows[0][5], "50.00");
+                assert_eq!(table.rows[0][6], "6.00");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Model: conservative Wallace/GC-length hybrid estimate"
+        );
+    }
+
+    #[test]
+    fn rejects_ambiguous_input_for_dan() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("dan").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("ambiguous nucleotide input should fail for dan");
+        assert!(error.to_string().contains("canonical A/C/G/T/U"));
+    }
+
+    #[test]
     fn executes_complex_against_whole_sequence_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -8936,6 +9566,36 @@ mod tests {
                         .iter()
                         .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" })
                 );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_cusp_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("cusp").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![codon_reference_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("cusp should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "record"
+                        && row[1] == "ref_pref"
+                        && row[2] == "CTT"
+                        && row[4] == "3"
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row[0] == "aggregate"
+                        && row[1] == "ALL"
+                        && row[2] == "ATG"
+                        && row[4] == "2"
+                }));
+                assert_eq!(table.rows.len(), 61 * 3);
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

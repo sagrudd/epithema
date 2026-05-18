@@ -1,0 +1,52 @@
+{
+  "tool_name": "infoseq",
+  "document_id": "infoseq-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_basic_sequence_information",
+      "title": "Report basic sequence information",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "expected_output_ids": [
+        "infoseq_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS infoseq application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoseq.acd",
+          "invocation": "infoseq -sequence three_records.fasta -stdout yes"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS infoseq application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoseq.acd",
+      "invocation": "infoseq -sequence three_records.fasta -stdout yes"
+    }
+  ]
+}

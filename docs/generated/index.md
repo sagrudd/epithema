@@ -24,7 +24,9 @@ tools/complex
 tools/compseq
 tools/cons
 tools/consambig
+tools/cusp
 tools/cutseq
+tools/dan
 tools/degapseq
 tools/descseq
 tools/distmat
@@ -41,6 +43,7 @@ tools/fuzztran
 tools/geecee
 tools/getorf
 tools/infoalign
+tools/infoseq
 tools/maskfeat
 tools/maskseq
 tools/matcher
@@ -64,4 +67,5 @@ tools/transeq
 tools/trimseq
 tools/union
 tools/water
+tools/wordcount
 ```

@@ -1,0 +1,52 @@
+{
+  "tool_name": "cusp",
+  "document_id": "cusp-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_complete_codon_usage_table",
+      "title": "Report a complete codon-usage table",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "codon_reference_fixture"
+      ],
+      "expected_output_ids": [
+        "cusp_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS cusp application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cusp.acd",
+          "invocation": "cusp -sequence codon_reference.fasta -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS cusp application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cusp.acd",
+      "invocation": "cusp -sequence codon_reference.fasta -outfile stdout"
+    }
+  ]
+}
