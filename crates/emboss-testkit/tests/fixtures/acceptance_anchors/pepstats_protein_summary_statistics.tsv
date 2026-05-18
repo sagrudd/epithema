@@ -1,0 +1,14 @@
+section	record	metric_or_residue	value_or_count	frequency	notes
+summary	pepA	sequence_length	3		
+summary	pepA	residue_length	2		
+summary	pepA	stop_count	1		
+summary	pepA	molecular_weight	220.287		
+composition	pepA	*	1	0.3333	
+composition	pepA	A	1	0.3333	
+composition	pepA	M	1	0.3333	
+summary	pepB	sequence_length	2		
+summary	pepB	residue_length	2		
+summary	pepB	stop_count	0		
+summary	pepB	molecular_weight	218.253		
+composition	pepB	L	1	0.5000	
+composition	pepB	S	1	0.5000	

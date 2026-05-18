@@ -29,6 +29,12 @@
       "content": "The result is a normalized sequence collection rendered through the shared sequence output path. Local multi-record inputs preserve input record order. Provider-backed retrieval currently returns the fetched record with provenance attached to the core sequence metadata."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `seqret` normalization example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is deliberately narrow and local-file based; it does not claim full historical provider or literal-input parity."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
@@ -74,19 +80,29 @@
           "description": "A three-record output collection that preserves the source order and stable record identifiers."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS seqret application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd",
+        "invocation": "seqret -sequence three_records.fasta -outseq stdout"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS seqret application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd",
+        "invocation": "seqret -sequence three_records.fasta -outseq stdout"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "normalize_local_fasta_records"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

@@ -1,0 +1,15 @@
+scope	record	molecule	length	residue	count	frequency
+record	nucA	dna	9	A	2	0.2222
+record	nucA	dna	9	C	2	0.2222
+record	nucA	dna	9	G	2	0.2222
+record	nucA	dna	9	N	1	0.1111
+record	nucA	dna	9	T	2	0.2222
+record	nucB	dna	6	A	1	0.1667
+record	nucB	dna	6	C	2	0.3333
+record	nucB	dna	6	G	1	0.1667
+record	nucB	dna	6	T	2	0.3333
+aggregate	ALL	mixed	15	A	3	0.2000
+aggregate	ALL	mixed	15	C	4	0.2667
+aggregate	ALL	mixed	15	G	3	0.2000
+aggregate	ALL	mixed	15	N	1	0.0667
+aggregate	ALL	mixed	15	T	4	0.2667

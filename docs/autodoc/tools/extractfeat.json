@@ -29,6 +29,12 @@
       "content": "One output sequence record is emitted per selected simple feature in stable source and feature order. Output identifiers are derived deterministically as `<source>:<start>-<end>:<feature-name-or-kind>`, extracted residues preserve the source molecule kind and metadata, and the copied feature location is rebased so the extracted span starts at local coordinate 1."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `extractfeat` gene extraction example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is intentionally limited to the governed simple-feature path rather than broader historical location semantics."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
@@ -79,19 +85,29 @@
           "description": "The selected `gene` span is emitted as its own sequence record with rebased copied feature coordinates."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS extractfeat application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractfeat.acd",
+        "invocation": "extractfeat -sequence annotated_feature.gbk -type gene -outseq stdout"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS extractfeat application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractfeat.acd",
+        "invocation": "extractfeat -sequence annotated_feature.gbk -type gene -outseq stdout"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "extract_selected_gene_feature"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

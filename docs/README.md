@@ -40,10 +40,19 @@ the same autodoc inputs:
 cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-validation-stub
 ```
 
+The baseline validation stubs can then be upgraded for the committed
+acceptance-anchor cohort through:
+
+```bash
+make anchor-validation
+```
+
 The committed autodoc input contracts that drive those generated pages live
 under [`docs/autodoc/tools/`](./autodoc/README.md). Refresh the committed
 registry-backed stubs with `make autodoc-stubs`, then rebuild generated pages
-through the canonical CLI path with `make autodoc-refresh`.
+through the canonical CLI path with `make autodoc-refresh`. Refresh the shipped
+cohort evidence roll-up with `make cohort-report`, which now also refreshes the
+executed-and-compared anchor reports before aggregating the cohort summary.
 
 By default these reports are written under `docs/generated/validation/` as
 machine-readable JSON. They represent declared and harvested evidence only; they

@@ -35,6 +35,12 @@
       "content": "Residues are normalized case-insensitively before counting. Gap symbols `-` are ignored and excluded from the frequency denominator. All other normalized symbols, including ambiguity codes such as `N` and stop symbols such as `*`, are counted exactly as observed. Frequencies are reported as fractions over all non-gap symbols in the corresponding record or aggregate set."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `compseq` composition example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed symbol-counting and non-gap frequency rules for the committed nucleotide fixture."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
@@ -80,19 +86,29 @@
           "description": "A stable tabular report containing per-record and aggregate residue counts and non-gap frequencies."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS compseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/compseq.acd",
+        "invocation": "compseq -sequence nucleotide_pattern_records.fasta -stdout yes"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS compseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/compseq.acd",
+        "invocation": "compseq -sequence nucleotide_pattern_records.fasta -stdout yes"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "per_record_and_aggregate_composition"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

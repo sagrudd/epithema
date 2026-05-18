@@ -32,6 +32,10 @@ The current v1 tool accepts annotated EMBL or GenBank input plus optional featur
 
 One output sequence record is emitted per selected simple feature in stable source and feature order. Output identifiers are derived deterministically as `<source>:<start>-<end>:<feature-name-or-kind>`, extracted residues preserve the source molecule kind and metadata, and the copied feature location is rebased so the extracted span starts at local coordinate 1.
 
+## Legacy Context
+
+This acceptance anchor keeps one historical-style `extractfeat` gene extraction example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is intentionally limited to the governed simple-feature path rather than broader historical location semantics.
+
 ## Current Status
 
 This method is implemented and exposed through `emboss-rs extractfeat`. Validation currently covers gene extraction from a committed annotated GenBank fixture. Rust service and core tests also cover qualifier-based selection, no-match handling, coordinate rebasing, and reverse-strand nucleotide extraction through the shared feature-extraction layer.
@@ -61,17 +65,21 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
   - `kind` = `gene`
 - Expected outputs:
   - `extracted_feature_sequences`: Feature-defined extracted sequences (The selected `gene` span is emitted as its own sequence record with rebased copied feature coordinates.)
+- Legacy reference: EMBOSS extractfeat application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractfeat.acd`
+  - Invocation: `extractfeat -sequence annotated_feature.gbk -type gene -outseq stdout`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS extractfeat application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractfeat.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `extract_selected_gene_feature`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
 

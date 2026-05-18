@@ -1,16 +1,16 @@
 {
   "tool_name": "needle",
-  "document_id": "needle-minimal",
+  "document_id": "needle-v1",
   "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "evidence_source": "executed_run",
   "summary": {
     "total_case_count": 1,
     "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 1,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -18,23 +18,36 @@
   "cases": [
     {
       "id": "basic_alignment",
-      "title": "Basic alignment example",
-      "evidence_source": "curated_autodoc",
+      "title": "Compute one deterministic global nucleotide alignment",
+      "evidence_source": "executed_run",
       "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "not_requested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
-        "example_fasta"
+        "needle_query_fixture",
+        "needle_target_fixture"
       ],
       "expected_output_ids": [
-        "report"
+        "alignment_stockholm"
       ],
-      "provenance": [],
+      "provenance": [
+        {
+          "source": "EMBOSS needle application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/needle.acd",
+          "invocation": "needle -asequence needle_query.fasta -bsequence needle_target.fasta -gapopen 10 -gapextend 0.5"
+        }
+      ],
       "diagnostics": []
     }
   ],
   "unresolved_gaps": [],
   "diagnostics": [],
-  "provenance": []
+  "provenance": [
+    {
+      "source": "EMBOSS needle application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/needle.acd",
+      "invocation": "needle -asequence needle_query.fasta -bsequence needle_target.fasta -gapopen 10 -gapextend 0.5"
+    }
+  ]
 }

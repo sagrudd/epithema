@@ -110,12 +110,14 @@ pub fn derive_validation_report(
                 .iter()
                 .map(|output| output.id.clone())
                 .collect(),
-            provenance: example
-                .legacy_reference
-                .iter()
-                .cloned()
-                .chain(document.provenance.source_references.iter().cloned())
-                .collect(),
+            provenance: unique_references(
+                example
+                    .legacy_reference
+                    .iter()
+                    .cloned()
+                    .chain(document.provenance.source_references.iter().cloned())
+                    .collect(),
+            ),
             diagnostics: case_diagnostics,
         });
     }
@@ -209,7 +211,17 @@ fn declaration_status(
 }
 
 fn report_provenance(document: &AutodocDocument) -> Vec<LegacyReference> {
-    document.provenance.source_references.clone()
+    unique_references(document.provenance.source_references.clone())
+}
+
+fn unique_references(references: Vec<LegacyReference>) -> Vec<LegacyReference> {
+    let mut unique = Vec::new();
+    for reference in references {
+        if !unique.contains(&reference) {
+            unique.push(reference);
+        }
+    }
+    unique
 }
 
 #[cfg(test)]

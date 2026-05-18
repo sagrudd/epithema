@@ -5,11 +5,16 @@
 //! evidence, execution state, and comparison state without pretending that
 //! declared examples have already been run.
 
+pub mod anchor;
 pub mod cross_surface;
 pub mod evidence;
 pub mod projection;
 pub mod report;
 
+pub use anchor::{
+    AcceptanceAnchorSpec, acceptance_anchor_specs, derive_acceptance_anchor_report,
+    write_acceptance_anchor_reports,
+};
 pub use cross_surface::{
     CrossSurfaceExpected, CrossSurfaceFixtureCase, CrossSurfaceFixtureCatalog,
     DEFAULT_NUMERIC_TOLERANCE, write_cross_surface_fixture_catalog_json,

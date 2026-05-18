@@ -29,6 +29,12 @@
       "content": "The tool emits one masked sequence record per input record, preserving identifiers, descriptions, molecule kind, and other metadata. The default mask symbol is `N` for DNA, RNA, and currently unknown molecule kinds, and `X` for protein records. A custom mask character may be supplied when it is valid for the target record alphabet."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `maskseq` interval-masking example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison validates the governed 1-based inclusive masking rule and default nucleotide mask symbol."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
@@ -79,19 +85,29 @@
           "description": "Each output record has positions 2 through 3 replaced with `N`, while identifiers and metadata are preserved."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS maskseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd",
+        "invocation": "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS maskseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd",
+        "invocation": "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "mask_positions_two_to_three"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

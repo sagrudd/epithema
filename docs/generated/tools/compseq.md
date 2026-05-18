@@ -36,6 +36,10 @@ The tool emits a stable table report with columns `scope`, `record`, `molecule`,
 
 Residues are normalized case-insensitively before counting. Gap symbols `-` are ignored and excluded from the frequency denominator. All other normalized symbols, including ambiguity codes such as `N` and stop symbols such as `*`, are counted exactly as observed. Frequencies are reported as fractions over all non-gap symbols in the corresponding record or aggregate set.
 
+## Legacy Context
+
+This acceptance anchor keeps one historical-style `compseq` composition example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed symbol-counting and non-gap frequency rules for the committed nucleotide fixture.
+
 ## Current Status
 
 This method is implemented and exposed through `emboss-rs compseq`. Validation currently covers nucleotide composition, protein composition, ambiguity and stop-symbol handling, per-record plus aggregate reporting, and empty-input failure.
@@ -63,17 +67,21 @@ The first release does not infer richer chemistry-aware residue classes or rejec
 - Referenced artifacts: `nucleotide_pattern_fixture`
 - Expected outputs:
   - `composition_table`: Residue composition table (A stable tabular report containing per-record and aggregate residue counts and non-gap frequencies.)
+- Legacy reference: EMBOSS compseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/compseq.acd`
+  - Invocation: `compseq -sequence nucleotide_pattern_records.fasta -stdout yes`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS compseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/compseq.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `per_record_and_aggregate_composition`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
 

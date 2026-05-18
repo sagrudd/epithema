@@ -35,6 +35,12 @@
       "content": "Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared EMBOSS-RS average residue masses with one water molecule added once per chain."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `pepstats` reporting example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed first-release metric set rather than the broader historical EMBOSS biochemical-report surface."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
@@ -80,19 +86,29 @@
           "description": "A stable table containing per-record summary metrics and amino-acid composition frequencies."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS pepstats application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepstats.acd",
+        "invocation": "pepstats -sequence protein_stats_records.fasta -stdout yes"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "OpenAI Codex",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS pepstats application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepstats.acd",
+        "invocation": "pepstats -sequence protein_stats_records.fasta -stdout yes"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "protein_summary_statistics"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

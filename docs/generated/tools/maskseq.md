@@ -32,6 +32,10 @@ The current v1 tool accepts a local sequence file followed by one or more `start
 
 The tool emits one masked sequence record per input record, preserving identifiers, descriptions, molecule kind, and other metadata. The default mask symbol is `N` for DNA, RNA, and currently unknown molecule kinds, and `X` for protein records. A custom mask character may be supplied when it is valid for the target record alphabet.
 
+## Legacy Context
+
+This acceptance anchor keeps one historical-style `maskseq` interval-masking example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison validates the governed 1-based inclusive masking rule and default nucleotide mask symbol.
+
 ## Current Status
 
 This method is implemented and exposed through `emboss-rs maskseq`. Validation currently covers deterministic masking of an interior interval against a committed three-record FASTA fixture. Rust tests also cover whole-sequence masking, protein default masking with `X`, and rejection of biologically invalid explicit mask symbols.
@@ -61,17 +65,21 @@ Intervals must be valid for every input record; EMBOSS-RS does not clip partial 
   - `interval` = `2:3`
 - Expected outputs:
   - `masked_sequences`: Masked sequences (Each output record has positions 2 through 3 replaced with `N`, while identifiers and metadata are preserved.)
+- Legacy reference: EMBOSS maskseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd`
+  - Invocation: `maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS maskseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `mask_positions_two_to_three`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
 

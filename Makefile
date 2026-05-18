@@ -17,7 +17,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize cohort-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -27,6 +27,7 @@ help:
 		"  make docs        Build the Sphinx documentation site" \
 		"  make autodoc-stubs   Refresh committed autodoc JSON inputs for the exposed tool registry" \
 		"  make autodoc-refresh Refresh generated tool Markdown pages from the committed autodoc inputs" \
+		"  make anchor-validation Refresh executed-and-compared validation reports for the acceptance anchors" \
 		"  make cohort-report   Refresh the shipped cohort validation report JSON and Markdown outputs" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
@@ -133,9 +134,14 @@ generated-index-normalize:
 	$(PYTHON) scripts/normalize_generated_index.py
 
 cohort-report:
+	$(MAKE) anchor-validation
 	$(RUSTCARGO) run -p emboss-testkit --example write_shipped_cohort_validation_report -- \
 		--json docs/generated/validation/shipped_cohort.validation.json \
 		--markdown docs/generated/cohort_validation.md
+
+anchor-validation:
+	$(RUSTCARGO) run -p emboss-testkit --example write_acceptance_anchor_reports -- \
+		--output-dir docs/generated/validation
 
 lint-docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b dummy $(DOCS_DIR) $(DOCS_BUILD_DIR)/lint

@@ -9,9 +9,9 @@
     "documented_only_count": 8,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 37,
-    "compared_evidence_count": 0,
-    "gapped_method_count": 46
+    "executable_evidence_count": 31,
+    "compared_evidence_count": 6,
+    "gapped_method_count": 40
   },
   "methods": [
     {
@@ -296,20 +296,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'needle' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'needle' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "needleall",
@@ -350,20 +341,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'seqret' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'seqret' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "refseqget",
@@ -679,20 +661,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'maskseq' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'maskseq' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "maskfeat",
@@ -733,20 +706,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'extractfeat' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'extractfeat' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "featcopy",
@@ -1054,20 +1018,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'compseq' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'compseq' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "geecee",
@@ -1108,20 +1063,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'pepstats' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'pepstats' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "backtranseq",

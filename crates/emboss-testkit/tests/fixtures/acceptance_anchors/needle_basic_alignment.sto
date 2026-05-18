@@ -1,0 +1,5 @@
+# STOCKHOLM 1.0
+#=GF ID query_vs_target
+query ACGT
+target AC-T
+//

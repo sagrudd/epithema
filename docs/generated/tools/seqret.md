@@ -32,6 +32,10 @@ The current interface accepts exactly one governed input reference. Local sequen
 
 The result is a normalized sequence collection rendered through the shared sequence output path. Local multi-record inputs preserve input record order. Provider-backed retrieval currently returns the fetched record with provenance attached to the core sequence metadata.
 
+## Legacy Context
+
+This acceptance anchor keeps one historical-style `seqret` normalization example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is deliberately narrow and local-file based; it does not claim full historical provider or literal-input parity.
+
 ## Current Status
 
 This method is implemented and exposed through `emboss-rs seqret`. The local-file normalization path is exercised directly against a committed FASTA fixture. The provider-backed accession path is also implemented and covered in Rust service tests using mocked remote retrieval so the retrieval seam is executable without claiming that live network acceptance evidence has been harvested yet.
@@ -59,17 +63,21 @@ The first release is intentionally narrow. `seqret` is not yet a broad accession
 - Referenced artifacts: `three_record_fasta`
 - Expected outputs:
   - `normalized_local_sequence_collection`: Normalized local sequence collection (A three-record output collection that preserves the source order and stable record identifiers.)
+- Legacy reference: EMBOSS seqret application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd`
+  - Invocation: `seqret -sequence three_records.fasta -outseq stdout`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS seqret application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `normalize_local_fasta_records`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
 
