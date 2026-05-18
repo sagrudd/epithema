@@ -153,3 +153,166 @@ in the platform, while later items expand method coverage in governed sweeps.
       what is merely scaffolded.
     - Do not treat page count, stub presence, or registry inclusion as a proxy
       for biological acceptance.
+
+## Next Tier Task Map
+
+The first fourteen tasks established the truth model, the governed reporting
+path, the first compared-evidence anchors, and the current shipped cohort of
+`60` methods. The next tier should be driven by the generated governance and
+cohort reports rather than by ad hoc tool additions.
+
+Current baseline for this next tier:
+
+- shipped methods: `60`
+- documented-only shipped methods: `4`
+- declared-only shipped methods: `1`
+- compared-evidence shipped methods: `13`
+- retained backlog still unshipped: `36`
+
+15. Eliminate the remaining documented-only shipped methods.
+    - Target:
+      - `degapseq`
+      - `trimseq`
+      - `complex`
+      - `splitter`
+    - Convert each one to:
+      - curated autodoc
+      - executable validation intent
+      - honest generated validation metadata
+    - The specific goal is to drive `documented_only_count` from `4` to `0`
+      without inflating evidence claims beyond what actually runs.
+
+16. Upgrade `newseq` from declared-only to executable evidence.
+    - Keep the current conservative molecule policy.
+    - Add at least one governed executed case that proves:
+      - DNA creation
+      - protein creation
+      - invalid residue rejection
+    - The goal is to remove the last `declared_evidence` method from the
+      shipped cohort.
+
+17. Expand compared-evidence anchors across the strongest existing families.
+    - Prioritise methods that already have executable coverage and stable
+      output forms, for example:
+      - `water`
+      - `descseq`
+      - `fuzznuc`
+      - `fuzzpro`
+      - `fuzztran`
+      - `geecee`
+      - `infoseq`
+      - `cusp`
+    - Focus on durable expected-output fixtures, not high-volume superficial
+      comparisons.
+
+18. Add the next sequence editing and manipulation sweep.
+    - The governance report identifies this as the largest retained backlog.
+    - Prioritise the most structurally adjacent tools:
+      - `merger`
+      - `megamerger`
+      - `sizeseq`
+      - `shuffleseq`
+    - Keep the implementations aligned to existing sequence-stream and
+      transform seams, with method-associated files.
+
+19. Add the ambiguity and masking follow-on sweep.
+    - Prioritise:
+      - `maskambignuc`
+      - `maskambigprot`
+      - `pasteseq`
+      - `twofeat`
+    - Reuse existing masking, feature, and sequence-edit infrastructure rather
+      than introducing a second ambiguity model.
+
+20. Add the alignment post-processing follow-on sweep.
+    - The immediate retained backlog is:
+      - `diffseq`
+      - `edialign`
+    - Keep this sweep narrowly about comparison and alignment editing rather
+      than extending the pairwise scoring core unnecessarily.
+
+21. Add the next motif and regular-expression sweep.
+    - The retained backlog is still large here.
+    - Prioritise the most practically useful cluster:
+      - `preg`
+      - `patmatdb`
+      - `wordmatch`
+      - `wordfinder`
+    - Keep the first release for each tool bounded and typed rather than
+      reproducing the whole historical fuzzy-language surface at once.
+
+22. Add the inverted-repeat and palindrome sweep.
+    - Prioritise:
+      - `palindrome`
+      - `einverted`
+      - `dreg`
+      - `seqmatchall`
+    - Reuse interval and pattern-reporting structures where possible and keep
+      strand/coordinate semantics explicit.
+
+23. Add the next core statistics sweep.
+    - The retained backlog is now:
+      - `aaindexextract`
+      - `infobase`
+      - `inforesidue`
+      - `oddcomp`
+    - Follow the same deterministic table-report model used by `infoseq`,
+      `compseq`, `geecee`, `pepstats`, and `wordcount`.
+
+24. Add the next sequence IO and set-handling sweep.
+    - Prioritise:
+      - `nthseqset`
+      - `splitsource`
+      - `listor`
+      - `skipredundant`
+    - Keep ordering semantics and duplicate-handling behavior explicit and
+      deterministic.
+
+25. Add the next protein-property rework sweep.
+    - Governance already marks these as retained rework candidates:
+      - `iep`
+      - `pepdigest`
+    - Keep them scientifically narrow and typed.
+    - Do not add broad biochemical “kitchen sink” summaries; prefer explicit
+      v1 metric scopes.
+
+26. Add the restriction-analysis rework sweep.
+    - Governance backlog:
+      - `recoder`
+      - `silent`
+    - Treat these as modernized analytical tools, not literal ports of
+      EMBOSS-era UI behavior.
+
+27. Expand governed plotting carefully.
+    - After `charge` and `pepwindow`, choose the next narrow plot-contract
+      additions only where the analytical payload is already stable.
+    - Candidate next plots:
+      - `plotorf`
+      - a governed visualization for `dan`
+      - a governed visualization for `wordcount`
+    - Rendering must remain R-owned in `emboss-r`.
+
+28. Begin historical evidence harvesting for the compared-anchor cohort.
+    - The current framework can distinguish harvested evidence, but that count
+      is still `0`.
+    - Start with the methods that already have compared fixtures.
+    - The goal is to prove provenance depth, not merely to add more snapshots.
+
+29. Add a standing cohort-health gate for roadmap reprioritization.
+    - On each future family sweep, review:
+      - `docs/generated/cohort_validation.md`
+      - `docs/generated/governance_alignment.md`
+      - `docs/release/v1_0_0_rc_readiness.md`
+    - Reorder the next roadmap items whenever:
+      - a different family becomes the largest retained backlog
+      - a shipped family accumulates too many weak-evidence methods
+      - release truth would otherwise fall behind shipped capability
+
+30. Preserve the release candidate truth model after `1.0.0`.
+    - After the stable cut, carry the same rules forward into `Unreleased`.
+    - New shipped tools must not bypass:
+      - governance mapping
+      - autodoc presence
+      - validation-stub generation
+      - cohort-report inclusion
+      - honest release-note wording
