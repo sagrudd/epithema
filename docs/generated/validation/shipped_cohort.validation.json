@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 82,
-    "documentation_complete_count": 82,
-    "validation_stub_count": 82,
+    "total_method_count": 86,
+    "documentation_complete_count": 86,
+    "validation_stub_count": 86,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 61,
+    "executable_evidence_count": 65,
     "compared_evidence_count": 21,
-    "gapped_method_count": 61
+    "gapped_method_count": 65
   },
   "methods": [
     {
@@ -165,6 +165,33 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'extractalign' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "nthseqset",
+      "family": "alignment_tools",
+      "summary": "select one 1-based alignment set from a file containing one or more alignments",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'nthseqset' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'nthseqset' has no compared validation evidence yet"
         }
       ]
     },
@@ -574,6 +601,60 @@
       ]
     },
     {
+      "tool_name": "listor",
+      "family": "sequence_stream",
+      "summary": "combine two sequence sets with deterministic logical set operators over exact sequence identity",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'listor' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'listor' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "skipredundant",
+      "family": "sequence_stream",
+      "summary": "remove exact redundant sequences from one input while preserving first-seen order",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'skipredundant' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'skipredundant' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "degapseq",
       "family": "sequence_edit",
       "summary": "remove '-' and '.' gap characters from sequence records",
@@ -905,6 +986,33 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'feattext' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "splitsource",
+      "family": "feature_tools",
+      "summary": "split annotated synthetic records into deterministic source-feature fragments",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'splitsource' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'splitsource' has no compared validation evidence yet"
         }
       ]
     },

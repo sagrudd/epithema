@@ -6,6 +6,7 @@ mod diffseq;
 mod edialign;
 mod extractalign;
 mod infoalign;
+mod nthseqset;
 mod shared;
 
 use crate::ToolDescriptor;
@@ -22,7 +23,8 @@ pub use extractalign::{
     ExtractalignOutcome, ExtractalignParams, extractalign_help, run_extractalign,
 };
 pub use infoalign::{InfoalignOutcome, InfoalignParams, infoalign_help, run_infoalign};
-pub use shared::{AlignmentInput, AlignmentToolError, load_alignment};
+pub use nthseqset::{NthseqsetOutcome, NthseqsetParams, nthseqset_help, run_nthseqset};
+pub use shared::{AlignmentInput, AlignmentToolError, load_alignment, load_alignments};
 
 /// `aligncopy` descriptor.
 pub const ALIGNCOPY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
@@ -58,5 +60,11 @@ pub const EDIALIGN_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const EXTRACTALIGN_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "extractalign",
     "extract rows and an optional 1-based inclusive column range from an alignment",
+)
+.with_family(FAMILY);
+/// `nthseqset` descriptor.
+pub const NTHSEQSET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "nthseqset",
+    "select one 1-based alignment set from a file containing one or more alignments",
 )
 .with_family(FAMILY);

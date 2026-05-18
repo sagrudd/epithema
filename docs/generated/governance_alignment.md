@@ -8,17 +8,17 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `82`
-- Shipped tools with governance mapping: `82`
-- Retained backlog still unshipped: `14`
-- Shipped tools with curated autodoc: `82`
-- Shipped tools with executable or compared evidence: `82`
+- Shipped tools: `86`
+- Shipped tools with governance mapping: `86`
+- Retained backlog still unshipped: `10`
+- Shipped tools with curated autodoc: `86`
+- Shipped tools with executable or compared evidence: `86`
 - Shipped tools with compared evidence: `21`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
-- Shipped retain methods: `76`
+- Shipped retain methods: `80`
 - Shipped rework methods: `6`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
@@ -28,10 +28,10 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Governance family | Retained total | Retained shipped | Retained backlog | Shipped curated | Shipped executable+ | Shipped compared | Recommendation |
 |---|---:|---:|---:|---:|---:|---:|---|
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 2 | upgrade shipped retained methods to compared evidence |
-| Core Retain — Basic sequence IO and conversion | 18 | 16 | 2 | 16 | 16 | 3 | prioritise retained backlog closure (2 remaining) |
+| Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 3 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 6 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
-| Core Retain — Sequence editing and manipulation | 23 | 15 | 8 | 15 | 15 | 2 | prioritise retained backlog closure (8 remaining) |
+| Core Retain — Sequence editing and manipulation | 23 | 17 | 6 | 17 | 17 | 2 | prioritise retained backlog closure (6 remaining) |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 3 | upgrade shipped retained methods to compared evidence |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -52,21 +52,16 @@ This page is generated from the maintained governance family-to-tool appendix, t
 
 ## Recommended Next Governed Sweeps
 
-- **Core Retain — Sequence editing and manipulation**: prioritise retained backlog closure (8 remaining). Retained backlog: `biosed`, `listor`, `makenucseq`, `makeprotseq`, `msbar`, `skipredundant`, `trimest`, `vectorstrip`
-- **Core Retain — Basic sequence IO and conversion**: prioritise retained backlog closure (2 remaining). Retained backlog: `nthseqset`, `splitsource`
+- **Core Retain — Sequence editing and manipulation**: prioritise retained backlog closure (6 remaining). Retained backlog: `biosed`, `makenucseq`, `makeprotseq`, `msbar`, `trimest`, `vectorstrip`
 - **Modernize — Rework — Protein property and structural-summary utilities**: prioritise retained backlog closure (2 remaining). Retained backlog: `iep`, `pepdigest`
 - **Modernize — Rework — Restriction-enzyme design and analysis**: prioritise retained backlog closure (2 remaining). Retained backlog: `recoder`, `silent`
 
 ## Retained Backlog
 
-- `nthseqset` — retain — Core Retain — Basic sequence IO and conversion
-- `splitsource` — retain — Core Retain — Basic sequence IO and conversion
 - `biosed` — retain — Core Retain — Sequence editing and manipulation
-- `listor` — retain — Core Retain — Sequence editing and manipulation
 - `makenucseq` — retain — Core Retain — Sequence editing and manipulation
 - `makeprotseq` — retain — Core Retain — Sequence editing and manipulation
 - `msbar` — retain — Core Retain — Sequence editing and manipulation
-- `skipredundant` — retain — Core Retain — Sequence editing and manipulation
 - `trimest` — retain — Core Retain — Sequence editing and manipulation
 - `vectorstrip` — retain — Core Retain — Sequence editing and manipulation
 - `recoder` — retain — Modernize — Rework — Restriction-enzyme design and analysis
@@ -88,6 +83,7 @@ All shipped methods are mapped in the governance appendix.
 | `edialign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
+| `nthseqset` | `alignment_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `runinfo` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |
 | `runget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |
 | `matcher` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
@@ -104,6 +100,8 @@ All shipped methods are mapped in the governance appendix.
 | `notseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `nthseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `skipseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
+| `listor` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
+| `skipredundant` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
 | `degapseq` | `sequence_edit` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `revseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
 | `trimseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
@@ -118,6 +116,7 @@ All shipped methods are mapped in the governance appendix.
 | `featmerge` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `featreport` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `feattext` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
+| `splitsource` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
 | `twofeat` | `feature_tools` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
 | `cai` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
 | `chips` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |

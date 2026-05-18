@@ -23,9 +23,10 @@ use emboss_tools::alignment_analysis::{
 };
 use emboss_tools::alignment_tools::{
     AligncopyParams, AligncopypairParams, AlignmentInput, DiffseqParams, EdialignParams,
-    ExtractalignParams, InfoalignParams, aligncopy_help, aligncopypair_help, diffseq_help,
-    edialign_help, extractalign_help, infoalign_help, run_aligncopy, run_aligncopypair,
-    run_diffseq, run_edialign, run_extractalign, run_infoalign,
+    ExtractalignParams, InfoalignParams, NthseqsetParams, aligncopy_help, aligncopypair_help,
+    diffseq_help, edialign_help, extractalign_help, infoalign_help, nthseqset_help,
+    run_aligncopy, run_aligncopypair, run_diffseq, run_edialign, run_extractalign,
+    run_infoalign, run_nthseqset,
 };
 use emboss_tools::archive_tools::{
     RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
@@ -38,10 +39,11 @@ use emboss_tools::codon_tools::{
 use emboss_tools::feature_tools::{
     CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
     FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams, MaskseqParams,
-    TwofeatParams, coderet_help, extractfeat_help, featcopy_help, featmerge_help, featreport_help,
-    feattext_help, maskambignuc_help, maskambigprot_help, maskfeat_help, maskseq_help, run_coderet,
-    run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext, run_maskambignuc,
-    run_maskambigprot, run_maskfeat, run_maskseq, run_twofeat, twofeat_help,
+    SplitsourceParams, TwofeatParams, coderet_help, extractfeat_help, featcopy_help,
+    featmerge_help, featreport_help, feattext_help, maskambignuc_help, maskambigprot_help,
+    maskfeat_help, maskseq_help, run_coderet, run_extractfeat, run_featcopy, run_featmerge,
+    run_featreport, run_feattext, run_maskambignuc, run_maskambigprot, run_maskfeat,
+    run_maskseq, run_splitsource, run_twofeat, splitsource_help, twofeat_help,
 };
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
@@ -76,9 +78,10 @@ use emboss_tools::sequence_stats::{
     word_frequency, wordcount_help,
 };
 use emboss_tools::sequence_stream::{
-    NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
-    load_sequence_records, newseq_help, notseq_help, nthseq_help, run_newseq, run_notseq,
-    run_nthseq, run_seqcount, run_skipseq, seqcount_help, skipseq_help,
+    ListorParams, NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput,
+    SequenceSetOperator, SkipredundantParams, SkipseqParams, load_sequence_records, listor_help,
+    newseq_help, notseq_help, nthseq_help, run_listor, run_newseq, run_notseq, run_nthseq,
+    run_seqcount, run_skipredundant, run_skipseq, seqcount_help, skipredundant_help, skipseq_help,
 };
 use emboss_tools::sequence_transform::{
     CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, PasteseqParams,
@@ -262,6 +265,7 @@ impl EmbossService {
             "edialign" => self.invoke_edialign(request, descriptor),
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
+            "nthseqset" => self.invoke_nthseqset(request, descriptor),
             "runinfo" => self.invoke_runinfo(request, descriptor),
             "runget" => self.invoke_runget(request, descriptor),
             "matcher" => self.invoke_matcher(request, descriptor),
@@ -276,6 +280,8 @@ impl EmbossService {
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
             "skipseq" => self.invoke_skipseq(request, descriptor),
+            "listor" => self.invoke_listor(request, descriptor),
+            "skipredundant" => self.invoke_skipredundant(request, descriptor),
             "notseq" => self.invoke_notseq(request, descriptor),
             "newseq" => self.invoke_newseq(request, descriptor),
             "degapseq" => self.invoke_degapseq(request, descriptor),
@@ -293,6 +299,7 @@ impl EmbossService {
             "featmerge" => self.invoke_featmerge(request, descriptor),
             "featreport" => self.invoke_featreport(request, descriptor),
             "feattext" => self.invoke_feattext(request, descriptor),
+            "splitsource" => self.invoke_splitsource(request, descriptor),
             "twofeat" => self.invoke_twofeat(request, descriptor),
             "cai" => self.invoke_cai(request, descriptor),
             "chips" => self.invoke_chips(request, descriptor),
@@ -770,6 +777,51 @@ impl EmbossService {
                         _ => "all".to_owned(),
                     }
                 ))
+                .with_line("Output format: Stockholm"),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_nthseqset(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, nthseqset_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("nthseqset", nthseqset_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_alignment_input(&arguments[0])?;
+        let number = parse_positive_index("nthseqset", &arguments[1])?;
+        let outcome = run_nthseqset(NthseqsetParams { input, number })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("selected alignment set {}", outcome.number),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Alignment set selected")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Selected set: {}", outcome.number))
+                .with_line(format!("Total sets: {}", outcome.total_count))
                 .with_line("Output format: Stockholm"),
             report.clone(),
         );
@@ -1741,6 +1793,136 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("remaining-sequences", ArtifactKind::Sequence)
                 .with_label("Remaining sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_listor(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, listor_help()));
+        }
+
+        let params = parse_listor_params(request.arguments())?;
+        let first_path = params.first.path.display().to_string();
+        let second_path = params.second.path.display().to_string();
+        let (first, first_provenance, first_diagnostics) =
+            self.resolve_local_sequence_input(&first_path)?;
+        let (second, second_provenance, second_diagnostics) =
+            self.resolve_local_sequence_input(&second_path)?;
+        let outcome = run_listor(ListorParams {
+            first,
+            second,
+            operator: params.operator,
+        })?;
+
+        let mut diagnostics = first_diagnostics;
+        diagnostics.extend(second_diagnostics);
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("logical set FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "applied {} set operation and returned {} records",
+                outcome.operator.label(),
+                outcome.records.len()
+            ),
+            diagnostics,
+            vec![
+                first_provenance,
+                second_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence set operation completed")
+                .with_line(format!("First input: {}", outcome.first.path.display()))
+                .with_line(format!("Second input: {}", outcome.second.path.display()))
+                .with_line(format!("Operator: {}", outcome.operator.label()))
+                .with_line(format!(
+                    "Dropped duplicates in first input: {}",
+                    outcome.first_duplicate_count
+                ))
+                .with_line(format!(
+                    "Dropped duplicates in second input: {}",
+                    outcome.second_duplicate_count
+                ))
+                .with_line("Comparison rule: exact normalized sequence content plus molecule kind")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("logical-set-sequences", ArtifactKind::Sequence)
+                .with_label("Logical set result")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_skipredundant(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, skipredundant_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("skipredundant", skipredundant_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_skipredundant(SkipredundantParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("non-redundant FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("removed {} redundant records", outcome.redundant_count),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Redundant sequences removed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Input records: {}", outcome.total_count))
+                .with_line(format!("Removed redundant: {}", outcome.redundant_count))
+                .with_line(format!(
+                    "Returned: {}",
+                    outcome.total_count.saturating_sub(outcome.redundant_count)
+                ))
+                .with_line("Redundancy rule: exact normalized sequence content plus molecule kind")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("non-redundant-sequences", ArtifactKind::Sequence)
+                .with_label("Non-redundant sequences")
                 .with_provenance(output_provenance),
         );
 
@@ -3011,6 +3193,57 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("feature-text", ArtifactKind::FeatureTable)
                 .with_label("Normalized feature table")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_splitsource(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, splitsource_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("splitsource", splitsource_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_splitsource(SplitsourceParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("split source-fragment FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("split synthetic input into {} source fragments", outcome.fragment_count),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Source fragments extracted")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Fragments: {}", outcome.fragment_count))
+                .with_line("Selection rule: simple `source` features in source order")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("source-fragments", ArtifactKind::Sequence)
+                .with_label("Source fragments")
                 .with_provenance(output_provenance),
         );
 
@@ -7955,6 +8188,63 @@ fn parse_pasteseq_params(arguments: &[String]) -> Result<PasteseqParams, Service
     })
 }
 
+fn parse_listor_params(arguments: &[String]) -> Result<ListorParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("listor", listor_help()));
+    }
+
+    let mut positional = Vec::new();
+    let mut operator = SequenceSetOperator::Or;
+    let mut index = 0usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--operator=") {
+            operator = parse_listor_operator(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--operator" {
+            let value = arguments
+                .get(index + 1)
+                .ok_or_else(|| tool_usage_error("listor", listor_help()))?;
+            operator = parse_listor_operator(value)?;
+            index += 2;
+            continue;
+        }
+        if argument.starts_with("--") {
+            return Err(tool_usage_error("listor", listor_help()));
+        }
+        positional.push(argument.clone());
+        index += 1;
+    }
+
+    if positional.len() != 2 {
+        return Err(tool_usage_error("listor", listor_help()));
+    }
+
+    Ok(ListorParams {
+        first: SequenceInput::new(positional[0].clone()),
+        second: SequenceInput::new(positional[1].clone()),
+        operator,
+    })
+}
+
+fn parse_listor_operator(value: &str) -> Result<SequenceSetOperator, ServiceError> {
+    match value.to_ascii_uppercase().as_str() {
+        "OR" => Ok(SequenceSetOperator::Or),
+        "AND" => Ok(SequenceSetOperator::And),
+        "XOR" => Ok(SequenceSetOperator::Xor),
+        "NOT" => Ok(SequenceSetOperator::Not),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unsupported listor operator '{value}'"),
+        )
+        .with_code("service.tool.listor.operator_invalid")
+        .with_detail(listor_help())),
+    }
+}
+
 fn parse_revseq_params(arguments: &[String]) -> Result<RevseqParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("revseq", revseq_help()));
@@ -8804,6 +9094,17 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "refseqget" => refseqget_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
+        "seqcount" => seqcount_help(),
+        "nthseq" => nthseq_help(),
+        "skipseq" => skipseq_help(),
+        "listor" => listor_help(),
+        "skipredundant" => skipredundant_help(),
+        "notseq" => notseq_help(),
+        "newseq" => newseq_help(),
+        "degapseq" => degapseq_help(),
+        "revseq" => revseq_help(),
+        "trimseq" => trimseq_help(),
+        "descseq" => descseq_help(),
         "infoseq" => infoseq_help(),
         "maskambignuc" => maskambignuc_help(),
         "maskambigprot" => maskambigprot_help(),
@@ -8811,6 +9112,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "aligncopypair" => aligncopypair_help(),
         "infoalign" => infoalign_help(),
         "extractalign" => extractalign_help(),
+        "nthseqset" => nthseqset_help(),
         "maskfeat" => maskfeat_help(),
         "extractfeat" => extractfeat_help(),
         "featcopy" => featcopy_help(),
@@ -8818,6 +9120,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "featmerge" => featmerge_help(),
         "featreport" => featreport_help(),
         "feattext" => feattext_help(),
+        "splitsource" => splitsource_help(),
         "twofeat" => twofeat_help(),
         "dreg" => dreg_help(),
         "einverted" => einverted_help(),
@@ -8852,6 +9155,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "sizeseq" => sizeseq_help(),
         "shuffleseq" => shuffleseq_help(),
         "pasteseq" => pasteseq_help(),
+        "splitter" => splitter_help(),
+        "union" => union_help(),
         _ => "",
     }
 }
@@ -9076,6 +9381,31 @@ mod tests {
     fn oddcomp_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/oddcomp_records.fasta")
+    }
+
+    fn listor_first_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/listor_first.fasta")
+    }
+
+    fn listor_second_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/listor_second.fasta")
+    }
+
+    fn skipredundant_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/skipredundant_records.fasta")
+    }
+
+    fn nthseqset_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/nthseqset_alignments.sto")
+    }
+
+    fn splitsource_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/splitsource_annotated.gbk")
     }
 
     fn codon_reference_fixture() -> std::path::PathBuf {
@@ -9909,6 +10239,31 @@ mod tests {
     }
 
     #[test]
+    fn executes_nthseqset_against_multiple_alignment_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("nthseqset").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            nthseqset_fixture().display().to_string(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("nthseqset should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 2);
+                assert_eq!(alignment.column_count(), 5);
+                assert_eq!(alignment.rows()[0].identifier().accession(), "gamma");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Selected set: 2");
+        assert_eq!(response.result.summary.lines[2], "Total sets: 2");
+    }
+
+    #[test]
     fn executes_nthseq_against_real_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -9997,6 +10352,59 @@ mod tests {
         assert_eq!(response.result.summary.lines[1], "Skipped: 3");
         assert_eq!(response.result.summary.lines[2], "Input records: 3");
         assert_eq!(response.result.summary.lines[3], "Returned: 0");
+    }
+
+    #[test]
+    fn executes_listor_against_real_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("listor").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            listor_first_fixture().display().to_string(),
+            listor_second_fixture().display().to_string(),
+            "--operator".to_owned(),
+            "xor".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("listor should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                let ids: Vec<_> = records
+                    .iter()
+                    .map(|record| record.identifier().accession().to_owned())
+                    .collect();
+                assert_eq!(ids, vec!["beta", "delta"]);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[2], "Operator: XOR");
+    }
+
+    #[test]
+    fn executes_skipredundant_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("skipredundant").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![skipredundant_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("skipredundant should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                let ids: Vec<_> = records
+                    .iter()
+                    .map(|record| record.identifier().accession().to_owned())
+                    .collect();
+                assert_eq!(ids, vec!["keep_alpha", "keep_gamma"]);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[2], "Removed redundant: 2");
     }
 
     #[test]
@@ -11389,6 +11797,27 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_splitsource_against_synthetic_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("splitsource").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![splitsource_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("splitsource should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 2);
+                assert_eq!(records[0].residues(), "AAAT");
+                assert_eq!(records[1].residues(), "GGGC");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Fragments: 2");
     }
 
     #[test]

@@ -52,6 +52,7 @@ tools/infoalign
 tools/infobase
 tools/inforesidue
 tools/infoseq
+tools/listor
 tools/maskambignuc
 tools/maskambigprot
 tools/maskfeat
@@ -64,6 +65,7 @@ tools/needleall
 tools/newseq
 tools/notseq
 tools/nthseq
+tools/nthseqset
 tools/oddcomp
 tools/palindrome
 tools/pasteseq
@@ -81,7 +83,9 @@ tools/seqmatchall
 tools/seqret
 tools/shuffleseq
 tools/sizeseq
+tools/skipredundant
 tools/skipseq
+tools/splitsource
 tools/splitter
 tools/tranalign
 tools/transeq

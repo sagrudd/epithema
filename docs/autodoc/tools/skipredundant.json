@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "skipredundant-v1",
+  "tool": {
+    "name": "skipredundant",
+    "family": "sequence_stream",
+    "summary": "Remove exact duplicate sequence records while preserving first-seen representatives",
+    "legacy_names": [
+      "skipredundant"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`skipredundant` collapses an input sequence stream to exact non-redundant representatives. EMBOSS-RS v1 defines redundancy conservatively as identical molecule kind plus identical normalized residue content, and it retains the first representative encountered for each exact sequence."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local sequence input path containing one or more sequence records. All records are loaded through the shared EMBOSS-RS sequence IO layer before redundancy filtering is applied."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a non-redundant FASTA sequence collection through the shared result path. CLI summaries report the input path, total loaded record count, exact duplicates removed, and returned representative count."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs skipredundant`. Validation currently covers deterministic removal of exact duplicate records against a committed FASTA fixture, including service-level summary checks."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not support historical similarity-threshold redundancy, alignment-based clustering, or accession-aware deduplication. Duplicate handling is exact and sequence-based only."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "skipredundant_fixture",
+      "label": "Exact-duplicate FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/skipredundant_records.fasta"
+      },
+      "description": "Repository-managed FASTA fixture containing two exact duplicate pairs for deterministic first-representative retention."
+    }
+  ],
+  "examples": [
+    {
+      "id": "remove_exact_duplicate_records",
+      "title": "Keep only the first representative of each exact sequence",
+      "description": "Runs `skipredundant` against a committed FASTA fixture containing exact duplicates and emits only the first representative for each sequence content key.",
+      "artifact_ids": [
+        "skipredundant_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "non_redundant_sequence_collection",
+          "label": "Non-redundant FASTA collection",
+          "description": "A FASTA sequence collection containing only `keep_alpha` and `keep_gamma`, with two duplicates removed."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "remove_exact_duplicate_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

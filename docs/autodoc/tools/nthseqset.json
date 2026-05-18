@@ -1,0 +1,97 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "nthseqset-v1",
+  "tool": {
+    "name": "nthseqset",
+    "family": "alignment_tools",
+    "summary": "Select one alignment set by 1-based ordinal position from a multi-alignment input",
+    "legacy_names": [
+      "nthseqset"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`nthseqset` selects one alignment set from an input that may contain more than one multiple alignment. EMBOSS-RS v1 supports deterministic 1-based selection from Stockholm files containing multiple alignments and also accepts a single aligned FASTA or Stockholm input as set `1`."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local alignment input path plus one selection number. The selection number is **1-based** and must refer to an existing alignment set after the shared loader has parsed the input."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits the selected alignment through the shared alignment result path. CLI summaries report the input path, selected set number, total set count, and Stockholm output format."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs nthseqset`. Validation currently covers deterministic selection of the second alignment from a committed multi-Stockholm fixture, single-alignment passthrough as set `1`, and out-of-range failure behavior."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release supports ordinal set selection only. It does not support identifier-based alignment selection, combined reporting across sets, or grouped filtering within one invocation."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "nthseqset_stockholm_fixture",
+      "label": "Two-alignment Stockholm fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/nthseqset_alignments.sto"
+      },
+      "description": "Repository-managed Stockholm fixture containing two distinct alignment sets for deterministic ordinal selection."
+    }
+  ],
+  "examples": [
+    {
+      "id": "select_second_alignment_set",
+      "title": "Select the second alignment set from a multi-Stockholm input",
+      "description": "Runs `nthseqset` against a committed Stockholm fixture containing two alignments and returns only the second set.",
+      "artifact_ids": [
+        "nthseqset_stockholm_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "number",
+          "value": "2"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "selected_alignment_set",
+          "label": "Selected alignment as Stockholm",
+          "description": "A Stockholm alignment containing the second parsed set, whose first row accession is `gamma`."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "select_second_alignment_set"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

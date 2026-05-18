@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "splitsource-v1",
+  "tool": {
+    "name": "splitsource",
+    "family": "feature_tools",
+    "summary": "Split annotated records into one fragment per simple source feature",
+    "legacy_names": [
+      "splitsource"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`splitsource` divides one annotated sequence record into multiple fragments using `source` features as the split plan. EMBOSS-RS v1 treats only simple single-span `source` features as eligible, requires at least two such features per record, and emits one unannotated fragment sequence per source interval in source order."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one annotated EMBL or GenBank input path. Records must contain at least two eligible `source` features, and each eligible source feature must have a simple single-span location."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a sequence collection through the shared FASTA output path. Fragment identifiers are derived as `<parent>-source-<n>`, descriptions record the ordinal and interval used, and CLI summaries report the input path, fragment count, and the conservative source-feature selection rule."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs splitsource`. Validation currently covers deterministic splitting of a committed GenBank fixture containing two `source` features, along with rejection of records that do not contain multiple eligible source spans."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not preserve annotation on emitted fragments, does not support complex `source` feature locations, and does not merge or infer fragment metadata beyond conservative identifier and description derivation."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "splitsource_gbk_fixture",
+      "label": "Annotated GenBank source fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/splitsource_annotated.gbk"
+      },
+      "description": "Repository-managed annotated GenBank fixture containing two simple `source` features for deterministic fragment emission."
+    }
+  ],
+  "examples": [
+    {
+      "id": "split_record_by_source_features",
+      "title": "Emit one fragment per simple source feature",
+      "description": "Runs `splitsource` against a committed annotated GenBank fixture and emits two unannotated FASTA fragments in source-feature order.",
+      "artifact_ids": [
+        "splitsource_gbk_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "source_fragment_collection",
+          "label": "Source-derived FASTA fragments",
+          "description": "A FASTA sequence collection containing two fragments with residues `AAAT` and `GGGC`."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "split_record_by_source_features"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

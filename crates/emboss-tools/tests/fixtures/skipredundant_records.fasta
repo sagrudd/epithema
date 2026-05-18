@@ -1,0 +1,8 @@
+>keep_alpha first representative
+ACGT
+>drop_beta duplicate of alpha
+ACGT
+>keep_gamma second representative
+TTTT
+>drop_delta duplicate of gamma
+TTTT

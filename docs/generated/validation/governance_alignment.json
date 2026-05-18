@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 82,
-    "shipped_with_governance_mapping_count": 82,
-    "shipped_retain_count": 76,
+    "shipped_tool_count": 86,
+    "shipped_with_governance_mapping_count": 86,
+    "shipped_retain_count": 80,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 14,
-    "shipped_curated_autodoc_count": 82,
-    "shipped_executable_or_better_count": 82,
+    "retained_backlog_count": 10,
+    "shipped_curated_autodoc_count": 86,
+    "shipped_executable_or_better_count": 86,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -69,6 +69,15 @@
       "shipped_family": "alignment_tools",
       "shipped_summary": "extract rows and an optional 1-based inclusive column range from an alignment",
       "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "nthseqset",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "select one 1-based alignment set from a file containing one or more alignments",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "executable_evidence"
@@ -218,6 +227,24 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "listor",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "combine two sequence sets with deterministic logical set operators over exact sequence identity",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "skipredundant",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "remove exact redundant sequences from one input while preserving first-seen order",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "degapseq",
       "shipped_family": "sequence_edit",
       "shipped_summary": "remove '-' and '.' gap characters from sequence records",
@@ -338,6 +365,15 @@
       "tool_name": "feattext",
       "shipped_family": "feature_tools",
       "shipped_summary": "render selected features as normalized feature-table text",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "splitsource",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "split annotated synthetic records into deterministic source-feature fragments",
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
@@ -773,16 +809,13 @@
     {
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "retained_total": 18,
-      "retained_shipped": 16,
-      "retained_backlog": 2,
-      "shipped_curated_autodoc": 16,
-      "shipped_executable_or_better": 16,
+      "retained_shipped": 18,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 18,
+      "shipped_executable_or_better": 18,
       "shipped_compared": 3,
-      "recommendation": "prioritise retained backlog closure (2 remaining)",
-      "retained_backlog_tools": [
-        "nthseqset",
-        "splitsource"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Core Retain — Core sequence statistics and composition",
@@ -809,19 +842,17 @@
     {
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "retained_total": 23,
-      "retained_shipped": 15,
-      "retained_backlog": 8,
-      "shipped_curated_autodoc": 15,
-      "shipped_executable_or_better": 15,
+      "retained_shipped": 17,
+      "retained_backlog": 6,
+      "shipped_curated_autodoc": 17,
+      "shipped_executable_or_better": 17,
       "shipped_compared": 2,
-      "recommendation": "prioritise retained backlog closure (8 remaining)",
+      "recommendation": "prioritise retained backlog closure (6 remaining)",
       "retained_backlog_tools": [
         "biosed",
-        "listor",
         "makenucseq",
         "makeprotseq",
         "msbar",
-        "skipredundant",
         "trimest",
         "vectorstrip"
       ]
@@ -1022,28 +1053,10 @@
   ],
   "retained_backlog_tools": [
     {
-      "tool_name": "nthseqset",
-      "governance_family": "Core Retain — Basic sequence IO and conversion",
-      "decision": "retain",
-      "description": "Read and write (return) one set of sequences from many"
-    },
-    {
-      "tool_name": "splitsource",
-      "governance_family": "Core Retain — Basic sequence IO and conversion",
-      "decision": "retain",
-      "description": "Split sequence(s) into original source sequences"
-    },
-    {
       "tool_name": "biosed",
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Replace or delete sequence sections"
-    },
-    {
-      "tool_name": "listor",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Write a list file of the logical OR of two sets of sequences"
     },
     {
       "tool_name": "makenucseq",
@@ -1062,12 +1075,6 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Mutate a sequence"
-    },
-    {
-      "tool_name": "skipredundant",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Remove redundant sequences from an input set"
     },
     {
       "tool_name": "trimest",

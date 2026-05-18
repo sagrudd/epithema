@@ -12,6 +12,7 @@ mod maskfeat;
 mod maskseq;
 mod render;
 mod shared;
+mod splitsource;
 mod twofeat;
 
 use crate::ToolDescriptor;
@@ -32,6 +33,7 @@ pub use maskambigprot::{
 };
 pub use maskfeat::{MaskfeatOutcome, MaskfeatParams, maskfeat_help, run_maskfeat};
 pub use maskseq::{MaskseqOutcome, MaskseqParams, maskseq_help, run_maskseq};
+pub use splitsource::{SplitsourceOutcome, SplitsourceParams, run_splitsource, splitsource_help};
 pub use twofeat::{TwofeatOutcome, TwofeatParams, run_twofeat, twofeat_help};
 
 /// `maskseq` descriptor.
@@ -92,6 +94,12 @@ pub const FEATREPORT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const FEATTEXT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "feattext",
     "render selected features as normalized feature-table text",
+)
+.with_family(FAMILY);
+/// `splitsource` descriptor.
+pub const SPLITSOURCE_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "splitsource",
+    "split annotated synthetic records into deterministic source-feature fragments",
 )
 .with_family(FAMILY);
 /// `twofeat` descriptor.
