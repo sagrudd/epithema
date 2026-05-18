@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "backtranambig-stub-v1",
+  "document_id": "backtranambig-v1",
   "tool": {
     "name": "backtranambig",
     "family": "translation_tools",
-    "summary": "Back-translate protein sequences to ambiguous DNA codon representations",
+    "summary": "Back-translate protein records into deterministic IUPAC-ambiguous DNA codons",
     "legacy_names": [
       "backtranambig"
     ]
@@ -14,39 +14,95 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`backtranambig` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`backtranambig` back-translates protein sequence records into deterministic IUPAC-ambiguous DNA codons under the shared EMBOSS-RS standard genetic code. The v1 surface preserves ambiguity explicitly instead of selecting a single representative codon."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The current interface accepts one local protein-oriented sequence input path. Explicit nucleotide-classified input records are rejected clearly. Unknown-classified records remain acceptable when their residue content is protein-like."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The tool emits one DNA FASTA record per input protein record in stable order. Output identifiers are preserved, descriptions are annotated with the suffix `ambiguous back-translated DNA`, and stop symbols are rendered as `TAR` in the first release."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `backtranambig` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison focuses on deterministic IUPAC ambiguity encoding rather than broad codon-table configurability."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs backtranambig`. The generated tool page and the machine-readable validation stub at [`../validation/backtranambig.validation.json`](../validation/backtranambig.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs backtranambig`. Current validation covers the deterministic ambiguous-codon policy, stop-symbol handling with `* -> TAR`, and stable FASTA output from the committed protein fixture."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release exposes only the standard genetic code and one fixed ambiguity mapping per residue. It does not infer organism-specific codon usage or alternate code tables, and unsupported residues fail clearly."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "protein_stats_fixture",
+      "label": "Protein ambiguous back-translation fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/protein_stats_records.fasta"
+      },
+      "description": "Repository-managed protein fixture used for deterministic ambiguous back-translation validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "ambiguous_backtranslation",
+      "title": "Back-translate protein records into ambiguous DNA codons",
+      "description": "Back-translates the committed protein fixture into IUPAC-ambiguous DNA codons using the governed EMBOSS-RS standard-code ambiguity policy.",
+      "artifact_ids": [
+        "protein_stats_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "ambiguous_dna_sequences",
+          "label": "Ambiguous DNA FASTA output",
+          "description": "A stable FASTA rendering of the deterministic ambiguous DNA back-translations."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS backtranambig application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd",
+        "invocation": "backtranambig -sequence protein_stats_records.fasta -outseq stdout"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS backtranambig application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd",
+        "invocation": "backtranambig -sequence protein_stats_records.fasta -outseq stdout"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "ambiguous_backtranslation"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

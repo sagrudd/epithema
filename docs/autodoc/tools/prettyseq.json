@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "prettyseq-stub-v1",
+  "document_id": "prettyseq-v1",
   "tool": {
     "name": "prettyseq",
     "family": "translation_tools",
-    "summary": "Render nucleotide sequences with a translated frame-oriented text view",
+    "summary": "Render nucleotide records with a paired translated text view",
     "legacy_names": [
       "prettyseq"
     ]
@@ -14,39 +14,100 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`prettyseq` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`prettyseq` renders a deterministic text report that shows nucleotide rows and their translated amino-acid rows together. The EMBOSS-RS v1 surface is intentionally small: one chosen forward frame, stable plain-text layout, and no attempt to reproduce the full historical pretty-printing parameter surface."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The current interface accepts one nucleotide input path plus optional `--frame <1|2|3>` and `--width <positive-count>`. Translation uses the shared standard genetic code, and trailing partial codons are ignored."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The primary payload is a stable text report. Each record is rendered with a header line, one `FRAME N` line, one or more nucleotide rows prefixed with `NT`, and the corresponding amino-acid rows prefixed with `AA`."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `prettyseq` invocation in view and compares the EMBOSS-RS text-report payload against a committed expected output. The governed comparison validates layout stability for the frame-1 committed coding fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs prettyseq`. The generated tool page and the machine-readable validation stub at [`../validation/prettyseq.validation.json`](../validation/prettyseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs prettyseq`. Current validation covers deterministic frame-1 rendering, stable line layout, and clear rejection of unsupported frame or input combinations."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports forward frames only and emits a governed plain-text layout rather than attempting byte-for-byte parity with historical EMBOSS formatting or richer annotation-aware sequence displays."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "checktrans_nucleotide_fixture",
+      "label": "Pretty sequence nucleotide fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+      },
+      "description": "Repository-managed coding-sequence fixture used for deterministic prettyseq text rendering."
+    }
+  ],
+  "examples": [
+    {
+      "id": "render_forward_frame_report",
+      "title": "Render a frame-1 nucleotide and amino-acid text report",
+      "description": "Renders the committed coding-sequence fixture with forward frame-1 translation and the governed EMBOSS-RS plain-text layout.",
+      "artifact_ids": [
+        "checktrans_nucleotide_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "frame",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "prettyseq_text_report",
+          "label": "Deterministic text report",
+          "description": "A stable text rendering containing nucleotide and amino-acid rows for the committed coding fixture."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS prettyseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd",
+        "invocation": "prettyseq -sequence checktrans_nucleotide.fasta -frame 1 -stdout yes"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS prettyseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd",
+        "invocation": "prettyseq -sequence checktrans_nucleotide.fasta -frame 1 -stdout yes"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "render_forward_frame_report"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

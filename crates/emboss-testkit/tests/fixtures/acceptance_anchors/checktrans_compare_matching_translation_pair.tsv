@@ -1,0 +1,3 @@
+nucleotide_id	protein_id	matches	translated_terminal_stop	expected_terminal_stop	detail
+cdsA	protA	true	true	true	translated protein matches expected sequence
+cdsB	protB	true	false	false	translated protein matches expected sequence

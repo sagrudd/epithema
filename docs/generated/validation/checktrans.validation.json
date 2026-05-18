@@ -1,31 +1,53 @@
 {
   "tool_name": "checktrans",
-  "document_id": "checktrans-stub-v1",
-  "source_mode": "registry_stub",
-  "evidence_source": "registry_stub_autodoc",
+  "document_id": "checktrans-v1",
+  "source_mode": "curated",
+  "evidence_source": "executed_run",
   "summary": {
-    "total_case_count": 0,
-    "declared_case_count": 0,
+    "total_case_count": 1,
+    "declared_case_count": 1,
     "harvested_case_count": 0,
     "runnable_case_count": 0,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [],
-  "unresolved_gaps": [
-    "tool 'checktrans' needs at least one declared example to establish validation evidence"
-  ],
-  "diagnostics": [
+  "cases": [
     {
-      "severity": "warning",
-      "code": "testkit.report.no_cases",
-      "message": "autodoc document does not declare any validation cases",
-      "context": "checktrans"
+      "id": "compare_matching_translation_pair",
+      "title": "Compare matching coding and protein records",
+      "evidence_source": "executed_run",
+      "declaration_status": "declared",
+      "execution_status": "executed",
+      "comparison_status": "passed",
+      "required": true,
+      "artifact_ids": [
+        "checktrans_nucleotide_fixture",
+        "checktrans_protein_fixture"
+      ],
+      "expected_output_ids": [
+        "translation_check_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS checktrans application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd",
+          "invocation": "checktrans -sequence checktrans_nucleotide.fasta -translation checktrans_protein.fasta -stdout yes"
+        }
+      ],
+      "diagnostics": []
     }
   ],
-  "provenance": []
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS checktrans application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd",
+      "invocation": "checktrans -sequence checktrans_nucleotide.fasta -translation checktrans_protein.fasta -stdout yes"
+    }
+  ]
 }

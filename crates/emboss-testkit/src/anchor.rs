@@ -82,6 +82,87 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "backtranseq",
+        autodoc_contract: "docs/autodoc/tools/backtranseq.json",
+        example_id: "representative_backtranslation",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/backtranseq_representative_backtranslation.fasta",
+        legacy_source: "EMBOSS backtranseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranseq.acd",
+        legacy_invocation: "backtranseq -sequence protein_stats_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "backtranambig",
+        autodoc_contract: "docs/autodoc/tools/backtranambig.json",
+        example_id: "ambiguous_backtranslation",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/backtranambig_ambiguous_backtranslation.fasta",
+        legacy_source: "EMBOSS backtranambig application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd",
+        legacy_invocation: "backtranambig -sequence protein_stats_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "checktrans",
+        autodoc_contract: "docs/autodoc/tools/checktrans.json",
+        example_id: "compare_matching_translation_pair",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/checktrans_compare_matching_translation_pair.tsv",
+        legacy_source: "EMBOSS checktrans application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd",
+        legacy_invocation:
+            "checktrans -sequence checktrans_nucleotide.fasta -translation checktrans_protein.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "transeq",
+        autodoc_contract: "docs/autodoc/tools/transeq.json",
+        example_id: "forward_frame_one_translation",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/transeq_forward_frame_one_translation.fasta",
+        legacy_source: "EMBOSS transeq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/transeq.acd",
+        legacy_invocation:
+            "transeq -sequence checktrans_nucleotide.fasta -frame 1 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "getorf",
+        autodoc_contract: "docs/autodoc/tools/getorf.json",
+        example_id: "extract_stop_bounded_forward_orfs",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/getorf_extract_stop_bounded_forward_orfs.fasta",
+        legacy_source: "EMBOSS getorf application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/getorf.acd",
+        legacy_invocation: "getorf -sequence getorf_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "prettyseq",
+        autodoc_contract: "docs/autodoc/tools/prettyseq.json",
+        example_id: "render_forward_frame_report",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/prettyseq_render_forward_frame_report.txt",
+        legacy_source: "EMBOSS prettyseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd",
+        legacy_invocation:
+            "prettyseq -sequence checktrans_nucleotide.fasta -frame 1 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "tranalign",
+        autodoc_contract: "docs/autodoc/tools/tranalign.json",
+        example_id: "project_protein_alignment_to_codons",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/tranalign_project_protein_alignment_to_codons.sto",
+        legacy_source: "EMBOSS tranalign application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/tranalign.acd",
+        legacy_invocation:
+            "tranalign -asequence tranalign_protein_alignment.sto -bsequence checktrans_nucleotide.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -329,6 +410,54 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "backtranseq" | "backtranambig" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "checktrans" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_protein.fasta")
+                .display()
+                .to_string(),
+        ],
+        "transeq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+            "--frame".to_owned(),
+            "1".to_owned(),
+        ],
+        "getorf" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/getorf_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "prettyseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+            "--frame".to_owned(),
+            "1".to_owned(),
+        ],
+        "tranalign" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/tranalign_protein_alignment.sto")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+        ],
         _ => Vec::new(),
     }
 }
@@ -364,6 +493,7 @@ fn render_payload(payload: &ResultPayload) -> Result<String, PlatformError> {
             })
         }
         ResultPayload::TableReport(table) => Ok(render_table(table)),
+        ResultPayload::TextReport(report) => Ok(report.body.clone()),
         other => Err(PlatformError::new(
             ErrorCategory::Validation,
             "acceptance-anchor payload kind is not currently comparable",

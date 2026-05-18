@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "checktrans-stub-v1",
+  "document_id": "checktrans-v1",
   "tool": {
     "name": "checktrans",
     "family": "translation_tools",
-    "summary": "Strictly compare frame-1 DNA translation against expected protein sequences",
+    "summary": "Strictly compare frame-1 coding-sequence translations against expected protein records",
     "legacy_names": [
       "checktrans"
     ]
@@ -14,39 +14,111 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`checktrans` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`checktrans` strictly translates DNA coding-sequence records in frame 1 under the standard genetic code and compares them against paired expected protein records. EMBOSS-RS v1 keeps the pairing rule simple and deterministic: inputs must contain the same number of records and are compared by input order."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The interface accepts one nucleotide coding-sequence input and one protein input. Nucleotide records must translate cleanly in frame 1 with coding-sequence length divisible by three. Protein records may end with a single terminal `*`, and one terminal stop is normalized on both sides for comparison."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The tool emits a stable table report with one row per paired comparison. Report columns are `nucleotide_id`, `protein_id`, `matches`, `translated_terminal_stop`, `expected_terminal_stop`, and `detail`."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `checktrans` invocation in view and compares the EMBOSS-RS table payload against a committed expected output. The governed comparison validates strict frame-1 translation, terminal-stop normalization, and deterministic row ordering."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs checktrans`. The generated tool page and the machine-readable validation stub at [`../validation/checktrans.validation.json`](../validation/checktrans.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs checktrans`. Current validation covers the matching committed fixture pair, mismatch reporting, unequal record-count failure, and invalid-codon rejection."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release does not search alternative frames or infer record pairing by identifier. Inputs are compared in order only, and ambiguous or invalid coding input fails clearly rather than being tolerated."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "checktrans_nucleotide_fixture",
+      "label": "Translation-check nucleotide fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+      },
+      "description": "Repository-managed coding-sequence fixture used for strict translation checking."
+    },
+    {
+      "id": "checktrans_protein_fixture",
+      "label": "Translation-check protein fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_protein.fasta"
+      },
+      "description": "Repository-managed expected protein fixture paired by input order with the committed coding sequences."
+    }
+  ],
+  "examples": [
+    {
+      "id": "compare_matching_translation_pair",
+      "title": "Compare matching coding and protein records",
+      "description": "Strictly translates the committed coding-sequence fixture in frame 1 and compares the result against the paired committed protein fixture.",
+      "artifact_ids": [
+        "checktrans_nucleotide_fixture",
+        "checktrans_protein_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "translation_check_table",
+          "label": "Translation comparison table",
+          "description": "A stable row-per-pair report describing whether each strict frame-1 translation matched the expected protein record."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS checktrans application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd",
+        "invocation": "checktrans -sequence checktrans_nucleotide.fasta -translation checktrans_protein.fasta -stdout yes"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS checktrans application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd",
+        "invocation": "checktrans -sequence checktrans_nucleotide.fasta -translation checktrans_protein.fasta -stdout yes"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "compare_matching_translation_pair"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

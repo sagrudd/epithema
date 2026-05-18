@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "transeq-stub-v1",
+  "document_id": "transeq-v1",
   "tool": {
     "name": "transeq",
     "family": "translation_tools",
@@ -14,39 +14,100 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`transeq` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`transeq` translates nucleotide sequence records in forward reading frames using the shared EMBOSS-RS standard genetic code. The v1 surface supports frame `1`, `2`, `3`, or `all`, emits protein FASTA records deterministically, and ignores trailing partial codons."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The current interface accepts one nucleotide input path plus optional `--frame <1|2|3|all>`. Protein-classified input is rejected clearly. Translation is strict with respect to unsupported codons and residues."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The tool emits one protein FASTA record per translated frame in stable source order. Output identifiers are suffixed as `<accession>.frameN`, descriptions are annotated with `translated protein frame N`, and molecule kind becomes `protein`."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `transeq` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates strict forward frame-1 translation for the committed coding fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs transeq`. The generated tool page and the machine-readable validation stub at [`../validation/transeq.validation.json`](../validation/transeq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs transeq`. Current validation covers forward frame selection, strict translation, trailing partial-codon truncation, and stable FASTA emission from the committed coding fixture."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports forward frames only and the standard genetic code only. It does not search reverse-complement frames, and ambiguous unsupported codons fail clearly instead of being expanded."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "checktrans_nucleotide_fixture",
+      "label": "Forward translation nucleotide fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+      },
+      "description": "Repository-managed coding-sequence fixture used for deterministic forward translation validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "forward_frame_one_translation",
+      "title": "Translate a coding-sequence fixture in frame 1",
+      "description": "Translates the committed coding-sequence fixture in forward frame 1 and emits deterministic protein FASTA output.",
+      "artifact_ids": [
+        "checktrans_nucleotide_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "frame",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "translated_protein_fasta",
+          "label": "Frame-1 translated FASTA",
+          "description": "A stable FASTA rendering of the translated protein records for the committed coding fixture."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS transeq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/transeq.acd",
+        "invocation": "transeq -sequence checktrans_nucleotide.fasta -frame 1 -outseq stdout"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS transeq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/transeq.acd",
+        "invocation": "transeq -sequence checktrans_nucleotide.fasta -frame 1 -outseq stdout"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "forward_frame_one_translation"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

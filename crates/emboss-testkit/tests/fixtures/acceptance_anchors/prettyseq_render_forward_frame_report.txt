@@ -1,0 +1,9 @@
+>cdsA
+FRAME 1
+NT     1 ATGGCTTAA     9
+AA     1 MA*     3
+
+>cdsB
+FRAME 1
+NT     1 CTTTCT     6
+AA     1 LS     2

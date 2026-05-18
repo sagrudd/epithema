@@ -1,55 +1,85 @@
 # prettyseq
 
-> Generated from a registry-backed autodoc stub. Edit or replace the source autodoc document rather than this page.
+> Generated from validated autodoc input. Edit the source autodoc document rather than this page.
 
 ## Summary
 
-Render nucleotide sequences with a translated frame-oriented text view
+Render nucleotide records with a paired translated text view
 
 ## Document Metadata
 
-- Document ID: `prettyseq-stub-v1`
+- Document ID: `prettyseq-v1`
 - Schema version: `emboss-rs.autodoc/v1`
-- Source mode: `registry-stub`
+- Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `prettyseq`
 
 ## Evidence Status
 
-- Declared evidence baseline: `documented_only`
+- Declared evidence baseline: `declared_evidence`
 - Machine-readable validation report: [`../validation/prettyseq.validation.json`](../validation/prettyseq.validation.json)
 - This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
 
 ## Overview
 
-`prettyseq` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
+`prettyseq` renders a deterministic text report that shows nucleotide rows and their translated amino-acid rows together. The EMBOSS-RS v1 surface is intentionally small: one chosen forward frame, stable plain-text layout, and no attempt to reproduce the full historical pretty-printing parameter surface.
 
 ## Inputs
 
-This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort.
+The current interface accepts one nucleotide input path plus optional `--frame <1|2|3>` and `--width <positive-count>`. Translation uses the shared standard genetic code, and trailing partial codons are ignored.
 
 ## Outputs
 
-The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer.
+The primary payload is a stable text report. Each record is rendered with a header line, one `FRAME N` line, one or more nucleotide rows prefixed with `NT`, and the corresponding amino-acid rows prefixed with `AA`.
+
+## Legacy Context
+
+This acceptance anchor keeps one historical-style `prettyseq` invocation in view and compares the EMBOSS-RS text-report payload against a committed expected output. The governed comparison validates layout stability for the frame-1 committed coding fixture.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs prettyseq`. The generated tool page and the machine-readable validation stub at [`../validation/prettyseq.validation.json`](../validation/prettyseq.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly.
+This method is implemented and exposed through `emboss-rs prettyseq`. Current validation covers deterministic frame-1 rendering, stable line layout, and clear rejection of unsupported frame or input combinations.
 
 ## Caveats
 
-Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet.
+The first release supports forward frames only and emits a governed plain-text layout rather than attempting byte-for-byte parity with historical EMBOSS formatting or richer annotation-aware sequence displays.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Pretty sequence nucleotide fixture
+
+- Artifact ID: `checktrans_nucleotide_fixture`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta`
+- Notes: Repository-managed coding-sequence fixture used for deterministic prettyseq text rendering.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Render a frame-1 nucleotide and amino-acid text report
+
+- Example ID: `render_forward_frame_report`
+- Description: Renders the committed coding-sequence fixture with forward frame-1 translation and the governed EMBOSS-RS plain-text layout.
+- Referenced artifacts: `checktrans_nucleotide_fixture`
+- Parameters:
+  - `frame` = `1`
+- Expected outputs:
+  - `prettyseq_text_report`: Deterministic text report (A stable text rendering containing nucleotide and amino-acid rows for the committed coding fixture.)
+- Legacy reference: EMBOSS prettyseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd`
+  - Invocation: `prettyseq -sequence checktrans_nucleotide.fasta -frame 1 -stdout yes`
 
 ## Provenance
 
-- Stub generated by: emboss-rs autodoc stub generator
-- Source references: none declared
+- Curated by: emboss-rs maintainers
+- Source references:
+  - EMBOSS prettyseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd`)
+
+## Declared Validation Intent
+
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `render_forward_frame_report`
+- Future legacy comparison requested: yes
+- Future execution must capture provenance: yes
 

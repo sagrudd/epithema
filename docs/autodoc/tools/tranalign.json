@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "tranalign-stub-v1",
+  "document_id": "tranalign-v1",
   "tool": {
     "name": "tranalign",
     "family": "translation_tools",
-    "summary": "Project aligned proteins onto matching coding-sequence codon alignments",
+    "summary": "Project aligned protein rows onto matching codon alignments",
     "legacy_names": [
       "tranalign"
     ]
@@ -14,39 +14,111 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`tranalign` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`tranalign` projects an aligned protein set onto matching nucleotide coding sequences to produce a codon alignment. EMBOSS-RS v1 keeps the compatibility rules strict: rows are paired to coding sequences by exact identifier, translation is checked in frame 1 under the standard genetic code, and protein gaps expand to triple-nucleotide gaps."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The interface accepts one protein alignment input in aligned FASTA or Stockholm plus one nucleotide coding-sequence input. Each protein alignment row must have an exact identifier match in the nucleotide input, and the ungapped protein row must match the strict frame-1 translation of the corresponding coding sequence after terminal-stop normalization."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The result payload is a Stockholm codon alignment that preserves the input protein-row order. Protein gaps become `---`, and each non-gap protein symbol consumes exactly one source codon from the matching nucleotide record."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `tranalign` invocation in view and compares the EMBOSS-RS Stockholm payload against a committed expected output. The governed comparison validates exact identifier pairing and codon-projection stability for the committed alignment fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs tranalign`. The generated tool page and the machine-readable validation stub at [`../validation/tranalign.validation.json`](../validation/tranalign.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs tranalign`. Current validation covers codon projection from the committed protein alignment and coding-sequence fixtures, exact identifier pairing, and strict translation compatibility."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release requires exact identifier matches, strict frame-1 compatibility, and a complete codon for every aligned non-gap residue. It does not infer alternative pairings, reverse-complement frames, or broader codon-projection heuristics."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "tranalign_protein_alignment_fixture",
+      "label": "Protein alignment fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/tranalign_protein_alignment.sto"
+      },
+      "description": "Repository-managed protein Stockholm alignment used for deterministic codon projection validation."
+    },
+    {
+      "id": "checktrans_nucleotide_fixture",
+      "label": "Matching coding-sequence fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+      },
+      "description": "Repository-managed coding-sequence fixture paired by exact identifier with the committed protein alignment rows."
+    }
+  ],
+  "examples": [
+    {
+      "id": "project_protein_alignment_to_codons",
+      "title": "Project a protein alignment onto codon rows",
+      "description": "Projects the committed protein Stockholm alignment onto matching coding-sequence records and emits a deterministic codon alignment as Stockholm.",
+      "artifact_ids": [
+        "tranalign_protein_alignment_fixture",
+        "checktrans_nucleotide_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "codon_alignment_stockholm",
+          "label": "Projected codon Stockholm alignment",
+          "description": "A stable Stockholm rendering of the projected codon alignment."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS tranalign application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/tranalign.acd",
+        "invocation": "tranalign -asequence tranalign_protein_alignment.sto -bsequence checktrans_nucleotide.fasta -outseq stdout"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS tranalign application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/tranalign.acd",
+        "invocation": "tranalign -asequence tranalign_protein_alignment.sto -bsequence checktrans_nucleotide.fasta -outseq stdout"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "project_protein_alignment_to_codons"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }

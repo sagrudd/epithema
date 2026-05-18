@@ -1,31 +1,52 @@
 {
   "tool_name": "backtranambig",
-  "document_id": "backtranambig-stub-v1",
-  "source_mode": "registry_stub",
-  "evidence_source": "registry_stub_autodoc",
+  "document_id": "backtranambig-v1",
+  "source_mode": "curated",
+  "evidence_source": "executed_run",
   "summary": {
-    "total_case_count": 0,
-    "declared_case_count": 0,
+    "total_case_count": 1,
+    "declared_case_count": 1,
     "harvested_case_count": 0,
     "runnable_case_count": 0,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [],
-  "unresolved_gaps": [
-    "tool 'backtranambig' needs at least one declared example to establish validation evidence"
-  ],
-  "diagnostics": [
+  "cases": [
     {
-      "severity": "warning",
-      "code": "testkit.report.no_cases",
-      "message": "autodoc document does not declare any validation cases",
-      "context": "backtranambig"
+      "id": "ambiguous_backtranslation",
+      "title": "Back-translate protein records into ambiguous DNA codons",
+      "evidence_source": "executed_run",
+      "declaration_status": "declared",
+      "execution_status": "executed",
+      "comparison_status": "passed",
+      "required": true,
+      "artifact_ids": [
+        "protein_stats_fixture"
+      ],
+      "expected_output_ids": [
+        "ambiguous_dna_sequences"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS backtranambig application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd",
+          "invocation": "backtranambig -sequence protein_stats_records.fasta -outseq stdout"
+        }
+      ],
+      "diagnostics": []
     }
   ],
-  "provenance": []
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS backtranambig application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd",
+      "invocation": "backtranambig -sequence protein_stats_records.fasta -outseq stdout"
+    }
+  ]
 }

@@ -1,10 +1,10 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "getorf-stub-v1",
+  "document_id": "getorf-v1",
   "tool": {
     "name": "getorf",
     "family": "translation_tools",
-    "summary": "Extract stop-bounded forward ORFs from nucleotide sequences",
+    "summary": "Extract stop-bounded forward ORFs from nucleotide records",
     "legacy_names": [
       "getorf"
     ]
@@ -14,39 +14,95 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`getorf` is part of the exposed EMBOSS-RS `translation_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`getorf` extracts stop-bounded open reading frames from nucleotide input using the shared EMBOSS-RS translation foundations. The current v1 policy searches only forward frames 1-3, starts ORFs at `ATG`, and ends each ORF at the first in-frame stop codon, including the stop codon in the extracted nucleotide output."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The tool accepts one local nucleotide input path. Protein-classified input is rejected. Ambiguous or unsupported codons are not expanded in the first release."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The tool emits one nucleotide FASTA record per detected ORF in stable record and frame order. Output identifiers are suffixed as `<accession>.orfN.frameF.<start>-<end>`, and descriptions are annotated with the reported frame and coordinates."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This acceptance anchor keeps one historical-style `getorf` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates the first-release stop-bounded forward-ORF policy on the committed nucleotide fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs getorf`. The generated tool page and the machine-readable validation stub at [`../validation/getorf.validation.json`](../validation/getorf.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs getorf`. Current validation covers ORF extraction from the committed stop-bounded fixture, stable coordinate encoding in identifiers, and clear rejection of non-nucleotide input."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release supports forward frames only, requires `ATG` starts, and stops at the first in-frame stop codon. It does not expose alternative start codons, minimum-length filtering, reverse-complement search, or alternative genetic codes."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "getorf_fixture",
+      "label": "Stop-bounded ORF fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/getorf_records.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture containing two forward stop-bounded ORFs for deterministic ORF extraction validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "extract_stop_bounded_forward_orfs",
+      "title": "Extract forward stop-bounded ORFs",
+      "description": "Scans the committed nucleotide fixture for `ATG`-started forward ORFs and emits each stop-bounded nucleotide span as FASTA.",
+      "artifact_ids": [
+        "getorf_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "orf_fasta_records",
+          "label": "Extracted ORF FASTA output",
+          "description": "A stable FASTA rendering of the extracted stop-bounded forward ORFs."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS getorf application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/getorf.acd",
+        "invocation": "getorf -sequence getorf_records.fasta -outseq stdout"
+      }
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
-    "source_references": []
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS getorf application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/getorf.acd",
+        "invocation": "getorf -sequence getorf_records.fasta -outseq stdout"
+      }
+    ]
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "extract_stop_bounded_forward_orfs"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
 }
