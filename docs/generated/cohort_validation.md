@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `86`
-- Documentation-complete methods: `86`
-- Methods with validation stubs: `86`
+- Methods in cohort: `88`
+- Documentation-complete methods: `88`
+- Methods with validation stubs: `88`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `65`
+- Methods with executable validation: `67`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `65`
+- Methods with visible gaps: `67`
 
 ## Evidence Level Definitions
 
@@ -94,7 +94,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `infobase` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `infoseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `inforesidue` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `iep` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `oddcomp` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `pepdigest` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `pepstats` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordcount` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `backtranseq` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -170,7 +172,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `dan`: `missing_compared_evidence`
 - `infobase`: `missing_compared_evidence`
 - `inforesidue`: `missing_compared_evidence`
+- `iep`: `missing_compared_evidence`
 - `oddcomp`: `missing_compared_evidence`
+- `pepdigest`: `missing_compared_evidence`
 - `wordcount`: `missing_compared_evidence`
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

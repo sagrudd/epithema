@@ -1,0 +1,135 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "pepdigest-v1",
+  "tool": {
+    "name": "pepdigest",
+    "family": "sequence_stats",
+    "summary": "Report deterministic full-digest peptide fragments for a small typed protease set",
+    "legacy_names": [
+      "pepdigest"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`pepdigest` reports full-digest peptide fragments for each protein record. The EMBOSS-RS v1 implementation is intentionally narrow: it supports a small typed protease set, uses exact deterministic cleavage rules, and emits one stable row per resulting peptide."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local protein input path plus an optional protease selector. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Unsupported ambiguous protein residues are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `protease`, `peptide_index`, `start`, `end`, `cleavage_after`, and `sequence`. Coordinates are 1-based and inclusive."
+    },
+    {
+      "id": "digest_model",
+      "kind": "notes",
+      "title": "Digest Model",
+      "content": "The first release supports `trypsin`, `lys-c`, `arg-c`, and `cnbr`. Trypsin cleaves after `K` or `R` unless the following residue is `P`. Lys-C cleaves after `K`. Arg-C cleaves after `R`. CNBr cleaves after `M`. Only full deterministic digestion is supported; missed cleavages, partial digest searches, and mass filters are deferred."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs pepdigest`. Validation currently covers tryptic digestion, CNBr reagent mode, stable per-peptide coordinate reporting, and nucleotide-input rejection."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not model missed cleavages, semi-specific digestion, post-translational modification masses, or protease mixtures. It reports only deterministic full-digest fragments."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "pepdigest_fixture",
+      "label": "Protein digest fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/pepdigest_records.fasta"
+      },
+      "description": "Repository-managed protein fixture used to validate deterministic full-digest peptide reporting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "digest_proteins_with_trypsin",
+      "title": "Digest protein records with trypsin",
+      "description": "Loads a small protein fixture and reports deterministic tryptic peptide fragments in source order.",
+      "artifact_ids": [
+        "pepdigest_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "pepdigest_trypsin_table",
+          "label": "Tryptic peptide table",
+          "description": "A stable peptide-fragment table with record order, peptide ordinals, and source coordinates."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS pepdigest application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+        "invocation": "pepdigest -sequence pepdigest_records.fasta -outfile stdout"
+      }
+    },
+    {
+      "id": "digest_proteins_with_cnbr",
+      "title": "Digest protein records with CNBr",
+      "description": "Uses the same protein fixture with the v1 `cnbr` reagent mode to validate alternate deterministic cleavage boundaries.",
+      "artifact_ids": [
+        "pepdigest_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "protease",
+          "value": "cnbr"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "pepdigest_cnbr_table",
+          "label": "CNBr peptide table",
+          "description": "A stable peptide-fragment table reflecting cleavage after methionine residues."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS pepdigest application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+        "invocation": "pepdigest -sequence pepdigest_records.fasta -menu cnbr -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS pepdigest application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+        "invocation": "pepdigest -sequence pepdigest_records.fasta -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "digest_proteins_with_trypsin",
+      "digest_proteins_with_cnbr"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -8,17 +8,17 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `86`
-- Shipped tools with governance mapping: `86`
-- Retained backlog still unshipped: `10`
-- Shipped tools with curated autodoc: `86`
-- Shipped tools with executable or compared evidence: `86`
+- Shipped tools: `88`
+- Shipped tools with governance mapping: `88`
+- Retained backlog still unshipped: `8`
+- Shipped tools with curated autodoc: `88`
+- Shipped tools with executable or compared evidence: `88`
 - Shipped tools with compared evidence: `21`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
-- Shipped retain methods: `80`
+- Shipped retain methods: `82`
 - Shipped rework methods: `6`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
@@ -44,7 +44,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 2 | 2 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Protein property and structural-summary utilities | 2 | 0 | 2 | 0 | 0 | 0 | prioritise retained backlog closure (2 remaining) |
+| Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 0 | upgrade shipped retained methods to compared evidence |
 | Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 4 | 4 | 1 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 0 | 2 | 0 | 0 | 0 | prioritise retained backlog closure (2 remaining) |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -53,7 +53,6 @@ This page is generated from the maintained governance family-to-tool appendix, t
 ## Recommended Next Governed Sweeps
 
 - **Core Retain — Sequence editing and manipulation**: prioritise retained backlog closure (6 remaining). Retained backlog: `biosed`, `makenucseq`, `makeprotseq`, `msbar`, `trimest`, `vectorstrip`
-- **Modernize — Rework — Protein property and structural-summary utilities**: prioritise retained backlog closure (2 remaining). Retained backlog: `iep`, `pepdigest`
 - **Modernize — Rework — Restriction-enzyme design and analysis**: prioritise retained backlog closure (2 remaining). Retained backlog: `recoder`, `silent`
 
 ## Retained Backlog
@@ -66,8 +65,6 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - `vectorstrip` — retain — Core Retain — Sequence editing and manipulation
 - `recoder` — retain — Modernize — Rework — Restriction-enzyme design and analysis
 - `silent` — retain — Modernize — Rework — Restriction-enzyme design and analysis
-- `iep` — retain — Modernize — Rework — Protein property and structural-summary utilities
-- `pepdigest` — retain — Modernize — Rework — Protein property and structural-summary utilities
 
 ## Shipped Methods Without Governance Mapping
 
@@ -144,7 +141,9 @@ All shipped methods are mapped in the governance appendix.
 | `infobase` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
 | `infoseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `inforesidue` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `iep` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `executable_evidence` |
 | `oddcomp` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `pepdigest` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `executable_evidence` |
 | `pepstats` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `wordcount` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
 | `backtranseq` | `translation_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |

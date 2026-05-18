@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "iep-v1",
+  "tool": {
+    "name": "iep",
+    "family": "sequence_stats",
+    "summary": "Estimate deterministic protein isoelectric points from a fixed explicit pKa model",
+    "legacy_names": [
+      "iep"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`iep` estimates one protein isoelectric point per input record. The EMBOSS-RS v1 implementation uses a fixed explicit pKa model for the N terminus, C terminus, and the D/E/C/Y/H/K/R side chains, and reports the same model's net charge at pH 7.0."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Gap symbols are ignored; stop symbols are ignored before estimation; unsupported ambiguous protein residues are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `residue_length`, `titratable_side_chains`, `aspartate`, `glutamate`, `cysteine`, `tyrosine`, `histidine`, `lysine`, `arginine`, `net_charge_ph7`, and `estimated_pi`."
+    },
+    {
+      "id": "model",
+      "kind": "notes",
+      "title": "Model",
+      "content": "This first release is intentionally narrow and deterministic. It solves for the pI by bisection over a fixed pH range using the shared explicit pKa set and Henderson-Hasselbalch style charge fractions. It does not expose alternative pKa models, pH titration curves, or solvent-condition tuning."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs iep`. Validation currently covers basic versus mixed protein fixtures, stable per-record reporting, and nucleotide-input rejection."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release is a governed deterministic estimate, not a broad biochemical modeling surface. Ambiguous residues such as `X` or `Z` cause the run to fail instead of being approximated."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "iep_fixture",
+      "label": "Protein pI fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/iep_records.fasta"
+      },
+      "description": "Repository-managed protein fixture used to validate deterministic per-record pI estimation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "estimate_pi_for_protein_records",
+      "title": "Estimate pI for protein records",
+      "description": "Loads a small protein fixture and reports one deterministic pI estimate per record.",
+      "artifact_ids": [
+        "iep_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "iep_table",
+          "label": "Protein pI table",
+          "description": "A stable tabular report containing per-record titratable counts, net charge at pH 7.0, and estimated pI."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS iep application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/iep.acd",
+        "invocation": "iep -sequence iep_records.fasta -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS iep application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/iep.acd",
+        "invocation": "iep -sequence iep_records.fasta -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "estimate_pi_for_protein_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

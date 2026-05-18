@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 86,
-    "documentation_complete_count": 86,
-    "validation_stub_count": 86,
+    "total_method_count": 88,
+    "documentation_complete_count": 88,
+    "validation_stub_count": 88,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 65,
+    "executable_evidence_count": 67,
     "compared_evidence_count": 21,
-    "gapped_method_count": 65
+    "gapped_method_count": 67
   },
   "methods": [
     {
@@ -1635,6 +1635,29 @@
       ]
     },
     {
+      "tool_name": "iep",
+      "family": "sequence_stats",
+      "summary": "estimate deterministic protein isoelectric points from a fixed explicit pKa model",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'iep' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "oddcomp",
       "family": "sequence_stats",
       "summary": "report deterministic exact protein word-composition counts for query words",
@@ -1654,6 +1677,29 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'oddcomp' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "pepdigest",
+      "family": "sequence_stats",
+      "summary": "report deterministic full-digest peptide fragments for a small typed protease set",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'pepdigest' has no compared validation evidence yet"
         }
       ]
     },

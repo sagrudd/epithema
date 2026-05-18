@@ -8,8 +8,11 @@ mod geecee;
 mod infobase;
 mod infoseq;
 mod inforesidue;
+mod iep;
 mod oddcomp;
+mod pepdigest;
 mod pepstats;
+mod protein_support;
 mod wordcount;
 
 use crate::ToolDescriptor;
@@ -27,7 +30,12 @@ pub use geecee::{GeeceeOutcome, GeeceeParams, geecee_help, run_geecee};
 pub use infobase::{InfobaseOutcome, InfobaseParams, infobase_help, run_infobase};
 pub use infoseq::{InfoseqOutcome, InfoseqParams, infoseq_help, run_infoseq};
 pub use inforesidue::{InforesidueOutcome, InforesidueParams, inforesidue_help, run_inforesidue};
+pub use iep::{IepOutcome, IepParams, iep_help, run_iep};
 pub use oddcomp::{OddcompOutcome, OddcompParams, oddcomp_help, run_oddcomp};
+pub use pepdigest::{
+    PepdigestOutcome, PepdigestParams, PepdigestPeptide, PepdigestProtease, pepdigest_help,
+    run_pepdigest,
+};
 pub use pepstats::{PepstatsOutcome, PepstatsParams, pepstats_help, run_pepstats};
 pub use wordcount::{
     WordcountOutcome, WordcountParams, run_wordcount, word_frequency, wordcount_help,
@@ -81,10 +89,22 @@ pub const INFORESIDUE_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "report deterministic metadata for one canonical amino-acid residue",
 )
 .with_family(FAMILY);
+/// `iep` descriptor.
+pub const IEP_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "iep",
+    "estimate deterministic protein isoelectric points from a fixed explicit pKa model",
+)
+.with_family(FAMILY);
 /// `oddcomp` descriptor.
 pub const ODDCOMP_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "oddcomp",
     "report deterministic exact protein word-composition counts for query words",
+)
+.with_family(FAMILY);
+/// `pepdigest` descriptor.
+pub const PEPDIGEST_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "pepdigest",
+    "report deterministic full-digest peptide fragments for a small typed protease set",
 )
 .with_family(FAMILY);
 /// `pepstats` descriptor.

@@ -70,12 +70,13 @@ use emboss_tools::sequence_edit::{
 };
 use emboss_tools::sequence_stats::{
     AaindexextractParams, ComplexParams, CompseqParams, DanParams, GeeceeParams, InfobaseParams,
-    InfoseqParams, InforesidueParams, OddcompParams, PepstatsParams, WordcountParams,
+    InfoseqParams, InforesidueParams, IepParams, OddcompParams, PepdigestParams,
+    PepdigestProtease, PepstatsParams, WordcountParams,
     aaindexextract_help, complex_help, compseq_help, dan_help, geecee_help, infobase_help,
-    infoseq_help, inforesidue_help, oddcomp_help, parse_aaindexextract_index,
-    pepstats_help, run_aaindexextract, run_complex, run_compseq, run_dan, run_geecee,
-    run_infobase, run_infoseq, run_inforesidue, run_oddcomp, run_pepstats, run_wordcount,
-    word_frequency, wordcount_help,
+    infoseq_help, inforesidue_help, iep_help, oddcomp_help, parse_aaindexextract_index,
+    pepdigest_help, pepstats_help, run_aaindexextract, run_complex, run_compseq, run_dan,
+    run_geecee, run_iep, run_infobase, run_infoseq, run_inforesidue, run_oddcomp,
+    run_pepdigest, run_pepstats, run_wordcount, word_frequency, wordcount_help,
 };
 use emboss_tools::sequence_stream::{
     ListorParams, NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput,
@@ -326,7 +327,9 @@ impl EmbossService {
             "geecee" => self.invoke_geecee(request, descriptor),
             "infobase" => self.invoke_infobase(request, descriptor),
             "inforesidue" => self.invoke_inforesidue(request, descriptor),
+            "iep" => self.invoke_iep(request, descriptor),
             "oddcomp" => self.invoke_oddcomp(request, descriptor),
+            "pepdigest" => self.invoke_pepdigest(request, descriptor),
             "wordcount" => self.invoke_wordcount(request, descriptor),
             "pepstats" => self.invoke_pepstats(request, descriptor),
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
@@ -5486,6 +5489,94 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_iep(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, iep_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("iep", iep_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input)?;
+        let outcome = run_iep(IepParams { input })?;
+
+        let rows = outcome
+            .records
+            .iter()
+            .map(|record| {
+                vec![
+                    record.record_id.clone(),
+                    record.residue_length.to_string(),
+                    record
+                        .titratable_counts
+                        .total_side_chains()
+                        .to_string(),
+                    record.titratable_counts.aspartate.to_string(),
+                    record.titratable_counts.glutamate.to_string(),
+                    record.titratable_counts.cysteine.to_string(),
+                    record.titratable_counts.tyrosine.to_string(),
+                    record.titratable_counts.histidine.to_string(),
+                    record.titratable_counts.lysine.to_string(),
+                    record.titratable_counts.arginine.to_string(),
+                    format!("{:.6}", record.net_charge_at_ph7),
+                    format!("{:.6}", record.estimated_pi),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported isoelectric-point estimates for {} records",
+                outcome.records.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "residue_length".to_owned(),
+                    "titratable_side_chains".to_owned(),
+                    "aspartate".to_owned(),
+                    "glutamate".to_owned(),
+                    "cysteine".to_owned(),
+                    "tyrosine".to_owned(),
+                    "histidine".to_owned(),
+                    "lysine".to_owned(),
+                    "arginine".to_owned(),
+                    "net_charge_ph7".to_owned(),
+                    "estimated_pi".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein isoelectric-point estimates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Model: fixed explicit pKa set for termini and D/E/C/Y/H/K/R")
+                .with_line("Net charge reported at pH 7.0")
+                .with_line("Stop symbols are ignored before estimation")
+                .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_pepstats(
         &self,
         request: InvocationRequest,
@@ -5578,6 +5669,84 @@ impl EmbossService {
                 .with_line("Stop symbols are excluded from residue_length and mass")
                 .with_line("pI estimation: deferred in v1")
                 .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_pepdigest(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, pepdigest_help()));
+        }
+
+        let params = parse_pepdigest_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_pepdigest(PepdigestParams {
+            input,
+            protease: params.protease,
+        })?;
+
+        let rows = outcome
+            .peptides
+            .iter()
+            .map(|peptide| {
+                vec![
+                    peptide.record_id.clone(),
+                    peptide.protease.label().to_owned(),
+                    peptide.peptide_index.to_string(),
+                    peptide.start.to_string(),
+                    peptide.end.to_string(),
+                    peptide
+                        .cleavage_after
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned()),
+                    peptide.sequence.clone(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported {} peptide fragments across digested records",
+                outcome.peptides.len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "protease".to_owned(),
+                    "peptide_index".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "cleavage_after".to_owned(),
+                    "sequence".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein digest fragments reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Protease: {}", outcome.protease.label()))
+                .with_line("Digest mode: full deterministic cleavage")
+                .with_line("Trypsin blocks cleavage before proline")
+                .with_line(format!("Peptides: {}", outcome.peptides.len())),
             report.clone(),
         );
 
@@ -8413,6 +8582,54 @@ fn parse_oddcomp_params(arguments: &[String]) -> Result<OddcompParams, ServiceEr
     Ok(OddcompParams { input, query_words })
 }
 
+fn parse_pepdigest_params(arguments: &[String]) -> Result<PepdigestParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("pepdigest", pepdigest_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut protease = PepdigestProtease::Trypsin;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--protease=") {
+            protease = parse_pepdigest_protease(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--protease" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --protease")
+                    .with_code("service.tool.pepdigest.protease_missing")
+            })?;
+            protease = parse_pepdigest_protease(value)?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown pepdigest argument '{argument}'"),
+        )
+        .with_code("service.tool.pepdigest.argument_unknown")
+        .with_detail(pepdigest_help()));
+    }
+
+    Ok(PepdigestParams { input, protease })
+}
+
+fn parse_pepdigest_protease(value: &str) -> Result<PepdigestProtease, ServiceError> {
+    PepdigestProtease::from_str(value).map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            "protease must be one of trypsin, lys-c, arg-c, or cnbr",
+        )
+        .with_code("service.tool.pepdigest.protease_invalid")
+        .with_detail(value.to_owned())
+    })
+}
+
 fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceError> {
     if arguments.len() < 2 {
         return Err(tool_usage_error("maskseq", maskseq_help()));
@@ -9142,7 +9359,9 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "geecee" => geecee_help(),
         "infobase" => infobase_help(),
         "inforesidue" => inforesidue_help(),
+        "iep" => iep_help(),
         "oddcomp" => oddcomp_help(),
+        "pepdigest" => pepdigest_help(),
         "pepstats" => pepstats_help(),
         "wordcount" => wordcount_help(),
         "chips" => chips_help(),
@@ -9376,6 +9595,16 @@ mod tests {
     fn protein_stats_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/protein_stats_records.fasta")
+    }
+
+    fn iep_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/iep_records.fasta")
+    }
+
+    fn pepdigest_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/pepdigest_records.fasta")
     }
 
     fn oddcomp_fixture() -> std::path::PathBuf {
@@ -13237,6 +13466,186 @@ mod tests {
         let error = service
             .invoke(request)
             .expect_err("nucleotide input should fail for pepstats");
+        assert!(error.to_string().contains("expects protein input"));
+    }
+
+    #[test]
+    fn executes_iep_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("iep").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![iep_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("iep should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "residue_length",
+                        "titratable_side_chains",
+                        "aspartate",
+                        "glutamate",
+                        "cysteine",
+                        "tyrosine",
+                        "histidine",
+                        "lysine",
+                        "arginine",
+                        "net_charge_ph7",
+                        "estimated_pi",
+                    ]
+                );
+                assert_eq!(table.rows[0][0], "iep_basic");
+                assert_eq!(table.rows[0][1], "4");
+                assert_eq!(table.rows[0][8], "4");
+                assert_eq!(table.rows[1][0], "iep_mixed");
+                assert_eq!(table.rows[1][3], "1");
+                assert_eq!(table.rows[1][8], "1");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/iep_records.fasta")
+        );
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Model: fixed explicit pKa set for termini and D/E/C/Y/H/K/R"
+        );
+        assert_eq!(response.result.summary.lines[2], "Net charge reported at pH 7.0");
+    }
+
+    #[test]
+    fn rejects_nucleotide_input_for_iep() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("iep").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("nucleotide input should fail for iep");
+        assert!(error.to_string().contains("expects protein input"));
+    }
+
+    #[test]
+    fn executes_pepdigest_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepdigest").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![pepdigest_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("pepdigest should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "protease",
+                        "peptide_index",
+                        "start",
+                        "end",
+                        "cleavage_after",
+                        "sequence",
+                    ]
+                );
+                assert_eq!(
+                    table.rows[0],
+                    vec![
+                        "digestA".to_owned(),
+                        "trypsin".to_owned(),
+                        "1".to_owned(),
+                        "1".to_owned(),
+                        "2".to_owned(),
+                        "2".to_owned(),
+                        "AK".to_owned(),
+                    ]
+                );
+                assert_eq!(
+                    table.rows[1],
+                    vec![
+                        "digestA".to_owned(),
+                        "trypsin".to_owned(),
+                        "2".to_owned(),
+                        "3".to_owned(),
+                        "7".to_owned(),
+                        "7".to_owned(),
+                        "RPQMK".to_owned(),
+                    ]
+                );
+                assert_eq!(
+                    table.rows[2],
+                    vec![
+                        "digestB".to_owned(),
+                        "trypsin".to_owned(),
+                        "1".to_owned(),
+                        "1".to_owned(),
+                        "4".to_owned(),
+                        "4".to_owned(),
+                        "MAMK".to_owned(),
+                    ]
+                );
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta")
+        );
+        assert_eq!(response.result.summary.lines[1], "Protease: trypsin");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Digest mode: full deterministic cleavage"
+        );
+    }
+
+    #[test]
+    fn executes_pepdigest_with_cnbr_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepdigest").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            pepdigest_fixture().display().to_string(),
+            "--protease".to_owned(),
+            "cnbr".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("pepdigest should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows[0][1], "cnbr");
+                assert_eq!(table.rows[0][6], "AKRPQM");
+                assert_eq!(table.rows[1][6], "K");
+                assert_eq!(table.rows[2][6], "M");
+                assert_eq!(table.rows[3][6], "AM");
+                assert_eq!(table.rows[4][6], "K");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn rejects_nucleotide_input_for_pepdigest() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepdigest").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![nucleotide_pattern_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("nucleotide input should fail for pepdigest");
         assert!(error.to_string().contains("expects protein input"));
     }
 

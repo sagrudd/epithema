@@ -1,0 +1,80 @@
+{
+  "tool_name": "pepdigest",
+  "document_id": "pepdigest-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 2,
+    "declared_case_count": 2,
+    "harvested_case_count": 0,
+    "runnable_case_count": 2,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "digest_proteins_with_trypsin",
+      "title": "Digest protein records with trypsin",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "pepdigest_fixture"
+      ],
+      "expected_output_ids": [
+        "pepdigest_trypsin_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS pepdigest application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+          "invocation": "pepdigest -sequence pepdigest_records.fasta -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "digest_proteins_with_cnbr",
+      "title": "Digest protein records with CNBr",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "pepdigest_fixture"
+      ],
+      "expected_output_ids": [
+        "pepdigest_cnbr_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS pepdigest application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+          "invocation": "pepdigest -sequence pepdigest_records.fasta -menu cnbr -outfile stdout"
+        },
+        {
+          "source": "EMBOSS pepdigest application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+          "invocation": "pepdigest -sequence pepdigest_records.fasta -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS pepdigest application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+      "invocation": "pepdigest -sequence pepdigest_records.fasta -outfile stdout"
+    }
+  ]
+}

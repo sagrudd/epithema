@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 86,
-    "shipped_with_governance_mapping_count": 86,
-    "shipped_retain_count": 80,
+    "shipped_tool_count": 88,
+    "shipped_with_governance_mapping_count": 88,
+    "shipped_retain_count": 82,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 10,
-    "shipped_curated_autodoc_count": 86,
-    "shipped_executable_or_better_count": 86,
+    "retained_backlog_count": 8,
+    "shipped_curated_autodoc_count": 88,
+    "shipped_executable_or_better_count": 88,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -623,10 +623,28 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "iep",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "estimate deterministic protein isoelectric points from a fixed explicit pKa model",
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "oddcomp",
       "shipped_family": "sequence_stats",
       "shipped_summary": "report deterministic exact protein word-composition counts for query words",
       "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "pepdigest",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report deterministic full-digest peptide fragments for a small typed protease set",
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "executable_evidence"
@@ -992,16 +1010,13 @@
     {
       "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
       "retained_total": 2,
-      "retained_shipped": 0,
-      "retained_backlog": 2,
-      "shipped_curated_autodoc": 0,
-      "shipped_executable_or_better": 0,
+      "retained_shipped": 2,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 2,
+      "shipped_executable_or_better": 2,
       "shipped_compared": 0,
-      "recommendation": "prioritise retained backlog closure (2 remaining)",
-      "retained_backlog_tools": [
-        "iep",
-        "pepdigest"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
@@ -1099,18 +1114,6 @@
       "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
       "decision": "retain",
       "description": "Find restriction sites to insert (mutate) with no translation change"
-    },
-    {
-      "tool_name": "iep",
-      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
-      "decision": "retain",
-      "description": "Calculate the isoelectric point of proteins"
-    },
-    {
-      "tool_name": "pepdigest",
-      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
-      "decision": "retain",
-      "description": "Report on protein proteolytic enzyme or reagent cleavage sites"
     }
   ],
   "shipped_without_governance_mapping": []

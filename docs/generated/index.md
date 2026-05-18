@@ -48,6 +48,7 @@ tools/fuzzpro
 tools/fuzztran
 tools/geecee
 tools/getorf
+tools/iep
 tools/infoalign
 tools/infobase
 tools/inforesidue
@@ -70,6 +71,7 @@ tools/oddcomp
 tools/palindrome
 tools/pasteseq
 tools/patmatdb
+tools/pepdigest
 tools/pepstats
 tools/pepwindow
 tools/preg
