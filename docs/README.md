@@ -139,6 +139,8 @@ Additional documentation-oriented targets currently available are:
   installed in the selected Python environment
 - `make release-version-check` to verify the checked-in Cargo and Sphinx
   release metadata are aligned
+- `make release-truth-check` to verify that `Unreleased` and the draft release
+  notes still preserve the post-`1.0.0` truth-model wording
 - `make release-generated-check` to refresh governed generated artefacts and
   require a clean diff
 - `make release-artifacts` to assemble the reproducible local release bundle

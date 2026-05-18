@@ -8,7 +8,20 @@ package. Until that cutover, changes accumulate under `Unreleased`.
 
 ## [Unreleased]
 
-- Post-`1.0.0` changes will be recorded here after the coordinated stable cut.
+Changes recorded here after the coordinated `1.0.0` stable cut must preserve
+the same release-truth model used during the RC phase.
+
+New shipped tools after `1.0.0` must not bypass:
+
+- governance mapping
+- autodoc presence
+- validation-stub generation
+- cohort-report inclusion
+- honest release-note wording
+
+Release-facing documentation under `Unreleased` should continue to defer to the
+generated cohort, governance, and cohort-health reports rather than implying
+biological acceptance from shipped-method count alone.
 
 ## [1.0.0] - Planned
 

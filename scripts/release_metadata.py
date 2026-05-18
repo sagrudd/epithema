@@ -13,6 +13,25 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CARGO_TOML = REPO_ROOT / "Cargo.toml"
 DOCS_CONF = REPO_ROOT / "docs" / "conf.py"
+CHANGELOG = REPO_ROOT / "CHANGELOG.md"
+RELEASE_NOTES = REPO_ROOT / "docs" / "release" / "v1_0_0_release_notes.md"
+
+REQUIRED_UNRELEASED_MARKERS = [
+    "## [Unreleased]",
+    "New shipped tools after `1.0.0` must not bypass:",
+    "- governance mapping",
+    "- autodoc presence",
+    "- validation-stub generation",
+    "- cohort-report inclusion",
+    "- honest release-note wording",
+]
+
+REQUIRED_RELEASE_NOTES_MARKERS = [
+    "These notes remain a draft release document",
+    "[Cohort Validation Report](../generated/cohort_validation.md)",
+    "[Governance Alignment Report](../generated/governance_alignment.md)",
+    "[Cohort Health Gate](../generated/cohort_health.md)",
+]
 
 
 def load_workspace_version() -> str:
@@ -45,6 +64,26 @@ def check_version_alignment() -> int:
             "release metadata mismatch: "
             f"workspace.package.version={workspace_version!r}, "
             f"docs.conf release={docs_release!r}"
+        )
+    return 0
+
+
+def check_release_truth_surface() -> int:
+    changelog_text = CHANGELOG.read_text()
+    release_notes_text = RELEASE_NOTES.read_text()
+
+    missing = []
+    for marker in REQUIRED_UNRELEASED_MARKERS:
+        if marker not in changelog_text:
+            missing.append(f"{CHANGELOG}: missing marker {marker!r}")
+
+    for marker in REQUIRED_RELEASE_NOTES_MARKERS:
+        if marker not in release_notes_text:
+            missing.append(f"{RELEASE_NOTES}: missing marker {marker!r}")
+
+    if missing:
+        raise SystemExit(
+            "release truth check failed:\n- " + "\n- ".join(missing)
         )
     return 0
 
@@ -84,6 +123,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("workspace-version", help="Print the workspace release version")
     subparsers.add_parser("check", help="Verify release metadata alignment")
+    subparsers.add_parser(
+        "truth-check",
+        help="Verify Unreleased and release-note wording preserves the release-truth model",
+    )
 
     manifest = subparsers.add_parser(
         "manifest",
@@ -104,6 +147,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "check":
         return check_version_alignment()
+    if args.command == "truth-check":
+        return check_release_truth_surface()
     if args.command == "manifest":
         return write_manifest(args.output, args.container_image)
 

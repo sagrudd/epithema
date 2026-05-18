@@ -17,7 +17,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -46,6 +46,7 @@ help:
 		"" \
 		"Release:" \
 		"  make release-version-check Verify Cargo and Sphinx release metadata alignment" \
+		"  make release-truth-check Verify Unreleased and release-note truth-model markers" \
 		"  make release-generated-check Refresh governed generated artefacts and require a clean diff" \
 		"  make release-build     Build release-mode Rust artefacts" \
 		"  make release-test      Run release-gating Rust checks" \
@@ -77,6 +78,9 @@ test:
 
 release-version-check:
 	$(PYTHON) scripts/release_metadata.py check
+
+release-truth-check:
+	$(PYTHON) scripts/release_metadata.py truth-check
 
 release-generated-check:
 	rm -rf docs/generated/tools docs/generated/index.md
@@ -118,7 +122,7 @@ release-container:
 		-t $(CONTAINER_IMAGE) \
 		.
 
-release-check: lint-repo check-sister-repo release-version-check release-generated-check release-test release-docs release-build
+release-check: lint-repo check-sister-repo release-version-check release-truth-check release-generated-check release-test release-docs release-build
 
 docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)

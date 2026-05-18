@@ -15,13 +15,14 @@ For the current evidence posture, see:
 
 - [Cohort Validation Report](../generated/cohort_validation.md)
 - [Governance Alignment Report](../generated/governance_alignment.md)
+- [Cohort Health Gate](../generated/cohort_health.md)
 
 ## Highlights
 
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `60` methods, including:
+of `90` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -57,10 +58,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `13` shipped methods carry compared evidence
-- `42` shipped methods carry executable evidence
-- `1` shipped method remains at declared evidence
-- `4` shipped methods remain documented only
+- `21` shipped methods carry compared evidence
+- `69` shipped methods carry executable evidence
+- `47` shipped methods record harvested legacy provenance
+- `0` shipped methods remain at declared or documented-only evidence
 
 ### First-class R story
 

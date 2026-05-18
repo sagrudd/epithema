@@ -109,15 +109,39 @@ The workflows automate build, packaging, and release staging. Humans still own:
 - final tag creation
 - final go/no-go decision after stabilization audit
 
+## Post-1.0 truth model
+
+After the stable `1.0.0` cut, the repository should carry the same release
+truth rules forward into `Unreleased`.
+
+New shipped tools must not bypass:
+
+- governance mapping
+- autodoc presence
+- validation-stub generation
+- cohort-report inclusion
+- honest release-note wording
+
+`Unreleased` changelog and release-facing wording should continue to defer to:
+
+- `docs/generated/cohort_validation.md`
+- `docs/generated/governance_alignment.md`
+- `docs/generated/cohort_health.md`
+
+This project treats those generated reports as the current truth surface for
+scope, evidence, and roadmap pressure. Shipped-method count alone is not used
+as a proxy for biological acceptance completeness.
+
 ## Local release-candidate flow
 
 For a conservative local candidate build, run:
 
 1. `make release-version-check`
-2. `make release-generated-check`
-3. `make release-check`
-4. `make release-artifacts`
-5. `make release-container` on a machine with Docker available
+2. `make release-truth-check`
+3. `make release-generated-check`
+4. `make release-check`
+5. `make release-artifacts`
+6. `make release-container` on a machine with Docker available
 
 The release bundle is written under `dist/release/<version>/`. It is intended
 for inspection and local smoke verification before a `v*` tag is created.
