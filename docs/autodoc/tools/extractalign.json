@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "extractalign-stub-v1",
+  "document_id": "extractalign-v1",
   "tool": {
     "name": "extractalign",
     "family": "alignment_tools",
@@ -14,39 +14,96 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`extractalign` is part of the exposed EMBOSS-RS `alignment_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`extractalign` subsets an alignment by row and, optionally, by column range using explicit typed coordinates instead of ad hoc text slicing. The current implementation can retain rows selected by 1-based ordinal and/or row identifier, then optionally crop the surviving alignment to a 1-based inclusive column span."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts alignment or sequence inputs through the shared alignment and sequence IO layers. Exact parameter shape remains governed by the implemented CLI/service definition for the method."
+      "content": "The current v1 tool accepts one local aligned FASTA or Stockholm input plus optional selectors: repeated `--row <ordinal>`, repeated `--row-id <identifier>`, and a paired `--start <column>` / `--end <column>` column range. If no row selectors are supplied, all rows are retained. If no column range is supplied, all columns are retained."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized alignments or structured alignment summaries through the shared result layer."
+      "content": "The result is an extracted alignment payload with preserved row ordering from the source alignment after selection. Column coordinates are 1-based inclusive in the user-facing CLI and are validated strictly before extraction."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractalign`. The generated tool page and the machine-readable validation stub at [`../validation/extractalign.validation.json`](../validation/extractalign.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs extractalign`. Current Rust service coverage exercises mixed row-identifier and row-ordinal selection plus 1-based inclusive column slicing against the committed multiple-alignment fixture."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "Both `--start` and `--end` must be provided together. Out-of-range ordinals, unknown identifiers, and invalid column coordinates fail clearly instead of being clipped or ignored."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "multiple_alignment_stockholm",
+      "label": "Multiple-alignment Stockholm fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+      },
+      "description": "Repository-managed Stockholm alignment fixture used to validate row and column extraction behavior."
+    }
+  ],
+  "examples": [
+    {
+      "id": "extract_selected_rows_and_columns",
+      "title": "Extract selected rows and a column slice from a Stockholm alignment",
+      "description": "Retains row identifier `alpha` and row ordinal `3`, then crops the resulting alignment to columns 2 through 4 inclusive.",
+      "artifact_ids": [
+        "multiple_alignment_stockholm"
+      ],
+      "parameters": [
+        {
+          "name": "row_id",
+          "value": "alpha"
+        },
+        {
+          "name": "row",
+          "value": "3"
+        },
+        {
+          "name": "start",
+          "value": "2"
+        },
+        {
+          "name": "end",
+          "value": "4"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "extracted_alignment",
+          "label": "Extracted alignment payload",
+          "description": "A two-row, three-column alignment containing the selected rows and the requested inclusive column slice."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "extract_selected_rows_and_columns"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

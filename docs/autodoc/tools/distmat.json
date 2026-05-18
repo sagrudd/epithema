@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "distmat-stub-v1",
+  "document_id": "distmat-v1",
   "tool": {
     "name": "distmat",
     "family": "alignment_analysis",
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`distmat` is part of the exposed EMBOSS-RS `alignment_analysis` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`distmat` computes a deterministic p-distance matrix for one local sequence set. The current EMBOSS-RS implementation uses the shared sequence loader and reports mismatch fraction as `mismatches / sequence_length` for each pair in stable input order."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts alignment or sequence inputs through the shared alignment and sequence IO layers. Exact parameter shape remains governed by the implemented CLI/service definition for the method."
+      "content": "The current v1 interface accepts exactly one local sequence-set input path. All records must have equal length before the distance matrix can be derived."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured analytical summaries such as matrices, consensus sequences, or deterministic comparison tables."
+      "content": "CLI and service output is a stable square table with one row per input record and one column per input record. Diagonal entries are zero, and off-diagonal entries report pairwise mismatch fraction as fixed-precision decimal text."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs distmat`. The generated tool page and the machine-readable validation stub at [`../validation/distmat.validation.json`](../validation/distmat.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs distmat`. Current Rust service coverage exercises the committed equal-length three-record FASTA fixture and locks down the expected p-distance rows in stable source order."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "Mixed-length inputs fail validation instead of being padded, aligned, or compared over partial overlap. The first release reports simple p-distance only; it does not yet expose alternate distance models."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "equal_length_fasta",
+      "label": "Equal-length FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+      },
+      "description": "Repository-managed three-record FASTA fixture with equal-length sequences used for deterministic p-distance validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "compute_p_distance_matrix_for_equal_length_records",
+      "title": "Compute a p-distance matrix for three equal-length FASTA records",
+      "description": "Loads the committed three-record FASTA fixture and reports the pairwise mismatch fractions in stable input order.",
+      "artifact_ids": [
+        "equal_length_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "distance_matrix_table",
+          "label": "P-distance matrix table",
+          "description": "A square table with zero diagonal entries and fixed-precision mismatch fractions for each record pair."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "compute_p_distance_matrix_for_equal_length_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

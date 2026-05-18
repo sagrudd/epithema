@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "aligncopy-stub-v1",
+  "document_id": "aligncopy-v1",
   "tool": {
     "name": "aligncopy",
     "family": "alignment_tools",
@@ -14,39 +14,79 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`aligncopy` is part of the exposed EMBOSS-RS `alignment_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`aligncopy` is the alignment-preserving equivalent of `seqret` for the current EMBOSS-RS alignment surface. It loads one aligned FASTA or Stockholm alignment through the shared alignment reader and writes the same alignment payload back through the governed alignment result path without modifying rows, columns, or metadata."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts alignment or sequence inputs through the shared alignment and sequence IO layers. Exact parameter shape remains governed by the implemented CLI/service definition for the method."
+      "content": "The current v1 interface accepts exactly one local alignment input path. Supported input formats are the alignment formats already handled by the shared alignment loader, currently aligned FASTA and Stockholm."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits normalized alignments or structured alignment summaries through the shared result layer."
+      "content": "The result is the normalized alignment payload itself. Through the CLI, EMBOSS-RS renders alignment outputs as Stockholm by default so the copied alignment remains structured and round-trippable."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs aligncopy`. The generated tool page and the machine-readable validation stub at [`../validation/aligncopy.validation.json`](../validation/aligncopy.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs aligncopy`. The declared example below matches the existing Rust service test path that loads a committed multiple-alignment fixture and confirms row-count and alignment-identifier preservation."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release is intentionally narrow: `aligncopy` is a normalization and pass-through command, not an editing or reformatting workflow. Historical EMBOSS option breadth is not reproduced yet."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "multiple_alignment_stockholm",
+      "label": "Multiple-alignment Stockholm fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+      },
+      "description": "Repository-managed Stockholm alignment fixture with three aligned rows and a stable alignment identifier."
+    }
+  ],
+  "examples": [
+    {
+      "id": "copy_multiple_alignment_stockholm",
+      "title": "Copy a multiple Stockholm alignment unchanged",
+      "description": "Loads the committed three-row Stockholm alignment fixture and returns the same alignment through the governed output path.",
+      "artifact_ids": [
+        "multiple_alignment_stockholm"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "copied_alignment",
+          "label": "Copied alignment payload",
+          "description": "A three-row alignment that preserves the input alignment identifier and column layout."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "copy_multiple_alignment_stockholm"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

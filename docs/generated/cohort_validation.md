@@ -8,10 +8,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods in cohort: `46`
 - Documentation-complete methods: `46`
 - Methods with validation stubs: `46`
-- Documented-only methods: `25`
+- Documented-only methods: `16`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `20`
+- Methods with executable validation: `29`
 - Methods with compared evidence: `0`
 - Methods with visible gaps: `46`
 
@@ -27,18 +27,18 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 | Tool | Family | Evidence level | Docs | Stub | Harvested | Executable | Compared | Gap count |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `aligncopy` | `alignment_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `aligncopypair` | `alignment_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `infoalign` | `alignment_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `extractalign` | `alignment_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `aligncopy` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `aligncopypair` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `infoalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `extractalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `runinfo` | `archive_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `runget` | `archive_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `matcher` | `alignment_analysis` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `distmat` | `alignment_analysis` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `cons` | `alignment_analysis` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `consambig` | `alignment_analysis` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `matcher` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `distmat` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `cons` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `consambig` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `needle` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `needleall` | `pairwise_alignment` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `needleall` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `seqret` | `retrieval_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `refseqget` | `retrieval_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `newseq` | `sequence_stream` | `declared_evidence` | `yes` | `yes` | `no` | `no` | `no` | `4` |
@@ -76,18 +76,18 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-- `aligncopy`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `aligncopypair`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `infoalign`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `extractalign`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `aligncopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `aligncopypair`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `infoalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `extractalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `runinfo`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `runget`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `matcher`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `distmat`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `cons`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `consambig`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `matcher`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `distmat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `cons`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `needle`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `needleall`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `seqret`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `refseqget`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `newseq`: `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`

@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "needleall-stub-v1",
+  "document_id": "needleall-v1",
   "tool": {
     "name": "needleall",
     "family": "pairwise_alignment",
@@ -14,39 +14,95 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`needleall` is part of the exposed EMBOSS-RS `pairwise_alignment` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`needleall` performs deterministic many-vs-many global pairwise alignment between every query record and every target record in two local sequence sets. EMBOSS-RS v1 keeps the surface deliberately structured: comparisons run in query-major then target-major order and the CLI reports one summary row per pair instead of rendering every alignment body."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts alignment or sequence inputs through the shared alignment and sequence IO layers. Exact parameter shape remains governed by the implemented CLI/service definition for the method."
+      "content": "The current v1 interface accepts one local query sequence-set input and one local target sequence-set input, plus optional `--gap-open` and `--gap-extend` overrides. Both inputs must contain at least one sequence record."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits governed alignment reports and structured comparison summaries rather than legacy free-form output alone."
+      "content": "CLI and service output is a deterministic summary table with one row per query/target pair. Each row reports the query identifier, target identifier, scoring mode, alignment score, aligned length, identity count, identity percentage, and query/target gap counts."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs needleall`. The generated tool page and the machine-readable validation stub at [`../validation/needleall.validation.json`](../validation/needleall.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs needleall`. Current Rust service coverage exercises committed multi-record FASTA fixtures and locks down the query-major, target-major ordering of the four pairwise comparisons."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release reports a structured comparison table only. It does not emit every rendered pairwise alignment body or reproduce the full breadth of historical EMBOSS reporting options yet."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "needleall_queries_fasta",
+      "label": "Needleall query FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/needleall_queries.fasta"
+      },
+      "description": "Repository-managed two-record FASTA fixture used as the query set."
+    },
+    {
+      "id": "needleall_targets_fasta",
+      "label": "Needleall target FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/needleall_targets.fasta"
+      },
+      "description": "Repository-managed two-record FASTA fixture used as the target set."
+    }
+  ],
+  "examples": [
+    {
+      "id": "align_all_query_target_pairs",
+      "title": "Align every query/target pair from two small FASTA sets",
+      "description": "Runs deterministic many-vs-many global alignment across the committed two-record query and two-record target fixtures, yielding four summary rows in query-major then target-major order.",
+      "artifact_ids": [
+        "needleall_queries_fasta",
+        "needleall_targets_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "needleall_summary_table",
+          "label": "Many-vs-many alignment summary table",
+          "description": "A four-row summary table covering every query/target pair in deterministic order."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "align_all_query_target_pairs"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

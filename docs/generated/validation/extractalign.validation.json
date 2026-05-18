@@ -1,13 +1,13 @@
 {
   "tool_name": "extractalign",
-  "document_id": "extractalign-stub-v1",
-  "source_mode": "registry_stub",
-  "evidence_source": "registry_stub_autodoc",
+  "document_id": "extractalign-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 0,
-    "declared_case_count": 0,
+    "total_case_count": 1,
+    "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 0,
+    "runnable_case_count": 1,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,17 +15,26 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [],
-  "unresolved_gaps": [
-    "tool 'extractalign' needs at least one declared example to establish validation evidence"
-  ],
-  "diagnostics": [
+  "cases": [
     {
-      "severity": "warning",
-      "code": "testkit.report.no_cases",
-      "message": "autodoc document does not declare any validation cases",
-      "context": "extractalign"
+      "id": "extract_selected_rows_and_columns",
+      "title": "Extract selected rows and a column slice from a Stockholm alignment",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "multiple_alignment_stockholm"
+      ],
+      "expected_output_ids": [
+        "extracted_alignment"
+      ],
+      "provenance": [],
+      "diagnostics": []
     }
   ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
   "provenance": []
 }
