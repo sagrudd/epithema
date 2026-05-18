@@ -8,17 +8,17 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `70`
-- Shipped tools with governance mapping: `70`
-- Retained backlog still unshipped: `26`
-- Shipped tools with curated autodoc: `70`
-- Shipped tools with executable or compared evidence: `70`
+- Shipped tools: `74`
+- Shipped tools with governance mapping: `74`
+- Retained backlog still unshipped: `22`
+- Shipped tools with curated autodoc: `74`
+- Shipped tools with executable or compared evidence: `74`
 - Shipped tools with compared evidence: `21`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
-- Shipped retain methods: `64`
+- Shipped retain methods: `68`
 - Shipped rework methods: `6`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
@@ -32,7 +32,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Core Retain — Core sequence statistics and composition | 16 | 12 | 4 | 12 | 12 | 6 | prioritise retained backlog closure (4 remaining) |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Sequence editing and manipulation | 23 | 15 | 8 | 15 | 15 | 2 | prioritise retained backlog closure (8 remaining) |
-| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 4 | 8 | 4 | 4 | 3 | prioritise retained backlog closure (8 remaining) |
+| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 8 | 4 | 8 | 8 | 3 | prioritise retained backlog closure (4 remaining) |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Exclude Permanently — ACD developer tooling | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -53,8 +53,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 ## Recommended Next Governed Sweeps
 
 - **Core Retain — Sequence editing and manipulation**: prioritise retained backlog closure (8 remaining). Retained backlog: `biosed`, `listor`, `makenucseq`, `makeprotseq`, `msbar`, `skipredundant`, `trimest`, `vectorstrip`
-- **Core Retain — Simple motif, pattern, and regular-expression search**: prioritise retained backlog closure (8 remaining). Retained backlog: `dreg`, `einverted`, `palindrome`, `patmatdb`, `preg`, `seqmatchall`, `wordfinder`, `wordmatch`
 - **Core Retain — Core sequence statistics and composition**: prioritise retained backlog closure (4 remaining). Retained backlog: `aaindexextract`, `infobase`, `inforesidue`, `oddcomp`
+- **Core Retain — Simple motif, pattern, and regular-expression search**: prioritise retained backlog closure (4 remaining). Retained backlog: `dreg`, `einverted`, `palindrome`, `seqmatchall`
 - **Core Retain — Basic sequence IO and conversion**: prioritise retained backlog closure (2 remaining). Retained backlog: `nthseqset`, `splitsource`
 - **Modernize — Rework — Protein property and structural-summary utilities**: prioritise retained backlog closure (2 remaining). Retained backlog: `iep`, `pepdigest`
 
@@ -77,11 +77,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - `dreg` — retain — Core Retain — Simple motif, pattern, and regular-expression search
 - `einverted` — retain — Core Retain — Simple motif, pattern, and regular-expression search
 - `palindrome` — retain — Core Retain — Simple motif, pattern, and regular-expression search
-- `patmatdb` — retain — Core Retain — Simple motif, pattern, and regular-expression search
-- `preg` — retain — Core Retain — Simple motif, pattern, and regular-expression search
 - `seqmatchall` — retain — Core Retain — Simple motif, pattern, and regular-expression search
-- `wordfinder` — retain — Core Retain — Simple motif, pattern, and regular-expression search
-- `wordmatch` — retain — Core Retain — Simple motif, pattern, and regular-expression search
 - `recoder` — retain — Modernize — Rework — Restriction-enzyme design and analysis
 - `silent` — retain — Modernize — Rework — Restriction-enzyme design and analysis
 - `iep` — retain — Modernize — Rework — Protein property and structural-summary utilities
@@ -140,6 +136,10 @@ All shipped methods are mapped in the governance appendix.
 | `fuzznuc` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `fuzzpro` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `fuzztran` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `preg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `patmatdb` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `charge` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `pepwindow` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `complex` | `sequence_stats` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |

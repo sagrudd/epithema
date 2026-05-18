@@ -1,0 +1,110 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "patmatdb-v1",
+  "tool": {
+    "name": "patmatdb",
+    "family": "pattern_tools",
+    "summary": "scan protein sequences with a local deterministic motif database",
+    "legacy_names": [
+      "patmatdb"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`patmatdb` searches protein sequence records against a local motif database and reports stable motif hits in a table. EMBOSS-RS v1 keeps the database contract deliberately narrow and local rather than recreating historical database plumbing."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local protein input plus one local TSV motif database. Each non-comment database row must contain `<motif-id><TAB><pattern><TAB><optional-description>`. Pattern syntax matches `fuzzpro`: exact amino-acid residues plus `X` as a single-residue wildcard."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a stable hit table with one row per motif match. Each row reports the source record, motif identifier, pattern text, optional description, 1-based inclusive coordinates, and the matched sequence slice."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs patmatdb`. Validation currently covers a committed two-motif TSV database and a committed protein FASTA fixture through the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release supports only local TSV motif databases and the bounded `fuzzpro` pattern model. It does not integrate with external motif archives, profile libraries, or richer scoring semantics."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "patmatdb_records_fasta",
+      "label": "Patmatdb protein FASTA fixture",
+      "origin": { "kind": "fixture_asset" },
+      "acquisition": { "mode": "fixture" },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/patmatdb_records.fasta"
+      },
+      "description": "Repository-managed protein FASTA fixture used for motif-database searching."
+    },
+    {
+      "id": "patmatdb_motif_tsv",
+      "label": "Patmatdb motif TSV fixture",
+      "origin": { "kind": "fixture_asset" },
+      "acquisition": { "mode": "fixture" },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/patmatdb_motifs.tsv"
+      },
+      "description": "Repository-managed TSV motif database fixture containing two simple protein motifs."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_hits_from_local_motif_database",
+      "title": "Report hits from a local motif database",
+      "description": "Runs `patmatdb` against a committed protein FASTA fixture and a committed TSV motif database.",
+      "artifact_ids": [
+        "patmatdb_records_fasta",
+        "patmatdb_motif_tsv"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "patmatdb_hit_table",
+          "label": "Motif database hit table",
+          "description": "Two hits are reported from the first fixture record, one for each motif entry in the committed TSV database."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS patmatdb application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+        "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS patmatdb application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+        "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_hits_from_local_motif_database"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

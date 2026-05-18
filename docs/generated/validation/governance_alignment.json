@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 70,
-    "shipped_with_governance_mapping_count": 70,
-    "shipped_retain_count": 64,
+    "shipped_tool_count": 74,
+    "shipped_with_governance_mapping_count": 74,
+    "shipped_retain_count": 68,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 26,
-    "shipped_curated_autodoc_count": 70,
-    "shipped_executable_or_better_count": 70,
+    "retained_backlog_count": 22,
+    "shipped_curated_autodoc_count": 74,
+    "shipped_executable_or_better_count": 74,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -425,6 +425,42 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "preg",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan protein sequences with deterministic bounded regular expressions",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "patmatdb",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan protein sequences with a local deterministic motif database",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "wordmatch",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "report maximal exact shared regions between two singleton sequences",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "wordfinder",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "report maximal exact shared regions between one query and multiple targets",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "charge",
       "shipped_family": "protein_plots",
       "shipped_summary": "report a sliding-window protein charge profile and emit a line-plot contract",
@@ -726,21 +762,17 @@
     {
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "retained_total": 12,
-      "retained_shipped": 4,
-      "retained_backlog": 8,
-      "shipped_curated_autodoc": 4,
-      "shipped_executable_or_better": 4,
+      "retained_shipped": 8,
+      "retained_backlog": 4,
+      "shipped_curated_autodoc": 8,
+      "shipped_executable_or_better": 8,
       "shipped_compared": 3,
-      "recommendation": "prioritise retained backlog closure (8 remaining)",
+      "recommendation": "prioritise retained backlog closure (4 remaining)",
       "retained_backlog_tools": [
         "dreg",
         "einverted",
         "palindrome",
-        "patmatdb",
-        "preg",
-        "seqmatchall",
-        "wordfinder",
-        "wordmatch"
+        "seqmatchall"
       ]
     },
     {
@@ -1030,34 +1062,10 @@
       "description": "Find inverted repeats in nucleotide sequence(s)"
     },
     {
-      "tool_name": "patmatdb",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Search protein sequences with a sequence motif"
-    },
-    {
-      "tool_name": "preg",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Regular expression search of protein sequence(s)"
-    },
-    {
       "tool_name": "seqmatchall",
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "decision": "retain",
       "description": "All-against-all word comparison of a sequence set"
-    },
-    {
-      "tool_name": "wordfinder",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Match large sequences against one or more other sequences"
-    },
-    {
-      "tool_name": "wordmatch",
-      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "decision": "retain",
-      "description": "Find regions of identity (exact matches) of two sequences"
     },
     {
       "tool_name": "recoder",

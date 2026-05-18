@@ -48,8 +48,10 @@ use emboss_tools::pairwise_alignment::{
     run_needleall, run_water, water_help,
 };
 use emboss_tools::pattern_tools::{
-    FuzznucParams, FuzzproParams, FuzztranParams, fuzznuc_help, fuzzpro_help, fuzztran_help,
-    run_fuzznuc, run_fuzzpro, run_fuzztran,
+    FuzznucParams, FuzzproParams, FuzztranParams, PatmatdbParams, PregParams, WordfinderParams,
+    WordmatchParams, fuzznuc_help, fuzzpro_help, fuzztran_help, patmatdb_help, preg_help,
+    run_fuzznuc, run_fuzzpro, run_fuzztran, run_patmatdb, run_preg, run_wordfinder,
+    run_wordmatch, wordfinder_help, wordmatch_help,
 };
 use emboss_tools::protein_plots::{
     ChargeParams, PepwindowParams, charge_help, pepwindow_help, run_charge, run_pepwindow,
@@ -295,6 +297,10 @@ impl EmbossService {
             "fuzznuc" => self.invoke_fuzznuc(request, descriptor),
             "fuzzpro" => self.invoke_fuzzpro(request, descriptor),
             "fuzztran" => self.invoke_fuzztran(request, descriptor),
+            "preg" => self.invoke_preg(request, descriptor),
+            "patmatdb" => self.invoke_patmatdb(request, descriptor),
+            "wordmatch" => self.invoke_wordmatch(request, descriptor),
+            "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
             "complex" => self.invoke_complex(request, descriptor),
@@ -3445,6 +3451,309 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_preg(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, preg_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("preg", preg_help()))?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let outcome = run_preg(PregParams {
+            input,
+            pattern: parse_protein_regex("preg", &arguments[1])?,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} protein regex hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.pattern.clone(),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "pattern".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein regular-expression search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Pattern: {}", outcome.pattern))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Pattern model: bounded Rust regex over protein residues")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_patmatdb(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, patmatdb_help()));
+        }
+
+        let cli = parse_patmatdb_params(request.arguments())?;
+        let input_argument = cli.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_argument)?;
+        let outcome = run_patmatdb(PatmatdbParams {
+            input,
+            database: cli.database,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} motif-database hits", outcome.hits.len()),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.record_id.clone(),
+                    hit.motif_id.clone(),
+                    hit.pattern.clone(),
+                    hit.description.clone().unwrap_or_else(|| "-".to_owned()),
+                    (hit.start + 1).to_string(),
+                    hit.end.to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "motif_id".to_owned(),
+                    "pattern".to_owned(),
+                    "description".to_owned(),
+                    "start".to_owned(),
+                    "end".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein motif-database search completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Database: {}", outcome.database.display()))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Motifs loaded: {}", outcome.motifs.len()))
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_wordmatch(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, wordmatch_help()));
+        }
+
+        if request.arguments().len() < 2 {
+            return Err(tool_usage_error("wordmatch", wordmatch_help()));
+        }
+        let query_argument = request.arguments()[0].clone();
+        let target_argument = request.arguments()[1].clone();
+        let (query, query_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&query_argument)?;
+        let (target, target_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&target_argument)?;
+        diagnostics.extend(target_diagnostics);
+        let params = parse_wordmatch_params(request.arguments())?;
+        let outcome = run_wordmatch(WordmatchParams {
+            query,
+            target,
+            word_size: params.word_size,
+        })?;
+
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.query_id.clone(),
+                    hit.target_id.clone(),
+                    (hit.query_start + 1).to_string(),
+                    hit.query_end.to_string(),
+                    (hit.target_start + 1).to_string(),
+                    hit.target_end.to_string(),
+                    hit.matched.len().to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} exact shared regions", outcome.hits.len()),
+            diagnostics,
+            vec![query_provenance, target_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "query".to_owned(),
+                    "target".to_owned(),
+                    "query_start".to_owned(),
+                    "query_end".to_owned(),
+                    "target_start".to_owned(),
+                    "target_end".to_owned(),
+                    "length".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Exact shared-region search completed")
+                .with_line(format!("Query: {}", outcome.query.path.display()))
+                .with_line(format!("Target: {}", outcome.target.path.display()))
+                .with_line(format!("Minimum word size: {}", outcome.word_size))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_wordfinder(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, wordfinder_help()));
+        }
+
+        if request.arguments().len() < 2 {
+            return Err(tool_usage_error("wordfinder", wordfinder_help()));
+        }
+        let query_argument = request.arguments()[0].clone();
+        let targets_argument = request.arguments()[1].clone();
+        let (query, query_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&query_argument)?;
+        let (targets, targets_provenance, target_diagnostics) =
+            self.resolve_local_sequence_input(&targets_argument)?;
+        diagnostics.extend(target_diagnostics);
+        let params = parse_wordfinder_params(request.arguments())?;
+        let outcome = run_wordfinder(WordfinderParams {
+            query,
+            targets,
+            word_size: params.word_size,
+        })?;
+
+        let rows = outcome
+            .hits
+            .iter()
+            .map(|hit| {
+                vec![
+                    hit.query_id.clone(),
+                    hit.target_id.clone(),
+                    (hit.query_start + 1).to_string(),
+                    hit.query_end.to_string(),
+                    (hit.target_start + 1).to_string(),
+                    hit.target_end.to_string(),
+                    hit.matched.len().to_string(),
+                    hit.matched.clone(),
+                ]
+            })
+            .collect();
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} exact shared regions across target set", outcome.hits.len()),
+            diagnostics,
+            vec![query_provenance, targets_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "query".to_owned(),
+                    "target".to_owned(),
+                    "query_start".to_owned(),
+                    "query_end".to_owned(),
+                    "target_start".to_owned(),
+                    "target_end".to_owned(),
+                    "length".to_owned(),
+                    "matched".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Multi-target exact shared-region search completed")
+                .with_line(format!("Query: {}", outcome.query.path.display()))
+                .with_line(format!("Targets: {}", outcome.targets.path.display()))
+                .with_line(format!("Minimum word size: {}", outcome.word_size))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line(format!("Hits: {}", outcome.hits.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_charge(
         &self,
         request: InvocationRequest,
@@ -5833,6 +6142,111 @@ fn parse_protein_pattern(tool: &str, value: &str) -> Result<ProteinPattern, Serv
     ProteinPattern::parse(value).map_err(|error| map_pattern_error(tool, error))
 }
 
+fn parse_protein_regex(
+    tool: &str,
+    value: &str,
+) -> Result<emboss_tools::pattern_tools::CompiledProteinRegex, ServiceError> {
+    emboss_tools::pattern_tools::CompiledProteinRegex::parse(value).map_err(|error| {
+        PlatformError::new(ErrorCategory::Validation, error.to_string())
+            .with_code(format!("service.tool.{tool}.pattern.regex_invalid"))
+    })
+}
+
+fn parse_patmatdb_params(arguments: &[String]) -> Result<PatmatdbParams, ServiceError> {
+    if arguments.len() != 2 {
+        return Err(tool_usage_error("patmatdb", patmatdb_help()));
+    }
+
+    Ok(PatmatdbParams {
+        input: SequenceInput::new(arguments[0].clone()),
+        database: PathBuf::from(arguments[1].clone()),
+    })
+}
+
+fn parse_wordmatch_params(arguments: &[String]) -> Result<WordmatchParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("wordmatch", wordmatch_help()));
+    }
+
+    let query = SequenceInput::new(arguments[0].clone());
+    let target = SequenceInput::new(arguments[1].clone());
+    let mut word_size = 4usize;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--word-size=") {
+            word_size = parse_positive_count("wordmatch", value, "--word-size")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--word-size" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --word-size")
+                    .with_code("service.tool.wordmatch.word_size_missing")
+            })?;
+            word_size = parse_positive_count("wordmatch", value, "--word-size")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown wordmatch argument '{argument}'"),
+        )
+        .with_code("service.tool.wordmatch.argument_unknown")
+        .with_detail(wordmatch_help()));
+    }
+
+    Ok(WordmatchParams {
+        query,
+        target,
+        word_size,
+    })
+}
+
+fn parse_wordfinder_params(arguments: &[String]) -> Result<WordfinderParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("wordfinder", wordfinder_help()));
+    }
+
+    let query = SequenceInput::new(arguments[0].clone());
+    let targets = SequenceInput::new(arguments[1].clone());
+    let mut word_size = 4usize;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--word-size=") {
+            word_size = parse_positive_count("wordfinder", value, "--word-size")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--word-size" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --word-size")
+                    .with_code("service.tool.wordfinder.word_size_missing")
+            })?;
+            word_size = parse_positive_count("wordfinder", value, "--word-size")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown wordfinder argument '{argument}'"),
+        )
+        .with_code("service.tool.wordfinder.argument_unknown")
+        .with_detail(wordfinder_help()));
+    }
+
+    Ok(WordfinderParams {
+        query,
+        targets,
+        word_size,
+    })
+}
+
 fn parse_codcopy_params(arguments: &[String]) -> Result<CodcopyParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("codcopy", codcopy_help()));
@@ -7600,6 +8014,10 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "fuzznuc" => fuzznuc_help(),
         "fuzzpro" => fuzzpro_help(),
         "fuzztran" => fuzztran_help(),
+        "preg" => preg_help(),
+        "patmatdb" => patmatdb_help(),
+        "wordmatch" => wordmatch_help(),
+        "wordfinder" => wordfinder_help(),
         "charge" => charge_help(),
         "pepwindow" => pepwindow_help(),
         "complex" => complex_help(),
@@ -7972,6 +8390,36 @@ mod tests {
     fn tranalign_protein_alignment_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/tranalign_protein_alignment.sto")
+    }
+
+    fn preg_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/preg_records.fasta")
+    }
+
+    fn patmatdb_records_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/patmatdb_records.fasta")
+    }
+
+    fn patmatdb_motifs_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/patmatdb_motifs.tsv")
+    }
+
+    fn wordmatch_query_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/wordmatch_query.fasta")
+    }
+
+    fn wordmatch_target_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/wordmatch_target.fasta")
+    }
+
+    fn wordfinder_targets_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/wordfinder_targets.fasta")
     }
 
     fn implemented_service() -> EmbossService {
@@ -10583,6 +11031,108 @@ mod tests {
                 assert_eq!(table.rows[0][4], "3");
                 assert_eq!(table.rows[1][3], "3");
                 assert_eq!(table.rows[1][4], "5");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_preg_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("preg").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![preg_fixture().display().to_string(), "MAM".to_owned()]);
+
+        let response = service.invoke(request).expect("preg should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "pregA");
+                assert_eq!(table.rows[0][1], "MAM");
+                assert_eq!(table.rows[0][2], "1");
+                assert_eq!(table.rows[0][3], "3");
+                assert_eq!(table.rows[1][2], "3");
+                assert_eq!(table.rows[1][3], "5");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_patmatdb_against_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("patmatdb").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            patmatdb_records_fixture().display().to_string(),
+            patmatdb_motifs_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("patmatdb should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 2);
+                assert_eq!(table.rows[0][0], "patmatA");
+                assert_eq!(table.rows[0][1], "motif_a");
+                assert_eq!(table.rows[1][1], "motif_b");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_wordmatch_against_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wordmatch").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            wordmatch_query_fixture().display().to_string(),
+            wordmatch_target_fixture().display().to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("wordmatch should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "wm_query");
+                assert_eq!(table.rows[0][1], "wm_target");
+                assert_eq!(table.rows[0][6], "4");
+                assert_eq!(table.rows[0][7], "ACGT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_wordfinder_against_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wordfinder").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            wordmatch_query_fixture().display().to_string(),
+            wordfinder_targets_fixture().display().to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("wordfinder should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "wm_query");
+                assert_eq!(table.rows[0][1], "wf_target_a");
+                assert_eq!(table.rows[0][6], "4");
+                assert_eq!(table.rows[0][7], "ACGT");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

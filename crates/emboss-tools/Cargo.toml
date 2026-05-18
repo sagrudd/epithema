@@ -13,6 +13,7 @@ emboss-core.workspace = true
 emboss-diagnostics.workspace = true
 emboss-io.workspace = true
 emboss-plot-contract.workspace = true
+regex.workspace = true
 
 [lints]
 workspace = true

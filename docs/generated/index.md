@@ -60,8 +60,10 @@ tools/newseq
 tools/notseq
 tools/nthseq
 tools/pasteseq
+tools/patmatdb
 tools/pepstats
 tools/pepwindow
+tools/preg
 tools/prettyseq
 tools/refseqget
 tools/revseq
@@ -80,4 +82,6 @@ tools/twofeat
 tools/union
 tools/water
 tools/wordcount
+tools/wordfinder
+tools/wordmatch
 ```

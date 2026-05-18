@@ -1,0 +1,53 @@
+{
+  "tool_name": "patmatdb",
+  "document_id": "patmatdb-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_hits_from_local_motif_database",
+      "title": "Report hits from a local motif database",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "patmatdb_records_fasta",
+        "patmatdb_motif_tsv"
+      ],
+      "expected_output_ids": [
+        "patmatdb_hit_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS patmatdb application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+          "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS patmatdb application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+      "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+    }
+  ]
+}

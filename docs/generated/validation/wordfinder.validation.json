@@ -1,0 +1,53 @@
+{
+  "tool_name": "wordfinder",
+  "document_id": "wordfinder-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_one_exact_shared_region_across_target_set",
+      "title": "Report one exact shared region across a target set",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "wordfinder_query_fasta",
+        "wordfinder_targets_fasta"
+      ],
+      "expected_output_ids": [
+        "wordfinder_hit_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS wordfinder application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordfinder.acd",
+          "invocation": "wordfinder -asequence wordmatch_query.fasta -bsequence wordfinder_targets.fasta -wordsize 4 -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS wordfinder application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordfinder.acd",
+      "invocation": "wordfinder -asequence wordmatch_query.fasta -bsequence wordfinder_targets.fasta -wordsize 4 -outfile stdout"
+    }
+  ]
+}

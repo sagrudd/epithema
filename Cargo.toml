@@ -37,6 +37,7 @@ emboss-r-bridge = { path = "crates/emboss-r-bridge", version = "1.0.0" }
 emboss-service = { path = "crates/emboss-service", version = "1.0.0" }
 emboss-testkit = { path = "crates/emboss-testkit", version = "1.0.0" }
 emboss-tools = { path = "crates/emboss-tools", version = "1.0.0" }
+regex = "1.12.2"
 
 [workspace.lints.rust]
 missing_docs = "warn"
