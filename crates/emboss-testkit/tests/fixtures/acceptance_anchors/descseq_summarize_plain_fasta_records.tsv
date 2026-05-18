@@ -1,0 +1,2 @@
+ordinal	identifier	display_name	description	length	molecule	alphabet	feature_count	source	organism	topology
+1	FEAT1	-	Example annotated sequence.	12	dna	DNA alphabet	2	Synthetic construct	Synthetic construct	-

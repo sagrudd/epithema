@@ -1,0 +1,4 @@
+scope	record	length	gc_count	gc_denominator	ambiguous_count	gc_percent
+record	nucA	9	4	8	1	50.00
+record	nucB	6	3	6	0	50.00
+aggregate	ALL	15	7	14	1	50.00

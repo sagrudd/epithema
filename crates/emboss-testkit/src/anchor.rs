@@ -163,6 +163,90 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "tranalign -asequence tranalign_protein_alignment.sto -bsequence checktrans_nucleotide.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "water",
+        autodoc_contract: "docs/autodoc/tools/water.json",
+        example_id: "basic_local_alignment",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/water_basic_local_alignment.sto",
+        legacy_source: "EMBOSS water application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/water.acd",
+        legacy_invocation:
+            "water -asequence water_query.fasta -bsequence water_target.fasta -gapopen 5 -gapextend 1",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "descseq",
+        autodoc_contract: "docs/autodoc/tools/descseq.json",
+        example_id: "summarize_plain_fasta_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/descseq_summarize_plain_fasta_records.tsv",
+        legacy_source: "EMBOSS descseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/descseq.acd",
+        legacy_invocation: "descseq -sequence annotated_feature.gbk -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "geecee",
+        autodoc_contract: "docs/autodoc/tools/geecee.json",
+        example_id: "per_record_and_aggregate_gc",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/geecee_per_record_and_aggregate_gc.tsv",
+        legacy_source: "EMBOSS geecee application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/geecee.acd",
+        legacy_invocation:
+            "geecee -sequence nucleotide_pattern_records.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "infoseq",
+        autodoc_contract: "docs/autodoc/tools/infoseq.json",
+        example_id: "report_basic_sequence_information",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/infoseq_report_basic_sequence_information.tsv",
+        legacy_source: "EMBOSS infoseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoseq.acd",
+        legacy_invocation: "infoseq -sequence three_records.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "cusp",
+        autodoc_contract: "docs/autodoc/tools/cusp.json",
+        example_id: "report_complete_codon_usage_table",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/cusp_report_complete_codon_usage_table.tsv",
+        legacy_source: "EMBOSS cusp application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cusp.acd",
+        legacy_invocation: "cusp -sequence codon_reference.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "fuzznuc",
+        autodoc_contract: "docs/autodoc/tools/fuzznuc.json",
+        example_id: "iupac_forward_search",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/fuzznuc_iupac_forward_search.tsv",
+        legacy_source: "EMBOSS fuzznuc application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/fuzznuc.acd",
+        legacy_invocation:
+            "fuzznuc -sequence nucleotide_pattern_records.fasta -pattern ACGN -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "fuzzpro",
+        autodoc_contract: "docs/autodoc/tools/fuzzpro.json",
+        example_id: "wildcard_forward_search",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/fuzzpro_wildcard_forward_search.tsv",
+        legacy_source: "EMBOSS fuzzpro application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/fuzzpro.acd",
+        legacy_invocation: "fuzzpro -sequence protein_records.fasta -pattern MX -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "fuzztran",
+        autodoc_contract: "docs/autodoc/tools/fuzztran.json",
+        example_id: "forward_frame_search",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/fuzztran_forward_frame_search.tsv",
+        legacy_source: "EMBOSS fuzztran application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/fuzztran.acd",
+        legacy_invocation:
+            "fuzztran -sequence checktrans_nucleotide.fasta -pattern MA -stdout yes",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -457,6 +541,61 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
                 .display()
                 .to_string(),
+        ],
+        "water" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/water_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/water_target.fasta")
+                .display()
+                .to_string(),
+        ],
+        "descseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+        ],
+        "geecee" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "infoseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "cusp" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_reference.fasta")
+                .display()
+                .to_string(),
+        ],
+        "fuzznuc" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+                .display()
+                .to_string(),
+            "ACGN".to_owned(),
+        ],
+        "fuzzpro" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/protein_records.fasta")
+                .display()
+                .to_string(),
+            "MX".to_owned(),
+        ],
+        "fuzztran" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+            "MA".to_owned(),
         ],
         _ => Vec::new(),
     }

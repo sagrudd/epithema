@@ -11,9 +11,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `47`
-- Methods with compared evidence: `13`
-- Methods with visible gaps: `47`
+- Methods with executable validation: `39`
+- Methods with compared evidence: `21`
+- Methods with visible gaps: `39`
 
 ## Evidence Level Definitions
 
@@ -39,7 +39,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `consambig` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `needle` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `needleall` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `water` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `water` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `newseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -50,7 +50,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `degapseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `descseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `descseq` | `sequence_edit` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -61,19 +61,19 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `cusp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `cusp` | `codon_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `codcmp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `codcopy` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `fuzznuc` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `fuzzpro` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `fuzztran` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `fuzznuc` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `fuzzpro` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `fuzztran` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `complex` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `geecee` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `infoseq` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `geecee` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `infoseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `pepstats` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordcount` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `backtranseq` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -101,7 +101,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `cons`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `water`: `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `newseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `seqcount`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
@@ -111,7 +110,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `trimseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `descseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `coderet`: `missing_compared_evidence`
@@ -120,18 +118,12 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `feattext`: `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `cusp`: `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `fuzznuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `fuzzpro`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `fuzztran`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `charge`: `missing_compared_evidence`, `validation_report_gap`
 - `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
 - `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `dan`: `missing_compared_evidence`
-- `geecee`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `infoseq`: `missing_compared_evidence`
 - `wordcount`: `missing_compared_evidence`
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

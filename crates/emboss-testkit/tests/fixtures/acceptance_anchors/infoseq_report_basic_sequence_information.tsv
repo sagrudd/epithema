@@ -1,0 +1,4 @@
+ordinal	identifier	display_name	length	molecule	alphabet	gc_percent	feature_count	description	organism
+1	alpha	-	4	dna	DNA alphabet	50.00	0	first example	-
+2	beta	-	4	dna	DNA alphabet	0.00	0	second example	-
+3	gamma	-	4	unknown	text alphabet	100.00	0	third example	-

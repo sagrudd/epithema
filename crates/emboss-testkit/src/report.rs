@@ -895,6 +895,6 @@ mod tests {
 
         let descseq = gap_map.get("descseq").expect("descseq should be present");
         assert!(descseq.executable_validation_present);
-        assert_eq!(descseq.evidence_level, CohortEvidenceLevel::ExecutableEvidence);
+        assert_eq!(descseq.evidence_level, CohortEvidenceLevel::ComparedEvidence);
     }
 }
