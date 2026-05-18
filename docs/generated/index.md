@@ -9,6 +9,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 :caption: Generated Tools
 
 cohort_validation
+governance_alignment
 tools/aligncopy
 tools/aligncopypair
 tools/backtranambig

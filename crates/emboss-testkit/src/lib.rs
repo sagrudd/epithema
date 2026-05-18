@@ -8,6 +8,7 @@
 pub mod anchor;
 pub mod cross_surface;
 pub mod evidence;
+pub mod governance;
 pub mod projection;
 pub mod report;
 
@@ -22,6 +23,13 @@ pub use cross_surface::{
 pub use evidence::{
     ComparisonStatus, EvidenceDeclarationStatus, EvidenceNote, EvidenceNoteSeverity,
     EvidenceSourceKind, ExecutionStatus, ToolValidationCase,
+};
+pub use governance::{
+    GovernanceAlignmentFamilyRecord, GovernanceAlignmentMethodRecord, GovernanceAlignmentReport,
+    GovernanceAlignmentSummary, GovernanceDecision, GovernanceMappingEntry,
+    derive_governance_alignment_report, parse_governance_mapping_reference,
+    render_governance_alignment_markdown, write_governance_alignment_markdown,
+    write_governance_alignment_report_json,
 };
 pub use projection::{derive_validation_report, write_validation_report_json};
 pub use report::{

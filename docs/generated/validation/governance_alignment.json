@@ -1,0 +1,1069 @@
+{
+  "schema_version": 1,
+  "report_id": "governance-registry-alignment",
+  "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
+  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "summary": {
+    "governed_tool_count": 265,
+    "retained_tool_count": 90,
+    "shipped_tool_count": 60,
+    "shipped_with_governance_mapping_count": 60,
+    "shipped_retain_count": 54,
+    "shipped_rework_count": 6,
+    "shipped_omit_count": 0,
+    "shipped_add_count": 0,
+    "retained_backlog_count": 36,
+    "shipped_curated_autodoc_count": 56,
+    "shipped_executable_or_better_count": 55,
+    "shipped_compared_count": 13,
+    "shipped_documented_only_count": 4
+  },
+  "shipped_methods": [
+    {
+      "tool_name": "aligncopy",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "copy a single alignment unchanged through the shared alignment IO path",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "aligncopypair",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "copy a single pairwise alignment unchanged and reject non-pairwise inputs",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "infoalign",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "report row counts, column counts, and per-row gap statistics for an alignment",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "extractalign",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "extract rows and an optional 1-based inclusive column range from an alignment",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "runinfo",
+      "shipped_family": "archive_tools",
+      "shipped_summary": "normalize ENA or SRA archive metadata for one accession-backed archive object",
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "runget",
+      "shipped_family": "archive_tools",
+      "shipped_summary": "discover a normalized public-run manifest through the governed archive acquisition seam",
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "matcher",
+      "shipped_family": "alignment_analysis",
+      "shipped_summary": "deterministic ungapped pairwise similarity summary",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "distmat",
+      "shipped_family": "alignment_analysis",
+      "shipped_summary": "pairwise p-distance matrix for equal-length sequence sets",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "cons",
+      "shipped_family": "alignment_analysis",
+      "shipped_summary": "simple majority consensus from an alignment",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "consambig",
+      "shipped_family": "alignment_analysis",
+      "shipped_summary": "ambiguity-aware consensus from an alignment",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "needle",
+      "shipped_family": "pairwise_alignment",
+      "shipped_summary": "perform deterministic global pairwise alignment between exactly one query and one target",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "needleall",
+      "shipped_family": "pairwise_alignment",
+      "shipped_summary": "perform deterministic many-vs-many global pairwise alignment and report comparison summaries",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "water",
+      "shipped_family": "pairwise_alignment",
+      "shipped_summary": "perform deterministic local pairwise alignment between exactly one query and one target",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "seqret",
+      "shipped_family": "retrieval_tools",
+      "shipped_summary": "normalize local sequence inputs or retrieve one accession-backed sequence",
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "refseqget",
+      "shipped_family": "retrieval_tools",
+      "shipped_summary": "retrieve one provider-backed reference sequence through the governed acquisition seam",
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "newseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "create a new sequence record from supplied residues",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "declared_evidence"
+    },
+    {
+      "tool_name": "seqcount",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "count sequence records in an input stream",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "notseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "return all sequence records except the excluded index",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "nthseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "select the 1-based Nth sequence record from an input set",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "skipseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "skip the first N sequence records and return the rest",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "degapseq",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "remove '-' and '.' gap characters from sequence records",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": false,
+      "evidence_level": "documented_only"
+    },
+    {
+      "tool_name": "revseq",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "reverse sequence content record by record",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "trimseq",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "trim explicit residue counts from the left and right ends of sequence records",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": false,
+      "evidence_level": "documented_only"
+    },
+    {
+      "tool_name": "descseq",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "report stable sequence-record descriptions and metadata",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "maskseq",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "mask explicit 1-based inclusive sequence intervals with a configurable symbol",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "maskfeat",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "mask selected simple feature spans while preserving annotations in the result payload",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "extractfeat",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "extract selected simple feature spans into rebased sequence records",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "featcopy",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "copy selected feature annotations between identifier-matched compatible records",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "coderet",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "extract selected simple coding features and optionally translate them",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "featmerge",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "merge selected feature annotations between identifier-matched annotated records",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "featreport",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "report selected features in a stable tabular summary",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "feattext",
+      "shipped_family": "feature_tools",
+      "shipped_summary": "render selected features as normalized feature-table text",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "cai",
+      "shipped_family": "codon_tools",
+      "shipped_summary": "report deterministic codon adaptation index values against a reference profile",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "chips",
+      "shipped_family": "codon_tools",
+      "shipped_summary": "report per-record and aggregate codon usage counts and frequencies",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "cusp",
+      "shipped_family": "codon_tools",
+      "shipped_summary": "create complete per-record and aggregate codon usage tables from coding sequences",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "codcmp",
+      "shipped_family": "codon_tools",
+      "shipped_summary": "compare codon usage between two coding-sequence or codon-profile sources",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "codcopy",
+      "shipped_family": "codon_tools",
+      "shipped_summary": "normalize coding-sequence or codon-profile input into a reusable codon profile",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "fuzznuc",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan nucleotide sequences for deterministic literal or IUPAC-ambiguous motifs",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "fuzzpro",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan protein sequences for deterministic literal motifs with X wildcard support",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "fuzztran",
+      "shipped_family": "pattern_tools",
+      "shipped_summary": "scan forward translated nucleotide frames for deterministic protein motifs",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "charge",
+      "shipped_family": "protein_plots",
+      "shipped_summary": "report a sliding-window protein charge profile and emit a line-plot contract",
+      "governance_family": "Modernize — Rework — Plotting and visualization tools",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "pepwindow",
+      "shipped_family": "protein_plots",
+      "shipped_summary": "report a sliding-window protein hydropathy profile and emit a line-plot contract",
+      "governance_family": "Modernize — Rework — Plotting and visualization tools",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "complex",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report whole-sequence and sliding-window nucleotide linguistic complexity",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "governance_decision": "retain",
+      "curated_autodoc_present": false,
+      "evidence_level": "documented_only"
+    },
+    {
+      "tool_name": "compseq",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report per-record and aggregate residue composition counts and frequencies",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "dan",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report conservative whole-sequence or sliding-window melting estimates",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "geecee",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report per-record and aggregate GC statistics for nucleotide sequences",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "infoseq",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report stable basic metadata and length summaries for sequence records",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "pepstats",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report basic protein composition, length, and molecular-weight statistics",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "wordcount",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "count overlapping normalized sequence words with stable per-record and aggregate reporting",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "backtranseq",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "back-translate protein sequences to deterministic representative DNA codons",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "backtranambig",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "back-translate protein sequences to ambiguous DNA codon representations",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "checktrans",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "strictly compare frame-1 DNA translation against expected protein sequences",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "transeq",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "translate nucleotide sequences in forward reading frames",
+      "governance_family": "Core Retain — ORF and translation-adjacent utilities",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "getorf",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "extract stop-bounded forward ORFs from nucleotide sequences",
+      "governance_family": "Core Retain — ORF and translation-adjacent utilities",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "prettyseq",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "render nucleotide sequences with a translated frame-oriented text view",
+      "governance_family": "Core Retain — ORF and translation-adjacent utilities",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "tranalign",
+      "shipped_family": "translation_tools",
+      "shipped_summary": "project aligned proteins onto matching coding-sequence codon alignments",
+      "governance_family": "Core Retain — ORF and translation-adjacent utilities",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "extractseq",
+      "shipped_family": "sequence_transform",
+      "shipped_summary": "extract a 1-based inclusive region from each input sequence record",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "cutseq",
+      "shipped_family": "sequence_transform",
+      "shipped_summary": "cut each input sequence record into left and right fragments at a position",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "union",
+      "shipped_family": "sequence_transform",
+      "shipped_summary": "concatenate multiple sequence inputs into one output stream",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "splitter",
+      "shipped_family": "sequence_transform",
+      "shipped_summary": "partition an input sequence stream into deterministic fixed-size chunks",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": false,
+      "evidence_level": "documented_only"
+    }
+  ],
+  "families": [
+    {
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "retained_total": 13,
+      "retained_shipped": 11,
+      "retained_backlog": 2,
+      "shipped_curated_autodoc": 11,
+      "shipped_executable_or_better": 11,
+      "shipped_compared": 1,
+      "recommendation": "prioritise retained backlog closure (2 remaining)",
+      "retained_backlog_tools": [
+        "diffseq",
+        "edialign"
+      ]
+    },
+    {
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "retained_total": 18,
+      "retained_shipped": 16,
+      "retained_backlog": 2,
+      "shipped_curated_autodoc": 15,
+      "shipped_executable_or_better": 14,
+      "shipped_compared": 3,
+      "recommendation": "prioritise retained backlog closure (2 remaining)",
+      "retained_backlog_tools": [
+        "nthseqset",
+        "splitsource"
+      ]
+    },
+    {
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "retained_total": 16,
+      "retained_shipped": 12,
+      "retained_backlog": 4,
+      "shipped_curated_autodoc": 12,
+      "shipped_executable_or_better": 12,
+      "shipped_compared": 3,
+      "recommendation": "prioritise retained backlog closure (4 remaining)",
+      "retained_backlog_tools": [
+        "aaindexextract",
+        "infobase",
+        "inforesidue",
+        "oddcomp"
+      ]
+    },
+    {
+      "governance_family": "Core Retain — ORF and translation-adjacent utilities",
+      "retained_total": 4,
+      "retained_shipped": 4,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 4,
+      "shipped_executable_or_better": 4,
+      "shipped_compared": 4,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "retained_total": 23,
+      "retained_shipped": 7,
+      "retained_backlog": 16,
+      "shipped_curated_autodoc": 5,
+      "shipped_executable_or_better": 5,
+      "shipped_compared": 1,
+      "recommendation": "prioritise retained backlog closure (16 remaining)",
+      "retained_backlog_tools": [
+        "biosed",
+        "listor",
+        "makenucseq",
+        "makeprotseq",
+        "maskambignuc",
+        "maskambigprot",
+        "megamerger",
+        "merger",
+        "msbar",
+        "pasteseq",
+        "shuffleseq",
+        "sizeseq",
+        "skipredundant",
+        "trimest",
+        "vectorstrip",
+        "twofeat"
+      ]
+    },
+    {
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "retained_total": 12,
+      "retained_shipped": 4,
+      "retained_backlog": 8,
+      "shipped_curated_autodoc": 3,
+      "shipped_executable_or_better": 3,
+      "shipped_compared": 0,
+      "recommendation": "prioritise retained backlog closure (8 remaining)",
+      "retained_backlog_tools": [
+        "dreg",
+        "einverted",
+        "palindrome",
+        "patmatdb",
+        "preg",
+        "seqmatchall",
+        "wordfinder",
+        "wordmatch"
+      ]
+    },
+    {
+      "governance_family": "Defer — Ontology command group",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Defer — Specialized metadata and semantic lookup utilities",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Exclude Permanently — ACD developer tooling",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Exclude Permanently — EMBOSS local database indexing administration",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Exclude Permanently — EMBOSS-era server-cache-registry plumbing",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Exclude Permanently — Wrapper-only compatibility commands",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Command discovery and help-navigation",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — External database preparation helpers",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Legacy prediction methods with enduring scientific value",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Plotting and visualization tools",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 2,
+      "shipped_executable_or_better": 2,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Primer and assay-oriented search",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "retained_total": 2,
+      "retained_shipped": 0,
+      "retained_backlog": 2,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "prioritise retained backlog closure (2 remaining)",
+      "retained_backlog_tools": [
+        "iep",
+        "pepdigest"
+      ]
+    },
+    {
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 4,
+      "shipped_executable_or_better": 4,
+      "shipped_compared": 1,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "retained_total": 2,
+      "retained_shipped": 0,
+      "retained_backlog": 2,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "prioritise retained backlog closure (2 remaining)",
+      "retained_backlog_tools": [
+        "recoder",
+        "silent"
+      ]
+    },
+    {
+      "governance_family": "Strategic Add — HMM and probabilistic homology workflows",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    },
+    {
+      "governance_family": "Strategic Add — Modern archive-scale raw data ingestion",
+      "retained_total": 0,
+      "retained_shipped": 0,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 0,
+      "shipped_executable_or_better": 0,
+      "shipped_compared": 0,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
+      "retained_backlog_tools": []
+    }
+  ],
+  "retained_backlog_tools": [
+    {
+      "tool_name": "nthseqset",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "decision": "retain",
+      "description": "Read and write (return) one set of sequences from many"
+    },
+    {
+      "tool_name": "splitsource",
+      "governance_family": "Core Retain — Basic sequence IO and conversion",
+      "decision": "retain",
+      "description": "Split sequence(s) into original source sequences"
+    },
+    {
+      "tool_name": "biosed",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Replace or delete sequence sections"
+    },
+    {
+      "tool_name": "listor",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Write a list file of the logical OR of two sets of sequences"
+    },
+    {
+      "tool_name": "makenucseq",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Create random nucleotide sequences"
+    },
+    {
+      "tool_name": "makeprotseq",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Create random protein sequences"
+    },
+    {
+      "tool_name": "maskambignuc",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Mask all ambiguity characters in nucleotide sequences with N"
+    },
+    {
+      "tool_name": "maskambigprot",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Mask all ambiguity characters in protein sequences with X"
+    },
+    {
+      "tool_name": "megamerger",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Merge two large overlapping DNA sequences"
+    },
+    {
+      "tool_name": "merger",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Merge two overlapping sequences"
+    },
+    {
+      "tool_name": "msbar",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Mutate a sequence"
+    },
+    {
+      "tool_name": "pasteseq",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Insert one sequence into another"
+    },
+    {
+      "tool_name": "shuffleseq",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Shuffle a set of sequences maintaining composition"
+    },
+    {
+      "tool_name": "sizeseq",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Sort sequences by size"
+    },
+    {
+      "tool_name": "skipredundant",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Remove redundant sequences from an input set"
+    },
+    {
+      "tool_name": "trimest",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Remove poly-A tails from nucleotide sequences"
+    },
+    {
+      "tool_name": "vectorstrip",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Remove vectors from the ends of nucleotide sequence(s)"
+    },
+    {
+      "tool_name": "twofeat",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "decision": "retain",
+      "description": "Find neighbouring pairs of features in sequence(s)"
+    },
+    {
+      "tool_name": "diffseq",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "decision": "retain",
+      "description": "Compare and report features of two similar sequences"
+    },
+    {
+      "tool_name": "edialign",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "decision": "retain",
+      "description": "Local multiple alignment of sequences"
+    },
+    {
+      "tool_name": "aaindexextract",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "decision": "retain",
+      "description": "Extract amino acid property data from AAINDEX"
+    },
+    {
+      "tool_name": "infobase",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "decision": "retain",
+      "description": "Return information on a given nucleotide base"
+    },
+    {
+      "tool_name": "inforesidue",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "decision": "retain",
+      "description": "Return information on a given amino acid residue"
+    },
+    {
+      "tool_name": "oddcomp",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "decision": "retain",
+      "description": "Identify proteins with specified sequence word composition"
+    },
+    {
+      "tool_name": "dreg",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Regular expression search of nucleotide sequence(s)"
+    },
+    {
+      "tool_name": "einverted",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Find inverted repeats in nucleotide sequences"
+    },
+    {
+      "tool_name": "palindrome",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Find inverted repeats in nucleotide sequence(s)"
+    },
+    {
+      "tool_name": "patmatdb",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Search protein sequences with a sequence motif"
+    },
+    {
+      "tool_name": "preg",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Regular expression search of protein sequence(s)"
+    },
+    {
+      "tool_name": "seqmatchall",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "All-against-all word comparison of a sequence set"
+    },
+    {
+      "tool_name": "wordfinder",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Match large sequences against one or more other sequences"
+    },
+    {
+      "tool_name": "wordmatch",
+      "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "decision": "retain",
+      "description": "Find regions of identity (exact matches) of two sequences"
+    },
+    {
+      "tool_name": "recoder",
+      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "decision": "retain",
+      "description": "Find restriction sites to remove (mutate) with no translation change"
+    },
+    {
+      "tool_name": "silent",
+      "governance_family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "decision": "retain",
+      "description": "Find restriction sites to insert (mutate) with no translation change"
+    },
+    {
+      "tool_name": "iep",
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "decision": "retain",
+      "description": "Calculate the isoelectric point of proteins"
+    },
+    {
+      "tool_name": "pepdigest",
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "decision": "retain",
+      "description": "Report on protein proteolytic enzyme or reagent cleavage sites"
+    }
+  ],
+  "shipped_without_governance_mapping": []
+}

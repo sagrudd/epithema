@@ -17,7 +17,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report release-version-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -29,6 +29,7 @@ help:
 		"  make autodoc-refresh Refresh generated tool Markdown pages from the committed autodoc inputs" \
 		"  make anchor-validation Refresh executed-and-compared validation reports for the acceptance anchors" \
 		"  make cohort-report   Refresh the shipped cohort validation report JSON and Markdown outputs" \
+		"  make governance-report Refresh the governance/backlog versus shipped-registry alignment report" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
 		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
@@ -84,6 +85,7 @@ release-generated-check:
 	done
 	$(MAKE) generated-index-normalize PYTHON=$(PYTHON)
 	$(MAKE) cohort-report
+	$(MAKE) governance-report
 	git diff --exit-code -- docs/generated
 
 release-build:
@@ -138,6 +140,11 @@ cohort-report:
 	$(RUSTCARGO) run -p emboss-testkit --example write_shipped_cohort_validation_report -- \
 		--json docs/generated/validation/shipped_cohort.validation.json \
 		--markdown docs/generated/cohort_validation.md
+
+governance-report:
+	$(RUSTCARGO) run -p emboss-testkit --example write_governance_alignment_report -- \
+		--json docs/generated/validation/governance_alignment.json \
+		--markdown docs/generated/governance_alignment.md
 
 anchor-validation:
 	$(RUSTCARGO) run -p emboss-testkit --example write_acceptance_anchor_reports -- \

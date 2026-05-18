@@ -17,6 +17,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 :caption: Generated Tools
 
 cohort_validation
+governance_alignment
 """
 
 FOOTER = "```\n"

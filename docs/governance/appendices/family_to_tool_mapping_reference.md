@@ -27,7 +27,7 @@ This appendix ties the named tool families from the governance policy back to in
 | Modernize — Rework — Restriction-enzyme design and analysis | Modernize | 7 | Retain: 2, Rework: 5 |
 | Modernize — Rework — Primer and assay-oriented search | Modernize | 5 | Rework: 3, Omit: 2 |
 | Modernize — Rework — Plotting and visualization tools | Modernize | 28 | Rework: 28 |
-| Modernize — Rework — Remote retrieval and archive acquisition | Modernize | 8 | Rework: 8 |
+| Modernize — Rework — Remote retrieval and archive acquisition | Modernize | 10 | Rework: 10 |
 | Modernize — Rework — External database preparation helpers | Modernize | 5 | Rework: 5 |
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | Modernize | 21 | Rework: 21 |
 | Modernize — Rework — Protein property and structural-summary utilities | Modernize | 6 | Retain: 2, Rework: 1, Omit: 3 |
@@ -272,14 +272,16 @@ Rendering moves to `emboss-r`; Rust emits plot-ready data only.
 
 Accession-driven retrieval is retained as a user need, but the old EMBOSS server/database model is replaced with provider-aware integrations.
 
-**Mapped historical/core tools:** 8
+**Mapped historical/core tools:** 10
 
-**Decision split:** Rework 8
+**Decision split:** Rework 10
 
 - `assemblyget` — **Rework** — Get assembly of sequence reads
 - `entret` — **Rework** — Retrieve sequence entries from flatfile databases and files
 - `infoassembly` — **Rework** — Display information about assemblies
 - `refseqget` — **Rework** — Get reference sequence
+- `runget` — **Rework** — Download archive-run-associated data through a modern provider seam
+- `runinfo` — **Rework** — Report archive-run-associated metadata through a modern provider seam
 - `seqret` — **Rework** — Read and write (return) sequences
 - `seqretsetall` — **Rework** — Read and write (return) many sets of sequences
 - `seqretsplit` — **Rework** — Read sequences and write them to individual files

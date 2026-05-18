@@ -73,6 +73,27 @@ The cohort report uses the actual shipped tool registry as its source of truth
 and records documentation completeness, validation-stub presence, evidence
 maturity, and visible gaps per tool.
 
+A governance-alignment report can also be derived to reconcile the maintained
+family-to-tool appendix against the shipped Rust registry plus current curated
+autodoc and evidence state:
+
+```bash
+make governance-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/governance_alignment.json`
+- `docs/generated/governance_alignment.md`
+
+The governance-alignment report uses the governance appendix as the backlog
+source of truth and makes three things explicit:
+
+- which shipped methods are governed `retain` versus `rework`
+- which retained governance methods remain unshipped backlog
+- which shipped methods have curated autodoc coverage and executable or compared
+  evidence
+
 At this stage generated pages include validated narrative content, declared
 artefacts, declared example stubs, provenance, and transformation notes when
 available. Tool execution, acquisition, and acceptance reporting remain
