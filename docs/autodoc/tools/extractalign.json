@@ -44,7 +44,7 @@
   "artifacts": [],
   "examples": [],
   "provenance": {
-    "source_mode": "curated",
+    "source_mode": "registry_stub",
     "curated_by": "emboss-rs autodoc stub generator",
     "source_references": []
   },

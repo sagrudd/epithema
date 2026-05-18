@@ -35,7 +35,7 @@ pub fn build_stub_document(descriptor: ToolDescriptor) -> AutodocDocument {
             legacy_names: vec![descriptor.name.to_owned()],
         },
         AutodocProvenance {
-            source_mode: AutodocSourceMode::Curated,
+            source_mode: AutodocSourceMode::RegistryStub,
             curated_by: Some("emboss-rs autodoc stub generator".to_owned()),
             source_references: Vec::new(),
         },
@@ -245,6 +245,7 @@ fn capitalized_summary(summary: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::{build_stub_catalog, build_stub_document};
+    use crate::AutodocSourceMode;
     use emboss_tools::governed_tool_descriptors;
 
     #[test]
@@ -259,6 +260,7 @@ mod tests {
         assert_eq!(document.tool.name, "aligncopy");
         assert_eq!(document.tool.family.as_deref(), Some("alignment_tools"));
         assert!(document.tool.summary.is_some());
+        assert_eq!(document.provenance.source_mode, AutodocSourceMode::RegistryStub);
     }
 
     #[test]

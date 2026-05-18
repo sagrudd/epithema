@@ -1,8 +1,8 @@
 {
   "tool_name": "cons",
   "document_id": "cons-stub-v1",
-  "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "source_mode": "registry_stub",
+  "evidence_source": "registry_stub_autodoc",
   "summary": {
     "total_case_count": 0,
     "declared_case_count": 0,

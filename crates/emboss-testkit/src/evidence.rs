@@ -7,6 +7,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EvidenceSourceKind {
+    /// Registry-generated autodoc stub content.
+    #[serde(alias = "registry_stub")]
+    RegistryStubAutodoc,
     /// Human-curated autodoc content.
     #[serde(alias = "curated")]
     CuratedAutodoc,

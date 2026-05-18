@@ -320,12 +320,27 @@ pub struct AutodocProvenance {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AutodocSourceMode {
+    /// Deterministic registry-generated baseline stub.
+    RegistryStub,
     /// Entirely hand-curated contract.
     Curated,
     /// Entirely derived from legacy material.
     LegacyDerived,
     /// Mixed curated and legacy-derived inputs.
     Mixed,
+}
+
+impl AutodocSourceMode {
+    /// Stable machine-readable label used across summaries and generated docs.
+    #[must_use]
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::RegistryStub => "registry_stub",
+            Self::Curated => "curated",
+            Self::LegacyDerived => "legacy_derived",
+            Self::Mixed => "mixed",
+        }
+    }
 }
 
 /// Optional validation expectations for future autodoc execution.

@@ -48,7 +48,7 @@ impl AutodocProcessingSummary {
             section_count: document.sections.len(),
             artifact_count: document.artifacts.len(),
             example_count: document.examples.len(),
-            source_mode: format!("{:?}", document.provenance.source_mode).to_ascii_lowercase(),
+            source_mode: document.provenance.source_mode.as_str().replace('_', "-"),
             acquisition_record_count: 0,
             valid: true,
             diagnostics: Vec::new(),

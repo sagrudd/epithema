@@ -185,6 +185,7 @@ pub fn write_validation_report_json(
 
 fn source_kind(source_mode: AutodocSourceMode) -> EvidenceSourceKind {
     match source_mode {
+        AutodocSourceMode::RegistryStub => EvidenceSourceKind::RegistryStubAutodoc,
         AutodocSourceMode::Curated => EvidenceSourceKind::CuratedAutodoc,
         AutodocSourceMode::LegacyDerived => EvidenceSourceKind::LegacyHarvestedAutodoc,
         AutodocSourceMode::Mixed => EvidenceSourceKind::MixedAutodoc,
@@ -196,6 +197,7 @@ fn declaration_status(
     legacy_reference: Option<&LegacyReference>,
 ) -> EvidenceDeclarationStatus {
     match source_mode {
+        AutodocSourceMode::RegistryStub => EvidenceDeclarationStatus::Declared,
         AutodocSourceMode::LegacyDerived => EvidenceDeclarationStatus::Harvested,
         AutodocSourceMode::Mixed if legacy_reference.is_some() => {
             EvidenceDeclarationStatus::Harvested
@@ -251,6 +253,27 @@ mod tests {
                 .iter()
                 .all(|case| case.comparison_status == crate::ComparisonStatus::Pending)
         );
+    }
+
+    #[test]
+    fn registry_stub_document_projects_as_declared_stub_evidence() {
+        let document = emboss_docgen::build_stub_document(
+            emboss_tools::governed_tool_descriptors()
+                .iter()
+                .copied()
+                .find(|descriptor| descriptor.name == "aligncopy")
+                .expect("aligncopy descriptor should exist"),
+        );
+
+        let report = derive_validation_report(&document).expect("report should derive");
+        assert_eq!(report.source_mode, emboss_docgen::AutodocSourceMode::RegistryStub);
+        assert_eq!(
+            report.evidence_source,
+            crate::EvidenceSourceKind::RegistryStubAutodoc
+        );
+        assert_eq!(report.summary.total_case_count, 0);
+        assert_eq!(report.summary.declared_case_count, 0);
+        assert_eq!(report.summary.harvested_case_count, 0);
     }
 
     #[test]
