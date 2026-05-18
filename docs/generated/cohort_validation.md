@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `78`
-- Documentation-complete methods: `78`
-- Methods with validation stubs: `78`
+- Methods in cohort: `82`
+- Documentation-complete methods: `82`
+- Methods with validation stubs: `82`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `57`
+- Methods with executable validation: `61`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `57`
+- Methods with visible gaps: `61`
 
 ## Evidence Level Definitions
 
@@ -82,11 +82,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `wordfinder` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
+| `aaindexextract` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `complex` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `geecee` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `infobase` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `infoseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `inforesidue` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `oddcomp` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `pepstats` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordcount` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `backtranseq` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -153,8 +157,12 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `wordfinder`: `missing_compared_evidence`
 - `charge`: `missing_compared_evidence`, `validation_report_gap`
 - `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
+- `aaindexextract`: `missing_compared_evidence`
 - `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `dan`: `missing_compared_evidence`
+- `infobase`: `missing_compared_evidence`
+- `inforesidue`: `missing_compared_evidence`
+- `oddcomp`: `missing_compared_evidence`
 - `wordcount`: `missing_compared_evidence`
 - `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "infobase-v1",
+  "tool": {
+    "name": "infobase",
+    "family": "sequence_stats",
+    "summary": "Report deterministic metadata for one nucleotide base or ambiguity symbol",
+    "legacy_names": [
+      "infobase"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`infobase` reports one deterministic metadata row for a single nucleotide symbol. The EMBOSS-RS v1 implementation supports canonical DNA/RNA bases plus the standard IUPAC ambiguity symbols and reports a governed classification rather than exposing multiple historical output layouts."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one nucleotide symbol. The symbol may be a canonical DNA or RNA base such as `A`, `C`, `G`, `T`, or `U`, or one of the standard IUPAC ambiguity symbols such as `R`, `Y`, `N`, or `V`."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable one-row table with columns `symbol`, `name`, `class`, `supported_molecules`, `canonical_expansion`, `dna_complement`, and `rna_complement`."
+    },
+    {
+      "id": "symbol_model",
+      "kind": "notes",
+      "title": "Symbol Model",
+      "content": "Canonical expansion is reported as the set of underlying canonical A/C/G/T/U bases covered by the symbol. Complement columns are reported separately for DNA and RNA interpretation. Unsupported symbols fail clearly instead of being approximated."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs infobase`. Validation currently covers ambiguity-symbol lookup, stable one-row table emission, and rejection of unsupported symbols."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release is a symbol-information lookup only. It does not model modified bases, chemical formulae, or broader residue ontologies."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "ambiguity_case",
+      "label": "Infobase ambiguity lookup case",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/infobase_lookup_ambiguity_symbol_case.md"
+      },
+      "description": "Repository-managed case note describing the ambiguity-symbol lookup example."
+    }
+  ],
+  "examples": [
+    {
+      "id": "lookup_any_base_symbol",
+      "title": "Look up the `N` ambiguity symbol",
+      "description": "Reports the stable one-row metadata table for the `N` any-base symbol.",
+      "artifact_ids": [
+        "ambiguity_case"
+      ],
+      "parameters": [
+        {
+          "name": "base",
+          "value": "N"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "infobase_table",
+          "label": "Nucleotide-symbol metadata row",
+          "description": "A stable one-row table including canonical expansion plus DNA and RNA complements."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS infobase application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infobase.acd",
+        "invocation": "infobase -base N"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS infobase application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infobase.acd",
+        "invocation": "infobase -base N"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "lookup_any_base_symbol"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

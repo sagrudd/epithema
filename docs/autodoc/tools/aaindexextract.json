@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "aaindexextract-v1",
+  "tool": {
+    "name": "aaindexextract",
+    "family": "sequence_stats",
+    "summary": "Report one governed built-in amino-acid property table",
+    "legacy_names": [
+      "aaindexextract"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`aaindexextract` exposes a governed built-in subset of amino-acid property indices. The EMBOSS-RS v1 implementation is intentionally narrower than historical EMBOSS and does not claim full AAINDEX database coverage. It emits one deterministic residue table for a requested built-in index."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one required built-in index name and no sequence input. Supported index names are `hydropathy_kyte_doolittle`, `average_mass`, `charge_class`, and `polarity_class`. Short aliases `hydropathy`, `mass`, `charge`, and `polarity` are also accepted."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `index`, `residue`, `three_letter`, `name`, `value`, `units`, and `notes`. Rows preserve a fixed canonical amino-acid order from `A` through `V`."
+    },
+    {
+      "id": "subset_model",
+      "kind": "notes",
+      "title": "Subset Model",
+      "content": "Hydropathy scores use the same Kyte-Doolittle table used by `pepwindow`. Average masses use the same residue-mass table used by `pepstats`. `charge_class` and `polarity_class` are reported as coarse categorical classes rather than as historical AAINDEX numeric scales."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs aaindexextract`. Validation currently covers supported built-in index parsing, stable residue-table emission, and service-level reporting through the shared statistics path."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not ingest external AAINDEX files or expose the broader historical index catalogue. It is a governed built-in subset only."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "hydropathy_case",
+      "label": "AAindexextract hydropathy case note",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/aaindexextract_hydropathy_subset_case.md"
+      },
+      "description": "Repository-managed case note describing the governed built-in hydropathy subset example."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_hydropathy_subset",
+      "title": "Report the built-in hydropathy subset",
+      "description": "Emits the stable amino-acid property table for the governed hydropathy subset.",
+      "artifact_ids": [
+        "hydropathy_case"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "value": "hydropathy"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "aaindexextract_table",
+          "label": "Built-in amino-acid property table",
+          "description": "A stable residue table for the requested built-in index."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS aaindexextract application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/aaindexextract.acd",
+        "invocation": "aaindexextract -index hydropathy"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS aaindexextract application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/aaindexextract.acd",
+        "invocation": "aaindexextract -index hydropathy"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_hydropathy_subset"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

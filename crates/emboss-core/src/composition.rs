@@ -9,6 +9,8 @@ use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use crate::residue_properties::protein_residue_property;
+
 /// Errors produced by composition/statistics helpers.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CompositionError {
@@ -178,83 +180,12 @@ pub fn protein_molecular_weight(sequence: &str) -> Result<f64, CompositionError>
     for residue in sequence.chars().map(|residue| residue.to_ascii_uppercase()) {
         match residue {
             '-' | '*' => {}
-            'A' => {
-                mass += 71.078_8;
+            other => {
+                let property = protein_residue_property(other)
+                    .ok_or(CompositionError::UnsupportedProteinResidue(other))?;
+                mass += property.average_mass;
                 residue_count += 1;
             }
-            'R' => {
-                mass += 156.187_5;
-                residue_count += 1;
-            }
-            'N' => {
-                mass += 114.103_8;
-                residue_count += 1;
-            }
-            'D' => {
-                mass += 115.088_6;
-                residue_count += 1;
-            }
-            'C' => {
-                mass += 103.138_8;
-                residue_count += 1;
-            }
-            'E' => {
-                mass += 129.115_5;
-                residue_count += 1;
-            }
-            'Q' => {
-                mass += 128.130_7;
-                residue_count += 1;
-            }
-            'G' => {
-                mass += 57.051_9;
-                residue_count += 1;
-            }
-            'H' => {
-                mass += 137.141_1;
-                residue_count += 1;
-            }
-            'I' | 'L' => {
-                mass += 113.159_4;
-                residue_count += 1;
-            }
-            'K' => {
-                mass += 128.174_1;
-                residue_count += 1;
-            }
-            'M' => {
-                mass += 131.192_6;
-                residue_count += 1;
-            }
-            'F' => {
-                mass += 147.176_6;
-                residue_count += 1;
-            }
-            'P' => {
-                mass += 97.116_7;
-                residue_count += 1;
-            }
-            'S' => {
-                mass += 87.078_2;
-                residue_count += 1;
-            }
-            'T' => {
-                mass += 101.105_1;
-                residue_count += 1;
-            }
-            'W' => {
-                mass += 186.213_2;
-                residue_count += 1;
-            }
-            'Y' => {
-                mass += 163.176_0;
-                residue_count += 1;
-            }
-            'V' => {
-                mass += 99.132_6;
-                residue_count += 1;
-            }
-            other => return Err(CompositionError::UnsupportedProteinResidue(other)),
         }
     }
 

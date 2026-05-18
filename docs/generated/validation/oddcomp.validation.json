@@ -1,0 +1,52 @@
+{
+  "tool_name": "oddcomp",
+  "document_id": "oddcomp-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "count_exact_protein_words",
+      "title": "Count exact protein query words",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "oddcomp_protein_fixture"
+      ],
+      "expected_output_ids": [
+        "oddcomp_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS oddcomp application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/oddcomp.acd",
+          "invocation": "oddcomp -sequence oddcomp_records.fasta -word MAM -word QQQ -stdout yes"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS oddcomp application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/oddcomp.acd",
+      "invocation": "oddcomp -sequence oddcomp_records.fasta -word MAM -word QQQ -stdout yes"
+    }
+  ]
+}

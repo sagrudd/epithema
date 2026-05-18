@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "oddcomp-v1",
+  "tool": {
+    "name": "oddcomp",
+    "family": "sequence_stats",
+    "summary": "Report deterministic exact protein word-composition counts for query words",
+    "legacy_names": [
+      "oddcomp"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`oddcomp` identifies proteins by exact query-word composition. The EMBOSS-RS v1 implementation keeps the model deliberately simple and typed: one protein input, one or more exact query words, overlapping literal counting, and one stable table row per record per query word."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local protein input path plus one or more `--word` arguments. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable table report with columns `record`, `query_word`, `word_length`, `count`, `frequency`, `contains`, and `counted_windows`. Rows preserve source record order and query-word order."
+    },
+    {
+      "id": "counting_model",
+      "kind": "notes",
+      "title": "Counting Model",
+      "content": "Query words are normalized case-insensitively and validated as literal protein words. Counts are computed from overlapping exact matches within each record. Frequency is the count divided by the number of possible windows for that word length in the record."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs oddcomp`. Validation currently covers exact overlapping protein-word counting, stable per-record reporting, and rejection of nucleotide inputs and invalid query words."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not implement broader statistical enrichment models, mismatch-tolerant motifs, or residue-class composition heuristics. It is an exact literal word-count surface only."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "oddcomp_protein_fixture",
+      "label": "Oddcomp protein fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/oddcomp_records.fasta"
+      },
+      "description": "Repository-managed protein fixture used to validate exact word-composition counting."
+    }
+  ],
+  "examples": [
+    {
+      "id": "count_exact_protein_words",
+      "title": "Count exact protein query words",
+      "description": "Counts overlapping exact `MAM` and `QQQ` words across a committed protein fixture and emits one stable row per record per query word.",
+      "artifact_ids": [
+        "oddcomp_protein_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "--word",
+          "value": "MAM"
+        },
+        {
+          "name": "--word",
+          "value": "QQQ"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "oddcomp_table",
+          "label": "Protein word-composition table",
+          "description": "A stable table containing per-record counts and frequencies for each requested query word."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS oddcomp application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/oddcomp.acd",
+        "invocation": "oddcomp -sequence oddcomp_records.fasta -word MAM -word QQQ -stdout yes"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS oddcomp application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/oddcomp.acd",
+        "invocation": "oddcomp -sequence oddcomp_records.fasta -word MAM -word QQQ -stdout yes"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "count_exact_protein_words"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

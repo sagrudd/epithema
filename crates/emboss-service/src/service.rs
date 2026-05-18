@@ -67,10 +67,13 @@ use emboss_tools::sequence_edit::{
     revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
 };
 use emboss_tools::sequence_stats::{
-    ComplexParams, CompseqParams, DanParams, GeeceeParams, InfoseqParams, PepstatsParams,
-    WordcountParams, complex_help, compseq_help, dan_help, geecee_help, infoseq_help,
-    pepstats_help, run_complex, run_compseq, run_dan, run_geecee, run_infoseq, run_pepstats,
-    run_wordcount, word_frequency, wordcount_help,
+    AaindexextractParams, ComplexParams, CompseqParams, DanParams, GeeceeParams, InfobaseParams,
+    InfoseqParams, InforesidueParams, OddcompParams, PepstatsParams, WordcountParams,
+    aaindexextract_help, complex_help, compseq_help, dan_help, geecee_help, infobase_help,
+    infoseq_help, inforesidue_help, oddcomp_help, parse_aaindexextract_index,
+    pepstats_help, run_aaindexextract, run_complex, run_compseq, run_dan, run_geecee,
+    run_infobase, run_infoseq, run_inforesidue, run_oddcomp, run_pepstats, run_wordcount,
+    word_frequency, wordcount_help,
 };
 use emboss_tools::sequence_stream::{
     NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput, SkipseqParams,
@@ -309,10 +312,14 @@ impl EmbossService {
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
+            "aaindexextract" => self.invoke_aaindexextract(request, descriptor),
             "complex" => self.invoke_complex(request, descriptor),
             "compseq" => self.invoke_compseq(request, descriptor),
             "dan" => self.invoke_dan(request, descriptor),
             "geecee" => self.invoke_geecee(request, descriptor),
+            "infobase" => self.invoke_infobase(request, descriptor),
+            "inforesidue" => self.invoke_inforesidue(request, descriptor),
+            "oddcomp" => self.invoke_oddcomp(request, descriptor),
             "wordcount" => self.invoke_wordcount(request, descriptor),
             "pepstats" => self.invoke_pepstats(request, descriptor),
             "backtranseq" => self.invoke_backtranseq(request, descriptor),
@@ -2229,6 +2236,76 @@ impl EmbossService {
                 .with_line("Scope: one stable row per input record")
                 .with_line("GC policy: reported only for nucleotide-like records")
                 .with_line(format!("Records: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_aaindexextract(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, aaindexextract_help()));
+        }
+
+        let [index]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("aaindexextract", aaindexextract_help()))?;
+        let outcome = run_aaindexextract(AaindexextractParams {
+            index: parse_aaindexextract_index(&index)?,
+        })?;
+
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.index.clone(),
+                    row.residue.to_string(),
+                    row.three_letter.clone(),
+                    row.name.clone(),
+                    row.value.clone(),
+                    row.units.clone(),
+                    row.notes.clone(),
+                ]
+            })
+            .collect::<Vec<_>>();
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} amino-acid property rows", outcome.rows.len()),
+            Vec::new(),
+            Vec::new(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "index".to_owned(),
+                    "residue".to_owned(),
+                    "three_letter".to_owned(),
+                    "name".to_owned(),
+                    "value".to_owned(),
+                    "units".to_owned(),
+                    "notes".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Amino-acid property index reported")
+                .with_line(format!("Index: {}", outcome.index.name()))
+                .with_line("Coverage: governed built-in subset, not full historical AAINDEX")
+                .with_line(format!("Rows: {}", outcome.rows.len())),
             report.clone(),
         );
 
@@ -4366,6 +4443,67 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_infobase(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, infobase_help()));
+        }
+
+        let [symbol]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("infobase", infobase_help()))?;
+        let symbol = parse_single_char_argument("infobase", &symbol, "base")?;
+        let outcome = run_infobase(InfobaseParams { symbol })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!("reported nucleotide metadata for '{}'", outcome.info.symbol),
+            Vec::new(),
+            Vec::new(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "symbol".to_owned(),
+                    "name".to_owned(),
+                    "class".to_owned(),
+                    "supported_molecules".to_owned(),
+                    "canonical_expansion".to_owned(),
+                    "dna_complement".to_owned(),
+                    "rna_complement".to_owned(),
+                ],
+                vec![vec![
+                    outcome.info.symbol.to_string(),
+                    outcome.info.name.to_owned(),
+                    outcome.info.base_class.to_owned(),
+                    outcome.info.supported_molecules.to_owned(),
+                    outcome.info.canonical_expansion.to_owned(),
+                    outcome.info.dna_complement.to_owned(),
+                    outcome.info.rna_complement.to_owned(),
+                ]],
+            )),
+            ResultSummary::new("Nucleotide base metadata reported")
+                .with_line(format!("Query: {}", outcome.info.symbol))
+                .with_line(format!("Class: {}", outcome.info.base_class))
+                .with_line(format!("Canonical expansion: {}", outcome.info.canonical_expansion)),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_chips(
         &self,
         request: InvocationRequest,
@@ -5048,6 +5186,73 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_inforesidue(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, inforesidue_help()));
+        }
+
+        let [residue]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("inforesidue", inforesidue_help()))?;
+        let residue = parse_single_char_argument("inforesidue", &residue, "residue")?;
+        let outcome = run_inforesidue(InforesidueParams { residue })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported amino-acid metadata for '{}'",
+                outcome.property.residue
+            ),
+            Vec::new(),
+            Vec::new(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "residue".to_owned(),
+                    "three_letter".to_owned(),
+                    "name".to_owned(),
+                    "charge_class".to_owned(),
+                    "polarity_class".to_owned(),
+                    "average_mass".to_owned(),
+                    "hydropathy".to_owned(),
+                ],
+                vec![vec![
+                    outcome.property.residue.to_string(),
+                    outcome.property.three_letter.to_owned(),
+                    outcome.property.name.to_owned(),
+                    outcome.property.charge_class.to_owned(),
+                    outcome.property.polarity_class.to_owned(),
+                    format!("{:.4}", outcome.property.average_mass),
+                    format!("{:.3}", outcome.property.hydropathy),
+                ]],
+            )),
+            ResultSummary::new("Amino-acid residue metadata reported")
+                .with_line(format!("Query: {}", outcome.property.residue))
+                .with_line(format!("Charge class: {}", outcome.property.charge_class))
+                .with_line(format!(
+                    "Hydropathy (Kyte-Doolittle): {:.3}",
+                    outcome.property.hydropathy
+                )),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_pepstats(
         &self,
         request: InvocationRequest,
@@ -5236,6 +5441,81 @@ impl EmbossService {
                 .with_line(format!("Word size: {}", outcome.word_size))
                 .with_line(format!("Minimum reported count: {}", outcome.min_count))
                 .with_line(format!("Records: {}", outcome.records.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_oddcomp(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, oddcomp_help()));
+        }
+
+        let params = parse_oddcomp_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_oddcomp(OddcompParams {
+            input,
+            query_words: params.query_words,
+        })?;
+
+        let mut rows = Vec::new();
+        for row in &outcome.rows {
+            rows.push(vec![
+                row.record_id.clone(),
+                row.query_word.clone(),
+                row.word_length.to_string(),
+                row.count.to_string(),
+                if row.counted_windows == 0 {
+                    "0.000000".to_owned()
+                } else {
+                    format!("{:.6}", row.count as f64 / row.counted_windows as f64)
+                },
+                row.contains.to_string(),
+                row.counted_windows.to_string(),
+            ]);
+        }
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported exact protein word composition for {} records",
+                outcome.rows.iter().map(|row| &row.record_id).collect::<std::collections::BTreeSet<_>>().len()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "query_word".to_owned(),
+                    "word_length".to_owned(),
+                    "count".to_owned(),
+                    "frequency".to_owned(),
+                    "contains".to_owned(),
+                    "counted_windows".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Protein word composition reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Query words: {}", outcome.query_words.join(", ")))
+                .with_line("Counting model: overlapping exact literal protein words")
+                .with_line(format!("Rows: {}", outcome.rows.len())),
             report.clone(),
         );
 
@@ -6416,6 +6696,33 @@ fn parse_infoseq_params(arguments: &[String]) -> Result<InfoseqParams, ServiceEr
     Ok(InfoseqParams {
         input: SequenceInput::new(arguments[0].clone()),
     })
+}
+
+fn parse_single_char_argument(
+    tool: &str,
+    value: &str,
+    label: &str,
+) -> Result<char, ServiceError> {
+    let mut chars = value.chars();
+    let character = chars.next().ok_or_else(|| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} requires one {label} character"),
+        )
+        .with_code(format!("service.tool.{tool}.{label}_empty"))
+        .with_detail("expected a single non-empty character")
+    })?;
+
+    if chars.next().is_some() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} requires exactly one {label} character"),
+        )
+        .with_code(format!("service.tool.{tool}.{label}_length"))
+        .with_detail(value.to_owned()));
+    }
+
+    Ok(character)
 }
 
 fn parse_molecule(value: &str) -> Result<MoleculeKind, ServiceError> {
@@ -7775,6 +8082,47 @@ fn parse_wordcount_params(arguments: &[String]) -> Result<WordcountParams, Servi
     })
 }
 
+fn parse_oddcomp_params(arguments: &[String]) -> Result<OddcompParams, ServiceError> {
+    if arguments.len() < 3 {
+        return Err(tool_usage_error("oddcomp", oddcomp_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut query_words = Vec::new();
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if argument == "--word" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --word")
+                    .with_code("service.tool.oddcomp.word_missing")
+            })?;
+            query_words.push(value.clone());
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--word=") {
+            query_words.push(value.to_owned());
+            index += 1;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown oddcomp argument '{argument}'"),
+        )
+        .with_code("service.tool.oddcomp.argument_unknown")
+        .with_detail(oddcomp_help()));
+    }
+
+    if query_words.is_empty() {
+        return Err(tool_usage_error("oddcomp", oddcomp_help()));
+    }
+
+    Ok(OddcompParams { input, query_words })
+}
+
 fn parse_maskseq_params(arguments: &[String]) -> Result<MaskseqParams, ServiceError> {
     if arguments.len() < 2 {
         return Err(tool_usage_error("maskseq", maskseq_help()));
@@ -8484,10 +8832,14 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "wordfinder" => wordfinder_help(),
         "charge" => charge_help(),
         "pepwindow" => pepwindow_help(),
+        "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
         "compseq" => compseq_help(),
         "dan" => dan_help(),
         "geecee" => geecee_help(),
+        "infobase" => infobase_help(),
+        "inforesidue" => inforesidue_help(),
+        "oddcomp" => oddcomp_help(),
         "pepstats" => pepstats_help(),
         "wordcount" => wordcount_help(),
         "chips" => chips_help(),
@@ -8719,6 +9071,11 @@ mod tests {
     fn protein_stats_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/protein_stats_records.fasta")
+    }
+
+    fn oddcomp_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/oddcomp_records.fasta")
     }
 
     fn codon_reference_fixture() -> std::path::PathBuf {
@@ -10387,6 +10744,82 @@ mod tests {
     }
 
     #[test]
+    fn executes_aaindexextract_against_builtin_index() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("aaindexextract").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["hydropathy".to_owned()]);
+
+        let response = service.invoke(request).expect("aaindexextract should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "index",
+                        "residue",
+                        "three_letter",
+                        "name",
+                        "value",
+                        "units",
+                        "notes",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 20);
+                assert_eq!(table.rows[0][0], "hydropathy_kyte_doolittle");
+                assert_eq!(table.rows[0][1], "A");
+                assert_eq!(table.rows[0][4], "1.800");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_infobase_against_ambiguity_symbol() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infobase").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["N".to_owned()]);
+
+        let response = service.invoke(request).expect("infobase should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "N");
+                assert_eq!(table.rows[0][2], "ambiguity");
+                assert_eq!(table.rows[0][4], "ACGTU");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_inforesidue_against_canonical_residue() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("inforesidue").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["K".to_owned()]);
+
+        let response = service.invoke(request).expect("inforesidue should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "K");
+                assert_eq!(table.rows[0][1], "Lys");
+                assert_eq!(table.rows[0][3], "positive");
+                assert_eq!(table.rows[0][6], "-3.900");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
     fn executes_maskseq_against_real_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -11858,6 +12291,51 @@ mod tests {
         assert_eq!(
             response.result.summary.lines[1],
             "Word model: overlapping normalized windows"
+        );
+    }
+
+    #[test]
+    fn executes_oddcomp_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("oddcomp").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            oddcomp_fixture().display().to_string(),
+            "--word".to_owned(),
+            "MAM".to_owned(),
+            "--word".to_owned(),
+            "QQQ".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("oddcomp should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "query_word",
+                        "word_length",
+                        "count",
+                        "frequency",
+                        "contains",
+                        "counted_windows",
+                    ]
+                );
+                assert_eq!(table.rows[0][0], "oddA");
+                assert_eq!(table.rows[0][1], "MAM");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[3][0], "oddB");
+                assert_eq!(table.rows[3][1], "QQQ");
+                assert_eq!(table.rows[3][3], "2");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Counting model: overlapping exact literal protein words"
         );
     }
 

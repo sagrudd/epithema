@@ -1,0 +1,52 @@
+{
+  "tool_name": "infobase",
+  "document_id": "infobase-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "lookup_any_base_symbol",
+      "title": "Look up the `N` ambiguity symbol",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "ambiguity_case"
+      ],
+      "expected_output_ids": [
+        "infobase_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS infobase application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infobase.acd",
+          "invocation": "infobase -base N"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS infobase application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infobase.acd",
+      "invocation": "infobase -base N"
+    }
+  ]
+}

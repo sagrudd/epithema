@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 78,
-    "documentation_complete_count": 78,
-    "validation_stub_count": 78,
+    "total_method_count": 82,
+    "documentation_complete_count": 82,
+    "validation_stub_count": 82,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 57,
+    "executable_evidence_count": 61,
     "compared_evidence_count": 21,
-    "gapped_method_count": 57
+    "gapped_method_count": 61
   },
   "methods": [
     {
@@ -1354,6 +1354,29 @@
       ]
     },
     {
+      "tool_name": "aaindexextract",
+      "family": "sequence_stats",
+      "summary": "report one governed built-in amino-acid property table",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'aaindexextract' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "complex",
       "family": "sequence_stats",
       "summary": "report whole-sequence and sliding-window nucleotide linguistic complexity",
@@ -1440,6 +1463,29 @@
       "unresolved_gaps": []
     },
     {
+      "tool_name": "infobase",
+      "family": "sequence_stats",
+      "summary": "report deterministic metadata for one nucleotide base or ambiguity symbol",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'infobase' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "infoseq",
       "family": "sequence_stats",
       "summary": "report stable basic metadata and length summaries for sequence records",
@@ -1456,6 +1502,52 @@
       "executable_validation_present": true,
       "compared_validation_present": true,
       "unresolved_gaps": []
+    },
+    {
+      "tool_name": "inforesidue",
+      "family": "sequence_stats",
+      "summary": "report deterministic metadata for one canonical amino-acid residue",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'inforesidue' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "oddcomp",
+      "family": "sequence_stats",
+      "summary": "report deterministic exact protein word-composition counts for query words",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'oddcomp' has no compared validation evidence yet"
+        }
+      ]
     },
     {
       "tool_name": "pepstats",

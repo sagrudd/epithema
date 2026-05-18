@@ -10,6 +10,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 
 cohort_validation
 governance_alignment
+tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair
 tools/backtranambig
@@ -48,6 +49,8 @@ tools/fuzztran
 tools/geecee
 tools/getorf
 tools/infoalign
+tools/infobase
+tools/inforesidue
 tools/infoseq
 tools/maskambignuc
 tools/maskambigprot
@@ -61,6 +64,7 @@ tools/needleall
 tools/newseq
 tools/notseq
 tools/nthseq
+tools/oddcomp
 tools/palindrome
 tools/pasteseq
 tools/patmatdb

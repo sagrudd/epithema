@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "inforesidue-v1",
+  "tool": {
+    "name": "inforesidue",
+    "family": "sequence_stats",
+    "summary": "Report deterministic metadata for one canonical amino-acid residue",
+    "legacy_names": [
+      "inforesidue"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`inforesidue` reports one deterministic metadata row for a single canonical amino-acid residue. The EMBOSS-RS v1 implementation focuses on stable naming, mass, hydropathy, and coarse biochemical classes rather than reproducing multiple historical report styles."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one canonical amino-acid residue symbol. The v1 surface supports the standard twenty residues and rejects ambiguous symbols such as `X`."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits a stable one-row table with columns `residue`, `three_letter`, `name`, `charge_class`, `polarity_class`, `average_mass`, and `hydropathy`."
+    },
+    {
+      "id": "property_model",
+      "kind": "notes",
+      "title": "Property Model",
+      "content": "Average mass uses the same residue-mass table used by `pepstats`. Hydropathy uses the same Kyte-Doolittle scale used by `pepwindow`. `charge_class` and `polarity_class` are governed coarse classes rather than historical AAINDEX identifiers."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs inforesidue`. Validation currently covers canonical-residue lookup, stable one-row table emission, and rejection of unsupported residue symbols."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not expose the broader historical biochemical or structural annotation surface. It is a stable lookup over one governed residue-property table."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "lysine_case",
+      "label": "Inforesidue lysine lookup case",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/inforesidue_lookup_lysine_case.md"
+      },
+      "description": "Repository-managed case note describing the canonical lysine lookup example."
+    }
+  ],
+  "examples": [
+    {
+      "id": "lookup_lysine",
+      "title": "Look up canonical lysine",
+      "description": "Reports the stable one-row residue table for lysine.",
+      "artifact_ids": [
+        "lysine_case"
+      ],
+      "parameters": [
+        {
+          "name": "residue",
+          "value": "K"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "inforesidue_table",
+          "label": "Residue metadata row",
+          "description": "A stable one-row amino-acid property table."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS inforesidue application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/inforesidue.acd",
+        "invocation": "inforesidue -residue K"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "OpenAI Codex",
+    "source_references": [
+      {
+        "source": "EMBOSS inforesidue application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/inforesidue.acd",
+        "invocation": "inforesidue -residue K"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "lookup_lysine"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 78,
-    "shipped_with_governance_mapping_count": 78,
-    "shipped_retain_count": 72,
+    "shipped_tool_count": 82,
+    "shipped_with_governance_mapping_count": 82,
+    "shipped_retain_count": 76,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 18,
-    "shipped_curated_autodoc_count": 78,
-    "shipped_executable_or_better_count": 78,
+    "retained_backlog_count": 14,
+    "shipped_curated_autodoc_count": 82,
+    "shipped_executable_or_better_count": 82,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -515,6 +515,15 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "aaindexextract",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report one governed built-in amino-acid property table",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "complex",
       "shipped_family": "sequence_stats",
       "shipped_summary": "report whole-sequence and sliding-window nucleotide linguistic complexity",
@@ -551,6 +560,15 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "infobase",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report deterministic metadata for one nucleotide base or ambiguity symbol",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "infoseq",
       "shipped_family": "sequence_stats",
       "shipped_summary": "report stable basic metadata and length summaries for sequence records",
@@ -558,6 +576,24 @@
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "inforesidue",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report deterministic metadata for one canonical amino-acid residue",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "oddcomp",
+      "shipped_family": "sequence_stats",
+      "shipped_summary": "report deterministic exact protein word-composition counts for query words",
+      "governance_family": "Core Retain — Core sequence statistics and composition",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
     },
     {
       "tool_name": "pepstats",
@@ -751,18 +787,13 @@
     {
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "retained_total": 16,
-      "retained_shipped": 12,
-      "retained_backlog": 4,
-      "shipped_curated_autodoc": 12,
-      "shipped_executable_or_better": 12,
+      "retained_shipped": 16,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 16,
+      "shipped_executable_or_better": 16,
       "shipped_compared": 6,
-      "recommendation": "prioritise retained backlog closure (4 remaining)",
-      "retained_backlog_tools": [
-        "aaindexextract",
-        "infobase",
-        "inforesidue",
-        "oddcomp"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Core Retain — ORF and translation-adjacent utilities",
@@ -1049,30 +1080,6 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Remove vectors from the ends of nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "aaindexextract",
-      "governance_family": "Core Retain — Core sequence statistics and composition",
-      "decision": "retain",
-      "description": "Extract amino acid property data from AAINDEX"
-    },
-    {
-      "tool_name": "infobase",
-      "governance_family": "Core Retain — Core sequence statistics and composition",
-      "decision": "retain",
-      "description": "Return information on a given nucleotide base"
-    },
-    {
-      "tool_name": "inforesidue",
-      "governance_family": "Core Retain — Core sequence statistics and composition",
-      "decision": "retain",
-      "description": "Return information on a given amino acid residue"
-    },
-    {
-      "tool_name": "oddcomp",
-      "governance_family": "Core Retain — Core sequence statistics and composition",
-      "decision": "retain",
-      "description": "Identify proteins with specified sequence word composition"
     },
     {
       "tool_name": "recoder",

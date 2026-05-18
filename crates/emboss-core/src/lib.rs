@@ -30,6 +30,7 @@ pub mod pattern;
 pub mod platform;
 pub mod protein_charge;
 pub mod protein_hydropathy;
+pub mod residue_properties;
 pub mod revseq;
 pub mod sequence;
 pub mod strand;
@@ -79,6 +80,10 @@ pub use protein_charge::{
 pub use protein_hydropathy::{
     HydropathyWindow, ProteinHydropathyError, ProteinHydropathyProfile,
     protein_hydropathy_profile,
+};
+pub use residue_properties::{
+    NucleotideBaseInfo, ProteinResidueProperty, nucleotide_base_info, nucleotide_base_infos,
+    protein_residue_properties, protein_residue_property,
 };
 pub use revseq::{
     RevseqError, RevseqMode, reverse_complement_residues, reverse_residues,
