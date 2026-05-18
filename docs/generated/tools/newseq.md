@@ -14,6 +14,12 @@ Create a new sequence record from inline residues and typed metadata
 - Tool family: `sequence_stream`
 - Legacy names: `newseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/newseq.validation.json`](../validation/newseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `newseq` constructs one new sequence record from user-supplied inline residues and shared EMBOSS-RS metadata fields. The record is validated through the core sequence model and emitted through the standard FASTA output path instead of being assembled as ad hoc text.
@@ -58,9 +64,11 @@ No artifacts are declared for this autodoc document.
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `create_dna_record`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `create_dna_record`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

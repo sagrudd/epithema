@@ -14,6 +14,12 @@ Mask one or more explicit 1-based inclusive sequence intervals with molecule-awa
 - Tool family: `feature_tools`
 - Legacy names: `maskseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/maskseq.validation.json`](../validation/maskseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `maskseq` masks explicit sequence intervals in each input record using the shared EMBOSS-RS interval and sequence-edit foundations. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval model before applying in-place masking through the shared `mask_intervals` helper.
@@ -61,9 +67,11 @@ Intervals must be valid for every input record; EMBOSS-RS does not clip partial 
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `mask_positions_two_to_three`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `mask_positions_two_to_three`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

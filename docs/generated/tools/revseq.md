@@ -14,6 +14,12 @@ Reverse sequence content and reverse-complement nucleotide records
 - Tool family: `sequence_edit`
 - Legacy names: `revseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/revseq.validation.json`](../validation/revseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared EMBOSS-RS sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative.
@@ -61,9 +67,11 @@ Explicit reverse-complement requests fail for protein or unknown-molecule record
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `auto_reverse_complement_fixture`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `auto_reverse_complement_fixture`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

@@ -14,6 +14,12 @@ Search translated nucleotide frames for deterministic protein motifs
 - Tool family: `pattern_tools`
 - Legacy names: `fuzztran`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/fuzztran.validation.json`](../validation/fuzztran.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `fuzztran` translates nucleotide sequence records in the three forward reading frames and searches those translated amino-acid strings for one deterministic protein-like motif. The EMBOSS-RS v1 surface keeps the translation model intentionally narrow: standard genetic code only, forward frames 1-3 only, and no reverse-complement frame search.
@@ -69,9 +75,11 @@ The first release does not implement reverse-strand scanning, alternative geneti
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `forward_frame_search`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `forward_frame_search`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

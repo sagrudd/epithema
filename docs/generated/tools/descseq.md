@@ -14,6 +14,12 @@ Report stable sequence-record descriptions and metadata summaries in tabular for
 - Tool family: `sequence_edit`
 - Legacy names: `descseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/descseq.validation.json`](../validation/descseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `descseq` reports stable per-record sequence descriptions and metadata using the shared EMBOSS-RS sequence and annotated-record models. It is useful for plain FASTA inputs and richer EMBL or GenBank inputs because it summarizes the typed metadata already carried by the core record representation instead of reparsing format-specific text ad hoc.
@@ -67,9 +73,11 @@ The v1 output is intentionally conservative and metadata-driven. It reports only
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `summarize_plain_fasta_records`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `summarize_plain_fasta_records`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

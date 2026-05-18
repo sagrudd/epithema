@@ -14,6 +14,12 @@ Exclude one sequence record by 1-based ordinal position
 - Tool family: `sequence_stream`
 - Legacy names: `notseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/notseq.validation.json`](../validation/notseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path instead of embedding format-specific stream logic.
@@ -61,9 +67,11 @@ The first release supports exclusion by ordinal position only. Identifier-based 
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `exclude_second_record`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `exclude_second_record`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

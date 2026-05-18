@@ -14,6 +14,12 @@ Extract rows and an optional 1-based inclusive column range from an alignment
 - Tool family: `alignment_tools`
 - Legacy names: `extractalign`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/extractalign.validation.json`](../validation/extractalign.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `extractalign` is part of the exposed EMBOSS-RS `alignment_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.

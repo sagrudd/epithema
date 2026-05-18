@@ -14,6 +14,12 @@ Report deterministic GC counts and GC percentages for nucleotide sequence record
 - Tool family: `sequence_stats`
 - Legacy names: `geecee`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/geecee.validation.json`](../validation/geecee.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `geecee` reports GC statistics for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 implementation keeps the model deliberately conservative: only canonical A/C/G/T/U symbols contribute to the GC denominator, while ambiguous non-gap symbols are counted separately and excluded from the percentage.
@@ -63,9 +69,11 @@ The first release does not attempt probabilistic treatment of ambiguous nucleoti
 - Curated by: OpenAI Codex
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `per_record_and_aggregate_gc`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `per_record_and_aggregate_gc`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

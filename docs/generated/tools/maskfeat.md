@@ -14,6 +14,12 @@ Mask selected simple annotated feature spans in-place while preserving record an
 - Tool family: `feature_tools`
 - Legacy names: `maskfeat`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/maskfeat.validation.json`](../validation/maskfeat.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `maskfeat` masks sequence spans defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and interval-masking path. The original record is retained, matching simple feature spans are masked in place, and feature annotations remain attached to the resulting payload.
@@ -65,9 +71,11 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `mask_selected_gene_feature`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `mask_selected_gene_feature`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

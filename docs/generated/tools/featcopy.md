@@ -14,6 +14,12 @@ Copy selected feature annotations from annotated source records onto compatible 
 - Tool family: `feature_tools`
 - Legacy names: `featcopy`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/featcopy.validation.json`](../validation/featcopy.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `featcopy` copies selected features from annotated source records onto matching target records using the shared EMBOSS-RS feature-selection and feature-copy helpers. In the current v1 behavior the underlying target sequence is preserved, existing target features are retained, and copied source features are appended in stable source order.
@@ -73,9 +79,11 @@ The current v1 output mode is conservative: copy selected features onto otherwis
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `copy_selected_gene_feature_to_matching_target`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `copy_selected_gene_feature_to_matching_target`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

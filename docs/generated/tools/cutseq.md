@@ -14,6 +14,12 @@ Split each input sequence record into left and right fragments at one 1-based cu
 - Tool family: `sequence_transform`
 - Legacy names: `cutseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/cutseq.validation.json`](../validation/cutseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared EMBOSS-RS interval and subsequence primitives instead of ad hoc string slicing.
@@ -61,9 +67,11 @@ The v1 scope supports only one cut position and always emits both remaining frag
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `cut_after_second_position`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `cut_after_second_position`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

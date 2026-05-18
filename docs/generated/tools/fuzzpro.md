@@ -14,6 +14,12 @@ Search protein sequences for deterministic exact or wildcard motifs
 - Tool family: `pattern_tools`
 - Legacy names: `fuzzpro`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/fuzzpro.validation.json`](../validation/fuzzpro.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `fuzzpro` searches protein sequence records for one linear motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact amino-acid symbols plus `X` as a one-residue wildcard, no gaps, no indels, and no full historical EMBOSS fuzzy-expression language.
@@ -65,9 +71,11 @@ The first release does not implement character classes, mismatches, gaps, or the
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `wildcard_forward_search`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `wildcard_forward_search`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

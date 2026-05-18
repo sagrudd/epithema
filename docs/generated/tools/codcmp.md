@@ -14,6 +14,12 @@ Compare codon usage between two coding-sequence or codon-profile sources
 - Tool family: `codon_tools`
 - Legacy names: `codcmp`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/codcmp.validation.json`](../validation/codcmp.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `codcmp` is part of the exposed EMBOSS-RS `codon_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.

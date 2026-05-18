@@ -8,10 +8,20 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods in cohort: `46`
 - Documentation-complete methods: `46`
 - Methods with validation stubs: `46`
+- Documented-only methods: `25`
+- Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
 - Methods with executable validation: `20`
 - Methods with compared evidence: `0`
 - Methods with visible gaps: `46`
+
+## Evidence Level Definitions
+
+- `documented_only`: the tool has documentation artefacts but no declared validation cases yet.
+- `declared_evidence`: the tool has declared validation cases, but no runnable or executed evidence yet.
+- `harvested_evidence`: the tool has legacy-derived or legacy-backed declared evidence.
+- `executable_evidence`: the tool has at least one runnable or executed validation case.
+- `compared_evidence`: the tool has at least one completed comparison result.
 
 ## Cohort Table
 

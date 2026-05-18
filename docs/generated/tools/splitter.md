@@ -14,6 +14,12 @@ Partition an input sequence stream into deterministic fixed-size chunks
 - Tool family: `sequence_transform`
 - Legacy names: `splitter`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/splitter.validation.json`](../validation/splitter.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `splitter` is part of the exposed EMBOSS-RS `sequence_transform` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.

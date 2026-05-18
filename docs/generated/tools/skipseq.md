@@ -14,6 +14,12 @@ Skip the first N sequence records and return the remainder
 - Tool family: `sequence_stream`
 - Legacy names: `skipseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/skipseq.validation.json`](../validation/skipseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `skipseq` removes a non-negative number of leading sequence records from a local input stream and returns the remaining records in stable source order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path rather than embedding format-specific stream handling.
@@ -61,9 +67,11 @@ The first release supports one input path and one skip count per invocation. Neg
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `skip_first_record`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `skip_first_record`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

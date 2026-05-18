@@ -14,6 +14,12 @@ Extract selected simple feature-defined sequence regions into rebased output rec
 - Tool family: `feature_tools`
 - Legacy names: `extractfeat`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/extractfeat.validation.json`](../validation/extractfeat.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `extractfeat` extracts sequence regions defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and extraction foundations. Each selected simple feature span becomes one output record, and the copied feature is rebased onto the local extracted coordinate system.
@@ -61,9 +67,11 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `extract_selected_gene_feature`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `extract_selected_gene_feature`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

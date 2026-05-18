@@ -14,6 +14,12 @@ Search nucleotide sequences for deterministic exact or IUPAC-ambiguous motifs
 - Tool family: `pattern_tools`
 - Legacy names: `fuzznuc`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/fuzznuc.validation.json`](../validation/fuzznuc.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `fuzznuc` searches nucleotide sequence records for one forward-strand motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact nucleotide symbols plus IUPAC ambiguity codes, no gaps, no indels, and no reverse-strand search.
@@ -65,9 +71,11 @@ The first release does not implement the historical EMBOSS fuzzy-expression lang
 - Curated by: Codex
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `iupac_forward_search`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `iupac_forward_search`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

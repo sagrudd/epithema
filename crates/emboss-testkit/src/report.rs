@@ -420,16 +420,24 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
     );
     rendered.push_str("## Summary\n\n");
     rendered.push_str(&format!(
-        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Methods with harvested legacy evidence: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with visible gaps: `{}`\n\n",
+        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Documented-only methods: `{}`\n- Methods with declared evidence only: `{}`\n- Methods with harvested legacy evidence: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with visible gaps: `{}`\n\n",
         report.registry_source,
         report.summary.total_method_count,
         report.summary.documentation_complete_count,
         report.summary.validation_stub_count,
+        report.summary.documented_only_count,
+        report.summary.declared_evidence_count,
         report.summary.harvested_evidence_count,
         report.summary.executable_evidence_count,
         report.summary.compared_evidence_count,
         report.summary.gapped_method_count
     ));
+    rendered.push_str("## Evidence Level Definitions\n\n");
+    rendered.push_str("- `documented_only`: the tool has documentation artefacts but no declared validation cases yet.\n");
+    rendered.push_str("- `declared_evidence`: the tool has declared validation cases, but no runnable or executed evidence yet.\n");
+    rendered.push_str("- `harvested_evidence`: the tool has legacy-derived or legacy-backed declared evidence.\n");
+    rendered.push_str("- `executable_evidence`: the tool has at least one runnable or executed validation case.\n");
+    rendered.push_str("- `compared_evidence`: the tool has at least one completed comparison result.\n\n");
     rendered.push_str("## Cohort Table\n\n");
     rendered.push_str("| Tool | Family | Evidence level | Docs | Stub | Harvested | Executable | Compared | Gap count |\n");
     rendered.push_str("| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n");
@@ -859,6 +867,8 @@ mod tests {
         let markdown = render_cohort_validation_markdown(&report);
 
         assert!(markdown.contains("# Shipped Cohort Validation Report"));
+        assert!(markdown.contains("## Evidence Level Definitions"));
+        assert!(markdown.contains("`documented_only`"));
         assert!(markdown.contains("| Tool | Family | Evidence level |"));
         assert!(markdown.contains("`needle`"));
         assert!(markdown.contains("Visible Gaps"));

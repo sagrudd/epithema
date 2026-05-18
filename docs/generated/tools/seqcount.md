@@ -14,6 +14,12 @@ Count sequence records in one local sequence input
 - Tool family: `sequence_stream`
 - Legacy names: `seqcount`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/seqcount.validation.json`](../validation/seqcount.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `seqcount` counts sequence records through the shared EMBOSS-RS sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs.
@@ -59,9 +65,11 @@ The first release supports one input path per invocation. Multiple-input aggrega
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `count_three_fasta_records`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `count_three_fasta_records`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

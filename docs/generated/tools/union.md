@@ -14,6 +14,12 @@ Combine two or more sequence inputs into one deterministic output stream
 - Tool family: `sequence_transform`
 - Legacy names: `union`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/union.validation.json`](../validation/union.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `union` combines two or more local sequence inputs into one output stream by stable concatenation. The first EMBOSS-RS release keeps the semantics intentionally simple: preserve input order, preserve per-input record order, and preserve duplicates exactly as they were read.
@@ -67,9 +73,11 @@ The first release does not perform identifier-based or content-based deduplicati
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `concatenate_two_sequence_inputs`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `concatenate_two_sequence_inputs`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

@@ -14,6 +14,12 @@ Extract one contiguous 1-based inclusive region from each input sequence record
 - Tool family: `sequence_transform`
 - Legacy names: `extractseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/extractseq.validation.json`](../validation/extractseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `extractseq` extracts the same contiguous region from every input sequence record using the shared EMBOSS-RS interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content.
@@ -62,9 +68,11 @@ The v1 scope extracts a single contiguous interval only. Coordinates must be sup
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `extract_region_two_to_three`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `extract_region_two_to_three`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

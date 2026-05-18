@@ -14,6 +14,12 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 - Tool family: `protein_plots`
 - Legacy names: `charge`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/charge.validation.json`](../validation/charge.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `charge` is the first production plotting vertical slice in EMBOSS-RS. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis.

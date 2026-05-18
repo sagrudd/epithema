@@ -14,6 +14,12 @@ Report deterministic protein summary statistics for sequence records
 - Tool family: `sequence_stats`
 - Legacy names: `pepstats`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/pepstats.validation.json`](../validation/pepstats.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `pepstats` reports a conservative first-release set of protein statistics for each input record. The EMBOSS-RS v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate.
@@ -63,9 +69,11 @@ The first release does not estimate isoelectric point, extinction coefficient, o
 - Curated by: OpenAI Codex
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `protein_summary_statistics`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `protein_summary_statistics`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

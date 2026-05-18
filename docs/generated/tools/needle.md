@@ -14,6 +14,12 @@ Global pairwise sequence alignment
 - Tool family: `pairwise_alignment`
 - Legacy names: `needle`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/needle.validation.json`](../validation/needle.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 Needle computes a global alignment between two sequences.
@@ -45,9 +51,11 @@ Needle computes a global alignment between two sequences.
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `basic_alignment`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `basic_alignment`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

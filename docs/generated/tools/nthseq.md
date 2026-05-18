@@ -14,6 +14,12 @@ Select one sequence record by 1-based ordinal position
 - Tool family: `sequence_stream`
 - Legacy names: `nthseq`
 
+## Evidence Status
+
+- Declared evidence baseline: `declared_evidence`
+- Machine-readable validation report: [`../validation/nthseq.validation.json`](../validation/nthseq.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `nthseq` selects exactly one sequence record from a local sequence stream by ordinal position. The tool reuses the shared EMBOSS-RS sequence loader and typed single-record result path instead of re-parsing format-specific content inside the command.
@@ -61,9 +67,11 @@ The first release supports ordinal selection only. Identifier-based selection, m
 - Curated by: emboss-rs maintainers
 - Source references: none declared
 
-## Validation Intent
+## Declared Validation Intent
 
-- Required examples: `select_second_record`
-- Compare against legacy: no
-- Require provenance capture: yes
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `select_second_record`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes
 

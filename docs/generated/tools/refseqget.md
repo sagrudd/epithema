@@ -14,6 +14,12 @@ Retrieve one provider-backed reference sequence through the governed acquisition
 - Tool family: `retrieval_tools`
 - Legacy names: `refseqget`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/refseqget.validation.json`](../validation/refseqget.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `refseqget` is part of the exposed EMBOSS-RS `retrieval_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.

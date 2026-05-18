@@ -14,6 +14,12 @@ Normalize ENA or SRA archive metadata for one accession-backed archive object
 - Tool family: `archive_tools`
 - Legacy names: `runinfo`
 
+## Evidence Status
+
+- Declared evidence baseline: `documented_only`
+- Machine-readable validation report: [`../validation/runinfo.validation.json`](../validation/runinfo.validation.json)
+- This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
+
 ## Overview
 
 `runinfo` is part of the exposed EMBOSS-RS `archive_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending.
