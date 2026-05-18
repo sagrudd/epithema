@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 68,
-    "documentation_complete_count": 68,
-    "validation_stub_count": 68,
+    "total_method_count": 70,
+    "documentation_complete_count": 70,
+    "validation_stub_count": 70,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 47,
+    "executable_evidence_count": 49,
     "compared_evidence_count": 21,
-    "gapped_method_count": 47
+    "gapped_method_count": 49
   },
   "methods": [
     {
@@ -65,6 +65,52 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'aligncopypair' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "diffseq",
+      "family": "alignment_tools",
+      "summary": "compare two similar sequences and report contiguous difference blocks from a deterministic global alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'diffseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "edialign",
+      "family": "alignment_tools",
+      "summary": "derive an exact shared local block across two or more sequences as a bounded local multiple alignment",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'edialign' has no compared validation evidence yet"
         }
       ]
     },

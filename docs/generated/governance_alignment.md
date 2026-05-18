@@ -8,17 +8,17 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `68`
-- Shipped tools with governance mapping: `68`
-- Retained backlog still unshipped: `28`
-- Shipped tools with curated autodoc: `68`
-- Shipped tools with executable or compared evidence: `68`
+- Shipped tools: `70`
+- Shipped tools with governance mapping: `70`
+- Retained backlog still unshipped: `26`
+- Shipped tools with curated autodoc: `70`
+- Shipped tools with executable or compared evidence: `70`
 - Shipped tools with compared evidence: `21`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
-- Shipped retain methods: `62`
+- Shipped retain methods: `64`
 - Shipped rework methods: `6`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
@@ -27,7 +27,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 
 | Governance family | Retained total | Retained shipped | Retained backlog | Shipped curated | Shipped executable+ | Shipped compared | Recommendation |
 |---|---:|---:|---:|---:|---:|---:|---|
-| Core Retain — Alignment read-write and post-processing | 13 | 11 | 2 | 11 | 11 | 2 | prioritise retained backlog closure (2 remaining) |
+| Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 2 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Basic sequence IO and conversion | 18 | 16 | 2 | 16 | 16 | 3 | prioritise retained backlog closure (2 remaining) |
 | Core Retain — Core sequence statistics and composition | 16 | 12 | 4 | 12 | 12 | 6 | prioritise retained backlog closure (4 remaining) |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
@@ -56,7 +56,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - **Core Retain — Simple motif, pattern, and regular-expression search**: prioritise retained backlog closure (8 remaining). Retained backlog: `dreg`, `einverted`, `palindrome`, `patmatdb`, `preg`, `seqmatchall`, `wordfinder`, `wordmatch`
 - **Core Retain — Core sequence statistics and composition**: prioritise retained backlog closure (4 remaining). Retained backlog: `aaindexextract`, `infobase`, `inforesidue`, `oddcomp`
 - **Core Retain — Basic sequence IO and conversion**: prioritise retained backlog closure (2 remaining). Retained backlog: `nthseqset`, `splitsource`
-- **Core Retain — Alignment read-write and post-processing**: prioritise retained backlog closure (2 remaining). Retained backlog: `diffseq`, `edialign`
+- **Modernize — Rework — Protein property and structural-summary utilities**: prioritise retained backlog closure (2 remaining). Retained backlog: `iep`, `pepdigest`
 
 ## Retained Backlog
 
@@ -70,8 +70,6 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - `skipredundant` — retain — Core Retain — Sequence editing and manipulation
 - `trimest` — retain — Core Retain — Sequence editing and manipulation
 - `vectorstrip` — retain — Core Retain — Sequence editing and manipulation
-- `diffseq` — retain — Core Retain — Alignment read-write and post-processing
-- `edialign` — retain — Core Retain — Alignment read-write and post-processing
 - `aaindexextract` — retain — Core Retain — Core sequence statistics and composition
 - `infobase` — retain — Core Retain — Core sequence statistics and composition
 - `inforesidue` — retain — Core Retain — Core sequence statistics and composition
@@ -99,6 +97,8 @@ All shipped methods are mapped in the governance appendix.
 |---|---|---|---|---:|---|
 | `aligncopy` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `aligncopypair` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
+| `diffseq` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
+| `edialign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
 | `runinfo` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |

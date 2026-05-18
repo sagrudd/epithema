@@ -2,6 +2,8 @@
 
 mod aligncopy;
 mod aligncopypair;
+mod diffseq;
+mod edialign;
 mod extractalign;
 mod infoalign;
 mod shared;
@@ -14,6 +16,8 @@ pub use aligncopy::{AligncopyOutcome, AligncopyParams, aligncopy_help, run_align
 pub use aligncopypair::{
     AligncopypairOutcome, AligncopypairParams, aligncopypair_help, run_aligncopypair,
 };
+pub use diffseq::{DiffseqOutcome, DiffseqParams, diffseq_help, run_diffseq};
+pub use edialign::{EdialignOutcome, EdialignParams, edialign_help, run_edialign};
 pub use extractalign::{
     ExtractalignOutcome, ExtractalignParams, extractalign_help, run_extractalign,
 };
@@ -36,6 +40,18 @@ pub const ALIGNCOPYPAIR_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const INFOALIGN_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "infoalign",
     "report row counts, column counts, and per-row gap statistics for an alignment",
+)
+.with_family(FAMILY);
+/// `diffseq` descriptor.
+pub const DIFFSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "diffseq",
+    "compare two similar sequences and report contiguous difference blocks from a deterministic global alignment",
+)
+.with_family(FAMILY);
+/// `edialign` descriptor.
+pub const EDIALIGN_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "edialign",
+    "derive an exact shared local block across two or more sequences as a bounded local multiple alignment",
 )
 .with_family(FAMILY);
 /// `extractalign` descriptor.

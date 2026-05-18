@@ -30,7 +30,9 @@ tools/cutseq
 tools/dan
 tools/degapseq
 tools/descseq
+tools/diffseq
 tools/distmat
+tools/edialign
 tools/extractalign
 tools/extractfeat
 tools/extractseq

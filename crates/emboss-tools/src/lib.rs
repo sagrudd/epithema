@@ -81,6 +81,8 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
     &[
         alignment_tools::ALIGNCOPY_DESCRIPTOR,
         alignment_tools::ALIGNCOPYPAIR_DESCRIPTOR,
+        alignment_tools::DIFFSEQ_DESCRIPTOR,
+        alignment_tools::EDIALIGN_DESCRIPTOR,
         alignment_tools::INFOALIGN_DESCRIPTOR,
         alignment_tools::EXTRACTALIGN_DESCRIPTOR,
         archive_tools::RUNINFO_DESCRIPTOR,
@@ -169,10 +171,12 @@ mod tests {
         assert_eq!(
             names,
             vec![
-                "aligncopy",
-                "aligncopypair",
-                "infoalign",
-                "extractalign",
+            "aligncopy",
+            "aligncopypair",
+            "diffseq",
+            "edialign",
+            "infoalign",
+            "extractalign",
                 "runinfo",
                 "runget",
                 "matcher",

@@ -1,0 +1,52 @@
+{
+  "tool_name": "edialign",
+  "document_id": "edialign-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "derive_shared_exact_block_alignment",
+      "title": "Derive one shared exact local block across three records",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "edialign_records_fasta"
+      ],
+      "expected_output_ids": [
+        "shared_block_alignment"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS edialign application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/edialign.acd",
+          "invocation": "edialign -sequences edialign_records.fasta -outseq stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS edialign application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/edialign.acd",
+      "invocation": "edialign -sequences edialign_records.fasta -outseq stdout"
+    }
+  ]
+}

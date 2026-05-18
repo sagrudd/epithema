@@ -1,0 +1,118 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "diffseq-v1",
+  "tool": {
+    "name": "diffseq",
+    "family": "alignment_tools",
+    "summary": "compare two similar sequences and report contiguous difference blocks from a deterministic global alignment",
+    "legacy_names": [
+      "diffseq"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`diffseq` compares exactly one sequence from each input, computes a deterministic global alignment, and reports contiguous mismatch or indel blocks in a governed table. EMBOSS-RS v1 treats the alignment as the comparison substrate and emits typed block coordinates instead of a prose-only narrative."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one local sequence record from each of two inputs. Optional `--gap-open` and `--gap-extend` flags tune the deterministic global-alignment penalties. Both inputs must resolve to a compatible nucleotide or protein comparison mode."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The output is a stable table with one row per contiguous difference block. Each row reports a classification, optional 1-based inclusive coordinates in both sequences, and the aligned block segments. When the sequences are identical, the table is empty and the summary states that zero difference blocks were found."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs diffseq`. Validation currently covers one committed substitution case through the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release is a deterministic block report, not a full recreation of historical EMBOSS difference narration. It does not attempt feature-aware commentary, biological effect interpretation, or alternative comparison heuristics beyond the governed global-alignment path."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "diffseq_left_fasta",
+      "label": "Diffseq left FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/diffseq_left.fasta"
+      },
+      "description": "Repository-managed one-record FASTA fixture used as the left-hand diffseq input."
+    },
+    {
+      "id": "diffseq_right_fasta",
+      "label": "Diffseq right FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/diffseq_right.fasta"
+      },
+      "description": "Repository-managed one-record FASTA fixture used as the right-hand diffseq input."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_single_substitution_block",
+      "title": "Report one substitution block between two similar sequences",
+      "description": "Runs `diffseq` against two committed one-record FASTA fixtures that differ at exactly one position.",
+      "artifact_ids": [
+        "diffseq_left_fasta",
+        "diffseq_right_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "difference_block_table",
+          "label": "Difference block table",
+          "description": "One row is reported with a `substitution` classification and matching 1-based block coordinates at position `5`."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS diffseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/diffseq.acd",
+        "invocation": "diffseq -asequence diffseq_left.fasta -bsequence diffseq_right.fasta -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS diffseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/diffseq.acd",
+        "invocation": "diffseq -asequence diffseq_left.fasta -bsequence diffseq_right.fasta -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_single_substitution_block"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

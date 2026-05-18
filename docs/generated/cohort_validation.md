@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `68`
-- Documentation-complete methods: `68`
-- Methods with validation stubs: `68`
+- Methods in cohort: `70`
+- Documentation-complete methods: `70`
+- Methods with validation stubs: `70`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `47`
+- Methods with executable validation: `49`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `47`
+- Methods with visible gaps: `49`
 
 ## Evidence Level Definitions
 
@@ -29,6 +29,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `aligncopy` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `aligncopypair` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `diffseq` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `edialign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `infoalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `extractalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `runinfo` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -100,6 +102,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 - `aligncopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `aligncopypair`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `diffseq`: `missing_compared_evidence`
+- `edialign`: `missing_compared_evidence`
 - `infoalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `extractalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `runinfo`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

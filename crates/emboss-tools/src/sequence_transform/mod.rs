@@ -24,6 +24,7 @@ pub use shuffleseq::{ShuffleseqOutcome, ShuffleseqParams, run_shuffleseq, shuffl
 pub use sizeseq::{SizeseqOutcome, SizeseqParams, run_sizeseq, sizeseq_help};
 pub use splitter::{SplitterOutcome, SplitterParams, run_splitter, splitter_help};
 pub use union::{UnionOutcome, UnionParams, run_union, union_help};
+pub(crate) use shared::load_exactly_one_record;
 
 /// `extractseq` descriptor.
 pub const EXTRACTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

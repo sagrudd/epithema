@@ -22,9 +22,10 @@ use emboss_tools::alignment_analysis::{
     distmat_help, matcher_help, run_cons, run_consambig, run_distmat, run_matcher,
 };
 use emboss_tools::alignment_tools::{
-    AligncopyParams, AligncopypairParams, AlignmentInput, ExtractalignParams, InfoalignParams,
-    aligncopy_help, aligncopypair_help, extractalign_help, infoalign_help, run_aligncopy,
-    run_aligncopypair, run_extractalign, run_infoalign,
+    AligncopyParams, AligncopypairParams, AlignmentInput, DiffseqParams, EdialignParams,
+    ExtractalignParams, InfoalignParams, aligncopy_help, aligncopypair_help, diffseq_help,
+    edialign_help, extractalign_help, infoalign_help, run_aligncopy, run_aligncopypair,
+    run_diffseq, run_edialign, run_extractalign, run_infoalign,
 };
 use emboss_tools::archive_tools::{
     RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
@@ -250,6 +251,8 @@ impl EmbossService {
         match descriptor.name {
             "aligncopy" => self.invoke_aligncopy(request, descriptor),
             "aligncopypair" => self.invoke_aligncopypair(request, descriptor),
+            "diffseq" => self.invoke_diffseq(request, descriptor),
+            "edialign" => self.invoke_edialign(request, descriptor),
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
             "runinfo" => self.invoke_runinfo(request, descriptor),
@@ -521,6 +524,155 @@ impl EmbossService {
                 .with_line(format!("Classification: {}", outcome.classification))
                 .with_line(format!("Rows: {}", outcome.row_count))
                 .with_line(format!("Columns: {}", outcome.column_count)),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_diffseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, diffseq_help()));
+        }
+
+        let params = parse_diffseq_params(request.arguments())?;
+        let (asequence, asequence_provenance, asequence_diagnostics) =
+            self.resolve_local_sequence_input(&params.asequence.path.display().to_string())?;
+        let (bsequence, bsequence_provenance, bsequence_diagnostics) =
+            self.resolve_local_sequence_input(&params.bsequence.path.display().to_string())?;
+        let outcome = run_diffseq(DiffseqParams {
+            asequence,
+            bsequence,
+            gap_open: params.gap_open,
+            gap_extend: params.gap_extend,
+        })?;
+
+        let mut diagnostics = asequence_diagnostics;
+        diagnostics.extend(bsequence_diagnostics);
+        let report = self.success_report(
+            &request.context,
+            format!("reported {} contiguous difference blocks", outcome.blocks.len()),
+            diagnostics,
+            vec![asequence_provenance, bsequence_provenance],
+        );
+        let rows = outcome
+            .blocks
+            .iter()
+            .map(|block| {
+                vec![
+                    block.ordinal.to_string(),
+                    block.classification.clone(),
+                    block
+                        .a_start
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned()),
+                    block
+                        .a_end
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned()),
+                    block
+                        .b_start
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned()),
+                    block
+                        .b_end
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "-".to_owned()),
+                    block.a_segment.clone(),
+                    block.b_segment.clone(),
+                ]
+            })
+            .collect();
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "block".to_owned(),
+                    "classification".to_owned(),
+                    "a_start".to_owned(),
+                    "a_end".to_owned(),
+                    "b_start".to_owned(),
+                    "b_end".to_owned(),
+                    "a_segment".to_owned(),
+                    "b_segment".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Sequence-difference report completed")
+                .with_line(format!("A sequence: {}", outcome.asequence.path.display()))
+                .with_line(format!("B sequence: {}", outcome.bsequence.path.display()))
+                .with_line(format!(
+                    "Mode: {}",
+                    match outcome.mode {
+                        emboss_core::AlignmentMode::Nucleotide => "nucleotide",
+                        emboss_core::AlignmentMode::Protein => "protein",
+                    }
+                ))
+                .with_line(format!("Aligned length: {}", outcome.aligned_length))
+                .with_line(format!("Difference blocks: {}", outcome.blocks.len()))
+                .with_line(format!(
+                    "Gap penalties: open={} extend={}",
+                    outcome.gap_open, outcome.gap_extend
+                )),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_edialign(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, edialign_help()));
+        }
+
+        let params = parse_edialign_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_edialign(EdialignParams {
+            input,
+            min_length: params.min_length,
+        })?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "derived exact shared local alignment of length {} across {} rows",
+                outcome.alignment.column_count(),
+                outcome.alignment.row_count()
+            ),
+            input_diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Alignment(outcome.alignment),
+            ResultSummary::new("Exact shared local alignment derived")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Minimum shared block length: {}", outcome.min_length))
+                .with_line(format!("Shared block: {}", outcome.block))
+                .with_line(format!("Rows: {}", outcome.rows.len()))
+                .with_line("Alignment model: longest exact shared block")
+                .with_line("Output format: Stockholm"),
             report.clone(),
         );
 
@@ -6227,6 +6379,101 @@ fn parse_extractalign_params(arguments: &[String]) -> Result<ExtractalignParams,
     })
 }
 
+fn parse_diffseq_params(arguments: &[String]) -> Result<DiffseqParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("diffseq", diffseq_help()));
+    }
+
+    let asequence = SequenceInput::new(arguments[0].clone());
+    let bsequence = SequenceInput::new(arguments[1].clone());
+    let mut gap_open = 5;
+    let mut gap_extend = 1;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--gap-open=") {
+            gap_open = parse_positive_i32("diffseq", value, "--gap-open")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--gap-open" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --gap-open")
+                    .with_code("service.tool.diffseq.gap_open_missing")
+            })?;
+            gap_open = parse_positive_i32("diffseq", value, "--gap-open")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--gap-extend=") {
+            gap_extend = parse_positive_i32("diffseq", value, "--gap-extend")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--gap-extend" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --gap-extend")
+                    .with_code("service.tool.diffseq.gap_extend_missing")
+            })?;
+            gap_extend = parse_positive_i32("diffseq", value, "--gap-extend")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown diffseq argument '{argument}'"),
+        )
+        .with_code("service.tool.diffseq.argument_unknown")
+        .with_detail(diffseq_help()));
+    }
+
+    Ok(DiffseqParams {
+        asequence,
+        bsequence,
+        gap_open,
+        gap_extend,
+    })
+}
+
+fn parse_edialign_params(arguments: &[String]) -> Result<EdialignParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("edialign", edialign_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut min_length = 2usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--min-length=") {
+            min_length = parse_positive_count("edialign", value, "--min-length")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--min-length" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --min-length")
+                    .with_code("service.tool.edialign.min_length_missing")
+            })?;
+            min_length = parse_positive_count("edialign", value, "--min-length")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown edialign argument '{argument}'"),
+        )
+        .with_code("service.tool.edialign.argument_unknown")
+        .with_detail(edialign_help()));
+    }
+
+    Ok(EdialignParams { input, min_length })
+}
+
 struct NeedleCliParams {
     query: SequenceInput,
     target: SequenceInput,
@@ -6372,6 +6619,28 @@ fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, Se
     })?;
 
     if parsed == 0 {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{flag} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{flag}_invalid"))
+        .with_detail(value.to_owned()));
+    }
+
+    Ok(parsed)
+}
+
+fn parse_positive_i32(tool: &str, value: &str, flag: &str) -> Result<i32, ServiceError> {
+    let parsed = value.parse::<i32>().map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{flag} must be a positive integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{flag}_invalid"))
+        .with_detail(value.to_owned())
+    })?;
+
+    if parsed <= 0 {
         return Err(PlatformError::new(
             ErrorCategory::Validation,
             format!("{flag} must be a positive integer"),
@@ -7650,6 +7919,21 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/pasteseq_insert.fasta")
     }
 
+    fn diffseq_left_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/diffseq_left.fasta")
+    }
+
+    fn diffseq_right_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/diffseq_right.fasta")
+    }
+
+    fn edialign_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/edialign_records.fasta")
+    }
+
     fn needleall_queries_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/needleall_queries.fasta")
@@ -8249,6 +8533,52 @@ mod tests {
                 assert_eq!(table.rows[0][2], "3");
                 assert_eq!(table.rows[0][3], "5");
                 assert_eq!(table.rows[0][7], "1");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_diffseq_against_real_fixtures() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("diffseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            diffseq_left_fixture().display().to_string(),
+            diffseq_right_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("diffseq should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][1], "substitution");
+                assert_eq!(table.rows[0][2], "5");
+                assert_eq!(table.rows[0][4], "5");
+                assert_eq!(table.rows[0][6], "A");
+                assert_eq!(table.rows[0][7], "T");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_edialign_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("edialign").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![edialign_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("edialign should execute");
+        match &response.result.payload {
+            ResultPayload::Alignment(alignment) => {
+                assert_eq!(alignment.row_count(), 3);
+                assert_eq!(alignment.column_count(), 4);
+                assert_eq!(alignment.rows()[0].aligned(), "TACG");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

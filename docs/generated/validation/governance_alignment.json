@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 68,
-    "shipped_with_governance_mapping_count": 68,
-    "shipped_retain_count": 62,
+    "shipped_tool_count": 70,
+    "shipped_with_governance_mapping_count": 70,
+    "shipped_retain_count": 64,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 28,
-    "shipped_curated_autodoc_count": 68,
-    "shipped_executable_or_better_count": 68,
+    "retained_backlog_count": 26,
+    "shipped_curated_autodoc_count": 70,
+    "shipped_executable_or_better_count": 70,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
   },
@@ -32,6 +32,24 @@
       "tool_name": "aligncopypair",
       "shipped_family": "alignment_tools",
       "shipped_summary": "copy a single pairwise alignment unchanged and reject non-pairwise inputs",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "diffseq",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "compare two similar sequences and report contiguous difference blocks from a deterministic global alignment",
+      "governance_family": "Core Retain — Alignment read-write and post-processing",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "edialign",
+      "shipped_family": "alignment_tools",
+      "shipped_summary": "derive an exact shared local block across two or more sequences as a bounded local multiple alignment",
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
@@ -636,16 +654,13 @@
     {
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "retained_total": 13,
-      "retained_shipped": 11,
-      "retained_backlog": 2,
-      "shipped_curated_autodoc": 11,
-      "shipped_executable_or_better": 11,
+      "retained_shipped": 13,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 13,
+      "shipped_executable_or_better": 13,
       "shipped_compared": 2,
-      "recommendation": "prioritise retained backlog closure (2 remaining)",
-      "retained_backlog_tools": [
-        "diffseq",
-        "edialign"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Core Retain — Basic sequence IO and conversion",
@@ -971,18 +986,6 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "decision": "retain",
       "description": "Remove vectors from the ends of nucleotide sequence(s)"
-    },
-    {
-      "tool_name": "diffseq",
-      "governance_family": "Core Retain — Alignment read-write and post-processing",
-      "decision": "retain",
-      "description": "Compare and report features of two similar sequences"
-    },
-    {
-      "tool_name": "edialign",
-      "governance_family": "Core Retain — Alignment read-write and post-processing",
-      "decision": "retain",
-      "description": "Local multiple alignment of sequences"
     },
     {
       "tool_name": "aaindexextract",
