@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "cai-stub-v1",
+  "document_id": "cai-v1",
   "tool": {
     "name": "cai",
     "family": "codon_tools",
@@ -14,39 +14,95 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`cai` is part of the exposed EMBOSS-RS `codon_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`cai` computes deterministic CAI-like values for strict coding nucleotide sequences. It derives a reference codon-usage profile from either another coding-sequence input or a normalized profile emitted by `codcopy`, then scores each query record against that reference."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The current v1 interface accepts two local inputs: a coding query input and a reference input. The query input is read through the shared sequence loader and must contain strict in-frame nucleotide coding sequences. The reference input may be another coding-sequence file or a normalized codon-profile TSV produced by `codcopy`."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The result is a stable table report with one row per query record. It includes the record identifier, sense-codon count, optional terminal stop codon, and the computed CAI-like value. Stop codons are excluded from weight derivation and a zero-weight codon in the reference yields CAI `0.0` for the affected query."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs cai`. The generated tool page and the machine-readable validation stub at [`../validation/cai.validation.json`](../validation/cai.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs cai`. Rust service coverage exercises CAI scoring directly against committed coding fixtures, and `codcopy` interoperability is also tested by writing a temporary normalized profile and reusing it as the CAI reference input."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The v1 method is intentionally strict. Protein inputs are rejected. Query sequences with non-triplet lengths, ambiguous codons, or internal stop codons fail validation. A single terminal stop codon is allowed and reported separately but excluded from the codon profile."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "codon_query_fasta",
+      "label": "Codon-query FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/codon_query.fasta"
+      },
+      "description": "Repository-managed coding-query FASTA fixture with one preferred-codon example and one rare-codon example."
+    },
+    {
+      "id": "codon_reference_fasta",
+      "label": "Codon-reference FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+      },
+      "description": "Repository-managed coding-reference FASTA fixture used to derive deterministic synonymous codon weights."
+    }
+  ],
+  "examples": [
+    {
+      "id": "score_query_sequences_against_reference_fixture",
+      "title": "Score coding query sequences against a coding reference fixture",
+      "description": "Derives a codon-usage reference from the committed coding-reference fixture and reports CAI-like values for the committed query records.",
+      "artifact_ids": [
+        "codon_query_fasta",
+        "codon_reference_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "cai_table_rows",
+          "label": "CAI result rows",
+          "description": "A two-row table in which the preferred-codon query scores higher than the rare-codon query."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "score_query_sequences_against_reference_fixture"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "emboss-rs.autodoc/v1",
-  "document_id": "codcopy-stub-v1",
+  "document_id": "codcopy-v1",
   "tool": {
     "name": "codcopy",
     "family": "codon_tools",
@@ -14,39 +14,84 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`codcopy` is part of the exposed EMBOSS-RS `codon_tools` cohort. This page is a generated baseline documentation stub produced through the governed autodoc path so the shipped tool surface remains fully documented even where richer harvested narrative or executable examples are still pending."
+      "content": "`codcopy` normalizes a coding-sequence input or an existing normalized codon-profile input into the governed codon-usage profile model. It can also write that profile back out as a tab-separated reusable profile file for later `cai` or `codcmp` runs."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "This tool accepts coding-sequence or protein-oriented inputs through the shared sequence IO and typed parameter layers used by the translation and codon-analysis cohort."
+      "content": "The current v1 interface accepts one local source input and an optional `--profile-out` path. The source may be either a strict coding-sequence file or an existing normalized profile TSV with the governed codon-profile header."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The current implementation emits structured comparison rows, codon profiles, or transformed sequence records through the shared result layer."
+      "content": "The result is a normalized codon-usage profile. When `--profile-out` is supplied, the profile is written as tab-separated text with the stable header `codon\\tamino_acid\\tcount\\tfrequency\\tweight` so it can be reused directly by `cai` and `codcmp`."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs codcopy`. The generated tool page and the machine-readable validation stub at [`../validation/codcopy.validation.json`](../validation/codcopy.validation.json) are current. No richer autodoc examples are declared in this contract yet; future prompts should replace or extend this stub with harvested or executable evidence rather than hand-maintaining the generated page directly."
+      "content": "This method is implemented and exposed through `emboss-rs codcopy`. Rust service coverage writes a temporary codon-profile TSV from a committed coding fixture and then proves downstream interoperability by reusing that profile successfully in a `cai` invocation."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Baseline stub coverage documents the exposed command surface and links to available validation evidence, but it does not imply that all historical EMBOSS examples, rendered screenshots, or legacy comparisons have been captured yet."
+      "content": "The first release is local-only and strict. Coding inputs are validated in the same way as the rest of the codon-analysis cohort, and profile inputs must use the governed TSV header and five-column row format exactly. This method does not attempt format inference beyond those two supported source shapes."
     }
   ],
-  "artifacts": [],
-  "examples": [],
+  "artifacts": [
+    {
+      "id": "codon_reference_fasta",
+      "label": "Codon-reference FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+      },
+      "description": "Repository-managed coding-reference FASTA fixture used to validate normalized profile generation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "normalize_coding_input_into_reusable_profile",
+      "title": "Normalize a coding fixture into a reusable codon-profile TSV",
+      "description": "Loads the committed coding-reference FASTA fixture, derives the governed codon-usage profile, and writes it as reusable TSV output for later `cai` or `codcmp` runs.",
+      "artifact_ids": [
+        "codon_reference_fasta"
+      ],
+      "parameters": [
+        {
+          "name": "profile_out",
+          "value": "<temporary-profile.tsv>"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "normalized_codon_profile",
+          "label": "Normalized codon-profile TSV",
+          "description": "A governed codon-profile TSV with the stable five-column header and weights suitable for later `cai` or `codcmp` input."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
   "provenance": {
-    "source_mode": "registry_stub",
-    "curated_by": "emboss-rs autodoc stub generator",
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
     "source_references": []
   },
-  "validation": null
+  "validation": {
+    "required_example_ids": [
+      "normalize_coding_input_into_reusable_profile"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
 }

@@ -1,13 +1,13 @@
 {
   "tool_name": "codcmp",
-  "document_id": "codcmp-stub-v1",
-  "source_mode": "registry_stub",
-  "evidence_source": "registry_stub_autodoc",
+  "document_id": "codcmp-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
   "summary": {
-    "total_case_count": 0,
-    "declared_case_count": 0,
+    "total_case_count": 1,
+    "declared_case_count": 1,
     "harvested_case_count": 0,
-    "runnable_case_count": 0,
+    "runnable_case_count": 1,
     "executed_case_count": 0,
     "compared_case_count": 0,
     "passed_case_count": 0,
@@ -15,17 +15,27 @@
     "partial_case_count": 0,
     "unsupported_case_count": 0
   },
-  "cases": [],
-  "unresolved_gaps": [
-    "tool 'codcmp' needs at least one declared example to establish validation evidence"
-  ],
-  "diagnostics": [
+  "cases": [
     {
-      "severity": "warning",
-      "code": "testkit.report.no_cases",
-      "message": "autodoc document does not declare any validation cases",
-      "context": "codcmp"
+      "id": "compare_two_coding_fixtures",
+      "title": "Compare codon usage between two committed coding fixtures",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "codon_reference_fasta",
+        "codon_compare_right_fasta"
+      ],
+      "expected_output_ids": [
+        "codon_comparison_table"
+      ],
+      "provenance": [],
+      "diagnostics": []
     }
   ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
   "provenance": []
 }

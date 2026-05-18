@@ -8,10 +8,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods in cohort: `46`
 - Documentation-complete methods: `46`
 - Methods with validation stubs: `46`
-- Documented-only methods: `12`
+- Documented-only methods: `8`
 - Methods with declared evidence only: `1`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `33`
+- Methods with executable validation: `37`
 - Methods with compared evidence: `0`
 - Methods with visible gaps: `46`
 
@@ -54,10 +54,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `extractfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `featcopy` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `cai` | `codon_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `chips` | `codon_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `codcmp` | `codon_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
-| `codcopy` | `codon_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
+| `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `codcmp` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `codcopy` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzznuc` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzzpro` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `fuzztran` | `pattern_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -103,10 +103,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `extractfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `cai`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `chips`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `codcmp`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
-- `codcopy`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
+- `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `codcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzznuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzzpro`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `fuzztran`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

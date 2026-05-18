@@ -6,10 +6,10 @@
     "total_method_count": 46,
     "documentation_complete_count": 46,
     "validation_stub_count": 46,
-    "documented_only_count": 12,
+    "documented_only_count": 8,
     "declared_evidence_count": 1,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 33,
+    "executable_evidence_count": 37,
     "compared_evidence_count": 0,
     "gapped_method_count": 46
   },
@@ -787,30 +787,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'cai' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'cai' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'cai' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'cai' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'cai' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -826,30 +814,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'chips' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'chips' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'chips' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'chips' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'chips' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -865,30 +841,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'codcmp' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'codcmp' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'codcmp' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'codcmp' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'codcmp' needs at least one declared example to establish validation evidence"
         }
       ]
     },
@@ -904,30 +868,18 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "documented_only",
+      "evidence_level": "executable_evidence",
       "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
+      "executable_validation_present": true,
       "compared_validation_present": false,
       "unresolved_gaps": [
-        {
-          "code": "missing_validation_cases",
-          "message": "tool 'codcopy' has no declared validation cases"
-        },
         {
           "code": "missing_harvested_legacy_evidence",
           "message": "tool 'codcopy' has no harvested legacy evidence recorded yet"
         },
         {
-          "code": "missing_executable_evidence",
-          "message": "tool 'codcopy' has no runnable or executed validation case yet"
-        },
-        {
           "code": "missing_compared_evidence",
           "message": "tool 'codcopy' has no compared validation evidence yet"
-        },
-        {
-          "code": "validation_report_gap",
-          "message": "tool 'codcopy' needs at least one declared example to establish validation evidence"
         }
       ]
     },
