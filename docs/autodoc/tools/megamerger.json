@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "megamerger-v1",
+  "tool": {
+    "name": "megamerger",
+    "family": "sequence_transform",
+    "summary": "Merge two overlapping DNA sequences by longest exact suffix/prefix overlap",
+    "legacy_names": [
+      "megamerger"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`megamerger` performs a DNA-only exact overlap merge between one left record and one right record. The first EMBOSS-RS release keeps the method intentionally narrow: it searches only for the longest positive exact overlap between the left suffix and right prefix and emits one merged DNA sequence record."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts two local FASTA-style sequence inputs. Each input must contain exactly one record, and both records must be inferred as DNA. Protein, RNA, multi-record, and provider-backed inputs are rejected in the current v1 service path."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits one merged DNA FASTA sequence record. CLI summaries report the left and right source inputs, the overlap length used, the exact-overlap merge rule, the DNA-only molecule policy, and FASTA output format."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs megamerger`. Validation currently covers a deterministic one-record DNA overlap merge against committed FASTA fixtures, and Rust tool tests also exercise explicit non-DNA rejection."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release does not implement approximate overlap finding, ambiguity-tolerant alignment, reverse-complement exploration, or scaffold graph operations. It is a DNA-only exact-overlap join rather than a broader assembly tool."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "megamerger_left_fasta",
+      "label": "Left DNA overlap FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/merger_left.fasta"
+      },
+      "description": "Repository-managed left DNA input fixture ending with the exact overlap used for deterministic megamerger validation."
+    },
+    {
+      "id": "megamerger_right_fasta",
+      "label": "Right DNA overlap FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/merger_right.fasta"
+      },
+      "description": "Repository-managed right DNA input fixture beginning with the exact overlap used for deterministic megamerger validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "merge_two_overlapping_dna_records",
+      "title": "Merge two one-record DNA FASTA inputs by exact overlap",
+      "description": "Runs `megamerger` against committed DNA overlap fixtures and emits one merged DNA sequence record.",
+      "artifact_ids": [
+        "megamerger_left_fasta",
+        "megamerger_right_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "merged_dna_sequence_record",
+          "label": "Merged DNA sequence record",
+          "description": "A DNA FASTA sequence record with residues `ACGTAAGGG` and an overlap length of `3` reported in the CLI summary."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "merge_two_overlapping_dna_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

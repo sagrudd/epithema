@@ -139,6 +139,10 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         sequence_transform::CUTSEQ_DESCRIPTOR,
         sequence_transform::UNION_DESCRIPTOR,
         sequence_transform::SPLITTER_DESCRIPTOR,
+        sequence_transform::MERGER_DESCRIPTOR,
+        sequence_transform::MEGAMERGER_DESCRIPTOR,
+        sequence_transform::SIZESEQ_DESCRIPTOR,
+        sequence_transform::SHUFFLESEQ_DESCRIPTOR,
     ]
 }
 
@@ -221,6 +225,10 @@ mod tests {
                 "cutseq",
                 "union",
                 "splitter",
+                "merger",
+                "megamerger",
+                "sizeseq",
+                "shuffleseq",
             ]
         );
     }

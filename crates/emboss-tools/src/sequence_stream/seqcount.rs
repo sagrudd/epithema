@@ -51,7 +51,10 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .expect("system time should be valid")
             .as_nanos();
-        std::env::temp_dir().join(format!("emboss-rs-seqcount-{unique}.{suffix}"))
+        std::env::temp_dir().join(format!(
+            "emboss-rs-seqcount-{}-{unique}.{suffix}",
+            std::process::id()
+        ))
     }
 
     #[test]

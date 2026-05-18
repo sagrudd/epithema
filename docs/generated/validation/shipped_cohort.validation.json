@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 60,
-    "documentation_complete_count": 60,
-    "validation_stub_count": 60,
+    "total_method_count": 64,
+    "documentation_complete_count": 64,
+    "validation_stub_count": 64,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "executable_evidence_count": 39,
+    "executable_evidence_count": 43,
     "compared_evidence_count": 21,
-    "gapped_method_count": 39
+    "gapped_method_count": 43
   },
   "methods": [
     {
@@ -1418,6 +1418,114 @@
         {
           "code": "missing_compared_evidence",
           "message": "tool 'splitter' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "merger",
+      "family": "sequence_transform",
+      "summary": "merge two overlapping sequences by longest exact suffix/prefix overlap",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'merger' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'merger' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "megamerger",
+      "family": "sequence_transform",
+      "summary": "merge two overlapping DNA sequences by longest exact suffix/prefix overlap",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'megamerger' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'megamerger' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "sizeseq",
+      "family": "sequence_transform",
+      "summary": "sort sequence records by size in deterministic order",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'sizeseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'sizeseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "shuffleseq",
+      "family": "sequence_transform",
+      "summary": "shuffle sequence residues deterministically while preserving composition",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'shuffleseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'shuffleseq' has no compared validation evidence yet"
         }
       ]
     }

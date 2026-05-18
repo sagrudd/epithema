@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `60`
-- Documentation-complete methods: `60`
-- Methods with validation stubs: `60`
+- Methods in cohort: `64`
+- Documentation-complete methods: `64`
+- Methods with validation stubs: `64`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods with harvested legacy evidence: `0`
-- Methods with executable validation: `39`
+- Methods with executable validation: `43`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `39`
+- Methods with visible gaps: `43`
 
 ## Evidence Level Definitions
 
@@ -87,6 +87,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `cutseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `union` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `splitter` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `merger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `megamerger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `sizeseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `shuffleseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 
 ## Visible Gaps
 
@@ -129,3 +133,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `union`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `splitter`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `merger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `megamerger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `sizeseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `shuffleseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

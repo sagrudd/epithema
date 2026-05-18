@@ -72,8 +72,11 @@ use emboss_tools::sequence_stream::{
     run_nthseq, run_seqcount, run_skipseq, seqcount_help, skipseq_help,
 };
 use emboss_tools::sequence_transform::{
-    CutseqParams, ExtractseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
-    run_cutseq, run_extractseq, run_splitter, run_union, splitter_help, union_help,
+    CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, ShuffleseqParams,
+    SizeseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help, megamerger_help,
+    merger_help, run_cutseq, run_extractseq, run_megamerger, run_merger, run_shuffleseq,
+    run_sizeseq, run_splitter, run_union, shuffleseq_help, sizeseq_help, splitter_help,
+    union_help,
 };
 use emboss_tools::translation_tools::{
     BacktranambigParams, BacktranseqParams, ChecktransParams, GetorfParams, PrettyseqParams,
@@ -304,6 +307,10 @@ impl EmbossService {
             "cutseq" => self.invoke_cutseq(request, descriptor),
             "union" => self.invoke_union(request, descriptor),
             "splitter" => self.invoke_splitter(request, descriptor),
+            "merger" => self.invoke_merger(request, descriptor),
+            "megamerger" => self.invoke_megamerger(request, descriptor),
+            "sizeseq" => self.invoke_sizeseq(request, descriptor),
+            "shuffleseq" => self.invoke_shuffleseq(request, descriptor),
             _ => {
                 let report = ExecutionReport::from_context(
                     &request.context,
@@ -4584,6 +4591,222 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_merger(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, merger_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("merger", merger_help()))?;
+        let (left, left_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let (right, right_provenance, right_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[1])?;
+        diagnostics.extend(right_diagnostics);
+        let outcome = run_merger(MergerParams { left, right })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("merged FASTA output");
+        let report = self.success_report(
+            &request.context,
+            "merged two overlapping sequence inputs",
+            diagnostics,
+            vec![
+                left_provenance,
+                right_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.record.clone()),
+            ResultSummary::new("Sequence merge completed")
+                .with_line(format!("Left input: {}", outcome.left.path.display()))
+                .with_line(format!("Right input: {}", outcome.right.path.display()))
+                .with_line(format!("Overlap length: {}", outcome.overlap_length))
+                .with_line("Merge rule: longest positive exact suffix/prefix overlap")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("merged-sequence", ArtifactKind::Sequence)
+                .with_label("Merged sequence record")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_megamerger(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, megamerger_help()));
+        }
+
+        let arguments: [String; 2] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("megamerger", megamerger_help()))?;
+        let (left, left_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let (right, right_provenance, right_diagnostics) =
+            self.resolve_local_sequence_input(&arguments[1])?;
+        diagnostics.extend(right_diagnostics);
+        let outcome = run_megamerger(MegamergerParams { left, right })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("merged DNA FASTA output");
+        let report = self.success_report(
+            &request.context,
+            "merged two overlapping DNA inputs",
+            diagnostics,
+            vec![
+                left_provenance,
+                right_provenance,
+                output_provenance.clone(),
+            ],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::Sequence(outcome.record.clone()),
+            ResultSummary::new("DNA sequence merge completed")
+                .with_line(format!("Left input: {}", outcome.left.path.display()))
+                .with_line(format!("Right input: {}", outcome.right.path.display()))
+                .with_line(format!("Overlap length: {}", outcome.overlap_length))
+                .with_line("Merge rule: longest positive exact suffix/prefix overlap")
+                .with_line("Molecule policy: DNA only")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("merged-dna-sequence", ArtifactKind::Sequence)
+                .with_label("Merged DNA sequence record")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_sizeseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, sizeseq_help()));
+        }
+
+        let arguments: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("sizeseq", sizeseq_help()))?;
+        let (input, input_provenance, diagnostics) =
+            self.resolve_local_sequence_input(&arguments[0])?;
+        let outcome = run_sizeseq(SizeseqParams { input })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("size-sorted FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("sorted {} records by size", outcome.records.len()),
+            diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence size sort completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line("Ordering: descending length, stable ties")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("size-sorted-sequences", ArtifactKind::Sequence)
+                .with_label("Size-sorted sequence stream")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_shuffleseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, shuffleseq_help()));
+        }
+
+        let (input_path, seed) = parse_shuffleseq_params(&request.arguments)?;
+        let (input, input_provenance, diagnostics) = self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_shuffleseq(ShuffleseqParams { input, seed })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("composition-preserving shuffled FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("shuffled {} sequence records", outcome.records.len()),
+            diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Deterministic sequence shuffle completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Seed: {}", outcome.seed))
+                .with_line("Shuffle rule: deterministic per-record residue permutation")
+                .with_line("Composition: preserved exactly")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("shuffled-sequences", ArtifactKind::Sequence)
+                .with_label("Shuffled sequence stream")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn help_response(
         &self,
         request: InvocationRequest,
@@ -5883,6 +6106,17 @@ fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, Se
     Ok(parsed)
 }
 
+fn parse_u64_value(tool: &str, value: &str, flag: &str) -> Result<u64, ServiceError> {
+    value.parse::<u64>().map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} requires {flag} to be an unsigned 64-bit integer"),
+        )
+        .with_code(format!("service.tool.{tool}.{flag}_invalid"))
+        .with_detail(value.to_owned())
+    })
+}
+
 fn map_pattern_error(tool: &str, error: PatternError) -> ServiceError {
     let code = match error {
         PatternError::EmptyPattern => format!("service.tool.{tool}.pattern.empty"),
@@ -5950,6 +6184,36 @@ fn parse_trimseq_params(arguments: &[String]) -> Result<TrimseqParams, ServiceEr
         left_trim,
         right_trim,
     })
+}
+
+fn parse_shuffleseq_params(arguments: &[String]) -> Result<(String, u64), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("shuffleseq", shuffleseq_help()));
+    }
+
+    let mut input = None;
+    let mut seed = 1_u64;
+    let mut index = 0usize;
+
+    while index < arguments.len() {
+        match arguments[index].as_str() {
+            "--seed" => {
+                let value = arguments
+                    .get(index + 1)
+                    .ok_or_else(|| tool_usage_error("shuffleseq", shuffleseq_help()))?;
+                seed = parse_u64_value("shuffleseq", value, "--seed")?;
+                index += 2;
+            }
+            argument if !argument.starts_with("--") && input.is_none() => {
+                input = Some(argument.to_owned());
+                index += 1;
+            }
+            _ => return Err(tool_usage_error("shuffleseq", shuffleseq_help())),
+        }
+    }
+
+    let input = input.ok_or_else(|| tool_usage_error("shuffleseq", shuffleseq_help()))?;
+    Ok((input, seed))
 }
 
 fn parse_revseq_params(arguments: &[String]) -> Result<RevseqParams, ServiceError> {
@@ -6587,6 +6851,10 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "codcopy" => codcopy_help(),
         "cai" => cai_help(),
         "codcmp" => codcmp_help(),
+        "merger" => merger_help(),
+        "megamerger" => megamerger_help(),
+        "sizeseq" => sizeseq_help(),
+        "shuffleseq" => shuffleseq_help(),
         _ => "",
     }
 }
@@ -6851,6 +7119,21 @@ mod tests {
     fn water_target_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/water_target.fasta")
+    }
+
+    fn merger_left_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/merger_left.fasta")
+    }
+
+    fn merger_right_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/merger_right.fasta")
+    }
+
+    fn sizeseq_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/sizeseq_records.fasta")
     }
 
     fn needleall_queries_fixture() -> std::path::PathBuf {
@@ -7968,6 +8251,100 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_merger_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("merger").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            merger_left_fixture().display().to_string(),
+            merger_right_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("merger should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(record) => {
+                assert_eq!(record.identifier().accession(), "left+right");
+                assert_eq!(record.residues(), "ACGTAAGGG");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[2], "Overlap length: 3");
+    }
+
+    #[test]
+    fn executes_megamerger_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("megamerger").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            merger_left_fixture().display().to_string(),
+            merger_right_fixture().display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("megamerger should execute");
+        match &response.result.payload {
+            ResultPayload::Sequence(record) => {
+                assert_eq!(record.molecule(), MoleculeKind::Dna);
+                assert_eq!(record.residues(), "ACGTAAGGG");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[4], "Molecule policy: DNA only");
+    }
+
+    #[test]
+    fn executes_sizeseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("sizeseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sizeseq_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("sizeseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                let ids: Vec<_> = records
+                    .iter()
+                    .map(|record| record.identifier().accession().to_owned())
+                    .collect();
+                assert_eq!(ids, vec!["long", "middle", "short", "short_tie"]);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Ordering: descending length, stable ties");
+    }
+
+    #[test]
+    fn executes_shuffleseq_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("shuffleseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "--seed".to_owned(),
+            "7".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("shuffleseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "CGTA");
+                assert_eq!(records[1].residues(), "TTTT");
+                assert_eq!(records[2].residues(), "CCGG");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[1], "Seed: 7");
     }
 
     #[test]

@@ -1,0 +1,41 @@
+{
+  "tool_name": "merger",
+  "document_id": "merger-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "merge_two_overlapping_records",
+      "title": "Merge two one-record FASTA inputs by exact overlap",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "merger_left_fasta",
+        "merger_right_fasta"
+      ],
+      "expected_output_ids": [
+        "merged_sequence_record"
+      ],
+      "provenance": [],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": []
+}

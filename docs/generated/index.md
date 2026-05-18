@@ -48,6 +48,8 @@ tools/infoseq
 tools/maskfeat
 tools/maskseq
 tools/matcher
+tools/megamerger
+tools/merger
 tools/needle
 tools/needleall
 tools/newseq
@@ -62,6 +64,8 @@ tools/runget
 tools/runinfo
 tools/seqcount
 tools/seqret
+tools/shuffleseq
+tools/sizeseq
 tools/skipseq
 tools/splitter
 tools/tranalign
