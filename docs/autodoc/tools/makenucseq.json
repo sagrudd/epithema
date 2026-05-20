@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "makenucseq-v1",
+  "tool": {
+    "name": "makenucseq",
+    "family": "sequence_stream",
+    "summary": "Create deterministic nucleotide sequence records from a bounded random generator",
+    "legacy_names": [
+      "makenucseq"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`makenucseq` creates one or more deterministic nucleotide sequence records from a documented seed and a bounded canonical alphabet. The first EMBOSS-RS release intentionally treats this as governed synthetic sequence generation rather than a broad stochastic simulation surface."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface requires an identifier prefix and an exact residue length. Optional flags control `--count`, `--seed`, `--molecule` (`dna` or `rna`), and a shared description string attached to generated records."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits one or more FASTA sequence records through the shared output path. CLI summaries report the identifier prefix, length, count, seed, chosen molecule kind, and FASTA output format."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs makenucseq`. Validation currently covers deterministic DNA and RNA generation, identifier-prefix behavior, and explicit molecule handling in the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 surface supports only canonical DNA or RNA alphabets, exact-length generation, and deterministic seed-driven output. It does not model base frequencies, ambiguity symbols, motifs, or quality-score simulation."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "makenucseq_rna_case",
+      "label": "makenucseq governed case note",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/makenucseq_create_rna_records_case.md"
+      },
+      "description": "Repository-managed note describing the deterministic RNA generation case used for the governed `makenucseq` surface."
+    }
+  ],
+  "examples": [
+    {
+      "id": "generate_two_rna_records",
+      "title": "Generate two deterministic RNA records",
+      "description": "Builds two six-residue RNA records from a documented seed and a shared identifier prefix.",
+      "artifact_ids": [
+        "makenucseq_rna_case"
+      ],
+      "parameters": [
+        {
+          "name": "identifier-prefix",
+          "value": "made_nuc"
+        },
+        {
+          "name": "length",
+          "value": "6"
+        },
+        {
+          "name": "count",
+          "value": "2"
+        },
+        {
+          "name": "seed",
+          "value": "7"
+        },
+        {
+          "name": "molecule",
+          "value": "rna"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "generated_rna_records",
+          "label": "Generated RNA records",
+          "description": "Two RNA FASTA records named `made_nuc_1` and `made_nuc_2` are emitted in stable order, and the result summary reports the deterministic seed and count."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "generate_two_rna_records"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -68,8 +68,10 @@ use emboss_tools::retrieval_tools::{
     seqret_help,
 };
 use emboss_tools::sequence_edit::{
-    DegapseqParams, DescseqParams, RevseqParams, TrimseqParams, degapseq_help, descseq_help,
-    revseq_help, run_degapseq, run_descseq, run_revseq, run_trimseq, trimseq_help,
+    BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
+    TrimestParams, TrimseqParams, VectorstripParams, biosed_help, degapseq_help, descseq_help,
+    msbar_help, revseq_help, run_biosed, run_degapseq, run_descseq, run_msbar, run_revseq,
+    run_trimest, run_trimseq, run_vectorstrip, trimest_help, trimseq_help, vectorstrip_help,
 };
 use emboss_tools::sequence_stats::{
     AaindexextractParams, ComplexParams, CompseqParams, DanParams, GeeceeParams, InfobaseParams,
@@ -82,10 +84,12 @@ use emboss_tools::sequence_stats::{
     run_pepdigest, run_pepstats, run_wordcount, word_frequency, wordcount_help,
 };
 use emboss_tools::sequence_stream::{
-    ListorParams, NewseqParams, NotseqParams, NthseqParams, SeqcountParams, SequenceInput,
-    SequenceSetOperator, SkipredundantParams, SkipseqParams, load_sequence_records, listor_help,
-    newseq_help, notseq_help, nthseq_help, run_listor, run_newseq, run_notseq, run_nthseq,
-    run_seqcount, run_skipredundant, run_skipseq, seqcount_help, skipredundant_help, skipseq_help,
+    ListorParams, MakenucseqParams, MakeprotseqParams, NewseqParams, NotseqParams, NthseqParams,
+    SeqcountParams, SequenceInput, SequenceSetOperator, SkipredundantParams, SkipseqParams,
+    listor_help, load_sequence_records, makenucseq_help, makeprotseq_help, newseq_help,
+    notseq_help, nthseq_help, run_listor, run_makenucseq, run_makeprotseq, run_newseq,
+    run_notseq, run_nthseq, run_seqcount, run_skipredundant, run_skipseq, seqcount_help,
+    skipredundant_help, skipseq_help,
 };
 use emboss_tools::sequence_transform::{
     CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, PasteseqParams,
@@ -288,10 +292,16 @@ impl EmbossService {
             "skipredundant" => self.invoke_skipredundant(request, descriptor),
             "notseq" => self.invoke_notseq(request, descriptor),
             "newseq" => self.invoke_newseq(request, descriptor),
+            "makenucseq" => self.invoke_makenucseq(request, descriptor),
+            "makeprotseq" => self.invoke_makeprotseq(request, descriptor),
+            "biosed" => self.invoke_biosed(request, descriptor),
             "degapseq" => self.invoke_degapseq(request, descriptor),
             "revseq" => self.invoke_revseq(request, descriptor),
+            "msbar" => self.invoke_msbar(request, descriptor),
+            "trimest" => self.invoke_trimest(request, descriptor),
             "trimseq" => self.invoke_trimseq(request, descriptor),
             "descseq" => self.invoke_descseq(request, descriptor),
+            "vectorstrip" => self.invoke_vectorstrip(request, descriptor),
             "infoseq" => self.invoke_infoseq(request, descriptor),
             "maskseq" => self.invoke_maskseq(request, descriptor),
             "maskambignuc" => self.invoke_maskambignuc(request, descriptor),
@@ -2062,6 +2072,96 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_makenucseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, makenucseq_help()));
+        }
+
+        let outcome = run_makenucseq(parse_makenucseq_params(request.arguments())?)?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("generated nucleotide FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("generated {} nucleotide records", outcome.records.len()),
+            Vec::new(),
+            vec![output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Deterministic nucleotide sequences created")
+                .with_line(format!("Identifier prefix: {}", outcome.identifier_prefix))
+                .with_line(format!("Length: {}", outcome.length))
+                .with_line(format!("Count: {}", outcome.count))
+                .with_line(format!("Seed: {}", outcome.seed))
+                .with_line(format!("Molecule: {}", outcome.molecule))
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("generated-nucleotide-sequences", ArtifactKind::Sequence)
+                .with_label("Generated nucleotide sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_makeprotseq(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, makeprotseq_help()));
+        }
+
+        let outcome = run_makeprotseq(parse_makeprotseq_params(request.arguments())?)?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("generated protein FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("generated {} protein records", outcome.records.len()),
+            Vec::new(),
+            vec![output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Deterministic protein sequences created")
+                .with_line(format!("Identifier prefix: {}", outcome.identifier_prefix))
+                .with_line(format!("Length: {}", outcome.length))
+                .with_line(format!("Count: {}", outcome.count))
+                .with_line(format!("Seed: {}", outcome.seed))
+                .with_line("Molecule: protein")
+                .with_line("Output format: fasta"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("generated-protein-sequences", ArtifactKind::Sequence)
+                .with_label("Generated protein sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_extractseq(
         &self,
         request: InvocationRequest,
@@ -2264,6 +2364,219 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("trimmed-sequences", ArtifactKind::Sequence)
                 .with_label("Trimmed sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_biosed(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, biosed_help()));
+        }
+
+        let params = parse_biosed_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_biosed(BiosedParams {
+            input,
+            start: params.start,
+            end: params.end,
+            replacement: params.replacement,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("biosed FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("edited {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Sequence interval editing completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Start: {}", outcome.start))
+                .with_line(format!("End: {}", outcome.end))
+                .with_line(format!(
+                    "Replacement: {}",
+                    outcome.replacement.unwrap_or_else(|| "<delete>".to_owned())
+                ))
+                .with_line("Coordinate convention: 1-based inclusive")
+                .with_line("Output format: fasta (feature annotations dropped in v1)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("biosed-sequences", ArtifactKind::Sequence)
+                .with_label("Biosed output sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_msbar(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, msbar_help()));
+        }
+
+        let params = parse_msbar_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let mutation_count = params.mutations.len();
+        let outcome = run_msbar(MsbarParams {
+            input,
+            mutations: params.mutations,
+        })?;
+
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("msbar FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("mutated {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Point mutation editing completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Mutations: {}", mutation_count))
+                .with_line("Mutation syntax: 1-based position:residue")
+                .with_line("Output format: fasta (feature annotations dropped in v1)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("msbar-sequences", ArtifactKind::Sequence)
+                .with_label("Mutated sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_trimest(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, trimest_help()));
+        }
+
+        let params = parse_trimest_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let outcome = run_trimest(TrimestParams {
+            input,
+            min_tail: params.min_tail,
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("trimest FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("trimmed poly-A tails from {} records", outcome.records.len()),
+            input_diagnostics,
+            vec![input_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Poly-A tail trimming completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Minimum tail length: {}", outcome.min_tail))
+                .with_line("Trim rule: trailing 3' runs of 'A' only")
+                .with_line("Output format: fasta (feature annotations dropped in v1)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("trimest-sequences", ArtifactKind::Sequence)
+                .with_label("Trimmed nucleotide sequences")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_vectorstrip(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, vectorstrip_help()));
+        }
+
+        let params = parse_vectorstrip_params(request.arguments())?;
+        let input_path = params.input.path.display().to_string();
+        let vector_path = params.vector.path.display().to_string();
+        let (input, input_provenance, mut diagnostics) =
+            self.resolve_local_sequence_input(&input_path)?;
+        let (vector, vector_provenance, vector_diagnostics) =
+            self.resolve_local_sequence_input(&vector_path)?;
+        diagnostics.extend(vector_diagnostics);
+        let outcome = run_vectorstrip(VectorstripParams { input, vector })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("vectorstrip FASTA output");
+        let report = self.success_report(
+            &request.context,
+            format!("stripped vector matches from {} records", outcome.records.len()),
+            diagnostics,
+            vec![input_provenance, vector_provenance, output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequenceCollection(outcome.records),
+            ResultSummary::new("Vector stripping completed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Vector input: {}", outcome.vector.path.display()))
+                .with_line("Match rule: exact full-length terminal vector matches only")
+                .with_line("Output format: fasta (feature annotations dropped in v1)"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("vectorstripped-sequences", ArtifactKind::Sequence)
+                .with_label("Vector-stripped sequences")
                 .with_provenance(output_provenance),
         );
 
@@ -7306,6 +7619,183 @@ fn parse_newseq_params(arguments: &[String]) -> Result<NewseqParams, ServiceErro
     })
 }
 
+fn parse_makenucseq_params(arguments: &[String]) -> Result<MakenucseqParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("makenucseq", makenucseq_help()));
+    }
+
+    let identifier_prefix = arguments[0].clone();
+    let length = parse_positive_count("makenucseq", &arguments[1], "<length>")?;
+    let mut count = 1usize;
+    let mut seed = 1_u64;
+    let mut molecule = MoleculeKind::Dna;
+    let mut description = None;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--count=") {
+            count = parse_positive_count("makenucseq", value, "--count")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--count" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --count")
+                    .with_code("service.tool.makenucseq.count_missing")
+            })?;
+            count = parse_positive_count("makenucseq", value, "--count")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--seed=") {
+            seed = parse_u64_value("makenucseq", value, "--seed")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--seed" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --seed")
+                    .with_code("service.tool.makenucseq.seed_missing")
+            })?;
+            seed = parse_u64_value("makenucseq", value, "--seed")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--molecule=") {
+            molecule = parse_makenucseq_molecule(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--molecule" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --molecule")
+                    .with_code("service.tool.makenucseq.molecule_missing")
+            })?;
+            molecule = parse_makenucseq_molecule(value)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--description=") {
+            description = Some(value.to_owned());
+            index += 1;
+            continue;
+        }
+        if argument == "--description" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --description")
+                    .with_code("service.tool.makenucseq.description_missing")
+            })?;
+            description = Some(value.clone());
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown makenucseq argument '{argument}'"),
+        )
+        .with_code("service.tool.makenucseq.argument_unknown")
+        .with_detail(makenucseq_help()));
+    }
+
+    Ok(MakenucseqParams {
+        identifier_prefix,
+        length,
+        count,
+        seed,
+        molecule,
+        description,
+    })
+}
+
+fn parse_makenucseq_molecule(value: &str) -> Result<MoleculeKind, ServiceError> {
+    match value.to_ascii_lowercase().as_str() {
+        "dna" => Ok(MoleculeKind::Dna),
+        "rna" => Ok(MoleculeKind::Rna),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "makenucseq molecule must be dna or rna",
+        )
+        .with_code("service.tool.makenucseq.molecule_invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn parse_makeprotseq_params(arguments: &[String]) -> Result<MakeprotseqParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("makeprotseq", makeprotseq_help()));
+    }
+
+    let identifier_prefix = arguments[0].clone();
+    let length = parse_positive_count("makeprotseq", &arguments[1], "<length>")?;
+    let mut count = 1usize;
+    let mut seed = 1_u64;
+    let mut description = None;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--count=") {
+            count = parse_positive_count("makeprotseq", value, "--count")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--count" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --count")
+                    .with_code("service.tool.makeprotseq.count_missing")
+            })?;
+            count = parse_positive_count("makeprotseq", value, "--count")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--seed=") {
+            seed = parse_u64_value("makeprotseq", value, "--seed")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--seed" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --seed")
+                    .with_code("service.tool.makeprotseq.seed_missing")
+            })?;
+            seed = parse_u64_value("makeprotseq", value, "--seed")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--description=") {
+            description = Some(value.to_owned());
+            index += 1;
+            continue;
+        }
+        if argument == "--description" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --description")
+                    .with_code("service.tool.makeprotseq.description_missing")
+            })?;
+            description = Some(value.clone());
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown makeprotseq argument '{argument}'"),
+        )
+        .with_code("service.tool.makeprotseq.argument_unknown")
+        .with_detail(makeprotseq_help()));
+    }
+
+    Ok(MakeprotseqParams {
+        identifier_prefix,
+        length,
+        count,
+        seed,
+        description,
+    })
+}
+
 fn parse_infoseq_params(arguments: &[String]) -> Result<InfoseqParams, ServiceError> {
     if arguments.len() != 1 {
         return Err(tool_usage_error("infoseq", infoseq_help()));
@@ -8531,6 +9021,127 @@ fn parse_trimseq_params(arguments: &[String]) -> Result<TrimseqParams, ServiceEr
     })
 }
 
+fn parse_biosed_params(arguments: &[String]) -> Result<BiosedParams, ServiceError> {
+    if arguments.len() < 3 {
+        return Err(tool_usage_error("biosed", biosed_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let start = parse_positive_count("biosed", &arguments[1], "<start>")?;
+    let end = parse_positive_count("biosed", &arguments[2], "<end>")?;
+    let mut replacement = None;
+    let mut index = 3usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--replace=") {
+            replacement = Some(value.to_owned());
+            index += 1;
+            continue;
+        }
+        if argument == "--replace" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --replace")
+                    .with_code("service.tool.biosed.replace_missing")
+            })?;
+            replacement = Some(value.clone());
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown biosed argument '{argument}'"),
+        )
+        .with_code("service.tool.biosed.argument_unknown")
+        .with_detail(biosed_help()));
+    }
+
+    Ok(BiosedParams {
+        input,
+        start,
+        end,
+        replacement,
+    })
+}
+
+fn parse_msbar_params(arguments: &[String]) -> Result<MsbarParams, ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("msbar", msbar_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mutations = arguments[1..]
+        .iter()
+        .map(|argument| parse_msbar_mutation(argument))
+        .collect::<Result<Vec<_>, _>>()?;
+
+    Ok(MsbarParams { input, mutations })
+}
+
+fn parse_msbar_mutation(value: &str) -> Result<MsbarMutation, ServiceError> {
+    let (position, residue) = value.split_once(':').ok_or_else(|| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            "msbar mutations must use position:residue syntax",
+        )
+        .with_code("service.tool.msbar.mutation_invalid")
+        .with_detail(value.to_owned())
+    })?;
+    Ok(MsbarMutation {
+        position: parse_positive_count("msbar", position, "<position>")?,
+        residue: parse_single_char_argument("msbar", residue, "mutation")?,
+    })
+}
+
+fn parse_trimest_params(arguments: &[String]) -> Result<TrimestParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("trimest", trimest_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut min_tail = 4usize;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--min-tail=") {
+            min_tail = parse_positive_count("trimest", value, "--min-tail")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--min-tail" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --min-tail")
+                    .with_code("service.tool.trimest.min_tail_missing")
+            })?;
+            min_tail = parse_positive_count("trimest", value, "--min-tail")?;
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown trimest argument '{argument}'"),
+        )
+        .with_code("service.tool.trimest.argument_unknown")
+        .with_detail(trimest_help()));
+    }
+
+    Ok(TrimestParams { input, min_tail })
+}
+
+fn parse_vectorstrip_params(arguments: &[String]) -> Result<VectorstripParams, ServiceError> {
+    let [input, vector]: [String; 2] = arguments
+        .to_vec()
+        .try_into()
+        .map_err(|_| tool_usage_error("vectorstrip", vectorstrip_help()))?;
+    Ok(VectorstripParams {
+        input: SequenceInput::new(input),
+        vector: SequenceInput::new(vector),
+    })
+}
+
 fn parse_shuffleseq_params(arguments: &[String]) -> Result<(String, u64), ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("shuffleseq", shuffleseq_help()));
@@ -9580,10 +10191,16 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "skipredundant" => skipredundant_help(),
         "notseq" => notseq_help(),
         "newseq" => newseq_help(),
+        "makenucseq" => makenucseq_help(),
+        "makeprotseq" => makeprotseq_help(),
+        "biosed" => biosed_help(),
         "degapseq" => degapseq_help(),
         "revseq" => revseq_help(),
+        "msbar" => msbar_help(),
+        "trimest" => trimest_help(),
         "trimseq" => trimseq_help(),
         "descseq" => descseq_help(),
+        "vectorstrip" => vectorstrip_help(),
         "infoseq" => infoseq_help(),
         "maskambignuc" => maskambignuc_help(),
         "maskambigprot" => maskambigprot_help(),
@@ -9974,6 +10591,31 @@ mod tests {
     fn sizeseq_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/sizeseq_records.fasta")
+    }
+
+    fn biosed_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/biosed_records.fasta")
+    }
+
+    fn msbar_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/msbar_records.fasta")
+    }
+
+    fn trimest_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/trimest_records.fasta")
+    }
+
+    fn vectorstrip_records_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/vectorstrip_records.fasta")
+    }
+
+    fn vectorstrip_vector_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/vectorstrip_vector.fasta")
     }
 
     fn ambiguous_nucleotide_fixture() -> std::path::PathBuf {
@@ -11017,6 +11659,64 @@ mod tests {
     }
 
     #[test]
+    fn executes_makenucseq_with_deterministic_count_and_seed() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("makenucseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            "made_nuc".to_owned(),
+            "6".to_owned(),
+            "--count".to_owned(),
+            "2".to_owned(),
+            "--seed".to_owned(),
+            "7".to_owned(),
+            "--molecule".to_owned(),
+            "rna".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("makenucseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 2);
+                assert_eq!(records[0].identifier().accession(), "made_nuc_1");
+                assert_eq!(records[0].molecule().to_string(), "rna");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[3], "Seed: 7");
+    }
+
+    #[test]
+    fn executes_makeprotseq_with_deterministic_seed() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("makeprotseq").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            "made_prot".to_owned(),
+            "5".to_owned(),
+            "--seed".to_owned(),
+            "9".to_owned(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("makeprotseq should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].identifier().accession(), "made_prot");
+                assert_eq!(records[0].molecule().to_string(), "protein");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[3], "Seed: 9");
+    }
+
+    #[test]
     fn newseq_rejects_invalid_residue_for_declared_molecule() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -11446,6 +12146,31 @@ mod tests {
     }
 
     #[test]
+    fn executes_biosed_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("biosed").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            biosed_fixture().display().to_string(),
+            "2".to_owned(),
+            "3".to_owned(),
+            "--replace".to_owned(),
+            "NN".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("biosed should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ANNG");
+                assert_eq!(records[1].residues(), "TNNN");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
     fn executes_revseq_against_real_fixture() {
         let service = implemented_service();
         let request = InvocationRequest::new(
@@ -11551,6 +12276,76 @@ mod tests {
             ResultPayload::SequenceCollection(records) => {
                 assert_eq!(records[0].residues(), "CG");
                 assert_eq!(records[1].residues(), "TT");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_msbar_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("msbar").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            msbar_fixture().display().to_string(),
+            "2:T".to_owned(),
+            "4:A".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("msbar should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ATGA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_trimest_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("trimest").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            trimest_fixture().display().to_string(),
+            "--min-tail".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("trimest should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ACGT");
+                assert_eq!(records[1].residues(), "TTGCAAA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+    }
+
+    #[test]
+    fn executes_vectorstrip_against_real_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("vectorstrip").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            vectorstrip_records_fixture().display().to_string(),
+            vectorstrip_vector_fixture().display().to_string(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("vectorstrip should execute");
+        match &response.result.payload {
+            ResultPayload::SequenceCollection(records) => {
+                assert_eq!(records[0].residues(), "ACGT");
+                assert_eq!(records[1].residues(), "TTAA");
+                assert_eq!(records[2].residues(), "GGCC");
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

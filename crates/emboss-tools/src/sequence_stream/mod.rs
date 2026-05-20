@@ -4,6 +4,9 @@
 //! `newseq`, `seqcount`, `notseq`, `nthseq`, `skipseq`, and deterministic set operations.
 
 mod listor;
+mod generation;
+mod makenucseq;
+mod makeprotseq;
 mod newseq;
 mod notseq;
 mod nthseq;
@@ -18,6 +21,8 @@ use crate::ToolDescriptor;
 const FAMILY: &str = "sequence_stream";
 
 pub use listor::{ListorOutcome, ListorParams, listor_help, run_listor};
+pub use makenucseq::{MakenucseqOutcome, MakenucseqParams, makenucseq_help, run_makenucseq};
+pub use makeprotseq::{MakeprotseqOutcome, MakeprotseqParams, makeprotseq_help, run_makeprotseq};
 pub use newseq::{NewseqOutcome, NewseqParams, newseq_help, run_newseq};
 pub use notseq::{NotseqOutcome, NotseqParams, notseq_help, run_notseq};
 pub use nthseq::{NthseqOutcome, NthseqParams, nthseq_help, run_nthseq};
@@ -33,6 +38,18 @@ pub use skipseq::{SkipseqOutcome, SkipseqParams, run_skipseq, skipseq_help};
 pub const NEWSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "newseq",
     "create a new sequence record from supplied residues",
+)
+.with_family(FAMILY);
+/// `makenucseq` descriptor.
+pub const MAKENUCSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "makenucseq",
+    "create deterministic nucleotide sequence records from a bounded random generator",
+)
+.with_family(FAMILY);
+/// `makeprotseq` descriptor.
+pub const MAKEPROTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "makeprotseq",
+    "create deterministic protein sequence records from a bounded random generator",
 )
 .with_family(FAMILY);
 /// `seqcount` descriptor.
@@ -73,6 +90,8 @@ pub const SKIPREDUNDANT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 /// Implemented sequence-stream cohort descriptors in stable listing order.
 pub const TOOL_DESCRIPTORS: &[ToolDescriptor] = &[
     NEWSEQ_DESCRIPTOR,
+    MAKENUCSEQ_DESCRIPTOR,
+    MAKEPROTSEQ_DESCRIPTOR,
     SEQCOUNT_DESCRIPTOR,
     NOTSEQ_DESCRIPTOR,
     NTHSEQ_DESCRIPTOR,

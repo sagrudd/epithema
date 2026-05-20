@@ -5,16 +5,16 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `90`
-- Documentation-complete methods: `90`
-- Methods with validation stubs: `90`
+- Methods in cohort: `96`
+- Documentation-complete methods: `96`
+- Methods with validation stubs: `96`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `47`
-- Methods with executable validation: `69`
+- Methods with executable validation: `75`
 - Methods with compared evidence: `21`
-- Methods with visible gaps: `69`
+- Methods with visible gaps: `75`
 
 ## Evidence Level Definitions
 
@@ -47,16 +47,22 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `newseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `seqcount` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `notseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `nthseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `skipseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `listor` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `skipredundant` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `biosed` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `degapseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `msbar` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `trimest` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `descseq` | `sequence_edit` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `vectorstrip` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskambignuc` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `maskambigprot` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -137,15 +143,21 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `newseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `makenucseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `makeprotseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `seqcount`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `notseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `nthseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `skipseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `listor`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `skipredundant`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `biosed`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `msbar`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `trimest`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `trimseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `vectorstrip`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskambignuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskambigprot`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

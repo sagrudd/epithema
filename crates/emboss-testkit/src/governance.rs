@@ -739,7 +739,7 @@ mod tests {
 
         assert_eq!(report.summary.shipped_tool_count, report.shipped_methods.len());
         assert!(report.shipped_without_governance_mapping.is_empty());
-        assert!(report.summary.retained_backlog_count > 0);
+        assert_eq!(report.summary.retained_backlog_count, 0);
 
         let transeq = report
             .shipped_methods

@@ -224,16 +224,12 @@ shipped cohort is:
 
 ### Missing validation depth
 
-- `69` shipped methods still have one or more visible evidence gaps, because
+- `75` shipped methods still have one or more visible evidence gaps, because
   executable evidence without compared grounding is still treated as partial.
-- The largest remaining retained backlog is in `Core Retain — Sequence editing
-  and manipulation`, with `6` unshipped retained methods:
-  - `biosed`
-  - `makenucseq`
-  - `makeprotseq`
-  - `msbar`
-  - `trimest`
-  - `vectorstrip`
+- The retained governance backlog is now `0`.
+- The dominant remaining weakness has shifted from implementation backlog to
+  evidence depth, especially in the still large executable-only portion of the
+  sequence editing and manipulation family.
 
 ### Legacy harvesting remains partial
 
@@ -272,11 +268,11 @@ shipped cohort is:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `90`
+- Shipped methods audited: `96`
 - Compared-evidence methods: `21`
-- Executable-evidence methods: `69`
+- Executable-evidence methods: `75`
 - Methods with harvested legacy provenance recorded: `47`
-- Retained backlog still unshipped: `6`
+- Retained backlog still unshipped: `0`
 
 ## Practical Validation Run
 

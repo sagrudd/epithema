@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 90,
-    "shipped_with_governance_mapping_count": 90,
-    "shipped_retain_count": 84,
+    "shipped_tool_count": 96,
+    "shipped_with_governance_mapping_count": 96,
+    "shipped_retain_count": 90,
     "shipped_rework_count": 6,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
-    "retained_backlog_count": 6,
-    "shipped_curated_autodoc_count": 90,
-    "shipped_executable_or_better_count": 90,
+    "retained_backlog_count": 0,
+    "shipped_curated_autodoc_count": 96,
+    "shipped_executable_or_better_count": 96,
     "shipped_harvested_legacy_presence_count": 47,
     "shipped_compared_count": 21,
     "shipped_documented_only_count": 0
@@ -192,6 +192,24 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "makenucseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "create deterministic nucleotide sequence records from a bounded random generator",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "makeprotseq",
+      "shipped_family": "sequence_stream",
+      "shipped_summary": "create deterministic protein sequence records from a bounded random generator",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "seqcount",
       "shipped_family": "sequence_stream",
       "shipped_summary": "count sequence records in an input stream",
@@ -246,6 +264,15 @@
       "evidence_level": "executable_evidence"
     },
     {
+      "tool_name": "biosed",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "replace or delete explicit sequence intervals record by record",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "degapseq",
       "shipped_family": "sequence_edit",
       "shipped_summary": "remove '-' and '.' gap characters from sequence records",
@@ -258,6 +285,24 @@
       "tool_name": "revseq",
       "shipped_family": "sequence_edit",
       "shipped_summary": "reverse sequence content record by record",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "msbar",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "apply explicit point mutations to sequence records",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
+      "tool_name": "trimest",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "remove terminal poly-A tails from nucleotide sequence records",
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
@@ -280,6 +325,15 @@
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "vectorstrip",
+      "shipped_family": "sequence_edit",
+      "shipped_summary": "strip exact vector sequences from the ends of nucleotide records",
+      "governance_family": "Core Retain — Sequence editing and manipulation",
+      "governance_decision": "retain",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
     },
     {
       "tool_name": "maskseq",
@@ -879,20 +933,13 @@
     {
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "retained_total": 23,
-      "retained_shipped": 17,
-      "retained_backlog": 6,
-      "shipped_curated_autodoc": 17,
-      "shipped_executable_or_better": 17,
+      "retained_shipped": 23,
+      "retained_backlog": 0,
+      "shipped_curated_autodoc": 23,
+      "shipped_executable_or_better": 23,
       "shipped_compared": 2,
-      "recommendation": "prioritise retained backlog closure (6 remaining)",
-      "retained_backlog_tools": [
-        "biosed",
-        "makenucseq",
-        "makeprotseq",
-        "msbar",
-        "trimest",
-        "vectorstrip"
-      ]
+      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "retained_backlog_tools": []
     },
     {
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
@@ -1082,43 +1129,6 @@
       "retained_backlog_tools": []
     }
   ],
-  "retained_backlog_tools": [
-    {
-      "tool_name": "biosed",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Replace or delete sequence sections"
-    },
-    {
-      "tool_name": "makenucseq",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Create random nucleotide sequences"
-    },
-    {
-      "tool_name": "makeprotseq",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Create random protein sequences"
-    },
-    {
-      "tool_name": "msbar",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Mutate a sequence"
-    },
-    {
-      "tool_name": "trimest",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Remove poly-A tails from nucleotide sequences"
-    },
-    {
-      "tool_name": "vectorstrip",
-      "governance_family": "Core Retain — Sequence editing and manipulation",
-      "decision": "retain",
-      "description": "Remove vectors from the ends of nucleotide sequence(s)"
-    }
-  ],
+  "retained_backlog_tools": [],
   "shipped_without_governance_mapping": []
 }

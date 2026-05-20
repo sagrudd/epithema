@@ -3,16 +3,16 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 90,
-    "documentation_complete_count": 90,
-    "validation_stub_count": 90,
+    "total_method_count": 96,
+    "documentation_complete_count": 96,
+    "validation_stub_count": 96,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
     "harvested_legacy_presence_count": 47,
-    "executable_evidence_count": 69,
+    "executable_evidence_count": 75,
     "compared_evidence_count": 21,
-    "gapped_method_count": 69
+    "gapped_method_count": 75
   },
   "methods": [
     {
@@ -494,6 +494,60 @@
       ]
     },
     {
+      "tool_name": "makenucseq",
+      "family": "sequence_stream",
+      "summary": "create deterministic nucleotide sequence records from a bounded random generator",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'makenucseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'makenucseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "makeprotseq",
+      "family": "sequence_stream",
+      "summary": "create deterministic protein sequence records from a bounded random generator",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'makeprotseq' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'makeprotseq' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "seqcount",
       "family": "sequence_stream",
       "summary": "count sequence records in an input stream",
@@ -656,6 +710,33 @@
       ]
     },
     {
+      "tool_name": "biosed",
+      "family": "sequence_edit",
+      "summary": "replace or delete explicit sequence intervals record by record",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'biosed' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'biosed' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "degapseq",
       "family": "sequence_edit",
       "summary": "remove '-' and '.' gap characters from sequence records",
@@ -710,6 +791,60 @@
       ]
     },
     {
+      "tool_name": "msbar",
+      "family": "sequence_edit",
+      "summary": "apply explicit point mutations to sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'msbar' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'msbar' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
+      "tool_name": "trimest",
+      "family": "sequence_edit",
+      "summary": "remove terminal poly-A tails from nucleotide sequence records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'trimest' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'trimest' has no compared validation evidence yet"
+        }
+      ]
+    },
+    {
       "tool_name": "trimseq",
       "family": "sequence_edit",
       "summary": "trim explicit residue counts from the left and right ends of sequence records",
@@ -753,6 +888,33 @@
       "executable_validation_present": true,
       "compared_validation_present": true,
       "unresolved_gaps": []
+    },
+    {
+      "tool_name": "vectorstrip",
+      "family": "sequence_edit",
+      "summary": "strip exact vector sequences from the ends of nucleotide records",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'vectorstrip' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'vectorstrip' has no compared validation evidence yet"
+        }
+      ]
     },
     {
       "tool_name": "maskseq",

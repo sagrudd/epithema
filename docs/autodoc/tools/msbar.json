@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "msbar-v1",
+  "tool": {
+    "name": "msbar",
+    "family": "sequence_edit",
+    "summary": "Apply explicit point mutations to sequence records",
+    "legacy_names": [
+      "msbar"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`msbar` applies one or more explicit point substitutions to every sequence record in one local input. The EMBOSS-RS v1 surface is bounded to deterministic substitution-only editing using `position:residue` syntax."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one local sequence input followed by one or more mutation specifications written as `position:residue`. Positions are 1-based, must be unique within a single invocation, and are applied to every input record."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits mutated FASTA records in input order. CLI summaries report the source input, mutation count, mutation syntax, and FASTA output format."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs msbar`. Validation currently covers deterministic substitution behavior against committed FASTA fixtures in the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 implementation supports substitutions only. It does not support insertions, deletions, ambiguous edit grammars, or annotation-coordinate remapping, and it drops feature annotations after mutation."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "msbar_records_fasta",
+      "label": "msbar FASTA fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/msbar_records.fasta"
+      },
+      "description": "Repository-managed FASTA input fixture used for deterministic point-mutation validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "apply_point_mutations",
+      "title": "Apply two point mutations to one input record",
+      "description": "Runs `msbar` against the committed FASTA fixture and applies mutations `2:T` and `4:A`.",
+      "artifact_ids": [
+        "msbar_records_fasta"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "mutated_sequence_record",
+          "label": "Mutated sequence record",
+          "description": "The output FASTA record contains residues `ATGA`, and the shared result summary reports that two mutations were applied using `position:residue` syntax."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "apply_point_mutations"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

@@ -455,7 +455,7 @@ mod tests {
             derive_cohort_health_report(repo_root()).expect("cohort health report should derive");
         assert!(report.summary.total_method_count > 0);
         assert!(!report.recommendations.is_empty());
-        assert!(report.summary.largest_retained_backlog_size > 0);
+        assert_eq!(report.summary.largest_retained_backlog_size, 0);
     }
 
     #[test]

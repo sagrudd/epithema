@@ -1,0 +1,105 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "makeprotseq-v1",
+  "tool": {
+    "name": "makeprotseq",
+    "family": "sequence_stream",
+    "summary": "Create deterministic protein sequence records from a bounded random generator",
+    "legacy_names": [
+      "makeprotseq"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`makeprotseq` creates one or more deterministic protein sequence records from a canonical amino-acid alphabet and a documented seed. The v1 implementation is intentionally narrow and governed, prioritizing reproducible generated records over a broad randomization surface."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface requires an identifier prefix and an exact residue length. Optional flags control `--count`, `--seed`, and a shared description string attached to generated records."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The tool emits one or more FASTA protein records through the shared sequence output path. CLI summaries report the identifier prefix, length, count, deterministic seed, and output format."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs makeprotseq`. Validation currently covers deterministic seed behavior, identifier-prefix behavior, and protein output typing in the Rust tool and service layers."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 surface supports only canonical amino-acid generation with exact-length output. It does not model residue frequencies, motifs, low-complexity constraints, or biologically informed composition targets."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "makeprotseq_case",
+      "label": "makeprotseq governed case note",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/makeprotseq_create_protein_record_case.md"
+      },
+      "description": "Repository-managed note describing the deterministic protein generation case used for the governed `makeprotseq` surface."
+    }
+  ],
+  "examples": [
+    {
+      "id": "generate_one_protein_record",
+      "title": "Generate one deterministic protein record",
+      "description": "Builds one five-residue protein sequence record from a documented seed.",
+      "artifact_ids": [
+        "makeprotseq_case"
+      ],
+      "parameters": [
+        {
+          "name": "identifier-prefix",
+          "value": "made_prot"
+        },
+        {
+          "name": "length",
+          "value": "5"
+        },
+        {
+          "name": "seed",
+          "value": "9"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "generated_protein_record",
+          "label": "Generated protein record",
+          "description": "One FASTA protein record named `made_prot` is emitted, and the shared result summary reports the deterministic seed and protein molecule kind."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "generate_one_protein_record"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

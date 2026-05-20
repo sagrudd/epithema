@@ -16,6 +16,7 @@ tools/aligncopy
 tools/aligncopypair
 tools/backtranambig
 tools/backtranseq
+tools/biosed
 tools/cai
 tools/charge
 tools/checktrans
@@ -55,6 +56,8 @@ tools/infobase
 tools/inforesidue
 tools/infoseq
 tools/listor
+tools/makenucseq
+tools/makeprotseq
 tools/maskambignuc
 tools/maskambigprot
 tools/maskfeat
@@ -62,6 +65,7 @@ tools/maskseq
 tools/matcher
 tools/megamerger
 tools/merger
+tools/msbar
 tools/needle
 tools/needleall
 tools/newseq
@@ -94,9 +98,11 @@ tools/splitsource
 tools/splitter
 tools/tranalign
 tools/transeq
+tools/trimest
 tools/trimseq
 tools/twofeat
 tools/union
+tools/vectorstrip
 tools/water
 tools/wordcount
 tools/wordfinder
