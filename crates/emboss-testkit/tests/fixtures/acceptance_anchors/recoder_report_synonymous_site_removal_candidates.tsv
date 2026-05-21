@@ -1,0 +1,3 @@
+record	site	occurrence	site_start	site_end	codon_index	codon_start	codon_end	amino_acid	original_codon	replacement_codon	mutated_sequence
+recoderA	GAATTC	1	7	12	3	7	9	E	GAA	GAG	ATGGCTGAGTTCGAA
+recoderA	GAATTC	1	7	12	4	10	12	F	TTC	TTT	ATGGCTGAATTTGAA

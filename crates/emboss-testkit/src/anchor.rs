@@ -800,6 +800,30 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "seqmatchall -sequence seqmatchall_records.fasta -wordsize 4 -stdout yes",
     },
     AcceptanceAnchorSpec {
+        tool_name: "recoder",
+        autodoc_contract: "docs/autodoc/tools/recoder.json",
+        example_id: "remove_exact_ecori_site_with_synonymous_edits",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/recoder_report_synonymous_site_removal_candidates.tsv",
+        legacy_source: "EMBOSS recoder application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/recoder.acd",
+        legacy_invocation:
+            "recoder -sequence recoder_records.fasta -site GAATTC -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "silent",
+        autodoc_contract: "docs/autodoc/tools/silent.json",
+        example_id: "create_exact_ecori_site_with_synonymous_edit",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/silent_report_synonymous_site_creation_candidates.tsv",
+        legacy_source: "EMBOSS silent application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/silent.acd",
+        legacy_invocation:
+            "silent -sequence silent_records.fasta -site GAATTC -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -1507,6 +1531,20 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             "--word-size".to_owned(),
             "2".to_owned(),
+        ],
+        "recoder" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/recoder_records.fasta")
+                .display()
+                .to_string(),
+            "GAATTC".to_owned(),
+        ],
+        "silent" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/silent_records.fasta")
+                .display()
+                .to_string(),
+            "GAATTC".to_owned(),
         ],
         "backtranseq" | "backtranambig" => vec![
             repo_root

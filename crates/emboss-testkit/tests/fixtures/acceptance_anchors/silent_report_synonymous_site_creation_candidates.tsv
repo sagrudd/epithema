@@ -1,0 +1,2 @@
+record	site	site_start	site_end	codon_index	codon_start	codon_end	amino_acid	original_codon	replacement_codon	mutated_sequence
+silentA	GAATTC	7	12	3	7	9	E	GAG	GAA	ATGGCTGAATTCGAA
