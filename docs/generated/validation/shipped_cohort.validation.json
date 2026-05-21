@@ -10,9 +10,9 @@
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
     "harvested_legacy_presence_count": 94,
-    "executable_evidence_count": 24,
-    "compared_evidence_count": 72,
-    "gapped_method_count": 24
+    "executable_evidence_count": 16,
+    "compared_evidence_count": 80,
+    "gapped_method_count": 16
   },
   "methods": [
     {
@@ -1017,16 +1017,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'dreg' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "einverted",
@@ -1040,16 +1035,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'einverted' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "fuzznuc",
@@ -1117,16 +1107,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'palindrome' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "preg",
@@ -1140,16 +1125,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'preg' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "patmatdb",
@@ -1163,16 +1143,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'patmatdb' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "seqmatchall",
@@ -1186,16 +1161,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'seqmatchall' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "wordmatch",
@@ -1209,16 +1179,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'wordmatch' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "wordfinder",
@@ -1232,16 +1197,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'wordfinder' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "charge",

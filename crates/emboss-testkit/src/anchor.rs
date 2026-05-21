@@ -708,6 +708,98 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "fuzztran -sequence checktrans_nucleotide.fasta -pattern MA -stdout yes",
     },
     AcceptanceAnchorSpec {
+        tool_name: "preg",
+        autodoc_contract: "docs/autodoc/tools/preg.json",
+        example_id: "report_overlapping_protein_regex_hits",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/preg_report_overlapping_protein_regex_hits.tsv",
+        legacy_source: "EMBOSS preg application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/preg.acd",
+        legacy_invocation: "preg -sequence preg_records.fasta -pattern MAM -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "patmatdb",
+        autodoc_contract: "docs/autodoc/tools/patmatdb.json",
+        example_id: "report_hits_from_local_motif_database",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/patmatdb_report_hits_from_local_motif_database.tsv",
+        legacy_source: "EMBOSS patmatdb application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+        legacy_invocation:
+            "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "wordmatch",
+        autodoc_contract: "docs/autodoc/tools/wordmatch.json",
+        example_id: "report_one_exact_shared_region",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/wordmatch_report_one_exact_shared_region.tsv",
+        legacy_source: "EMBOSS wordmatch application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordmatch.acd",
+        legacy_invocation:
+            "wordmatch -asequence wordmatch_query.fasta -bsequence wordmatch_target.fasta -wordsize 4 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "wordfinder",
+        autodoc_contract: "docs/autodoc/tools/wordfinder.json",
+        example_id: "report_one_exact_shared_region_across_target_set",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/wordfinder_report_one_exact_shared_region_across_target_set.tsv",
+        legacy_source: "EMBOSS wordfinder application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordfinder.acd",
+        legacy_invocation:
+            "wordfinder -asequence wordmatch_query.fasta -bsequence wordfinder_targets.fasta -wordsize 4 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "dreg",
+        autodoc_contract: "docs/autodoc/tools/dreg.json",
+        example_id: "report_overlapping_regex_hits",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/dreg_report_overlapping_regex_hits.tsv",
+        legacy_source: "EMBOSS dreg application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dreg.acd",
+        legacy_invocation: "dreg -sequence dreg_records.fasta -pattern ATA -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "palindrome",
+        autodoc_contract: "docs/autodoc/tools/palindrome.json",
+        example_id: "report_bounded_exact_palindromes",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/palindrome_report_bounded_exact_palindromes.tsv",
+        legacy_source: "EMBOSS palindrome application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/palindrome.acd",
+        legacy_invocation:
+            "palindrome -sequence palindrome_records.fasta -minpallen 6 -maxpallen 6 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "einverted",
+        autodoc_contract: "docs/autodoc/tools/einverted.json",
+        example_id: "report_exact_inverted_repeat_arms",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/einverted_report_exact_inverted_repeat_arms.tsv",
+        legacy_source: "EMBOSS einverted application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd",
+        legacy_invocation:
+            "einverted -sequence einverted_records.fasta -minrepeat 4 -maxgap 2 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "seqmatchall",
+        autodoc_contract: "docs/autodoc/tools/seqmatchall.json",
+        example_id: "report_all_against_all_exact_regions",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/seqmatchall_report_all_against_all_exact_regions.tsv",
+        legacy_source: "EMBOSS seqmatchall application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqmatchall.acd",
+        legacy_invocation:
+            "seqmatchall -sequence seqmatchall_records.fasta -wordsize 4 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -1605,6 +1697,82 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
             "MA".to_owned(),
+        ],
+        "preg" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/preg_records.fasta")
+                .display()
+                .to_string(),
+            "MAM".to_owned(),
+        ],
+        "patmatdb" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/patmatdb_records.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/patmatdb_motifs.tsv")
+                .display()
+                .to_string(),
+        ],
+        "wordmatch" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/wordmatch_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/wordmatch_target.fasta")
+                .display()
+                .to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
+        ],
+        "wordfinder" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/wordmatch_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/wordfinder_targets.fasta")
+                .display()
+                .to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
+        ],
+        "dreg" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/dreg_records.fasta")
+                .display()
+                .to_string(),
+            "ATA".to_owned(),
+        ],
+        "palindrome" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/palindrome_records.fasta")
+                .display()
+                .to_string(),
+            "--min-length".to_owned(),
+            "6".to_owned(),
+            "--max-length".to_owned(),
+            "6".to_owned(),
+        ],
+        "einverted" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/einverted_records.fasta")
+                .display()
+                .to_string(),
+            "--min-arm-length".to_owned(),
+            "4".to_owned(),
+            "--max-gap-length".to_owned(),
+            "2".to_owned(),
+        ],
+        "seqmatchall" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/seqmatchall_records.fasta")
+                .display()
+                .to_string(),
+            "--word-size".to_owned(),
+            "4".to_owned(),
         ],
         _ => Vec::new(),
     }

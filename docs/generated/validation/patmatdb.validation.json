@@ -2,15 +2,15 @@
   "tool_name": "patmatdb",
   "document_id": "patmatdb-v1",
   "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "evidence_source": "executed_run",
   "summary": {
     "total_case_count": 1,
-    "declared_case_count": 1,
-    "harvested_case_count": 0,
-    "runnable_case_count": 1,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -19,10 +19,10 @@
     {
       "id": "report_hits_from_local_motif_database",
       "title": "Report hits from a local motif database",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "pending",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
         "patmatdb_records_fasta",
@@ -36,6 +36,11 @@
           "source": "EMBOSS patmatdb application",
           "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
           "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+        },
+        {
+          "source": "EMBOSS patmatdb application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+          "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -stdout yes"
         }
       ],
       "diagnostics": []
@@ -48,6 +53,11 @@
       "source": "EMBOSS patmatdb application",
       "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
       "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -outfile stdout"
+    },
+    {
+      "source": "EMBOSS patmatdb application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd",
+      "invocation": "patmatdb -sequence patmatdb_records.fasta -full patmatdb_motifs.tsv -stdout yes"
     }
   ]
 }

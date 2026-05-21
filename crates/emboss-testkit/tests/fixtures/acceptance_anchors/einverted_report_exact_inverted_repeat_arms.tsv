@@ -1,0 +1,4 @@
+record	left_start	left_end	right_start	right_end	gap_length	arm_length	left_arm	right_arm
+invA	1	4	7	10	2	4	ATGC	GCAT
+invA	1	5	6	10	0	5	ATGCN	NGCAT
+invA	2	5	6	9	0	4	TGCN	NGCA

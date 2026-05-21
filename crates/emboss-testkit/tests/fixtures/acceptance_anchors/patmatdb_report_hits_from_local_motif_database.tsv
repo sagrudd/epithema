@@ -1,0 +1,3 @@
+record	motif_id	pattern	description	start	end	matched
+patmatA	motif_a	MAM	leading motif	1	3	MAM
+patmatA	motif_b	KLS	terminal motif	4	6	KLS

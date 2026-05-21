@@ -1,0 +1,4 @@
+left	right	left_start	left_end	right_start	right_end	length	matched
+sm_a	sm_b	3	6	3	6	4	ACGT
+sm_a	sm_c	3	6	3	6	4	ACGT
+sm_b	sm_c	3	6	3	6	4	ACGT

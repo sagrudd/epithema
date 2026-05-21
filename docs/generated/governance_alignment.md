@@ -14,7 +14,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
 - Shipped tools with harvested legacy provenance: `94`
-- Shipped tools with compared evidence: `72`
+- Shipped tools with compared evidence: `80`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -33,7 +33,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 15 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 14 | upgrade shipped retained methods to compared evidence |
-| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 3 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 11 | upgrade shipped retained methods to compared evidence |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Exclude Permanently — ACD developer tooling | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -118,17 +118,17 @@ All shipped methods are mapped in the governance appendix.
 | `cusp` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `codcmp` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `codcopy` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `dreg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `einverted` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `dreg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `einverted` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `fuzznuc` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `fuzzpro` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `fuzztran` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
-| `palindrome` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `preg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `patmatdb` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `seqmatchall` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
-| `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `palindrome` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `preg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `patmatdb` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `seqmatchall` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `charge` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `pepwindow` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `recoder` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `executable_evidence` |

@@ -132,12 +132,12 @@ shipped cohort is:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `72` methods currently show `compared_evidence`
-  - `24` methods currently show `executable_evidence`
+  - `80` methods currently show `compared_evidence`
+  - `16` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `94` shipped methods now record harvested legacy provenance, but much of the
-  cohort still lacks compared evidence.
+- `94` shipped methods now record harvested legacy provenance, but `16`
+  methods still stop short of compared evidence.
 - The retained governance backlog is now `0`, so the dominant remaining work
   is evidence deepening rather than method implementation.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`, and
@@ -161,7 +161,7 @@ shipped cohort is:
 
 - Status: `ready with known limitations`
 - Basis: every shipped method has a validation stub and appears in the cohort
-  report, but most methods still stop short of compared evidence.
+  report, but `16` shipped methods still stop short of compared evidence.
 
 ### Cohort-level acceptance reporting
 
@@ -224,7 +224,7 @@ shipped cohort is:
 
 ### Missing validation depth
 
-  - `24` shipped methods still have one or more visible evidence gaps, because
+  - `16` shipped methods still have one or more visible evidence gaps, because
   executable evidence without compared grounding is still treated as partial.
 - The retained governance backlog is now `0`.
 - The dominant remaining weakness has shifted from implementation backlog to
@@ -240,9 +240,9 @@ shipped cohort is:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `72` methods with compared evidence.
+- The cohort report now records `80` methods with compared evidence.
 - The comparison framework is therefore real and reusable, but it is still not
-  populated across most of the shipped cohort.
+  yet populated across the full shipped cohort.
 
 ### Plotting limitations
 
@@ -269,8 +269,8 @@ shipped cohort is:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `72`
-- Executable-evidence methods: `24`
+- Compared-evidence methods: `80`
+- Executable-evidence methods: `16`
 - Methods with harvested legacy provenance recorded: `94`
 - Retained backlog still unshipped: `0`
 

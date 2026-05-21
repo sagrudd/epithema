@@ -16,7 +16,7 @@
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
     "shipped_harvested_legacy_presence_count": 94,
-    "shipped_compared_count": 72,
+    "shipped_compared_count": 80,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -495,7 +495,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "einverted",
@@ -504,7 +504,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "fuzznuc",
@@ -540,7 +540,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "preg",
@@ -549,7 +549,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "patmatdb",
@@ -558,7 +558,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "seqmatchall",
@@ -567,7 +567,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "wordmatch",
@@ -576,7 +576,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "wordfinder",
@@ -585,7 +585,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "charge",
@@ -948,7 +948,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 12,
       "shipped_executable_or_better": 12,
-      "shipped_compared": 3,
+      "shipped_compared": 11,
       "recommendation": "upgrade shipped retained methods to compared evidence",
       "retained_backlog_tools": []
     },

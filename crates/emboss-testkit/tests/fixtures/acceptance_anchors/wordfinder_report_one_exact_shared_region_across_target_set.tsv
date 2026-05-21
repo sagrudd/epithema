@@ -1,0 +1,2 @@
+query	target	query_start	query_end	target_start	target_end	length	matched
+wm_query	wf_target_a	3	6	3	6	4	ACGT
