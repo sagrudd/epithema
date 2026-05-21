@@ -41,6 +41,69 @@ This appendix ties the named tool families from the governance policy back to in
 | Strategic Add — HMM and probabilistic homology workflows | Strategic Add | 0 | 0 historical core tools; 2 Add rows |
 | Strategic Add — Modern archive-scale raw data ingestion | Strategic Add | 0 | 0 historical core tools; 4 Add rows |
 
+## Post-retained-backlog closure reassessment
+
+Status date: 2026-05-21
+
+The retained backlog is now closed. This appendix therefore moves from
+implementation-backlog triage to governance review of the remaining `Rework`
+surface.
+
+### Outcome of this reassessment
+
+- No family is reclassified in this pass.
+- The remaining `Rework` set is **reordered**, not narrowed or expanded.
+- No implementation surface changes are implied by this review.
+- Any future bucket promotion or demotion should still follow the rules in
+  `scope_and_tool_family_policy.md`, especially the stabilization and
+  validation expectations for moving a `Rework` family toward operational core
+  treatment.
+
+### Why no family was silently promoted
+
+Several rework families now have meaningful enabling infrastructure in place,
+but they do not yet satisfy the promotion rule as a whole-family claim:
+
+- plotting has a real Rust-to-R plot-contract seam, but only a narrow governed
+  producer subset is validated today
+- remote retrieval has governed provider seams and compared examples, but the
+  wider acquisition surface still needs redesign decisions around scope,
+  orchestration, and operational guarantees
+- restriction-analysis has retained edit-design primitives, but the broader
+  database and reporting surface remains explicitly modernize-first
+- translation and alignment presentation-heavy rework members still need a
+  deliberate redesign, not a compatibility-only port
+
+For that reason, this pass preserves the bucket assignments and instead records
+the next recommended rework order.
+
+### Recommended next rework order
+
+| Priority | Family | Reason for ordering after retained backlog closure |
+|---:|---|---|
+| 1 | Modernize — Rework — Plotting and visualization tools | The governed plot-contract seam, R rendering ownership, and validated `charge` / `pepwindow` / `wordcount` path now exist. This is the most mature platform seam for scaling a broader rework family without inventing new architecture. |
+| 2 | Modernize — Rework — Remote retrieval and archive acquisition | Provider-backed acquisition seams, mocked compared evidence, and governed release wiring already exist. Additional tools can now be judged against a real operational model rather than a speculative one. |
+| 3 | Modernize — Rework — Protein property and structural-summary utilities | The residue-property, hydropathy, pI, and digestion foundations are now present, which lowers implementation risk for adjacent rework members while keeping scientific scope bounded. |
+| 4 | Core Retain — ORF and translation-adjacent utilities (rework members only) | The retained translation cohort is now shipped and substantially evidenced. Presentation-heavy or visualization-heavy members can be revisited from a stable translation substrate instead of as first-pass ports. |
+| 5 | Core Retain — Alignment read-write and post-processing (rework members only) | The retained alignment substrate is now broad and heavily compared. Remaining wrapper-heritage members should only advance if they are redesigned around current Rust alignment outputs rather than historical UI compatibility. |
+| 6 | Modernize — Rework — Restriction-enzyme design and analysis | `recoder` and `silent` establish a useful retained kernel, but the broader family still depends on deliberate redesign of enzyme sources, reporting, and workflow shape. |
+| 7 | Modernize — Rework — Primer and assay-oriented search | The problem domain remains relevant, but it still lacks the same enabling substrate and evidence path now available to plotting, retrieval, and core analytics rework families. |
+| 8 | Modernize — Rework — Legacy prediction methods with enduring scientific value | These methods remain scientifically interesting, but they are the least ready for quiet rollout because they demand the heaviest algorithm, dataset, and validation reconsideration. |
+| 9 | Modernize — Rework — External database preparation helpers | These remain downstream of more user-facing retrieval and analysis priorities. They should not advance ahead of the workflows that would actually consume them. |
+| 10 | Modernize — Rework — Command discovery and help-navigation | Important for polish, but not urgent while the governed docs, generated index, and release-truth reports already provide a strong discoverability baseline. |
+
+### Explicit no-change decisions
+
+This reassessment does **not** do any of the following:
+
+- promote a `Rework` family to `Core Retain`
+- demote any existing `Rework` family to `Defer`
+- expand the retained set beyond the current governed shipped cohort
+- rewrite per-tool decisions in the full scope matrix
+
+Those changes should only happen in a future governance pass with explicit
+supporting evidence, not as a side effect of roadmap execution.
+
 ## Core Retain — Basic sequence IO and conversion
 
 Foundational sequence and feature-table ingest, extraction, conversion, and stream-handling utilities.
