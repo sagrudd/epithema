@@ -1,0 +1,3 @@
+role	format	url	bytes	md5
+fastq	fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz	10	md51
+fastq	fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz	12	md52

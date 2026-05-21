@@ -9,10 +9,10 @@
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "harvested_legacy_presence_count": 85,
-    "executable_evidence_count": 47,
-    "compared_evidence_count": 49,
-    "gapped_method_count": 47
+    "harvested_legacy_presence_count": 88,
+    "executable_evidence_count": 44,
+    "compared_evidence_count": 52,
+    "gapped_method_count": 44
   },
   "methods": [
     {
@@ -153,20 +153,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'runinfo' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'runinfo' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "runget",
@@ -180,20 +171,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'runget' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'runget' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "matcher",
@@ -351,20 +333,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'refseqget' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'refseqget' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "newseq",

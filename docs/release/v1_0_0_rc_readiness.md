@@ -114,9 +114,9 @@ shipped cohort is:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `90` shipped methods are documented and present in the generated docs
+- All `96` shipped methods are documented and present in the generated docs
   index.
-- All `90` shipped methods have a checked-in validation stub.
+- All `96` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -132,11 +132,11 @@ shipped cohort is:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `49` methods currently show `compared_evidence`
-  - `47` methods currently show `executable_evidence`
+  - `52` methods currently show `compared_evidence`
+  - `44` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `85` shipped methods now record harvested legacy provenance, but much of the
+- `88` shipped methods now record harvested legacy provenance, but much of the
   cohort still lacks compared evidence.
 - The retained governance backlog is now `0`, so the dominant remaining work
   is evidence deepening rather than method implementation.
@@ -176,7 +176,7 @@ shipped cohort is:
 - Basis: the governance alignment report is generated at:
   - `docs/generated/validation/governance_alignment.json`
   - `docs/generated/governance_alignment.md`
-  and currently shows `90/90` shipped retained methods mapped into the
+  and currently shows `96/96` shipped retained methods mapped into the
   governance appendix with `0` retained methods still unshipped.
 
 ### Standing cohort-health gate
@@ -224,7 +224,7 @@ shipped cohort is:
 
 ### Missing validation depth
 
-- `47` shipped methods still have one or more visible evidence gaps, because
+- `44` shipped methods still have one or more visible evidence gaps, because
   executable evidence without compared grounding is still treated as partial.
 - The retained governance backlog is now `0`.
 - The dominant remaining weakness has shifted from implementation backlog to
@@ -233,14 +233,14 @@ shipped cohort is:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `85` methods with harvested legacy provenance.
+- The cohort report now records `88` methods with harvested legacy provenance.
 - That is a real improvement over the earlier zero-harvest state, but the
   harvested depth is still concentrated in curated and anchor-backed families
   rather than distributed across the full shipped cohort.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `49` methods with compared evidence.
+- The cohort report now records `52` methods with compared evidence.
 - The comparison framework is therefore real and reusable, but it is still not
   populated across most of the shipped cohort.
 
@@ -269,9 +269,9 @@ shipped cohort is:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `49`
-- Executable-evidence methods: `47`
-- Methods with harvested legacy provenance recorded: `85`
+- Compared-evidence methods: `52`
+- Executable-evidence methods: `44`
+- Methods with harvested legacy provenance recorded: `88`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

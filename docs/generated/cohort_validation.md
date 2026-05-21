@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `85`
-- Methods with executable validation: `47`
-- Methods with compared evidence: `49`
-- Methods with visible gaps: `47`
+- Methods with harvested legacy provenance recorded: `88`
+- Methods with executable validation: `44`
+- Methods with compared evidence: `52`
+- Methods with visible gaps: `44`
 
 ## Evidence Level Definitions
 
@@ -35,8 +35,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `infoalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `extractalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `nthseqset` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `runinfo` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `runget` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `runinfo` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `runget` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `matcher` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `distmat` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `cons` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -45,7 +45,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `needleall` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `water` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `refseqget` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
@@ -127,9 +127,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-- `runinfo`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `runget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `makenucseq`: `missing_compared_evidence`
 - `makeprotseq`: `missing_compared_evidence`
 - `biosed`: `missing_compared_evidence`

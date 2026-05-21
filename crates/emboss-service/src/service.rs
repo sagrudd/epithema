@@ -1000,10 +1000,13 @@ impl EmbossService {
         request: InvocationRequest,
         descriptor: ToolDescriptor,
     ) -> Result<InvocationResponse, ServiceError> {
-        self.invoke_runinfo_inner::<emboss_providers::ReqwestHttpClient>(request, descriptor, None)
+        self.invoke_runinfo_with_client::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
     }
 
-    fn invoke_runinfo_inner<C: ProviderHttpClient>(
+    /// Invokes `runinfo` using an explicit provider HTTP client.
+    pub fn invoke_runinfo_with_client<C: ProviderHttpClient>(
         &self,
         request: InvocationRequest,
         descriptor: ToolDescriptor,
@@ -1103,10 +1106,13 @@ impl EmbossService {
         request: InvocationRequest,
         descriptor: ToolDescriptor,
     ) -> Result<InvocationResponse, ServiceError> {
-        self.invoke_runget_inner::<emboss_providers::ReqwestHttpClient>(request, descriptor, None)
+        self.invoke_runget_with_client::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
     }
 
-    fn invoke_runget_inner<C: ProviderHttpClient>(
+    /// Invokes `runget` using an explicit provider HTTP client.
+    pub fn invoke_runget_with_client<C: ProviderHttpClient>(
         &self,
         request: InvocationRequest,
         descriptor: ToolDescriptor,
@@ -1589,12 +1595,13 @@ impl EmbossService {
         request: InvocationRequest,
         descriptor: ToolDescriptor,
     ) -> Result<InvocationResponse, ServiceError> {
-        self.invoke_refseqget_inner::<emboss_providers::ReqwestHttpClient>(
+        self.invoke_refseqget_with_client::<emboss_providers::ReqwestHttpClient>(
             request, descriptor, None,
         )
     }
 
-    fn invoke_refseqget_inner<C: ProviderHttpClient>(
+    /// Invokes `refseqget` using an explicit provider HTTP client.
+    pub fn invoke_refseqget_with_client<C: ProviderHttpClient>(
         &self,
         request: InvocationRequest,
         descriptor: ToolDescriptor,
@@ -10837,7 +10844,7 @@ mod tests {
         );
 
         let response = service
-            .invoke_refseqget_inner(request, descriptor, Some(&client))
+            .invoke_refseqget_with_client(request, descriptor, Some(&client))
             .expect("refseqget should execute with mocked retrieval");
         match &response.result.payload {
             ResultPayload::Sequence(record) => {
@@ -10883,7 +10890,7 @@ mod tests {
         );
 
         let response = service
-            .invoke_runinfo_inner(request, descriptor, Some(&client))
+            .invoke_runinfo_with_client(request, descriptor, Some(&client))
             .expect("runinfo should execute with mocked ENA metadata");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
@@ -10919,7 +10926,7 @@ mod tests {
         );
 
         let response = service
-            .invoke_runinfo_inner(request, descriptor, Some(&client))
+            .invoke_runinfo_with_client(request, descriptor, Some(&client))
             .expect("runinfo should execute with mocked SRA metadata");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
@@ -10954,7 +10961,7 @@ mod tests {
         );
 
         let response = service
-            .invoke_runget_inner(request, descriptor, Some(&client))
+            .invoke_runget_with_client(request, descriptor, Some(&client))
             .expect("runget should execute with mocked ENA manifest");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
@@ -10994,7 +11001,7 @@ mod tests {
         let client = MockHttpClient::default();
 
         let error = service
-            .invoke_runget_inner(request, descriptor, Some(&client))
+            .invoke_runget_with_client(request, descriptor, Some(&client))
             .expect_err("SRA manifest should not yet be supported");
         assert_eq!(
             error.code(),

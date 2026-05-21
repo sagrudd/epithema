@@ -300,6 +300,7 @@ dependencies = [
  "emboss-docgen",
  "emboss-fixtures",
  "emboss-io",
+ "emboss-providers",
  "emboss-r-bridge",
  "emboss-service",
  "emboss-tools",

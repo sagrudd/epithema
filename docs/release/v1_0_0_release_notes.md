@@ -22,7 +22,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `90` methods, including:
+of `96` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -58,9 +58,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `49` shipped methods carry compared evidence
-- `47` shipped methods carry executable evidence
-- `85` shipped methods record harvested legacy provenance
+- `52` shipped methods carry compared evidence
+- `44` shipped methods carry executable evidence
+- `88` shipped methods record harvested legacy provenance
 - `0` shipped methods remain at declared or documented-only evidence
 
 ### First-class R story

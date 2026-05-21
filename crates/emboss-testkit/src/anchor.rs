@@ -3,6 +3,7 @@
 //! These anchors turn declared autodoc examples into real executed and compared
 //! evidence without widening the scope to a full historical-harvest framework.
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -10,8 +11,10 @@ use emboss_core::SequenceRecord;
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_docgen::{LegacyReference, load_document_from_path};
 use emboss_io::{write_fasta_string, write_stockholm_string};
+use emboss_providers::{HttpRequest, HttpResponse, ProviderHttpClient};
 use emboss_service::{
-    EmbossService, ExecutionContext, InvocationRequest, ResultPayload, ServiceRegistry, ToolName,
+    EmbossService, ExecutionContext, InvocationRequest, ResultPayload, ServiceRegistry, ToolCatalog,
+    ToolName,
 };
 use emboss_tools::governed_tool_descriptors;
 
@@ -61,6 +64,40 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_source: "EMBOSS seqret application",
         legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd",
         legacy_invocation: "seqret -sequence three_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "refseqget",
+        autodoc_contract: "docs/autodoc/tools/refseqget.json",
+        example_id: "retrieve_provider_qualified_reference_sequence",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/refseqget_retrieve_provider_qualified_reference_sequence.fasta",
+        legacy_source: "EMBOSS refseqget application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/refseqget.acd",
+        legacy_invocation:
+            "refseqget -sequence ncbi:protein:NP_000537.3 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "runinfo",
+        autodoc_contract: "docs/autodoc/tools/runinfo.json",
+        example_id: "normalize_ena_run_metadata",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/runinfo_normalize_ena_run_metadata.tsv",
+        legacy_source: "EMBOSS runinfo application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/runinfo.acd",
+        legacy_invocation: "runinfo -sequence ena:ERR123456 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "runget",
+        autodoc_contract: "docs/autodoc/tools/runget.json",
+        example_id: "report_ena_run_manifest",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/runget_report_ena_run_manifest.tsv",
+        legacy_source: "EMBOSS runget application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/runget.acd",
+        legacy_invocation: "runget -sequence ena:ERR123456 -stdout yes",
     },
     AcceptanceAnchorSpec {
         tool_name: "newseq",
@@ -723,6 +760,10 @@ fn execute_anchor_payload(
     repo_root: &Path,
     spec: &AcceptanceAnchorSpec,
 ) -> Result<String, PlatformError> {
+    if matches!(spec.tool_name, "refseqget" | "runinfo" | "runget") {
+        return execute_mocked_provider_anchor_payload(repo_root, spec);
+    }
+
     let service = implemented_service()?;
     let request = InvocationRequest::new(
         ExecutionContext::default(),
@@ -741,6 +782,84 @@ fn execute_anchor_payload(
         PlatformError::new(
             ErrorCategory::Invocation,
             "acceptance-anchor invocation failed",
+        )
+        .with_code("testkit.anchor.invoke_failed")
+        .with_source(error)
+        .with_detail(spec.tool_name.to_owned())
+    })?;
+
+    render_payload(&response.result.payload)
+}
+
+#[derive(Default)]
+struct AnchorMockHttpClient {
+    responses: HashMap<String, HttpResponse>,
+}
+
+impl AnchorMockHttpClient {
+    fn with_response(mut self, url: impl Into<String>, response: HttpResponse) -> Self {
+        self.responses.insert(url.into(), response);
+        self
+    }
+}
+
+impl ProviderHttpClient for AnchorMockHttpClient {
+    fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError> {
+        self.responses.get(&request.url).cloned().ok_or_else(|| {
+            PlatformError::new(
+                ErrorCategory::Configuration,
+                "acceptance-anchor mock HTTP client had no registered response for the requested URL",
+            )
+            .with_code("testkit.anchor.http.unregistered_url")
+            .with_detail(request.url.clone())
+        })
+    }
+}
+
+fn execute_mocked_provider_anchor_payload(
+    _repo_root: &Path,
+    spec: &AcceptanceAnchorSpec,
+) -> Result<String, PlatformError> {
+    let service = implemented_service()?;
+    let tool = ToolName::new(spec.tool_name).map_err(|error| {
+        PlatformError::new(
+            ErrorCategory::Configuration,
+            "invalid mocked-provider acceptance-anchor tool name",
+        )
+        .with_code("testkit.anchor.tool.invalid")
+        .with_source(error)
+    })?;
+    let descriptor = service
+        .registry()
+        .find(&tool)
+        .copied()
+        .ok_or_else(|| {
+            PlatformError::new(
+                ErrorCategory::Configuration,
+                "mocked-provider acceptance-anchor tool is not registered",
+            )
+            .with_code("testkit.anchor.tool.unregistered")
+            .with_detail(spec.tool_name.to_owned())
+        })?;
+
+    let (request, client) = mocked_provider_request(spec.tool_name);
+    let response = match spec.tool_name {
+        "refseqget" => service.invoke_refseqget_with_client(request, descriptor, Some(&client)),
+        "runinfo" => service.invoke_runinfo_with_client(request, descriptor, Some(&client)),
+        "runget" => service.invoke_runget_with_client(request, descriptor, Some(&client)),
+        other => {
+            return Err(PlatformError::new(
+                ErrorCategory::Configuration,
+                "unsupported mocked-provider acceptance-anchor tool",
+            )
+            .with_code("testkit.anchor.mocked_provider.unsupported")
+            .with_detail(other.to_owned()))
+        }
+    }
+    .map_err(|error| {
+        PlatformError::new(
+            ErrorCategory::Invocation,
+            "mocked-provider acceptance-anchor invocation failed",
         )
         .with_code("testkit.anchor.invoke_failed")
         .with_source(error)
@@ -1198,6 +1317,38 @@ fn render_partitions(partitions: &[Vec<SequenceRecord>]) -> Result<String, Platf
         rendered.push_str(&fasta);
     }
     Ok(rendered)
+}
+
+fn mocked_provider_request(tool_name: &str) -> (InvocationRequest, AnchorMockHttpClient) {
+    let request = InvocationRequest::new(
+        ExecutionContext::default(),
+        ToolName::new(tool_name).expect("mocked-provider anchor tool name must be valid"),
+    );
+
+    match tool_name {
+        "refseqget" => (
+            request.with_arguments(vec!["ncbi:protein:NP_000537.3".to_owned()]),
+            AnchorMockHttpClient::default().with_response(
+                "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=NP_000537.3&rettype=fasta&retmode=text",
+                HttpResponse::new(200, ">NP_000537.3 TP53\nMEEPQSDPSV\n"),
+            ),
+        ),
+        "runinfo" => (
+            request.with_arguments(vec!["ena:ERR123456".to_owned()]),
+            AnchorMockHttpClient::default().with_response(
+                "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+                HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+            ),
+        ),
+        "runget" => (
+            request.with_arguments(vec!["ena:ERR123456".to_owned()]),
+            AnchorMockHttpClient::default().with_response(
+                "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+                HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+            ),
+        ),
+        other => panic!("unsupported mocked-provider anchor tool: {other}"),
+    }
 }
 
 fn normalize_text(text: &str) -> String {
