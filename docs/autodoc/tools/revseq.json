@@ -79,7 +79,11 @@
           "description": "DNA records are reverse-complemented and emitted as normalized FASTA output."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS revseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/revseq.acd",
+        "invocation": "revseq -sequence three_records.fasta -outseq stdout"
+      }
     }
   ],
   "provenance": {

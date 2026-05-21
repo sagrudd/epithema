@@ -74,7 +74,11 @@
           "description": "Stable FASTA output where the fixture residue string `ACGTRYN` becomes `ACGTNNN`."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS maskambignuc application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambignuc.acd",
+        "invocation": "maskambignuc -sequence ambiguous_nucleotide_records.fasta -outseq stdout"
+      }
     }
   ],
   "provenance": {

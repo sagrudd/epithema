@@ -90,7 +90,11 @@
           "description": "The output FASTA records contain residues `ACGT`, `TTAA`, and `GGCC`, showing exact stripping from both ends, one end, and no-change cases respectively."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS vectorstrip application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/vectorstrip.acd",
+        "invocation": "vectorstrip -sequence vectorstrip_records.fasta -vector vectorstrip_vector.fasta -outseq stdout"
+      }
     }
   ],
   "provenance": {

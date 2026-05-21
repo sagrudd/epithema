@@ -13,7 +13,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
-- Shipped tools with harvested legacy provenance: `63`
+- Shipped tools with harvested legacy provenance: `75`
 - Shipped tools with compared evidence: `37`
 - Shipped tools still documented-only: `0`
 

@@ -22,7 +22,7 @@
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
-      "comparison_status": "not_requested",
+      "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
         "three_record_fasta"
@@ -30,7 +30,13 @@
       "expected_output_ids": [
         "auto_transformed_sequences"
       ],
-      "provenance": [],
+      "provenance": [
+        {
+          "source": "EMBOSS revseq application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/revseq.acd",
+          "invocation": "revseq -sequence three_records.fasta -outseq stdout"
+        }
+      ],
       "diagnostics": []
     }
   ],

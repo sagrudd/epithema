@@ -136,7 +136,7 @@ shipped cohort is:
   - `59` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `63` shipped methods now record harvested legacy provenance, but much of the
+- `75` shipped methods now record harvested legacy provenance, but much of the
   cohort still lacks compared evidence.
 - The largest retained backlog remains concentrated in `Core Retain — Sequence
   editing and manipulation`, with `6` unshipped retained methods.
@@ -233,7 +233,7 @@ shipped cohort is:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `63` methods with harvested legacy provenance.
+- The cohort report now records `75` methods with harvested legacy provenance.
 - That is a real improvement over the earlier zero-harvest state, but the
   harvested depth is still concentrated in curated and anchor-backed families
   rather than distributed across the full shipped cohort.
@@ -271,7 +271,7 @@ shipped cohort is:
 - Shipped methods audited: `96`
 - Compared-evidence methods: `37`
 - Executable-evidence methods: `59`
-- Methods with harvested legacy provenance recorded: `63`
+- Methods with harvested legacy provenance recorded: `75`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

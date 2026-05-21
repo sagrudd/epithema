@@ -61,6 +61,9 @@ Explicit reverse-complement requests fail for protein or unknown-molecule record
   - `mode` = `auto`
 - Expected outputs:
   - `auto_transformed_sequences`: Auto-mode transformed sequences (DNA records are reverse-complemented and emitted as normalized FASTA output.)
+- Legacy reference: EMBOSS revseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/revseq.acd`
+  - Invocation: `revseq -sequence three_records.fasta -outseq stdout`
 
 ## Provenance
 

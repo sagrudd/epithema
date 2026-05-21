@@ -95,7 +95,11 @@
           "description": "Two RNA FASTA records named `made_nuc_1` and `made_nuc_2` are emitted in stable order, and the result summary reports the deterministic seed and count."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS makenucseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makenucseq.acd",
+        "invocation": "makenucseq -name made_nuc -length 6 -number 2 -seed 7 -type rna -outseq stdout"
+      }
     }
   ],
   "provenance": {

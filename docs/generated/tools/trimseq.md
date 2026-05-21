@@ -62,6 +62,9 @@ The v1 scope trims only fixed residue counts and does not implement motif-based 
   - `--right` = `1`
 - Expected outputs:
   - `trimmed_sequences`: Trimmed sequence output (Stable FASTA output in which `alpha` becomes `CG`, `beta` becomes `TT`, and `gamma` becomes `GC`.)
+- Legacy reference: EMBOSS trimseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimseq.acd`
+  - Invocation: `trimseq -sequence three_records.fasta -left 1 -right 1 -outseq stdout`
 
 ## Provenance
 

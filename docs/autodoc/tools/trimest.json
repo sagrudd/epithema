@@ -74,7 +74,11 @@
           "description": "The output FASTA records contain residues `ACGT` and `TTGCAAA`, showing that only the first record met the four-residue trailing poly-A threshold."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS trimest application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimest.acd",
+        "invocation": "trimest -sequence trimest_records.fasta -minpoly 4 -outseq stdout"
+      }
     }
   ],
   "provenance": {

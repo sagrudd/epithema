@@ -22,7 +22,7 @@
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
-      "comparison_status": "not_requested",
+      "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
         "ambiguous_nucleotide_fasta"
@@ -30,7 +30,13 @@
       "expected_output_ids": [
         "masked_nucleotide_sequences"
       ],
-      "provenance": [],
+      "provenance": [
+        {
+          "source": "EMBOSS maskambignuc application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambignuc.acd",
+          "invocation": "maskambignuc -sequence ambiguous_nucleotide_records.fasta -outseq stdout"
+        }
+      ],
       "diagnostics": []
     }
   ],

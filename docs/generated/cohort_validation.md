@@ -11,7 +11,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `63`
+- Methods with harvested legacy provenance recorded: `75`
 - Methods with executable validation: `59`
 - Methods with compared evidence: `37`
 - Methods with visible gaps: `59`
@@ -47,26 +47,26 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `seqcount` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `notseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `nthseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `skipseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `listor` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `skipredundant` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `biosed` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `biosed` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `degapseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `msbar` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `trimest` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `msbar` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `trimest` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `trimseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `descseq` | `sequence_edit` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `vectorstrip` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `vectorstrip` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `maskambignuc` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `maskambigprot` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `maskambignuc` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `maskambigprot` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `featcopy` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `coderet` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
@@ -74,7 +74,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `featreport` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `splitsource` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `twofeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `twofeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cusp` | `codon_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -142,25 +142,25 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `makenucseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `makeprotseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `biosed`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `makenucseq`: `missing_compared_evidence`
+- `makeprotseq`: `missing_compared_evidence`
+- `biosed`: `missing_compared_evidence`
 - `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `msbar`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `trimest`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `trimseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `vectorstrip`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `maskambignuc`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `maskambigprot`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `maskfeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `revseq`: `missing_compared_evidence`
+- `msbar`: `missing_compared_evidence`
+- `trimest`: `missing_compared_evidence`
+- `trimseq`: `missing_compared_evidence`
+- `vectorstrip`: `missing_compared_evidence`
+- `maskambignuc`: `missing_compared_evidence`
+- `maskambigprot`: `missing_compared_evidence`
+- `maskfeat`: `missing_compared_evidence`
 - `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `coderet`: `missing_compared_evidence`
 - `featmerge`: `missing_compared_evidence`
 - `featreport`: `missing_compared_evidence`
 - `feattext`: `missing_compared_evidence`
 - `splitsource`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `twofeat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
+- `twofeat`: `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

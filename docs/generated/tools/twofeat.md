@@ -62,6 +62,9 @@ The first release does not attempt the broader historical EMBOSS neighbourhood m
   - `b-kind` = `cds`
 - Expected outputs:
   - `neighbouring_feature_pair_report`: Neighbouring feature pair table (A governed table with one row for the adjacent `gene` then `CDS` pair, a gap of `1`, and a `separated` relation.)
+- Legacy reference: EMBOSS twofeat application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/twofeat.acd`
+  - Invocation: `twofeat -sequence annotated_feature.gbk -atype gene -btype cds -stdout yes`
 
 ## Provenance
 

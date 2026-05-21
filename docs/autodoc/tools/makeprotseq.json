@@ -87,7 +87,11 @@
           "description": "One FASTA protein record named `made_prot` is emitted, and the shared result summary reports the deterministic seed and protein molecule kind."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS makeprotseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makeprotseq.acd",
+        "invocation": "makeprotseq -name made_prot -length 5 -seed 9 -outseq stdout"
+      }
     }
   ],
   "provenance": {

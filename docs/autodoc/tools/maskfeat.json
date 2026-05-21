@@ -85,7 +85,11 @@
           "description": "The source sequence is returned at full length with the selected feature span replaced by masking symbols in place."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS maskfeat application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskfeat.acd",
+        "invocation": "maskfeat -sequence annotated_feature.gbk -type gene -outseq stdout"
+      }
     }
   ],
   "provenance": {

@@ -59,6 +59,9 @@ The v1 implementation applies the same coordinates to every record, drops featur
 - Referenced artifacts: `biosed_records_fasta`
 - Expected outputs:
   - `biosed_output_records`: Edited sequence records (The output records are emitted as FASTA with residues `ANNG` and `TNNN`, and the shared result summary reports `Start: 2`, `End: 3`, and `Replacement: NN`.)
+- Legacy reference: EMBOSS biosed application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/biosed.acd`
+  - Invocation: `biosed -sequence biosed_records.fasta -start 2 -end 3 -replace NN -outseq stdout`
 
 ## Provenance
 

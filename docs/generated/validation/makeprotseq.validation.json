@@ -22,7 +22,7 @@
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
-      "comparison_status": "not_requested",
+      "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
         "makeprotseq_case"
@@ -30,7 +30,13 @@
       "expected_output_ids": [
         "generated_protein_record"
       ],
-      "provenance": [],
+      "provenance": [
+        {
+          "source": "EMBOSS makeprotseq application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makeprotseq.acd",
+          "invocation": "makeprotseq -name made_prot -length 5 -seed 9 -outseq stdout"
+        }
+      ],
       "diagnostics": []
     }
   ],

@@ -67,6 +67,9 @@ The v1 implementation strips only exact full-length terminal matches, does not s
 - Referenced artifacts: `vectorstrip_records_fasta`, `vectorstrip_vector_fasta`
 - Expected outputs:
   - `vectorstrip_output_records`: Vector-stripped sequence records (The output FASTA records contain residues `ACGT`, `TTAA`, and `GGCC`, showing exact stripping from both ends, one end, and no-change cases respectively.)
+- Legacy reference: EMBOSS vectorstrip application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/vectorstrip.acd`
+  - Invocation: `vectorstrip -sequence vectorstrip_records.fasta -vector vectorstrip_vector.fasta -outseq stdout`
 
 ## Provenance
 

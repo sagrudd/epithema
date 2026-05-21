@@ -59,6 +59,9 @@ The v1 implementation trims trailing `A` runs only. It does not attempt bidirect
 - Referenced artifacts: `trimest_records_fasta`
 - Expected outputs:
   - `trimest_output_records`: Trimmed nucleotide records (The output FASTA records contain residues `ACGT` and `TTGCAAA`, showing that only the first record met the four-residue trailing poly-A threshold.)
+- Legacy reference: EMBOSS trimest application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimest.acd`
+  - Invocation: `trimest -sequence trimest_records.fasta -minpoly 4 -outseq stdout`
 
 ## Provenance
 

@@ -83,7 +83,11 @@
           "description": "A governed table with one row for the adjacent `gene` then `CDS` pair, a gap of `1`, and a `separated` relation."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS twofeat application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/twofeat.acd",
+        "invocation": "twofeat -sequence annotated_feature.gbk -atype gene -btype cds -stdout yes"
+      }
     }
   ],
   "provenance": {

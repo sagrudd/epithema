@@ -63,6 +63,9 @@ The v1 surface supports only canonical amino-acid generation with exact-length o
   - `seed` = `9`
 - Expected outputs:
   - `generated_protein_record`: Generated protein record (One FASTA protein record named `made_prot` is emitted, and the shared result summary reports the deterministic seed and protein molecule kind.)
+- Legacy reference: EMBOSS makeprotseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makeprotseq.acd`
+  - Invocation: `makeprotseq -name made_prot -length 5 -seed 9 -outseq stdout`
 
 ## Provenance
 

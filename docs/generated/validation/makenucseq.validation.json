@@ -22,7 +22,7 @@
       "evidence_source": "curated_autodoc",
       "declaration_status": "declared",
       "execution_status": "runnable",
-      "comparison_status": "not_requested",
+      "comparison_status": "pending",
       "required": true,
       "artifact_ids": [
         "makenucseq_rna_case"
@@ -30,7 +30,13 @@
       "expected_output_ids": [
         "generated_rna_records"
       ],
-      "provenance": [],
+      "provenance": [
+        {
+          "source": "EMBOSS makenucseq application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makenucseq.acd",
+          "invocation": "makenucseq -name made_nuc -length 6 -number 2 -seed 7 -type rna -outseq stdout"
+        }
+      ],
       "diagnostics": []
     }
   ],

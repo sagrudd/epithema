@@ -65,6 +65,9 @@ The v1 surface supports only canonical DNA or RNA alphabets, exact-length genera
   - `molecule` = `rna`
 - Expected outputs:
   - `generated_rna_records`: Generated RNA records (Two RNA FASTA records named `made_nuc_1` and `made_nuc_2` are emitted in stable order, and the result summary reports the deterministic seed and count.)
+- Legacy reference: EMBOSS makenucseq application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makenucseq.acd`
+  - Invocation: `makenucseq -name made_nuc -length 6 -number 2 -seed 7 -type rna -outseq stdout`
 
 ## Provenance
 

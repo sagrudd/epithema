@@ -59,6 +59,9 @@ The v1 implementation supports substitutions only. It does not support insertion
 - Referenced artifacts: `msbar_records_fasta`
 - Expected outputs:
   - `mutated_sequence_record`: Mutated sequence record (The output FASTA record contains residues `ATGA`, and the shared result summary reports that two mutations were applied using `position:residue` syntax.)
+- Legacy reference: EMBOSS msbar application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/msbar.acd`
+  - Invocation: `msbar -sequence msbar_records.fasta -mutation 2:T -mutation 4:A -outseq stdout`
 
 ## Provenance
 

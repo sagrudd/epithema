@@ -59,6 +59,9 @@ The first release masks only `B`, `J`, `X`, and `Z`. It does not treat `O` or `U
 - Referenced artifacts: `ambiguous_protein_fasta`
 - Expected outputs:
   - `masked_protein_sequences`: Ambiguity-masked protein FASTA output (Stable FASTA output where the fixture residue string `MBJZXUO-*` becomes `MXXXXUO-*`.)
+- Legacy reference: EMBOSS maskambigprot application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambigprot.acd`
+  - Invocation: `maskambigprot -sequence ambiguous_protein_records.fasta -outseq stdout`
 
 ## Provenance
 

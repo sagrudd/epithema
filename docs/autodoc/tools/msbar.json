@@ -74,7 +74,11 @@
           "description": "The output FASTA record contains residues `ATGA`, and the shared result summary reports that two mutations were applied using `position:residue` syntax."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS msbar application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/msbar.acd",
+        "invocation": "msbar -sequence msbar_records.fasta -mutation 2:T -mutation 4:A -outseq stdout"
+      }
     }
   ],
   "provenance": {

@@ -74,7 +74,11 @@
           "description": "The output records are emitted as FASTA with residues `ANNG` and `TNNN`, and the shared result summary reports `Start: 2`, `End: 3`, and `Replacement: NN`."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS biosed application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/biosed.acd",
+        "invocation": "biosed -sequence biosed_records.fasta -start 2 -end 3 -replace NN -outseq stdout"
+      }
     }
   ],
   "provenance": {

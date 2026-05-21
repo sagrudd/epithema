@@ -74,7 +74,11 @@
           "description": "Stable FASTA output where the fixture residue string `MBJZXUO-*` becomes `MXXXXUO-*`."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS maskambigprot application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambigprot.acd",
+        "invocation": "maskambigprot -sequence ambiguous_protein_records.fasta -outseq stdout"
+      }
     }
   ],
   "provenance": {

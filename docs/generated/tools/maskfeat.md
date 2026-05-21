@@ -65,6 +65,9 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
   - `kind` = `gene`
 - Expected outputs:
   - `feature_masked_sequences`: Feature-masked sequence records (The source sequence is returned at full length with the selected feature span replaced by masking symbols in place.)
+- Legacy reference: EMBOSS maskfeat application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskfeat.acd`
+  - Invocation: `maskfeat -sequence annotated_feature.gbk -type gene -outseq stdout`
 
 ## Provenance
 

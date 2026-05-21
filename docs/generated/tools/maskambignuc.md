@@ -59,6 +59,9 @@ The first release masks only the conservative ambiguity set `N/R/Y/S/W/K/M/B/D/H
 - Referenced artifacts: `ambiguous_nucleotide_fasta`
 - Expected outputs:
   - `masked_nucleotide_sequences`: Ambiguity-masked nucleotide FASTA output (Stable FASTA output where the fixture residue string `ACGTRYN` becomes `ACGTNNN`.)
+- Legacy reference: EMBOSS maskambignuc application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambignuc.acd`
+  - Invocation: `maskambignuc -sequence ambiguous_nucleotide_records.fasta -outseq stdout`
 
 ## Provenance
 

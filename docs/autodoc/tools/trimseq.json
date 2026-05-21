@@ -83,7 +83,11 @@
           "description": "Stable FASTA output in which `alpha` becomes `CG`, `beta` becomes `TT`, and `gamma` becomes `GC`."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS trimseq application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimseq.acd",
+        "invocation": "trimseq -sequence three_records.fasta -left 1 -right 1 -outseq stdout"
+      }
     }
   ],
   "provenance": {
