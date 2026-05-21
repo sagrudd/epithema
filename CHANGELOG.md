@@ -17,11 +17,16 @@ New shipped tools after `1.0.0` must not bypass:
 - autodoc presence
 - validation-stub generation
 - cohort-report inclusion
+- at least one compared anchor per shipped family
+- comparison-coverage reporting
+- retained-backlog-closure reporting
+- drift-free release-facing counts and report links
 - honest release-note wording
 
 Release-facing documentation under `Unreleased` should continue to defer to the
-generated cohort, governance, and cohort-health reports rather than implying
-biological acceptance from shipped-method count alone.
+generated cohort, governance, cohort-health, comparison-coverage, and
+retained-backlog reports rather than implying biological acceptance from
+shipped-method count alone.
 
 ## [1.0.0] - Planned
 

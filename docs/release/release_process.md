@@ -120,6 +120,10 @@ New shipped tools must not bypass:
 - autodoc presence
 - validation-stub generation
 - cohort-report inclusion
+- at least one compared anchor per shipped family
+- comparison-coverage reporting
+- retained-backlog-closure reporting
+- drift-free release-facing counts and report links
 - honest release-note wording
 
 `Unreleased` changelog and release-facing wording should continue to defer to:
@@ -127,6 +131,8 @@ New shipped tools must not bypass:
 - `docs/generated/cohort_validation.md`
 - `docs/generated/governance_alignment.md`
 - `docs/generated/cohort_health.md`
+- `docs/generated/comparison_coverage.md`
+- `docs/generated/retained_backlog_closure.md`
 
 This project treats those generated reports as the current truth surface for
 scope, evidence, and roadmap pressure. Shipped-method count alone is not used

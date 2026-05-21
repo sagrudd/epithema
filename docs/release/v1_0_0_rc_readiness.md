@@ -8,8 +8,8 @@ Status date: 2026-05-18
 limitations**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
-path, or release automation. The remaining gaps are evidence depth, retained
-backlog closure, and manual release cutover steps, not missing method exposure
+path, or release automation. The remaining gaps are evidence depth and manual
+release cutover steps, not missing method exposure, retained-backlog closure,
 or broken packaging mechanics.
 
 ## Audited Shipped Cohort
@@ -129,6 +129,9 @@ Current generated release-truth markers:
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
   forms.
+- The comparison-coverage report is present in both JSON and Markdown forms.
+- The retained-backlog-closure report is present in both JSON and Markdown
+  forms.
 - Release tasks cover version checks, generated-artifact freshness, governance
   alignment, release builds, release docs, Linux bundle assembly, and container
   build wiring.
@@ -196,6 +199,23 @@ Current generated release-truth markers:
   and now flags dominant backlog, weak-evidence burden, and release-truth lag
   explicitly before future roadmap reordering.
 
+### Family comparison coverage
+
+- Status: `complete`
+- Basis: the family-level comparison coverage report is generated at:
+  - `docs/generated/validation/comparison_coverage.json`
+  - `docs/generated/comparison_coverage.md`
+  and now makes per-family compared-anchor burden explicit after retained
+  backlog closure.
+
+### Retained backlog closure tracking
+
+- Status: `complete`
+- Basis: the retained-backlog closure report is generated at:
+  - `docs/generated/validation/retained_backlog_closure.json`
+  - `docs/generated/retained_backlog_closure.md`
+  and currently records `0` retained methods still unshipped.
+
 ### Workspace and test health
 
 - Status: `complete`
@@ -212,8 +232,11 @@ Current generated release-truth markers:
 
 - Status: `complete`
 - Basis: `make release-version-check`, `make release-generated-check`,
-  `make release-check`, `make release-artifacts`, and the new
-  `make cohort-health-report` gate are present and working.
+  `make release-check`, `make release-artifacts`, and these generated-report
+  gates are present and working:
+  - `make cohort-health-report`
+  - `make comparison-coverage-report`
+  - `make retained-backlog-report`
 
 ### Container readiness
 

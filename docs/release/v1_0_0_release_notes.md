@@ -16,6 +16,8 @@ For the current evidence posture, see:
 - [Cohort Validation Report](../generated/cohort_validation.md)
 - [Governance Alignment Report](../generated/governance_alignment.md)
 - [Cohort Health Gate](../generated/cohort_health.md)
+- [Comparison Coverage Report](../generated/comparison_coverage.md)
+- [Retained Backlog Closure Report](../generated/retained_backlog_closure.md)
 
 ## Highlights
 
@@ -61,6 +63,7 @@ Current evidence posture at the time of this draft:
 - `84` shipped methods carry compared evidence
 - `12` shipped methods carry executable evidence
 - `94` shipped methods record harvested legacy provenance
+- `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 ### First-class R story
