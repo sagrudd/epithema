@@ -58,9 +58,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `52` shipped methods carry compared evidence
-- `44` shipped methods carry executable evidence
-- `88` shipped methods record harvested legacy provenance
+- `61` shipped methods carry compared evidence
+- `35` shipped methods carry executable evidence
+- `90` shipped methods record harvested legacy provenance
 - `0` shipped methods remain at declared or documented-only evidence
 
 ### First-class R story

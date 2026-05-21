@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `88`
-- Methods with executable validation: `44`
-- Methods with compared evidence: `52`
-- Methods with visible gaps: `44`
+- Methods with harvested legacy provenance recorded: `90`
+- Methods with executable validation: `35`
+- Methods with compared evidence: `61`
+- Methods with visible gaps: `35`
 
 ## Evidence Level Definitions
 
@@ -64,17 +64,17 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `descseq` | `sequence_edit` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `vectorstrip` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `maskambignuc` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `maskambigprot` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `maskambignuc` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `maskambigprot` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `featcopy` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `coderet` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `featmerge` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `featreport` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `feattext` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `splitsource` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `twofeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `featcopy` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `coderet` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `featmerge` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `featreport` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `feattext` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `splitsource` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `twofeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `cai` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `chips` | `codon_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `cusp` | `codon_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -136,16 +136,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `trimest`: `missing_compared_evidence`
 - `trimseq`: `missing_compared_evidence`
 - `vectorstrip`: `missing_compared_evidence`
-- `maskambignuc`: `missing_compared_evidence`
-- `maskambigprot`: `missing_compared_evidence`
 - `maskfeat`: `missing_compared_evidence`
-- `featcopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `coderet`: `missing_compared_evidence`
-- `featmerge`: `missing_compared_evidence`
-- `featreport`: `missing_compared_evidence`
-- `feattext`: `missing_compared_evidence`
-- `splitsource`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `twofeat`: `missing_compared_evidence`
 - `cai`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `chips`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `codcmp`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

@@ -15,8 +15,8 @@
     "retained_backlog_count": 0,
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
-    "shipped_harvested_legacy_presence_count": 88,
-    "shipped_compared_count": 52,
+    "shipped_harvested_legacy_presence_count": 90,
+    "shipped_compared_count": 61,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -351,7 +351,7 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "maskambigprot",
@@ -360,7 +360,7 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "maskfeat",
@@ -387,7 +387,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "coderet",
@@ -396,7 +396,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "featmerge",
@@ -405,7 +405,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "featreport",
@@ -414,7 +414,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "feattext",
@@ -423,7 +423,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "splitsource",
@@ -432,7 +432,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "twofeat",
@@ -441,7 +441,7 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "cai",
@@ -904,7 +904,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 18,
       "shipped_executable_or_better": 18,
-      "shipped_compared": 11,
+      "shipped_compared": 17,
       "recommendation": "upgrade shipped retained methods to compared evidence",
       "retained_backlog_tools": []
     },
@@ -937,7 +937,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 23,
       "shipped_executable_or_better": 23,
-      "shipped_compared": 11,
+      "shipped_compared": 14,
       "recommendation": "upgrade shipped retained methods to compared evidence",
       "retained_backlog_tools": []
     },

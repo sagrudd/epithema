@@ -1,0 +1,2 @@
+record	a_kind	a_location	a_start	a_end	a_strand	a_name	b_kind	b_location	b_start	b_end	b_strand	b_name	gap	relation	strand_relation
+FEAT1	gene	2..6	2	6	forward	geneA	CDS	8..10	8	10	forward	cdsA	1	separated	same

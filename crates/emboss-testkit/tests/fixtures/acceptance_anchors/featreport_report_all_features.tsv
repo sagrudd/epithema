@@ -1,0 +1,3 @@
+record	kind	location	start	end	strand	name	qualifier_count
+FEAT1	gene	2..6	2	6	forward	geneA	2
+FEAT1	CDS	8..10	8	10	forward	cdsA	2

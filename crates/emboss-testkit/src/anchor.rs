@@ -188,6 +188,90 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "extractfeat -sequence annotated_feature.gbk -type gene -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "featcopy",
+        autodoc_contract: "docs/autodoc/tools/featcopy.json",
+        example_id: "copy_selected_gene_feature_to_matching_target",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/featcopy_copy_selected_gene_feature_to_matching_target.fasta",
+        legacy_source: "EMBOSS featcopy application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featcopy.acd",
+        legacy_invocation:
+            "featcopy -source annotated_feature.gbk -target featcopy_target.fasta -type gene -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "coderet",
+        autodoc_contract: "docs/autodoc/tools/coderet.json",
+        example_id: "translate_default_cds_selection",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/coderet_translate_default_cds_selection.fasta",
+        legacy_source: "EMBOSS coderet application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/coderet.acd",
+        legacy_invocation:
+            "coderet -sequence annotated_feature.gbk -translate -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "featmerge",
+        autodoc_contract: "docs/autodoc/tools/featmerge.json",
+        example_id: "merge_right_annotations",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/featmerge_merge_right_annotations.fasta",
+        legacy_source: "EMBOSS featmerge application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featmerge.acd",
+        legacy_invocation:
+            "featmerge -left annotated_feature.gbk -right annotated_merge_right.gbk -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "featreport",
+        autodoc_contract: "docs/autodoc/tools/featreport.json",
+        example_id: "report_all_features",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/featreport_report_all_features.tsv",
+        legacy_source: "EMBOSS featreport application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featreport.acd",
+        legacy_invocation:
+            "featreport -sequence annotated_feature.gbk -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "feattext",
+        autodoc_contract: "docs/autodoc/tools/feattext.json",
+        example_id: "render_normalized_feature_text",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/feattext_render_normalized_feature_text.txt",
+        legacy_source: "EMBOSS feattext application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/feattext.acd",
+        legacy_invocation:
+            "feattext -sequence annotated_feature.gbk -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "splitsource",
+        autodoc_contract: "docs/autodoc/tools/splitsource.json",
+        example_id: "split_record_by_source_features",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/splitsource_split_record_by_source_features.fasta",
+        legacy_source: "EMBOSS splitsource application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/splitsource.acd",
+        legacy_invocation:
+            "splitsource -sequence splitsource_annotated.gbk -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "twofeat",
+        autodoc_contract: "docs/autodoc/tools/twofeat.json",
+        example_id: "report_gene_cds_neighbour_pair",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/twofeat_report_gene_cds_neighbour_pair.tsv",
+        legacy_source: "EMBOSS twofeat application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/twofeat.acd",
+        legacy_invocation:
+            "twofeat -sequence annotated_feature.gbk -atype gene -btype cds -stdout yes",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "maskseq",
         autodoc_contract: "docs/autodoc/tools/maskseq.json",
         example_id: "mask_positions_two_to_three",
@@ -196,6 +280,30 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_source: "EMBOSS maskseq application",
         legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd",
         legacy_invocation: "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "maskambignuc",
+        autodoc_contract: "docs/autodoc/tools/maskambignuc.json",
+        example_id: "mask_nucleotide_ambiguities",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/maskambignuc_mask_nucleotide_ambiguities.fasta",
+        legacy_source: "EMBOSS maskambignuc application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambignuc.acd",
+        legacy_invocation:
+            "maskambignuc -sequence ambiguous_nucleotide_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "maskambigprot",
+        autodoc_contract: "docs/autodoc/tools/maskambigprot.json",
+        example_id: "mask_protein_ambiguities",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/maskambigprot_mask_protein_ambiguities.fasta",
+        legacy_source: "EMBOSS maskambigprot application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskambigprot.acd",
+        legacy_invocation:
+            "maskambigprot -sequence ambiguous_protein_records.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
         tool_name: "extractseq",
@@ -679,8 +787,12 @@ pub fn derive_acceptance_anchor_report(
             )
             .with_code("testkit.anchor.comparison.failed")
             .with_detail(format!(
-                "tool '{}' anchor case '{}' did not match '{}'",
-                spec.tool_name, spec.example_id, spec.expected_output
+                "tool '{}' anchor case '{}' did not match '{}'\nexpected:\n{:?}\nactual:\n{:?}",
+                spec.tool_name,
+                spec.example_id,
+                spec.expected_output,
+                expected_normalized,
+                actual_normalized
             )),
         );
     }
@@ -964,12 +1076,81 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
             "--kind".to_owned(),
             "gene".to_owned(),
         ],
+        "featcopy" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/featcopy_target.fasta")
+                .display()
+                .to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ],
+        "coderet" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+            "--translate".to_owned(),
+        ],
+        "featmerge" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_merge_right.gbk")
+                .display()
+                .to_string(),
+        ],
+        "featreport" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+        ],
+        "feattext" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+        ],
+        "splitsource" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/splitsource_annotated.gbk")
+                .display()
+                .to_string(),
+        ],
+        "twofeat" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
+                .display()
+                .to_string(),
+            "--a-kind".to_owned(),
+            "gene".to_owned(),
+            "--b-kind".to_owned(),
+            "cds".to_owned(),
+        ],
         "maskseq" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
                 .display()
                 .to_string(),
             "2:3".to_owned(),
+        ],
+        "maskambignuc" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/ambiguous_nucleotide_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "maskambigprot" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/ambiguous_protein_records.fasta")
+                .display()
+                .to_string(),
         ],
         "extractseq" => vec![
             repo_root

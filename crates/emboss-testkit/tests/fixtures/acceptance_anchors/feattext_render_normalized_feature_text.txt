@@ -1,0 +1,9 @@
+ID   FEAT1
+FEATURES             Location/Qualifiers
+     gene            2..6
+                     /gene="geneA"
+                     /note="example gene"
+     CDS             8..10
+                     /gene="cdsA"
+                     /product="short peptide"
+//
