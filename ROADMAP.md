@@ -500,3 +500,130 @@ Current basis at the time this tier was written:
       - keep changes scoped
       - commit and push after changed prompts
       - avoid touching unrelated code when implementing method or evidence work
+
+## Next Tier Task Map
+
+This next planning cycle is derived from the current generated truth surface:
+
+- shipped methods: `96`
+- compared evidence: `84`
+- executable evidence: `12`
+- harvested legacy provenance present: `94`
+- retained backlog: `0`
+- weakest evidence family:
+  `Core Retain — Sequence editing and manipulation`
+- weak-evidence method count in that family: `9`
+- release-truth state: `true`
+
+The remaining pressure is no longer method implementation backlog. It is the
+last mile of evidence deepening, harvested-provenance cleanup, and stronger
+post-`1.0.0` release discipline.
+
+46. Convert the remaining sequence-editing executable-only methods to compared evidence.
+    - Current targets:
+      - `biosed`
+      - `degapseq`
+      - `revseq`
+      - `msbar`
+      - `trimest`
+      - `trimseq`
+      - `vectorstrip`
+    - This is the largest remaining evidence hole and should be addressed as a
+      coherent family sweep.
+
+47. Convert the remaining sequence-construction executable-only methods to compared evidence.
+    - Current targets:
+      - `makenucseq`
+      - `makeprotseq`
+    - Keep this focused on anchor execution and deterministic expected outputs,
+      not tool redesign.
+
+48. Convert the remaining statistics-family executable-only methods to compared evidence.
+    - Current targets:
+      - `dan`
+      - `complex`
+    - `complex` is explicitly retained, so it should not remain an evidence
+      outlier once the rest of the retained cohort is mostly compared.
+
+49. Convert the remaining feature-family executable-only method to compared evidence.
+    - Current target:
+      - `maskfeat`
+    - Keep this as a narrow acceptance-anchor and generated-report refresh.
+
+50. Finish harvested legacy provenance for the last non-harvested shipped methods.
+    - Current known laggards:
+      - `degapseq`
+      - `complex`
+    - Do not overstate provenance if a defensible legacy reference cannot be
+      documented.
+
+51. Drive the shipped cohort to full compared evidence.
+    - After Tasks `46` through `49`, the target state is:
+      - `compared_evidence_count == shipped_method_count`
+      - `executable_evidence_count == 0`
+    - This is the cleanest remaining milestone before any broader v1.x scope
+      discussion.
+
+52. Add a generated “full compared cohort” release gate.
+    - Once every shipped method has compared evidence, encode that milestone as
+      a generated gate rather than a one-time claim in release notes.
+    - The gate should fail if any shipped method drops back below compared
+      evidence.
+
+53. Add a generated “harvest coverage exceptions” report.
+    - Surface only the shipped methods that still lack harvested legacy
+      provenance, with explicit reasons where known.
+    - This prevents the remaining provenance debt from being hidden once the
+      compared-evidence milestone is met.
+
+54. Reassess whether `harvested_legacy_presence_count` should become a harder release gate.
+    - Only do this after the real remaining exceptions are visible in generated
+      reports.
+    - Do not convert provenance aspiration into a silent hard requirement
+      without documenting exceptions.
+
+55. Tighten release gating again after full compared-cohort closure.
+    - Candidate future post-closure rule:
+      - no shipped method may land without a same-family compared anchor refresh
+      - no release-facing count may omit the “full compared cohort” status once
+        achieved
+    - Keep this as a release-process and generated-check change, not a product
+      feature sweep.
+
+56. Reassess the `Rework` families after full compared-cohort closure.
+    - Once the retained shipped cohort is fully compared, revisit whether the
+      highest-priority `Rework` family should move from governance ordering to
+      actual implementation planning.
+    - Use the post-backlog reassessment already documented in the governance
+      appendix as the starting point.
+
+57. Decide whether plotting rework should become the first post-v1.x family implementation program.
+    - Preconditions already present:
+      - validated plot contracts
+      - R rendering ownership
+      - governed producers (`charge`, `pepwindow`, `wordcount`)
+    - This is a planning decision, not permission to silently widen the
+      plotting surface.
+
+58. Decide whether remote retrieval rework should become the next alternative to plotting.
+    - Preconditions already present:
+      - provider-backed seams
+      - mocked compared evidence
+      - governed release and docs path
+    - The decision should explicitly choose between plotting-first and
+      retrieval-first for the next substantive rework program.
+
+59. Add a generated “next family recommendation” report if roadmap pressure becomes ambiguous again.
+    - The current cohort-health and comparison-coverage reports are enough for
+      now, but a dedicated recommendation artefact may become useful once the
+      executable-only debt reaches zero.
+
+60. Extend this roadmap again from generated truth after Task `59`.
+    - Future roadmap rollovers must continue to derive from:
+      - cohort validation
+      - governance alignment
+      - cohort health
+      - comparison coverage
+      - retained backlog closure
+    - Do not restart planning from memory or preference once these artefacts
+      exist.
