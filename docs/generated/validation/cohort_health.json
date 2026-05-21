@@ -3,8 +3,8 @@
   "report_id": "cohort-health-reprioritization-gate",
   "summary": {
     "total_method_count": 96,
-    "compared_evidence_count": 37,
-    "harvested_legacy_presence_count": 75,
+    "compared_evidence_count": 49,
+    "harvested_legacy_presence_count": 85,
     "retained_backlog_count": 0,
     "largest_retained_backlog_family": null,
     "largest_retained_backlog_size": 0,

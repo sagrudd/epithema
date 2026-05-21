@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `75`
-- Methods with executable validation: `59`
-- Methods with compared evidence: `37`
-- Methods with visible gaps: `59`
+- Methods with harvested legacy provenance recorded: `85`
+- Methods with executable validation: `47`
+- Methods with compared evidence: `49`
+- Methods with visible gaps: `47`
 
 ## Evidence Level Definitions
 
@@ -28,21 +28,21 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 | Tool | Family | Evidence level | Docs | Stub | Harvested | Executable | Compared | Gap count |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `aligncopy` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `aligncopypair` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `diffseq` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `edialign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `infoalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `extractalign` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `nthseqset` | `alignment_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `aligncopy` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `aligncopypair` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `diffseq` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `edialign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `infoalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `extractalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `nthseqset` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `runinfo` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `runget` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `matcher` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `distmat` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `cons` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `consambig` | `alignment_analysis` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `matcher` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `distmat` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `cons` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `consambig` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `needle` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `needleall` | `pairwise_alignment` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `needleall` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `water` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -127,20 +127,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-- `aligncopy`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `aligncopypair`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `diffseq`: `missing_compared_evidence`
-- `edialign`: `missing_compared_evidence`
-- `infoalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `extractalign`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `nthseqset`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `runinfo`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `runget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `matcher`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `distmat`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `cons`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `makenucseq`: `missing_compared_evidence`
 - `makeprotseq`: `missing_compared_evidence`

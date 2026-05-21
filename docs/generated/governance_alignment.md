@@ -13,8 +13,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
-- Shipped tools with harvested legacy provenance: `75`
-- Shipped tools with compared evidence: `37`
+- Shipped tools with harvested legacy provenance: `85`
+- Shipped tools with compared evidence: `49`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -28,8 +28,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 
 | Governance family | Retained total | Retained shipped | Retained backlog | Shipped curated | Shipped executable+ | Shipped compared | Recommendation |
 |---|---:|---:|---:|---:|---:|---:|---|
-| Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 2 | upgrade shipped retained methods to compared evidence |
-| Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 10 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 13 | family is aligned at the current governance and evidence threshold |
+| Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 11 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 6 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 11 | upgrade shipped retained methods to compared evidence |
@@ -66,21 +66,21 @@ All shipped methods are mapped in the governance appendix.
 
 | Tool | Shipped family | Governance family | Governance decision | Curated autodoc | Evidence level |
 |---|---|---|---|---:|---|
-| `aligncopy` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `aligncopypair` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `diffseq` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `edialign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `nthseqset` | `alignment_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
+| `aligncopy` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `aligncopypair` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `diffseq` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `edialign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `nthseqset` | `alignment_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `runinfo` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |
 | `runget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |
-| `matcher` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `distmat` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `cons` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
-| `consambig` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
+| `matcher` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `distmat` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `cons` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
+| `consambig` | `alignment_analysis` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `needle` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
-| `needleall` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `executable_evidence` |
+| `needleall` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `water` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `seqret` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `refseqget` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |

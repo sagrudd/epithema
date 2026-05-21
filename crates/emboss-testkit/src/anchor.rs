@@ -344,6 +344,141 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "tranalign -asequence tranalign_protein_alignment.sto -bsequence checktrans_nucleotide.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "aligncopy",
+        autodoc_contract: "docs/autodoc/tools/aligncopy.json",
+        example_id: "copy_multiple_alignment_stockholm",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/aligncopy_copy_multiple_alignment_stockholm.sto",
+        legacy_source: "EMBOSS aligncopy application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/aligncopy.acd",
+        legacy_invocation: "aligncopy -sequence multiple_alignment.sto -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "aligncopypair",
+        autodoc_contract: "docs/autodoc/tools/aligncopypair.json",
+        example_id: "copy_pairwise_alignment_stockholm",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/aligncopypair_copy_pairwise_alignment_stockholm.sto",
+        legacy_source: "EMBOSS aligncopypair application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/aligncopypair.acd",
+        legacy_invocation: "aligncopypair -sequence pairwise_alignment.sto -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "infoalign",
+        autodoc_contract: "docs/autodoc/tools/infoalign.json",
+        example_id: "summarize_multiple_alignment_statistics",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/infoalign_summarize_multiple_alignment_statistics.tsv",
+        legacy_source: "EMBOSS infoalign application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoalign.acd",
+        legacy_invocation: "infoalign -sequence multiple_alignment.sto -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "extractalign",
+        autodoc_contract: "docs/autodoc/tools/extractalign.json",
+        example_id: "extract_selected_rows_and_columns",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/extractalign_extract_selected_rows_and_columns.sto",
+        legacy_source: "EMBOSS extractalign application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractalign.acd",
+        legacy_invocation:
+            "extractalign -sequence multiple_alignment.sto -rowid alpha -row 3 -start 2 -end 4 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "nthseqset",
+        autodoc_contract: "docs/autodoc/tools/nthseqset.json",
+        example_id: "select_second_alignment_set",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/nthseqset_select_second_alignment_set.sto",
+        legacy_source: "EMBOSS nthseqset application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/nthseqset.acd",
+        legacy_invocation: "nthseqset -sequence nthseqset_alignments.sto -number 2 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "matcher",
+        autodoc_contract: "docs/autodoc/tools/matcher.json",
+        example_id: "compare_singleton_sequences_without_gaps",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/matcher_compare_singleton_sequences_without_gaps.tsv",
+        legacy_source: "EMBOSS matcher application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/matcher.acd",
+        legacy_invocation:
+            "matcher -asequence needle_query.fasta -bsequence needle_target.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "distmat",
+        autodoc_contract: "docs/autodoc/tools/distmat.json",
+        example_id: "compute_p_distance_matrix_for_equal_length_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/distmat_compute_p_distance_matrix_for_equal_length_records.tsv",
+        legacy_source: "EMBOSS distmat application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/distmat.acd",
+        legacy_invocation: "distmat -sequence three_records.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "cons",
+        autodoc_contract: "docs/autodoc/tools/cons.json",
+        example_id: "derive_simple_consensus_from_stockholm_alignment",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/cons_derive_simple_consensus_from_stockholm_alignment.fasta",
+        legacy_source: "EMBOSS cons application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cons.acd",
+        legacy_invocation: "cons -sequence multiple_alignment.sto -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "consambig",
+        autodoc_contract: "docs/autodoc/tools/consambig.json",
+        example_id: "derive_ambiguity_aware_consensus_from_stockholm_alignment",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/consambig_derive_ambiguity_aware_consensus_from_stockholm_alignment.fasta",
+        legacy_source: "EMBOSS consambig application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/consambig.acd",
+        legacy_invocation: "consambig -sequence multiple_alignment.sto -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "needleall",
+        autodoc_contract: "docs/autodoc/tools/needleall.json",
+        example_id: "align_all_query_target_pairs",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/needleall_align_all_query_target_pairs.tsv",
+        legacy_source: "EMBOSS needleall application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/needleall.acd",
+        legacy_invocation:
+            "needleall -asequence needleall_queries.fasta -bsequence needleall_targets.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "diffseq",
+        autodoc_contract: "docs/autodoc/tools/diffseq.json",
+        example_id: "report_single_substitution_block",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/diffseq_report_single_substitution_block.tsv",
+        legacy_source: "EMBOSS diffseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/diffseq.acd",
+        legacy_invocation:
+            "diffseq -asequence diffseq_left.fasta -bsequence diffseq_right.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "edialign",
+        autodoc_contract: "docs/autodoc/tools/edialign.json",
+        example_id: "derive_shared_exact_block_alignment",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/edialign_derive_shared_exact_block_alignment.sto",
+        legacy_source: "EMBOSS edialign application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/edialign.acd",
+        legacy_invocation: "edialign -sequence edialign_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "water",
         autodoc_contract: "docs/autodoc/tools/water.json",
         example_id: "basic_local_alignment",
@@ -841,6 +976,93 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+                .display()
+                .to_string(),
+        ],
+        "aligncopy" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/multiple_alignment.sto")
+                .display()
+                .to_string(),
+        ],
+        "aligncopypair" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/pairwise_alignment.sto")
+                .display()
+                .to_string(),
+        ],
+        "infoalign" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/multiple_alignment.sto")
+                .display()
+                .to_string(),
+        ],
+        "extractalign" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/multiple_alignment.sto")
+                .display()
+                .to_string(),
+            "--row-id".to_owned(),
+            "alpha".to_owned(),
+            "--row".to_owned(),
+            "3".to_owned(),
+            "--start".to_owned(),
+            "2".to_owned(),
+            "--end".to_owned(),
+            "4".to_owned(),
+        ],
+        "nthseqset" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/nthseqset_alignments.sto")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "matcher" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/needle_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/needle_target.fasta")
+                .display()
+                .to_string(),
+        ],
+        "distmat" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "cons" | "consambig" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/multiple_alignment.sto")
+                .display()
+                .to_string(),
+        ],
+        "needleall" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/needleall_queries.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/needleall_targets.fasta")
+                .display()
+                .to_string(),
+        ],
+        "diffseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/diffseq_left.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/diffseq_right.fasta")
+                .display()
+                .to_string(),
+        ],
+        "edialign" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/edialign_records.fasta")
                 .display()
                 .to_string(),
         ],

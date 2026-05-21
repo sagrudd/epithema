@@ -15,8 +15,8 @@
     "retained_backlog_count": 0,
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
-    "shipped_harvested_legacy_presence_count": 75,
-    "shipped_compared_count": 37,
+    "shipped_harvested_legacy_presence_count": 85,
+    "shipped_compared_count": 49,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -27,7 +27,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "aligncopypair",
@@ -36,7 +36,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "diffseq",
@@ -45,7 +45,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "edialign",
@@ -54,7 +54,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "infoalign",
@@ -63,7 +63,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "extractalign",
@@ -72,7 +72,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "nthseqset",
@@ -81,7 +81,7 @@
       "governance_family": "Core Retain — Basic sequence IO and conversion",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "runinfo",
@@ -108,7 +108,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "distmat",
@@ -117,7 +117,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "cons",
@@ -126,7 +126,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "consambig",
@@ -135,7 +135,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "needle",
@@ -153,7 +153,7 @@
       "governance_family": "Core Retain — Alignment read-write and post-processing",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "water",
@@ -893,8 +893,8 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 13,
       "shipped_executable_or_better": 13,
-      "shipped_compared": 2,
-      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "shipped_compared": 13,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
     {
@@ -904,7 +904,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 18,
       "shipped_executable_or_better": 18,
-      "shipped_compared": 10,
+      "shipped_compared": 11,
       "recommendation": "upgrade shipped retained methods to compared evidence",
       "retained_backlog_tools": []
     },

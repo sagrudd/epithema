@@ -1,0 +1,5 @@
+query	target	mode	score	aligned_length	identity_count	identity_percent	query_gap_count	target_gap_count
+q1	t1	nucleotide	-2	4	3	75	0	1
+q1	t2	nucleotide	0	4	2	50	0	0
+q2	t1	nucleotide	-6	4	1	25	0	1
+q2	t2	nucleotide	2	4	3	75	0	0

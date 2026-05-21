@@ -1,0 +1,4 @@
+alignment	classification	row_count	column_count	row_ordinal	row_identifier	ungapped_length	gap_count
+multiple-demo	multiple	3	5	1	alpha	4	1
+multiple-demo	multiple	3	5	2	beta	5	0
+multiple-demo	multiple	3	5	3	gamma	5	0
