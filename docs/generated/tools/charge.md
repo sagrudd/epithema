@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `charge` is the can
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs charge`. Rust service tests validate the analytical result and the canonical checked-in plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path.
+This method is implemented and exposed through `emboss-rs charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path.
 
 ## Caveats
 
@@ -74,6 +74,7 @@ v1 supports the charge profile only for one protein record at a time. Rendering 
   - `step` = `1`
 - Expected outputs:
   - `charge_profile_table`: Charge profile table (Stable sliding-window charge rows plus a canonical line-plot contract derived from the same governed output.)
+  - `charge_plot`: Charge line-plot contract (The canonical governed line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 

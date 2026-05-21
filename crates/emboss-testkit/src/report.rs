@@ -891,12 +891,12 @@ mod tests {
             .collect::<std::collections::BTreeMap<_, _>>();
 
         let charge = gap_map.get("charge").expect("charge should be present");
-        assert_eq!(charge.evidence_level, CohortEvidenceLevel::ExecutableEvidence);
+        assert_eq!(charge.evidence_level, CohortEvidenceLevel::ComparedEvidence);
         assert!(
             charge
                 .unresolved_gaps
                 .iter()
-                .any(|gap| gap.code == crate::report::CohortGapCode::MissingComparedEvidence)
+                .all(|gap| gap.code != crate::report::CohortGapCode::MissingComparedEvidence)
         );
 
         let descseq = gap_map.get("descseq").expect("descseq should be present");

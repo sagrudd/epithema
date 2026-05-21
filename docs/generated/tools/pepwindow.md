@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `pepwindow` is the 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pepwindow`. Rust tool and service tests validate analytical window rows, unsupported-residue rejection, and canonical checked-in line-plot contract emission.
+This method is implemented and exposed through `emboss-rs pepwindow`. Validation now covers stable analytical window rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, alongside unsupported-residue rejection.
 
 ## Caveats
 
@@ -74,6 +74,7 @@ v1 supports only the single-record `pepwindow` profile and does not implement `p
   - `step` = `2`
 - Expected outputs:
   - `pepwindow_table`: Hydropathy profile table (Stable sliding-window hydropathy rows plus a canonical line-plot contract derived from the same governed output.)
+  - `pepwindow_plot`: Hydropathy line-plot contract (The canonical governed line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 

@@ -58,8 +58,8 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `82` shipped methods carry compared evidence
-- `14` shipped methods carry executable evidence
+- `84` shipped methods carry compared evidence
+- `12` shipped methods carry executable evidence
 - `94` shipped methods record harvested legacy provenance
 - `0` shipped methods remain at declared or documented-only evidence
 
@@ -70,8 +70,8 @@ release includes:
 
 - the typed `emboss-plot-contract` crate
 - the Rust-to-R bridge
-- the `charge` and `pepwindow` analytical paths emitting real plot contracts
-  for R rendering
+- the `charge`, `pepwindow`, and governed `wordcount` analytical paths
+  emitting real plot contracts for R rendering
 
 ## Important Deferred Areas
 

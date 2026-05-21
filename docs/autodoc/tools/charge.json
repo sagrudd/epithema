@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs charge`. Rust service tests validate the analytical result and the canonical checked-in plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path."
+      "content": "This method is implemented and exposed through `emboss-rs charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path."
     },
     {
       "id": "caveats",
@@ -103,6 +103,11 @@
           "id": "charge_profile_table",
           "label": "Charge profile table",
           "description": "Stable sliding-window charge rows plus a canonical line-plot contract derived from the same governed output."
+        },
+        {
+          "id": "charge_plot",
+          "label": "Charge line-plot contract",
+          "description": "The canonical governed line-plot contract JSON emitted from the same deterministic analytical run."
         }
       ]
     }

@@ -43,6 +43,12 @@ pub struct AcceptanceAnchorSpec {
     pub legacy_invocation: &'static str,
 }
 
+#[derive(Debug)]
+struct AnchorActualResult {
+    payload: String,
+    plot: Option<String>,
+}
+
 const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
     AcceptanceAnchorSpec {
         tool_name: "needle",
@@ -824,6 +830,29 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "silent -sequence silent_records.fasta -site GAATTC -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "charge",
+        autodoc_contract: "docs/autodoc/tools/charge.json",
+        example_id: "charge_profile_example",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/charge_charge_profile_example.tsv",
+        legacy_source: "EMBOSS charge application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
+        legacy_invocation:
+            "charge -sequence charge_protein.fasta -winsize 5 -step 1 -graph data",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "pepwindow",
+        autodoc_contract: "docs/autodoc/tools/pepwindow.json",
+        example_id: "pepwindow_profile_example",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/pepwindow_pepwindow_profile_example.tsv",
+        legacy_source: "EMBOSS pepwindow application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepwindow.acd",
+        legacy_invocation:
+            "pepwindow -sequence pepwindow_protein.fasta -winsize 5 -step 2 -graph data",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -1019,7 +1048,7 @@ pub fn derive_acceptance_anchor_report(
         .with_detail(format!("{}: {error}", repo_root.join(spec.expected_output).display()))
     })?;
 
-    let actual_normalized = normalize_text(&actual);
+    let actual_normalized = normalize_text(&actual.payload);
     let expected_normalized = normalize_text(&expected);
     if actual_normalized != expected_normalized {
         return Err(
@@ -1037,6 +1066,47 @@ pub fn derive_acceptance_anchor_report(
                 actual_normalized
             )),
         );
+    }
+
+    if let Some(expected_plot_output) = expected_plot_output(spec.tool_name) {
+        let actual_plot = actual.plot.ok_or_else(|| {
+            PlatformError::new(
+                ErrorCategory::Validation,
+                "acceptance-anchor invocation did not attach the expected plot contract",
+            )
+            .with_code("testkit.anchor.plot.missing")
+            .with_detail(spec.tool_name.to_owned())
+        })?;
+        let expected_plot =
+            fs::read_to_string(repo_root.join(expected_plot_output)).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    "failed to read committed acceptance-anchor expected plot contract",
+                )
+                .with_code("testkit.anchor.expected_plot.read_failed")
+                .with_detail(format!(
+                    "{}: {error}",
+                    repo_root.join(expected_plot_output).display()
+                ))
+            })?;
+        let actual_plot_normalized = normalize_text(&actual_plot);
+        let expected_plot_normalized = normalize_text(&expected_plot);
+        if actual_plot_normalized != expected_plot_normalized {
+            return Err(
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "acceptance-anchor plot contract differed from the committed expected output",
+                )
+                .with_code("testkit.anchor.plot.comparison.failed")
+                .with_detail(format!(
+                    "tool '{}' plot output did not match '{}'\nexpected:\n{:?}\nactual:\n{:?}",
+                    spec.tool_name,
+                    expected_plot_output,
+                    expected_plot_normalized,
+                    actual_plot_normalized
+                )),
+            );
+        }
     }
 
     let legacy_reference = LegacyReference {
@@ -1113,7 +1183,7 @@ pub fn write_acceptance_anchor_reports(
 fn execute_anchor_payload(
     repo_root: &Path,
     spec: &AcceptanceAnchorSpec,
-) -> Result<String, PlatformError> {
+) -> Result<AnchorActualResult, PlatformError> {
     if matches!(spec.tool_name, "refseqget" | "runinfo" | "runget") {
         return execute_mocked_provider_anchor_payload(repo_root, spec);
     }
@@ -1142,7 +1212,10 @@ fn execute_anchor_payload(
         .with_detail(spec.tool_name.to_owned())
     })?;
 
-    render_payload(&response.result.payload)
+    Ok(AnchorActualResult {
+        payload: render_payload(&response.result.payload)?,
+        plot: render_plot(response.result.plot.as_ref())?,
+    })
 }
 
 #[derive(Default)]
@@ -1173,7 +1246,7 @@ impl ProviderHttpClient for AnchorMockHttpClient {
 fn execute_mocked_provider_anchor_payload(
     _repo_root: &Path,
     spec: &AcceptanceAnchorSpec,
-) -> Result<String, PlatformError> {
+) -> Result<AnchorActualResult, PlatformError> {
     let service = implemented_service()?;
     let tool = ToolName::new(spec.tool_name).map_err(|error| {
         PlatformError::new(
@@ -1220,7 +1293,10 @@ fn execute_mocked_provider_anchor_payload(
         .with_detail(spec.tool_name.to_owned())
     })?;
 
-    render_payload(&response.result.payload)
+    Ok(AnchorActualResult {
+        payload: render_payload(&response.result.payload)?,
+        plot: render_plot(response.result.plot.as_ref())?,
+    })
 }
 
 fn implemented_service() -> Result<EmbossService, PlatformError> {
@@ -1691,6 +1767,26 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "charge" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/charge_protein.fasta")
+                .display()
+                .to_string(),
+            "--window".to_owned(),
+            "5".to_owned(),
+            "--step".to_owned(),
+            "1".to_owned(),
+        ],
+        "pepwindow" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/pepwindow_protein.fasta")
+                .display()
+                .to_string(),
+            "--window".to_owned(),
+            "5".to_owned(),
+            "--step".to_owned(),
+            "2".to_owned(),
+        ],
         "descseq" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
@@ -1855,6 +1951,29 @@ fn render_payload(payload: &ResultPayload) -> Result<String, PlatformError> {
         )
         .with_code("testkit.anchor.payload.unsupported")
         .with_detail(other.kind_label().to_owned())),
+    }
+}
+
+fn render_plot(plot: Option<&emboss_plot_contract::PlotPayload>) -> Result<Option<String>, PlatformError> {
+    plot.map(|plot| {
+        plot.to_json_pretty().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Validation,
+                "failed to render acceptance-anchor plot payload",
+            )
+            .with_code("testkit.anchor.render_plot_failed")
+            .with_source(error)
+        })
+    })
+    .transpose()
+}
+
+fn expected_plot_output(tool_name: &str) -> Option<&'static str> {
+    match tool_name {
+        "charge" => Some("crates/emboss-tools/tests/fixtures/charge_plot_contract.json"),
+        "pepwindow" => Some("crates/emboss-tools/tests/fixtures/pepwindow_plot_contract.json"),
+        "wordcount" => Some("crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"),
+        _ => None,
     }
 }
 

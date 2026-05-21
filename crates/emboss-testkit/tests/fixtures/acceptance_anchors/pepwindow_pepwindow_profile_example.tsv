@@ -1,0 +1,11 @@
+sequence_id	window_start	window_end	window_length	mean_hydropathy
+pepwindow_example	1	5	5	0.120000
+pepwindow_example	3	7	5	1.980000
+pepwindow_example	5	9	5	1.920000
+pepwindow_example	7	11	5	2.820000
+pepwindow_example	9	13	5	3.400000
+pepwindow_example	11	15	5	1.560000
+pepwindow_example	13	17	5	0.340000
+pepwindow_example	15	19	5	-1.120000
+pepwindow_example	17	21	5	-0.560000
+pepwindow_example	19	23	5	-0.480000

@@ -111,6 +111,14 @@ shipped cohort is:
 
 ## Readiness Summary
 
+Current generated release-truth markers:
+
+- Shipped methods audited: `96`
+- Compared-evidence methods: `84`
+- Executable-evidence methods: `12`
+- Methods with harvested legacy provenance recorded: `94`
+- Retained backlog still unshipped: `0`
+
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
@@ -132,11 +140,11 @@ shipped cohort is:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `82` methods currently show `compared_evidence`
-  - `14` methods currently show `executable_evidence`
+  - `84` methods currently show `compared_evidence`
+  - `12` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `94` shipped methods now record harvested legacy provenance, but `14`
+- `94` shipped methods now record harvested legacy provenance, but `12`
   methods still stop short of compared evidence.
 - The retained governance backlog is now `0`, so the dominant remaining work
   is evidence deepening rather than method implementation.
@@ -161,7 +169,7 @@ shipped cohort is:
 
 - Status: `ready with known limitations`
 - Basis: every shipped method has a validation stub and appears in the cohort
-  report, but `14` shipped methods still stop short of compared evidence.
+  report, but `12` shipped methods still stop short of compared evidence.
 
 ### Cohort-level acceptance reporting
 

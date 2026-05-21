@@ -2,15 +2,15 @@
   "tool_name": "charge",
   "document_id": "charge-v1",
   "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "evidence_source": "executed_run",
   "summary": {
     "total_case_count": 1,
-    "declared_case_count": 1,
-    "harvested_case_count": 0,
-    "runnable_case_count": 1,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -19,23 +19,29 @@
     {
       "id": "charge_profile_example",
       "title": "Compute a deterministic protein charge profile and emit a line-plot contract",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "pending",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
         "charge_fixture",
         "charge_plot_contract"
       ],
       "expected_output_ids": [
-        "charge_profile_table"
+        "charge_profile_table",
+        "charge_plot"
       ],
       "provenance": [
         {
           "source": "EMBOSS charge application",
           "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
           "invocation": "charge -sequence charge_protein.fasta -winsize 5 -graph data"
+        },
+        {
+          "source": "EMBOSS charge application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
+          "invocation": "charge -sequence charge_protein.fasta -winsize 5 -step 1 -graph data"
         }
       ],
       "diagnostics": [
@@ -64,6 +70,11 @@
       "source": "EMBOSS charge application",
       "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
       "invocation": "charge -sequence charge_protein.fasta -winsize 5 -graph data"
+    },
+    {
+      "source": "EMBOSS charge application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd",
+      "invocation": "charge -sequence charge_protein.fasta -winsize 5 -step 1 -graph data"
     }
   ]
 }

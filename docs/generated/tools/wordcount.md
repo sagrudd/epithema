@@ -42,7 +42,7 @@ Rust does not render figures. For `wordcount`, the governed v1 plotting surface 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs wordcount`. Validation currently covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and canonical aggregate bar-plot contract emission.
+This method is implemented and exposed through `emboss-rs wordcount`. Validation now covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and compared acceptance evidence for the canonical aggregate bar-plot contract emission path.
 
 ## Caveats
 

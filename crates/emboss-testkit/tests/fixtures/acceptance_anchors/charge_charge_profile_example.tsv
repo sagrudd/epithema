@@ -1,0 +1,4 @@
+sequence_id	window_start	window_end	window_length	mean_charge
+charge_example	1	5	5	0.300000
+charge_example	2	6	5	0.100000
+charge_example	3	7	5	-0.300000

@@ -14,6 +14,7 @@ emboss-diagnostics.workspace = true
 emboss-docgen.workspace = true
 emboss-fixtures.workspace = true
 emboss-io.workspace = true
+emboss-plot-contract.workspace = true
 emboss-r-bridge.workspace = true
 emboss-providers.workspace = true
 emboss-service.workspace = true

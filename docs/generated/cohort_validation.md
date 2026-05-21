@@ -12,8 +12,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `94`
-- Methods with executable validation: `14`
-- Methods with compared evidence: `82`
+- Methods with executable validation: `12`
+- Methods with compared evidence: `84`
 - Methods with visible gaps: `14`
 
 ## Evidence Level Definitions
@@ -91,8 +91,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqmatchall` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordmatch` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordfinder` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `charge` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
-| `pepwindow` | `protein_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
+| `charge` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
+| `pepwindow` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `recoder` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `silent` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `aaindexextract` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -137,7 +137,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `trimseq`: `missing_compared_evidence`
 - `vectorstrip`: `missing_compared_evidence`
 - `maskfeat`: `missing_compared_evidence`
-- `charge`: `missing_compared_evidence`, `validation_report_gap`
-- `pepwindow`: `missing_compared_evidence`, `validation_report_gap`
+- `charge`: `validation_report_gap`
+- `pepwindow`: `validation_report_gap`
 - `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `dan`: `missing_compared_evidence`
