@@ -12,6 +12,7 @@ cohort_validation
 governance_alignment
 cohort_health
 comparison_coverage
+retained_backlog_closure
 tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair

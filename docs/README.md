@@ -111,6 +111,22 @@ cohort report alone:
 - executable-only count by family
 - harvested-but-not-compared count by family
 
+```bash
+make retained-backlog-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/retained_backlog_closure.json`
+- `docs/generated/retained_backlog_closure.md`
+
+The retained-backlog closure report makes one thing explicit regardless of
+whether the retained backlog is zero or nonzero:
+
+- each remaining unshipped retained method, with governance family, nearest
+  implemented Rust family, recommended next sweep, and blocker classification
+- or an explicit statement that the retained backlog is fully closed
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 

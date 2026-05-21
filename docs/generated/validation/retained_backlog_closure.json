@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "report_id": "retained-backlog-closure",
+  "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
+  "summary": {
+    "retained_tool_count": 90,
+    "retained_shipped_count": 90,
+    "retained_backlog_count": 0,
+    "retained_backlog_closed": true
+  },
+  "remaining_methods": []
+}

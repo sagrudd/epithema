@@ -12,6 +12,7 @@ pub mod cross_surface;
 pub mod evidence;
 pub mod governance;
 pub mod projection;
+pub mod retained_backlog;
 pub mod report;
 
 pub use anchor::{
@@ -45,6 +46,12 @@ pub use governance::{
     write_governance_alignment_report_json,
 };
 pub use projection::{derive_validation_report, write_validation_report_json};
+pub use retained_backlog::{
+    RetainedBacklogBlocker, RetainedBacklogRecord, RetainedBacklogReport,
+    RetainedBacklogSummary, derive_retained_backlog_report,
+    render_retained_backlog_markdown, write_retained_backlog_markdown,
+    write_retained_backlog_report_json,
+};
 pub use report::{
     CohortDocumentationRecord, CohortDocumentationStatus, CohortEvidenceLevel, CohortGapCode,
     CohortMethodGap, CohortMethodValidationRecord, CohortValidationReport,
