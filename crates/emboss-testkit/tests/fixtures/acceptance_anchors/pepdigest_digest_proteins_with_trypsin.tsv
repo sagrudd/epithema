@@ -1,0 +1,4 @@
+record	protease	peptide_index	start	end	cleavage_after	sequence
+digestA	trypsin	1	1	2	2	AK
+digestA	trypsin	2	3	7	7	RPQMK
+digestB	trypsin	1	1	4	4	MAMK

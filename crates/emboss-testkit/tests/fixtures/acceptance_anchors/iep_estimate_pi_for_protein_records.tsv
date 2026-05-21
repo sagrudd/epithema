@@ -1,0 +1,3 @@
+record	residue_length	titratable_side_chains	aspartate	glutamate	cysteine	tyrosine	histidine	lysine	arginine	net_charge_ph7	estimated_pi
+iep_basic	4	4	0	0	0	0	0	4	0	3.996804	11.032662
+iep_mixed	7	6	1	1	1	0	1	1	1	0.046411	7.159134

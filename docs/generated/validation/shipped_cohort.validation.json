@@ -9,10 +9,10 @@
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "harvested_legacy_presence_count": 90,
-    "executable_evidence_count": 35,
-    "compared_evidence_count": 61,
-    "gapped_method_count": 35
+    "harvested_legacy_presence_count": 94,
+    "executable_evidence_count": 24,
+    "compared_evidence_count": 72,
+    "gapped_method_count": 24
   },
   "methods": [
     {
@@ -927,20 +927,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'cai' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'cai' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "chips",
@@ -954,20 +945,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'chips' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'chips' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "cusp",
@@ -999,20 +981,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'codcmp' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'codcmp' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "codcopy",
@@ -1026,20 +999,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": false,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_harvested_legacy_evidence",
-          "message": "tool 'codcopy' has no harvested legacy evidence recorded yet"
-        },
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'codcopy' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "dreg",
@@ -1391,16 +1355,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'aaindexextract' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "complex",
@@ -1500,16 +1459,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'infobase' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "infoseq",
@@ -1541,16 +1495,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'inforesidue' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "iep",
@@ -1564,16 +1513,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'iep' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "oddcomp",
@@ -1587,16 +1531,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'oddcomp' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "pepdigest",
@@ -1610,16 +1549,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'pepdigest' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "pepstats",
@@ -1651,16 +1585,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
-      "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'wordcount' has no compared validation evidence yet"
-        }
-      ]
+      "compared_validation_present": true,
+      "unresolved_gaps": []
     },
     {
       "tool_name": "backtranseq",

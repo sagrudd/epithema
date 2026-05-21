@@ -1,0 +1,7 @@
+record	query_word	word_length	count	frequency	contains	counted_windows
+oddA	MAM	3	1	0.090909	true	11
+oddA	QQQ	3	0	0.000000	false	11
+oddB	MAM	3	2	0.200000	true	10
+oddB	QQQ	3	2	0.200000	true	10
+oddC	MAM	3	0	0.000000	false	4
+oddC	QQQ	3	0	0.000000	false	4

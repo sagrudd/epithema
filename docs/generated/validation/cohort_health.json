@@ -3,40 +3,28 @@
   "report_id": "cohort-health-reprioritization-gate",
   "summary": {
     "total_method_count": 96,
-    "compared_evidence_count": 61,
-    "harvested_legacy_presence_count": 90,
+    "compared_evidence_count": 72,
+    "harvested_legacy_presence_count": 94,
     "retained_backlog_count": 0,
     "largest_retained_backlog_family": null,
     "largest_retained_backlog_size": 0,
-    "weakest_evidence_family": "Core Retain — Core sequence statistics and composition",
-    "weak_evidence_method_count": 10,
-    "release_truth_current": false
+    "weakest_evidence_family": "Core Retain — Sequence editing and manipulation",
+    "weak_evidence_method_count": 9,
+    "release_truth_current": true
   },
   "signals": [
     {
       "code": "weak_evidence_burden",
       "severity": "warning",
-      "summary": "'Core Retain — Core sequence statistics and composition' carries the largest weak-evidence burden",
-      "detail": "'Core Retain — Core sequence statistics and composition' has 10 shipped methods below compared evidence and 6 already compared."
-    },
-    {
-      "code": "release_truth_lag",
-      "severity": "warning",
-      "summary": "release-truth documentation is behind the current generated state",
-      "detail": "The RC readiness document is missing current markers for: - Compared-evidence methods: `61`, - Executable-evidence methods: `35`, - Methods with harvested legacy provenance recorded: `90`."
+      "summary": "'Core Retain — Sequence editing and manipulation' carries the largest weak-evidence burden",
+      "detail": "'Core Retain — Sequence editing and manipulation' has 9 shipped methods below compared evidence and 14 already compared."
     }
   ],
   "recommendations": [
     {
       "priority": 1,
-      "target": "release readiness truth",
-      "rationale": "Refresh the RC readiness material before adding more shipped scope so release-facing documentation does not lag the generated cohort state.",
-      "source_signal": "release_truth_lag"
-    },
-    {
-      "priority": 2,
-      "target": "Core Retain — Core sequence statistics and composition",
-      "rationale": "This family has 10 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
+      "target": "Core Retain — Sequence editing and manipulation",
+      "rationale": "This family has 9 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
       "source_signal": "weak_evidence_burden"
     }
   ]

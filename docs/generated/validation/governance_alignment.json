@@ -15,8 +15,8 @@
     "retained_backlog_count": 0,
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
-    "shipped_harvested_legacy_presence_count": 90,
-    "shipped_compared_count": 61,
+    "shipped_harvested_legacy_presence_count": 94,
+    "shipped_compared_count": 72,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -450,7 +450,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "chips",
@@ -459,7 +459,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "cusp",
@@ -477,7 +477,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "codcopy",
@@ -486,7 +486,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "dreg",
@@ -630,7 +630,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "complex",
@@ -675,7 +675,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "infoseq",
@@ -693,7 +693,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "iep",
@@ -702,7 +702,7 @@
       "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "oddcomp",
@@ -711,7 +711,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "pepdigest",
@@ -720,7 +720,7 @@
       "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "pepstats",
@@ -738,7 +738,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "backtranseq",
@@ -915,7 +915,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 16,
       "shipped_executable_or_better": 16,
-      "shipped_compared": 6,
+      "shipped_compared": 15,
       "recommendation": "upgrade shipped retained methods to compared evidence",
       "retained_backlog_tools": []
     },
@@ -1080,8 +1080,8 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 2,
       "shipped_executable_or_better": 2,
-      "shipped_compared": 0,
-      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "shipped_compared": 2,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
     {

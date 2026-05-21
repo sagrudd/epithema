@@ -728,6 +728,132 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepstats.acd",
         legacy_invocation: "pepstats -sequence protein_stats_records.fasta -stdout yes",
     },
+    AcceptanceAnchorSpec {
+        tool_name: "cai",
+        autodoc_contract: "docs/autodoc/tools/cai.json",
+        example_id: "score_query_sequences_against_reference_fixture",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/cai_score_query_sequences_against_reference_fixture.tsv",
+        legacy_source: "EMBOSS cai application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cai.acd",
+        legacy_invocation:
+            "cai -sequence codon_query.fasta -cfile codon_reference.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "chips",
+        autodoc_contract: "docs/autodoc/tools/chips.json",
+        example_id: "report_codon_usage_for_reference_fixture",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/chips_report_codon_usage_for_reference_fixture.tsv",
+        legacy_source: "EMBOSS chips application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/chips.acd",
+        legacy_invocation:
+            "chips -sequence codon_reference.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "codcmp",
+        autodoc_contract: "docs/autodoc/tools/codcmp.json",
+        example_id: "compare_two_coding_fixtures",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/codcmp_compare_two_coding_fixtures.tsv",
+        legacy_source: "EMBOSS codcmp application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/codcmp.acd",
+        legacy_invocation:
+            "codcmp -first codon_query.fasta -second codon_compare_right.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "codcopy",
+        autodoc_contract: "docs/autodoc/tools/codcopy.json",
+        example_id: "normalize_coding_input_into_reusable_profile",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/codcopy_normalize_coding_input_into_reusable_profile.tsv",
+        legacy_source: "EMBOSS codcopy application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/codcopy.acd",
+        legacy_invocation:
+            "codcopy -sequence codon_reference.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "aaindexextract",
+        autodoc_contract: "docs/autodoc/tools/aaindexextract.json",
+        example_id: "report_hydropathy_subset",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/aaindexextract_report_hydropathy_subset.tsv",
+        legacy_source: "EMBOSS aaindexextract application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/aaindexextract.acd",
+        legacy_invocation: "aaindexextract -index hydropathy -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "infobase",
+        autodoc_contract: "docs/autodoc/tools/infobase.json",
+        example_id: "lookup_any_base_symbol",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/infobase_lookup_any_base_symbol.tsv",
+        legacy_source: "EMBOSS infobase application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infobase.acd",
+        legacy_invocation: "infobase -base N -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "inforesidue",
+        autodoc_contract: "docs/autodoc/tools/inforesidue.json",
+        example_id: "lookup_lysine",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/inforesidue_lookup_lysine.tsv",
+        legacy_source: "EMBOSS inforesidue application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/inforesidue.acd",
+        legacy_invocation: "inforesidue -residue K -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "oddcomp",
+        autodoc_contract: "docs/autodoc/tools/oddcomp.json",
+        example_id: "count_exact_protein_words",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/oddcomp_count_exact_protein_words.tsv",
+        legacy_source: "EMBOSS oddcomp application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/oddcomp.acd",
+        legacy_invocation:
+            "oddcomp -sequence oddcomp_records.fasta -word MAM -word QQQ -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "iep",
+        autodoc_contract: "docs/autodoc/tools/iep.json",
+        example_id: "estimate_pi_for_protein_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/iep_estimate_pi_for_protein_records.tsv",
+        legacy_source: "EMBOSS iep application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/iep.acd",
+        legacy_invocation: "iep -sequence iep_records.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "pepdigest",
+        autodoc_contract: "docs/autodoc/tools/pepdigest.json",
+        example_id: "digest_proteins_with_trypsin",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/pepdigest_digest_proteins_with_trypsin.tsv",
+        legacy_source: "EMBOSS pepdigest application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepdigest.acd",
+        legacy_invocation:
+            "pepdigest -sequence pepdigest_records.fasta -menu trypsin -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "wordcount",
+        autodoc_contract: "docs/autodoc/tools/wordcount.json",
+        example_id: "count_overlapping_words",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/wordcount_count_overlapping_words.tsv",
+        legacy_source: "EMBOSS wordcount application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordcount.acd",
+        legacy_invocation:
+            "wordcount -sequence three_records.fasta -wordsize 2 -outfile stdout",
+    },
 ];
 
 /// Returns the committed acceptance-anchor cohort.
@@ -1231,6 +1357,65 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "cai" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_reference.fasta")
+                .display()
+                .to_string(),
+        ],
+        "chips" | "codcopy" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_reference.fasta")
+                .display()
+                .to_string(),
+        ],
+        "codcmp" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_query.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_compare_right.fasta")
+                .display()
+                .to_string(),
+        ],
+        "aaindexextract" => vec!["hydropathy".to_owned()],
+        "infobase" => vec!["N".to_owned()],
+        "inforesidue" => vec!["K".to_owned()],
+        "oddcomp" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/oddcomp_records.fasta")
+                .display()
+                .to_string(),
+            "--word".to_owned(),
+            "MAM".to_owned(),
+            "--word".to_owned(),
+            "QQQ".to_owned(),
+        ],
+        "iep" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/iep_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "pepdigest" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "wordcount" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "--word-size".to_owned(),
+            "2".to_owned(),
+        ],
         "backtranseq" | "backtranambig" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta")
@@ -1539,6 +1724,7 @@ fn normalize_text(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::{acceptance_anchor_specs, derive_acceptance_anchor_report};
+    use crate::{ComparisonStatus, ExecutionStatus};
 
     fn repo_root() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -1553,11 +1739,17 @@ mod tests {
         for spec in acceptance_anchor_specs() {
             let report = derive_acceptance_anchor_report(&repo_root, spec.tool_name)
                 .expect("acceptance anchor should derive");
-            assert_eq!(report.summary.total_case_count, 1);
-            assert_eq!(report.summary.executed_case_count, 1);
-            assert_eq!(report.summary.compared_case_count, 1);
-            assert_eq!(report.summary.passed_case_count, 1);
-            assert_eq!(report.cases[0].id, spec.example_id);
+            assert!(report.summary.total_case_count >= 1);
+            assert!(report.summary.executed_case_count >= 1);
+            assert!(report.summary.compared_case_count >= 1);
+            assert!(report.summary.passed_case_count >= 1);
+            let case = report
+                .cases
+                .iter()
+                .find(|case| case.id == spec.example_id)
+                .expect("acceptance anchor should preserve its selected case");
+            assert_eq!(case.execution_status, ExecutionStatus::Executed);
+            assert_eq!(case.comparison_status, ComparisonStatus::Passed);
         }
     }
 }

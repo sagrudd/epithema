@@ -1,0 +1,15 @@
+scope	record	molecule	word_size	word	count	frequency	skipped_gap_windows
+record	alpha	dna	2	AC	1	0.333333	0
+record	alpha	dna	2	CG	1	0.333333	0
+record	alpha	dna	2	GT	1	0.333333	0
+record	beta	dna	2	TT	3	1.000000	0
+record	gamma	unknown	2	CC	1	0.333333	0
+record	gamma	unknown	2	GC	1	0.333333	0
+record	gamma	unknown	2	GG	1	0.333333	0
+aggregate	ALL	mixed	2	AC	1	0.111111	0
+aggregate	ALL	mixed	2	CC	1	0.111111	0
+aggregate	ALL	mixed	2	CG	1	0.111111	0
+aggregate	ALL	mixed	2	GC	1	0.111111	0
+aggregate	ALL	mixed	2	GG	1	0.111111	0
+aggregate	ALL	mixed	2	GT	1	0.111111	0
+aggregate	ALL	mixed	2	TT	3	0.333333	0

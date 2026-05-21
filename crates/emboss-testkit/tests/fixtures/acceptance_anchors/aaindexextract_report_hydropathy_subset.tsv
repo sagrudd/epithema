@@ -1,0 +1,21 @@
+index	residue	three_letter	name	value	units	notes
+hydropathy_kyte_doolittle	A	Ala	Alanine	1.800	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	R	Arg	Arginine	-4.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	N	Asn	Asparagine	-3.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	D	Asp	Aspartic acid	-3.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	C	Cys	Cysteine	2.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	E	Glu	Glutamic acid	-3.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	Q	Gln	Glutamine	-3.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	G	Gly	Glycine	-0.400	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	H	His	Histidine	-3.200	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	I	Ile	Isoleucine	4.500	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	L	Leu	Leucine	3.800	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	K	Lys	Lysine	-3.900	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	M	Met	Methionine	1.900	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	F	Phe	Phenylalanine	2.800	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	P	Pro	Proline	-1.600	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	S	Ser	Serine	-0.800	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	T	Thr	Threonine	-0.700	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	W	Trp	Tryptophan	-0.900	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	Y	Tyr	Tyrosine	-1.300	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage
+hydropathy_kyte_doolittle	V	Val	Valine	4.200	hydropathy_units	governed built-in subset; not full historical AAINDEX coverage

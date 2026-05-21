@@ -1,0 +1,2 @@
+symbol	name	class	supported_molecules	canonical_expansion	dna_complement	rna_complement
+N	Any base	ambiguity	dna,rna	ACGTU	N	N

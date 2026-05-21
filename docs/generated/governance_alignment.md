@@ -13,8 +13,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
-- Shipped tools with harvested legacy provenance: `90`
-- Shipped tools with compared evidence: `61`
+- Shipped tools with harvested legacy provenance: `94`
+- Shipped tools with compared evidence: `72`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -30,7 +30,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 |---|---:|---:|---:|---:|---:|---:|---|
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 13 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 17 | upgrade shipped retained methods to compared evidence |
-| Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 6 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 15 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 14 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 3 | upgrade shipped retained methods to compared evidence |
@@ -45,7 +45,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 2 | 2 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 0 | upgrade shipped retained methods to compared evidence |
+| Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 2 | 2 | 0 | upgrade shipped retained methods to compared evidence |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -113,11 +113,11 @@ All shipped methods are mapped in the governance appendix.
 | `feattext` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `splitsource` | `feature_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `twofeat` | `feature_tools` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
-| `cai` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
-| `chips` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `cai` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
+| `chips` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `cusp` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `codcmp` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
-| `codcopy` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `codcmp` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
+| `codcopy` | `codon_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `dreg` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `einverted` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `fuzznuc` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
@@ -133,19 +133,19 @@ All shipped methods are mapped in the governance appendix.
 | `pepwindow` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `recoder` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `executable_evidence` |
 | `silent` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `executable_evidence` |
-| `aaindexextract` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `aaindexextract` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `complex` | `sequence_stats` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
 | `compseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `dan` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
 | `geecee` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `infobase` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `infobase` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `infoseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `inforesidue` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
-| `iep` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `executable_evidence` |
-| `oddcomp` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
-| `pepdigest` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `executable_evidence` |
+| `inforesidue` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
+| `iep` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `compared_evidence` |
+| `oddcomp` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
+| `pepdigest` | `sequence_stats` | Modernize — Rework — Protein property and structural-summary utilities | retain | yes | `compared_evidence` |
 | `pepstats` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `wordcount` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `wordcount` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `backtranseq` | `translation_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `backtranambig` | `translation_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `checktrans` | `translation_tools` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |

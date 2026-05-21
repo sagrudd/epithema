@@ -1,0 +1,9 @@
+scope	record	codon	amino_acid	count	frequency	terminal_stop
+record	ref_pref	CTT	L	3	0.750000	-
+record	ref_pref	ATG	M	1	0.250000	-
+record	ref_mix	CTT	L	2	0.500000	-
+record	ref_mix	CTA	L	1	0.250000	-
+record	ref_mix	ATG	M	1	0.250000	-
+aggregate	ALL	CTT	L	5	0.625000	-
+aggregate	ALL	CTA	L	1	0.125000	-
+aggregate	ALL	ATG	M	2	0.250000	-
