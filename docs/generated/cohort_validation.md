@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `47`
-- Methods with executable validation: `75`
-- Methods with compared evidence: `21`
-- Methods with visible gaps: `75`
+- Methods with harvested legacy provenance recorded: `63`
+- Methods with executable validation: `59`
+- Methods with compared evidence: `37`
+- Methods with visible gaps: `59`
 
 ## Evidence Level Definitions
 
@@ -46,15 +46,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `water` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `newseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `seqcount` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `notseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `nthseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `skipseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `listor` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `skipredundant` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `seqcount` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `notseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `nthseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `skipseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `listor` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `skipredundant` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `biosed` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `degapseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
 | `revseq` | `sequence_edit` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
@@ -115,15 +115,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `getorf` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `prettyseq` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `tranalign` | `translation_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `extractseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `cutseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `union` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `pasteseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `splitter` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `merger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `megamerger` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `sizeseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
-| `shuffleseq` | `sequence_transform` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `extractseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `cutseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `union` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `pasteseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `splitter` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `merger` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `megamerger` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `sizeseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `shuffleseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 
 ## Visible Gaps
 
@@ -142,15 +142,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `consambig`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `needleall`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `refseqget`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `newseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `makenucseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `makeprotseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `seqcount`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `notseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `nthseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `skipseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `listor`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `skipredundant`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `biosed`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `degapseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `revseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
@@ -193,12 +186,3 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `oddcomp`: `missing_compared_evidence`
 - `pepdigest`: `missing_compared_evidence`
 - `wordcount`: `missing_compared_evidence`
-- `extractseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `cutseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `union`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `pasteseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `splitter`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `merger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `megamerger`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `sizeseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `shuffleseq`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`

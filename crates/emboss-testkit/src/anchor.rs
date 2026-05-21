@@ -6,6 +6,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use emboss_core::SequenceRecord;
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_docgen::{LegacyReference, load_document_from_path};
 use emboss_io::{write_fasta_string, write_stockholm_string};
@@ -62,6 +63,82 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "seqret -sequence three_records.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "newseq",
+        autodoc_contract: "docs/autodoc/tools/newseq.json",
+        example_id: "create_dna_record",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/newseq_create_dna_record.fasta",
+        legacy_source: "EMBOSS newseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/newseq.acd",
+        legacy_invocation:
+            "newseq -name created -sequence ACGTAC -desc 'created example' -type dna -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "seqcount",
+        autodoc_contract: "docs/autodoc/tools/seqcount.json",
+        example_id: "count_three_fasta_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/seqcount_count_three_fasta_records.tsv",
+        legacy_source: "EMBOSS seqcount application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqcount.acd",
+        legacy_invocation: "seqcount -sequence three_records.fasta -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "notseq",
+        autodoc_contract: "docs/autodoc/tools/notseq.json",
+        example_id: "exclude_second_record",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/notseq_exclude_second_record.fasta",
+        legacy_source: "EMBOSS notseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/notseq.acd",
+        legacy_invocation: "notseq -sequence three_records.fasta -exclude 2 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "nthseq",
+        autodoc_contract: "docs/autodoc/tools/nthseq.json",
+        example_id: "select_second_record",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/nthseq_select_second_record.fasta",
+        legacy_source: "EMBOSS nthseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/nthseq.acd",
+        legacy_invocation: "nthseq -sequence three_records.fasta -number 2 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "skipseq",
+        autodoc_contract: "docs/autodoc/tools/skipseq.json",
+        example_id: "skip_first_record",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/skipseq_skip_first_record.fasta",
+        legacy_source: "EMBOSS skipseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/skipseq.acd",
+        legacy_invocation: "skipseq -sequence three_records.fasta -skip 1 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "listor",
+        autodoc_contract: "docs/autodoc/tools/listor.json",
+        example_id: "xor_two_sequence_sets",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/listor_xor_two_sequence_sets.fasta",
+        legacy_source: "EMBOSS listor application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/listor.acd",
+        legacy_invocation:
+            "listor -first listor_first.fasta -second listor_second.fasta -operator xor -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "skipredundant",
+        autodoc_contract: "docs/autodoc/tools/skipredundant.json",
+        example_id: "remove_exact_duplicate_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/skipredundant_remove_exact_duplicate_records.fasta",
+        legacy_source: "EMBOSS skipredundant application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/skipredundant.acd",
+        legacy_invocation:
+            "skipredundant -sequence skipredundant_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "extractfeat",
         autodoc_contract: "docs/autodoc/tools/extractfeat.json",
         example_id: "extract_selected_gene_feature",
@@ -82,6 +159,108 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_source: "EMBOSS maskseq application",
         legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskseq.acd",
         legacy_invocation: "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "extractseq",
+        autodoc_contract: "docs/autodoc/tools/extractseq.json",
+        example_id: "extract_region_two_to_three",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/extractseq_extract_region_two_to_three.fasta",
+        legacy_source: "EMBOSS extractseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/extractseq.acd",
+        legacy_invocation:
+            "extractseq -sequence three_records.fasta -regions 2:3 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "cutseq",
+        autodoc_contract: "docs/autodoc/tools/cutseq.json",
+        example_id: "cut_after_second_position",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/cutseq_cut_after_second_position.fasta",
+        legacy_source: "EMBOSS cutseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/cutseq.acd",
+        legacy_invocation: "cutseq -sequence three_records.fasta -position 2 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "union",
+        autodoc_contract: "docs/autodoc/tools/union.json",
+        example_id: "concatenate_two_sequence_inputs",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/union_concatenate_two_sequence_inputs.fasta",
+        legacy_source: "EMBOSS union application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/union.acd",
+        legacy_invocation:
+            "union -first three_records.fasta -second two_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "pasteseq",
+        autodoc_contract: "docs/autodoc/tools/pasteseq.json",
+        example_id: "insert_short_sequence_after_position_two",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/pasteseq_insert_short_sequence_after_position_two.fasta",
+        legacy_source: "EMBOSS pasteseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pasteseq.acd",
+        legacy_invocation:
+            "pasteseq -asequence pasteseq_main.fasta -bsequence pasteseq_insert.fasta -position 2 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "splitter",
+        autodoc_contract: "docs/autodoc/tools/splitter.json",
+        example_id: "split_three_records_into_two_partitions",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/splitter_split_three_records_into_two_partitions.txt",
+        legacy_source: "EMBOSS splitter application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/splitter.acd",
+        legacy_invocation: "splitter -sequence three_records.fasta -size 2 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "merger",
+        autodoc_contract: "docs/autodoc/tools/merger.json",
+        example_id: "merge_two_overlapping_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/merger_merge_two_overlapping_records.fasta",
+        legacy_source: "EMBOSS merger application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/merger.acd",
+        legacy_invocation:
+            "merger -asequence merger_left.fasta -bsequence merger_right.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "megamerger",
+        autodoc_contract: "docs/autodoc/tools/megamerger.json",
+        example_id: "merge_two_overlapping_dna_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/megamerger_merge_two_overlapping_dna_records.fasta",
+        legacy_source: "EMBOSS megamerger application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/megamerger.acd",
+        legacy_invocation:
+            "megamerger -asequence merger_left.fasta -bsequence merger_right.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "sizeseq",
+        autodoc_contract: "docs/autodoc/tools/sizeseq.json",
+        example_id: "sort_records_by_descending_size",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/sizeseq_sort_records_by_descending_size.fasta",
+        legacy_source: "EMBOSS sizeseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/sizeseq.acd",
+        legacy_invocation: "sizeseq -sequence sizeseq_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "shuffleseq",
+        autodoc_contract: "docs/autodoc/tools/shuffleseq.json",
+        example_id: "shuffle_records_with_seed_7",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/shuffleseq_shuffle_records_with_seed_7.fasta",
+        legacy_source: "EMBOSS shuffleseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/shuffleseq.acd",
+        legacy_invocation:
+            "shuffleseq -sequence three_records.fasta -seed 7 -outseq stdout",
     },
     AcceptanceAnchorSpec {
         tool_name: "backtranseq",
@@ -470,6 +649,59 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "newseq" => vec![
+            "created".to_owned(),
+            "ACGTAC".to_owned(),
+            "--description".to_owned(),
+            "created example".to_owned(),
+            "--molecule".to_owned(),
+            "dna".to_owned(),
+        ],
+        "seqcount" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "notseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "nthseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "skipseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "1".to_owned(),
+        ],
+        "listor" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/listor_first.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/listor_second.fasta")
+                .display()
+                .to_string(),
+            "--operator".to_owned(),
+            "xor".to_owned(),
+        ],
+        "skipredundant" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/skipredundant_records.fasta")
+                .display()
+                .to_string(),
+        ],
         "extractfeat" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
@@ -484,6 +716,73 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
             "2:3".to_owned(),
+        ],
+        "extractseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+            "3".to_owned(),
+        ],
+        "cutseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "union" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/two_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "pasteseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/pasteseq_main.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/pasteseq_insert.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "splitter" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+        ],
+        "merger" | "megamerger" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/merger_left.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/merger_right.fasta")
+                .display()
+                .to_string(),
+        ],
+        "sizeseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/sizeseq_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "shuffleseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "--seed".to_owned(),
+            "7".to_owned(),
         ],
         "compseq" => vec![
             repo_root
@@ -634,6 +933,7 @@ fn render_payload(payload: &ResultPayload) -> Result<String, PlatformError> {
                 .with_source(error)
             })
         }
+        ResultPayload::SequencePartitions(partitions) => render_partitions(partitions),
         ResultPayload::TableReport(table) => Ok(render_table(table)),
         ResultPayload::TextReport(report) => Ok(report.body.clone()),
         other => Err(PlatformError::new(
@@ -656,6 +956,26 @@ fn render_table(table: &emboss_service::TableReport) -> String {
         rendered.push('\n');
     }
     rendered
+}
+
+fn render_partitions(partitions: &[Vec<SequenceRecord>]) -> Result<String, PlatformError> {
+    let mut rendered = String::new();
+    for (index, partition) in partitions.iter().enumerate() {
+        if index > 0 {
+            rendered.push('\n');
+        }
+        rendered.push_str(&format!("# Partition {}\n", index + 1));
+        let fasta = write_fasta_string(partition).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Internal,
+                "failed to render acceptance-anchor sequence partitions",
+            )
+            .with_code("testkit.anchor.render_sequence_partitions_failed")
+            .with_source(error)
+        })?;
+        rendered.push_str(&fasta);
+    }
+    Ok(rendered)
 }
 
 fn normalize_text(text: &str) -> String {

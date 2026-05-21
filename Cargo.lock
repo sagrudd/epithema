@@ -295,6 +295,7 @@ dependencies = [
 name = "emboss-testkit"
 version = "1.0.0"
 dependencies = [
+ "emboss-core",
  "emboss-diagnostics",
  "emboss-docgen",
  "emboss-fixtures",

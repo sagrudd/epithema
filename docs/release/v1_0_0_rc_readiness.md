@@ -132,11 +132,11 @@ shipped cohort is:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `21` methods currently show `compared_evidence`
-  - `69` methods currently show `executable_evidence`
+  - `37` methods currently show `compared_evidence`
+  - `59` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `47` shipped methods now record harvested legacy provenance, but most of the
+- `63` shipped methods now record harvested legacy provenance, but much of the
   cohort still lacks compared evidence.
 - The largest retained backlog remains concentrated in `Core Retain — Sequence
   editing and manipulation`, with `6` unshipped retained methods.
@@ -224,7 +224,7 @@ shipped cohort is:
 
 ### Missing validation depth
 
-- `75` shipped methods still have one or more visible evidence gaps, because
+- `59` shipped methods still have one or more visible evidence gaps, because
   executable evidence without compared grounding is still treated as partial.
 - The retained governance backlog is now `0`.
 - The dominant remaining weakness has shifted from implementation backlog to
@@ -233,14 +233,14 @@ shipped cohort is:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `47` methods with harvested legacy provenance.
+- The cohort report now records `63` methods with harvested legacy provenance.
 - That is a real improvement over the earlier zero-harvest state, but the
   harvested depth is still concentrated in curated and anchor-backed families
   rather than distributed across the full shipped cohort.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `21` methods with compared evidence.
+- The cohort report now records `37` methods with compared evidence.
 - The comparison framework is therefore real and reusable, but it is still not
   populated across most of the shipped cohort.
 
@@ -269,9 +269,9 @@ shipped cohort is:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `21`
-- Executable-evidence methods: `75`
-- Methods with harvested legacy provenance recorded: `47`
+- Compared-evidence methods: `37`
+- Executable-evidence methods: `59`
+- Methods with harvested legacy provenance recorded: `63`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

@@ -5,17 +5,17 @@ This page is generated from the shipped cohort validation report, the governance
 ## Summary
 
 - Shipped methods: `96`
-- Compared-evidence methods: `21`
-- Methods with harvested legacy provenance recorded: `47`
+- Compared-evidence methods: `37`
+- Methods with harvested legacy provenance recorded: `63`
 - Retained backlog still unshipped: `0`
 - Largest retained backlog family: `none` (`0` remaining)
-- Weakest evidence family: `Core Retain — Sequence editing and manipulation` (`21` methods below compared evidence)
+- Weakest evidence family: `Core Retain — Sequence editing and manipulation` (`12` methods below compared evidence)
 - Release-truth document current: `yes`
 
 ## Reprioritization Signals
 
-- `weak_evidence_burden` / `warning`: 'Core Retain — Sequence editing and manipulation' carries the largest weak-evidence burden 'Core Retain — Sequence editing and manipulation' has 21 shipped methods below compared evidence and 2 already compared.
+- `weak_evidence_burden` / `warning`: 'Core Retain — Sequence editing and manipulation' carries the largest weak-evidence burden 'Core Retain — Sequence editing and manipulation' has 12 shipped methods below compared evidence and 11 already compared.
 
 ## Ordered Recommendations
 
-1. `Core Retain — Sequence editing and manipulation`: This family has 21 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep. (`weak_evidence_burden`)
+1. `Core Retain — Sequence editing and manipulation`: This family has 12 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep. (`weak_evidence_burden`)
