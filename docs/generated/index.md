@@ -11,6 +11,7 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 cohort_validation
 governance_alignment
 cohort_health
+comparison_coverage
 tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair

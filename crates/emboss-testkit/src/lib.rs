@@ -6,6 +6,7 @@
 //! declared examples have already been run.
 
 pub mod anchor;
+pub mod comparison_coverage;
 pub mod cohort_health;
 pub mod cross_surface;
 pub mod evidence;
@@ -16,6 +17,11 @@ pub mod report;
 pub use anchor::{
     AcceptanceAnchorSpec, acceptance_anchor_specs, derive_acceptance_anchor_report,
     write_acceptance_anchor_reports,
+};
+pub use comparison_coverage::{
+    ComparisonCoverageFamilyRecord, ComparisonCoverageReport, ComparisonCoverageSummary,
+    derive_comparison_coverage_report, render_comparison_coverage_markdown,
+    write_comparison_coverage_markdown, write_comparison_coverage_report_json,
 };
 pub use cohort_health::{
     CohortHealthRecommendation, CohortHealthReport, CohortHealthSignal,

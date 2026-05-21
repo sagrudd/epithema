@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "report_id": "family-comparison-coverage",
+  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
+  "summary": {
+    "total_method_count": 96,
+    "family_count": 10,
+    "compared_count": 84,
+    "executable_only_count": 12,
+    "harvested_but_not_compared_count": 10
+  },
+  "families": [
+    {
+      "family": "Core Retain — Sequence editing and manipulation",
+      "shipped_method_count": 23,
+      "compared_count": 14,
+      "executable_only_count": 9,
+      "harvested_but_not_compared_count": 9
+    },
+    {
+      "family": "Core Retain — Core sequence statistics and composition",
+      "shipped_method_count": 16,
+      "compared_count": 15,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 1
+    },
+    {
+      "family": "Core Retain — Basic sequence IO and conversion",
+      "shipped_method_count": 18,
+      "compared_count": 17,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "shipped_method_count": 12,
+      "compared_count": 11,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — Alignment read-write and post-processing",
+      "shipped_method_count": 13,
+      "compared_count": 13,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — ORF and translation-adjacent utilities",
+      "shipped_method_count": 4,
+      "compared_count": 4,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Modernize — Rework — Plotting and visualization tools",
+      "shipped_method_count": 2,
+      "compared_count": 2,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "shipped_method_count": 2,
+      "compared_count": 2,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "shipped_method_count": 4,
+      "compared_count": 4,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Modernize — Rework — Restriction-enzyme design and analysis",
+      "shipped_method_count": 2,
+      "compared_count": 2,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    }
+  ]
+}

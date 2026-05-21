@@ -95,6 +95,22 @@ This refreshes both:
 - `docs/generated/validation/cohort_health.json`
 - `docs/generated/cohort_health.md`
 
+```bash
+make comparison-coverage-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/comparison_coverage.json`
+- `docs/generated/comparison_coverage.md`
+
+The comparison-coverage report makes one thing easier to scan than the raw
+cohort report alone:
+
+- compared count by family
+- executable-only count by family
+- harvested-but-not-compared count by family
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 
