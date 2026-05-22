@@ -107,15 +107,18 @@ still preserving the broader shortlist:
 - plotting is the chosen first post-v1.x family implementation program
   candidate because it combines the clearest governed platform seam with the
   lowest architectural ambiguity among the remaining rework families
+- remote retrieval is the chosen explicit next alternative if plotting-first
+  is later blocked, because its provider-aware seams and mocked compared
+  evidence already describe the strongest remaining operational model
+- protein-property rework remains the next fallback after those two because the
+  scientific and implementation substrate is present, but the user-facing
+  redesign pressure is lower
 
 - plotting remains the default first candidate because it already has a clear
   governed computation-to-contract seam and a bounded rendering handoff
 - remote retrieval remains the strongest alternative because its provider-aware
   seams and mocked compared evidence already describe a plausible operational
   model
-- protein-property rework remains the next fallback after those two because the
-  scientific and implementation substrate is present, but the user-facing
-  redesign pressure is lower
 
 Accordingly, future implementation planning should start from the top of this
 shortlist rather than reopening family-wide reorder debates unless the

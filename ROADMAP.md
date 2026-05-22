@@ -625,12 +625,18 @@ post-`1.0.0` release discipline.
       plotting surface.
 
 58. Decide whether remote retrieval rework should become the next alternative to plotting.
-    - Preconditions already present:
+    - Complete.
+    - Decision:
+      - plotting remains the first post-v1.x implementation-program candidate
+      - remote retrieval is the explicit next alternative if plotting-first is
+        later blocked
+    - Basis:
       - provider-backed seams
       - mocked compared evidence
       - governed release and docs path
-    - The decision should explicitly choose between plotting-first and
-      retrieval-first for the next substantive rework program.
+      - strongest remaining operational model after plotting
+    - This remains a planning decision, not permission to silently widen the
+      retrieval surface.
 
 59. Add a generated “next family recommendation” report if roadmap pressure becomes ambiguous again.
     - The current cohort-health and comparison-coverage reports are enough for
