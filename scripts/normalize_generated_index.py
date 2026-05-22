@@ -21,6 +21,7 @@ governance_alignment
 cohort_health
 comparison_coverage
 full_compared_cohort
+harvest_coverage
 retained_backlog_closure
 """
 

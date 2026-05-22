@@ -113,6 +113,15 @@ This refreshes both:
 - `docs/generated/validation/full_compared_cohort.json`
 - `docs/generated/full_compared_cohort.md`
 
+```bash
+make harvest-coverage-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/harvest_coverage.json`
+- `docs/generated/harvest_coverage.md`
+
 The comparison-coverage report makes one thing easier to scan than the raw
 cohort report alone:
 
@@ -124,6 +133,12 @@ The full-compared-cohort gate makes one release milestone explicit:
 
 - whether every shipped method currently reaches `compared_evidence`
 - and, if not, which shipped methods still sit below that threshold
+
+The harvest-coverage report makes one provenance condition explicit:
+
+- which shipped methods still lack harvested legacy provenance
+- or, when there are none, that harvested coverage is complete across the
+  shipped cohort
 
 ```bash
 make retained-backlog-report

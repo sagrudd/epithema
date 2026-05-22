@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "report_id": "harvest-coverage-exceptions",
+  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "summary": {
+    "total_method_count": 96,
+    "harvested_legacy_presence_count": 96,
+    "harvest_exception_count": 0,
+    "harvest_coverage_complete": true
+  },
+  "exceptions": []
+}

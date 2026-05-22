@@ -12,6 +12,7 @@ pub mod cross_surface;
 pub mod evidence;
 pub mod full_compared_cohort;
 pub mod governance;
+pub mod harvest_coverage;
 pub mod projection;
 pub mod retained_backlog;
 pub mod report;
@@ -43,6 +44,11 @@ pub use full_compared_cohort::{
     BelowComparedMethodRecord, FullComparedCohortReport, FullComparedCohortSummary,
     derive_full_compared_cohort_report, render_full_compared_cohort_markdown,
     write_full_compared_cohort_markdown, write_full_compared_cohort_report_json,
+};
+pub use harvest_coverage::{
+    HarvestCoverageExceptionRecord, HarvestCoverageReport, HarvestCoverageSummary,
+    derive_harvest_coverage_report, render_harvest_coverage_markdown,
+    write_harvest_coverage_markdown, write_harvest_coverage_report_json,
 };
 pub use governance::{
     GovernanceAlignmentFamilyRecord, GovernanceAlignmentMethodRecord, GovernanceAlignmentReport,
