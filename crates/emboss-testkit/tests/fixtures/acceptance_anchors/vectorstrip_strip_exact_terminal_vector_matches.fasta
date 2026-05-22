@@ -1,0 +1,6 @@
+>strip_both vector at both ends
+ACGT
+>strip_left vector at left end
+TTAA
+>strip_none no vector at ends
+GGCC

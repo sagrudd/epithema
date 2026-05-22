@@ -13,8 +13,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
-- Shipped tools with harvested legacy provenance: `94`
-- Shipped tools with compared evidence: `84`
+- Shipped tools with harvested legacy provenance: `95`
+- Shipped tools with compared evidence: `91`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -29,10 +29,10 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Governance family | Retained total | Retained shipped | Retained backlog | Shipped curated | Shipped executable+ | Shipped compared | Recommendation |
 |---|---:|---:|---:|---:|---:|---:|---|
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 13 | family is aligned at the current governance and evidence threshold |
-| Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 17 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 18 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 15 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
-| Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 14 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 20 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 11 | upgrade shipped retained methods to compared evidence |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -93,14 +93,14 @@ All shipped methods are mapped in the governance appendix.
 | `skipseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `listor` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `skipredundant` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
-| `biosed` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
-| `degapseq` | `sequence_edit` | Core Retain — Basic sequence IO and conversion | retain | yes | `executable_evidence` |
-| `revseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
-| `msbar` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
-| `trimest` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
-| `trimseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
+| `biosed` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
+| `degapseq` | `sequence_edit` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
+| `revseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
+| `msbar` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
+| `trimest` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
+| `trimseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `descseq` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
-| `vectorstrip` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
+| `vectorstrip` | `sequence_edit` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `maskseq` | `feature_tools` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `maskambignuc` | `feature_tools` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `maskambigprot` | `feature_tools` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |

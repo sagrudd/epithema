@@ -6,17 +6,17 @@
   "summary": {
     "total_method_count": 96,
     "family_count": 10,
-    "compared_count": 84,
-    "executable_only_count": 12,
-    "harvested_but_not_compared_count": 10
+    "compared_count": 91,
+    "executable_only_count": 5,
+    "harvested_but_not_compared_count": 4
   },
   "families": [
     {
       "family": "Core Retain — Sequence editing and manipulation",
       "shipped_method_count": 23,
-      "compared_count": 14,
-      "executable_only_count": 9,
-      "harvested_but_not_compared_count": 9
+      "compared_count": 20,
+      "executable_only_count": 3,
+      "harvested_but_not_compared_count": 3
     },
     {
       "family": "Core Retain — Core sequence statistics and composition",
@@ -24,13 +24,6 @@
       "compared_count": 15,
       "executable_only_count": 1,
       "harvested_but_not_compared_count": 1
-    },
-    {
-      "family": "Core Retain — Basic sequence IO and conversion",
-      "shipped_method_count": 18,
-      "compared_count": 17,
-      "executable_only_count": 1,
-      "harvested_but_not_compared_count": 0
     },
     {
       "family": "Core Retain — Simple motif, pattern, and regular-expression search",
@@ -43,6 +36,13 @@
       "family": "Core Retain — Alignment read-write and post-processing",
       "shipped_method_count": 13,
       "compared_count": 13,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — Basic sequence IO and conversion",
+      "shipped_method_count": 18,
+      "compared_count": 18,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

@@ -280,17 +280,17 @@ mod tests {
             .expect("comparison coverage report should derive");
 
         assert_eq!(report.summary.total_method_count, 96);
-        assert_eq!(report.summary.compared_count, 84);
-        assert_eq!(report.summary.executable_only_count, 12);
-        assert_eq!(report.summary.harvested_but_not_compared_count, 10);
+        assert_eq!(report.summary.compared_count, 91);
+        assert_eq!(report.summary.executable_only_count, 5);
+        assert_eq!(report.summary.harvested_but_not_compared_count, 4);
 
         let family = report
             .families
             .iter()
             .find(|family| family.family == "Core Retain — Sequence editing and manipulation")
             .expect("sequence editing family should be present");
-        assert_eq!(family.compared_count, 14);
-        assert_eq!(family.executable_only_count, 9);
+        assert_eq!(family.compared_count, 20);
+        assert_eq!(family.executable_only_count, 3);
     }
 
     #[test]

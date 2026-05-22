@@ -1,0 +1,4 @@
+>tail_alpha trailing poly-a should trim
+ACGT
+>tail_beta short tail should remain
+TTGCAAA

@@ -2,15 +2,15 @@
   "tool_name": "vectorstrip",
   "document_id": "vectorstrip-v1",
   "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "evidence_source": "executed_run",
   "summary": {
     "total_case_count": 1,
-    "declared_case_count": 1,
-    "harvested_case_count": 0,
-    "runnable_case_count": 1,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -19,10 +19,10 @@
     {
       "id": "strip_exact_terminal_vector_matches",
       "title": "Strip exact vector matches from sequence ends",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "pending",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
         "vectorstrip_records_fasta",
@@ -43,5 +43,11 @@
   ],
   "unresolved_gaps": [],
   "diagnostics": [],
-  "provenance": []
+  "provenance": [
+    {
+      "source": "EMBOSS vectorstrip application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/vectorstrip.acd",
+      "invocation": "vectorstrip -sequence vectorstrip_records.fasta -vector vectorstrip_vector.fasta -outseq stdout"
+    }
+  ]
 }

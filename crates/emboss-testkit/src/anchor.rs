@@ -288,6 +288,86 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "maskseq -sequence three_records.fasta -regions 2:3 -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "biosed",
+        autodoc_contract: "docs/autodoc/tools/biosed.json",
+        example_id: "replace_interval_across_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/biosed_replace_interval_across_records.fasta",
+        legacy_source: "EMBOSS biosed application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/biosed.acd",
+        legacy_invocation:
+            "biosed -sequence biosed_records.fasta -start 2 -end 3 -replace NN -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "degapseq",
+        autodoc_contract: "docs/autodoc/tools/degapseq.json",
+        example_id: "remove_gap_markers",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/degapseq_remove_gap_markers.fasta",
+        legacy_source: "EMBOSS degapseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/degapseq.acd",
+        legacy_invocation:
+            "degapseq -sequence gapped_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "revseq",
+        autodoc_contract: "docs/autodoc/tools/revseq.json",
+        example_id: "auto_reverse_complement_fixture",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/revseq_auto_reverse_complement_fixture.fasta",
+        legacy_source: "EMBOSS revseq application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/revseq.acd",
+        legacy_invocation: "revseq -sequence three_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "msbar",
+        autodoc_contract: "docs/autodoc/tools/msbar.json",
+        example_id: "apply_point_mutations",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/msbar_apply_point_mutations.fasta",
+        legacy_source: "EMBOSS msbar application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/msbar.acd",
+        legacy_invocation:
+            "msbar -sequence msbar_records.fasta -mutation 2:T -mutation 4:A -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "trimest",
+        autodoc_contract: "docs/autodoc/tools/trimest.json",
+        example_id: "trim_terminal_poly_a",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/trimest_trim_terminal_poly_a.fasta",
+        legacy_source: "EMBOSS trimest application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimest.acd",
+        legacy_invocation:
+            "trimest -sequence trimest_records.fasta -minpoly 4 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "trimseq",
+        autodoc_contract: "docs/autodoc/tools/trimseq.json",
+        example_id: "trim_one_residue_from_each_end",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/trimseq_trim_one_residue_from_each_end.fasta",
+        legacy_source: "EMBOSS trimseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/trimseq.acd",
+        legacy_invocation:
+            "trimseq -sequence three_records.fasta -left 1 -right 1 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "vectorstrip",
+        autodoc_contract: "docs/autodoc/tools/vectorstrip.json",
+        example_id: "strip_exact_terminal_vector_matches",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/vectorstrip_strip_exact_terminal_vector_matches.fasta",
+        legacy_source: "EMBOSS vectorstrip application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/vectorstrip.acd",
+        legacy_invocation:
+            "vectorstrip -sequence vectorstrip_records.fasta -vector vectorstrip_vector.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "maskambignuc",
         autodoc_contract: "docs/autodoc/tools/maskambignuc.json",
         example_id: "mask_nucleotide_ambiguities",
@@ -1457,6 +1537,64 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
             "2:3".to_owned(),
+        ],
+        "biosed" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/biosed_records.fasta")
+                .display()
+                .to_string(),
+            "2".to_owned(),
+            "3".to_owned(),
+            "--replace".to_owned(),
+            "NN".to_owned(),
+        ],
+        "degapseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/gapped_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "revseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "msbar" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/msbar_records.fasta")
+                .display()
+                .to_string(),
+            "2:T".to_owned(),
+            "4:A".to_owned(),
+        ],
+        "trimest" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/trimest_records.fasta")
+                .display()
+                .to_string(),
+            "--min-tail".to_owned(),
+            "4".to_owned(),
+        ],
+        "trimseq" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "--left".to_owned(),
+            "1".to_owned(),
+            "--right".to_owned(),
+            "1".to_owned(),
+        ],
+        "vectorstrip" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/vectorstrip_records.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/vectorstrip_vector.fasta")
+                .display()
+                .to_string(),
         ],
         "maskambignuc" => vec![
             repo_root

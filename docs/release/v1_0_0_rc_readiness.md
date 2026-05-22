@@ -114,9 +114,9 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `84`
-- Executable-evidence methods: `12`
-- Methods with harvested legacy provenance recorded: `94`
+- Compared-evidence methods: `91`
+- Executable-evidence methods: `5`
+- Methods with harvested legacy provenance recorded: `95`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -143,11 +143,11 @@ Current generated release-truth markers:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `84` methods currently show `compared_evidence`
-  - `12` methods currently show `executable_evidence`
+  - `91` methods currently show `compared_evidence`
+  - `5` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `94` shipped methods now record harvested legacy provenance, but `12`
+- `95` shipped methods now record harvested legacy provenance, but `5`
   methods still stop short of compared evidence.
 - The retained governance backlog is now `0`, so the dominant remaining work
   is evidence deepening rather than method implementation.
@@ -172,7 +172,7 @@ Current generated release-truth markers:
 
 - Status: `ready with known limitations`
 - Basis: every shipped method has a validation stub and appears in the cohort
-  report, but `12` shipped methods still stop short of compared evidence.
+  report, but `5` shipped methods still stop short of compared evidence.
 
 ### Cohort-level acceptance reporting
 
@@ -255,7 +255,7 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-  - `14` shipped methods still have one or more visible evidence gaps, because
+  - `7` shipped methods still have one or more visible evidence gaps, because
   executable evidence without compared grounding is still treated as partial.
 - The retained governance backlog is now `0`.
 - The dominant remaining weakness has shifted from implementation backlog to
@@ -264,14 +264,14 @@ Current generated release-truth markers:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `94` methods with harvested legacy provenance.
+- The cohort report now records `95` methods with harvested legacy provenance.
 - That is a real improvement over the earlier zero-harvest state, but the
   harvested depth is still concentrated in curated and anchor-backed families
   rather than distributed across the full shipped cohort.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `82` methods with compared evidence.
+- The cohort report now records `91` methods with compared evidence.
 - The comparison framework is therefore real and reusable, but it is still not
   yet populated across the full shipped cohort.
 
@@ -300,9 +300,9 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `82`
-- Executable-evidence methods: `14`
-- Methods with harvested legacy provenance recorded: `94`
+- Compared-evidence methods: `91`
+- Executable-evidence methods: `5`
+- Methods with harvested legacy provenance recorded: `95`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run
