@@ -639,9 +639,17 @@ post-`1.0.0` release discipline.
       retrieval surface.
 
 59. Add a generated “next family recommendation” report if roadmap pressure becomes ambiguous again.
-    - The current cohort-health and comparison-coverage reports are enough for
-      now, but a dedicated recommendation artefact may become useful once the
-      executable-only debt reaches zero.
+    - Complete without adding a new report.
+    - The existing generated surface is already sufficient for the current
+      state:
+      - `cohort_health` records release-truth health and the absence of
+        retained backlog pressure
+      - `comparison_coverage` records zero executable-only and zero
+        harvested-but-not-compared remainder across all shipped families
+      - `full_compared_cohort`, `harvest_coverage`, and
+        `retained_backlog_closure` close the remaining ambiguity directly
+    - If ambiguity reappears in a future cycle, add a dedicated recommendation
+      artefact then rather than pre-creating one without real pressure.
 
 60. Extend this roadmap again from generated truth after Task `59`.
     - Future roadmap rollovers must continue to derive from:
