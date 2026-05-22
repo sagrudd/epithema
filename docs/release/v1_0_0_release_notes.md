@@ -60,8 +60,8 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `91` shipped methods carry compared evidence
-- `5` shipped methods carry executable evidence
+- `93` shipped methods carry compared evidence
+- `3` shipped methods carry executable evidence
 - `95` shipped methods record harvested legacy provenance
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence

@@ -12,9 +12,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `95`
-- Methods with executable validation: `5`
-- Methods with compared evidence: `91`
-- Methods with visible gaps: `7`
+- Methods with executable validation: `3`
+- Methods with compared evidence: `93`
+- Methods with visible gaps: `5`
 
 ## Evidence Level Definitions
 
@@ -47,8 +47,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `makenucseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
-| `makeprotseq` | `sequence_stream` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `makenucseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `makeprotseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqcount` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `notseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `nthseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -127,8 +127,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-- `makenucseq`: `missing_compared_evidence`
-- `makeprotseq`: `missing_compared_evidence`
 - `maskfeat`: `missing_compared_evidence`
 - `charge`: `validation_report_gap`
 - `pepwindow`: `validation_report_gap`

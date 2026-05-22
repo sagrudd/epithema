@@ -14,7 +14,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
 - Shipped tools with harvested legacy provenance: `95`
-- Shipped tools with compared evidence: `91`
+- Shipped tools with compared evidence: `93`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -32,7 +32,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 18 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 15 | upgrade shipped retained methods to compared evidence |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
-| Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 20 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 22 | upgrade shipped retained methods to compared evidence |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 11 | upgrade shipped retained methods to compared evidence |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -85,8 +85,8 @@ All shipped methods are mapped in the governance appendix.
 | `seqret` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `refseqget` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `newseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
-| `makenucseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
-| `makeprotseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `executable_evidence` |
+| `makenucseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
+| `makeprotseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `seqcount` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `notseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `nthseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |

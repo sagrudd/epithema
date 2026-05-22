@@ -6,22 +6,22 @@
   "summary": {
     "total_method_count": 96,
     "family_count": 10,
-    "compared_count": 91,
-    "executable_only_count": 5,
-    "harvested_but_not_compared_count": 4
+    "compared_count": 93,
+    "executable_only_count": 3,
+    "harvested_but_not_compared_count": 2
   },
   "families": [
-    {
-      "family": "Core Retain — Sequence editing and manipulation",
-      "shipped_method_count": 23,
-      "compared_count": 20,
-      "executable_only_count": 3,
-      "harvested_but_not_compared_count": 3
-    },
     {
       "family": "Core Retain — Core sequence statistics and composition",
       "shipped_method_count": 16,
       "compared_count": 15,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 1
+    },
+    {
+      "family": "Core Retain — Sequence editing and manipulation",
+      "shipped_method_count": 23,
+      "compared_count": 22,
       "executable_only_count": 1,
       "harvested_but_not_compared_count": 1
     },

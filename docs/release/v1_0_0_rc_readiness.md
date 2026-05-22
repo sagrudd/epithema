@@ -114,8 +114,8 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `91`
-- Executable-evidence methods: `5`
+- Compared-evidence methods: `93`
+- Executable-evidence methods: `3`
 - Methods with harvested legacy provenance recorded: `95`
 - Retained backlog still unshipped: `0`
 
@@ -143,11 +143,11 @@ Current generated release-truth markers:
 ### Ready With Known Limitations
 
 - Evidence depth remains uneven across the shipped cohort.
-  - `91` methods currently show `compared_evidence`
-  - `5` methods currently show `executable_evidence`
+  - `93` methods currently show `compared_evidence`
+  - `3` methods currently show `executable_evidence`
   - `0` methods show `declared_evidence`
   - `0` methods remain at `documented_only`
-- `95` shipped methods now record harvested legacy provenance, but `5`
+- `95` shipped methods now record harvested legacy provenance, but `3`
   methods still stop short of compared evidence.
 - The retained governance backlog is now `0`, so the dominant remaining work
   is evidence deepening rather than method implementation.
@@ -172,7 +172,7 @@ Current generated release-truth markers:
 
 - Status: `ready with known limitations`
 - Basis: every shipped method has a validation stub and appears in the cohort
-  report, but `5` shipped methods still stop short of compared evidence.
+  report, but `3` shipped methods still stop short of compared evidence.
 
 ### Cohort-level acceptance reporting
 
@@ -271,7 +271,7 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `91` methods with compared evidence.
+- The cohort report now records `93` methods with compared evidence.
 - The comparison framework is therefore real and reusable, but it is still not
   yet populated across the full shipped cohort.
 
@@ -300,8 +300,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `96`
-- Compared-evidence methods: `91`
-- Executable-evidence methods: `5`
+- Compared-evidence methods: `93`
+- Executable-evidence methods: `3`
 - Methods with harvested legacy provenance recorded: `95`
 - Retained backlog still unshipped: `0`
 

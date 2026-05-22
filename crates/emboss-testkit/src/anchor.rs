@@ -117,6 +117,30 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "newseq -name created -sequence ACGTAC -desc 'created example' -type dna -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "makenucseq",
+        autodoc_contract: "docs/autodoc/tools/makenucseq.json",
+        example_id: "generate_two_rna_records",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/makenucseq_generate_two_rna_records.fasta",
+        legacy_source: "EMBOSS makenucseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makenucseq.acd",
+        legacy_invocation:
+            "makenucseq -name made_nuc -length 6 -number 2 -seed 7 -type rna -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "makeprotseq",
+        autodoc_contract: "docs/autodoc/tools/makeprotseq.json",
+        example_id: "generate_one_protein_record",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/makeprotseq_generate_one_protein_record.fasta",
+        legacy_source: "EMBOSS makeprotseq application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/makeprotseq.acd",
+        legacy_invocation:
+            "makeprotseq -name made_prot -length 5 -seed 9 -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "seqcount",
         autodoc_contract: "docs/autodoc/tools/seqcount.json",
         example_id: "count_three_fasta_records",
@@ -1420,6 +1444,22 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
             "created example".to_owned(),
             "--molecule".to_owned(),
             "dna".to_owned(),
+        ],
+        "makenucseq" => vec![
+            "made_nuc".to_owned(),
+            "6".to_owned(),
+            "--count".to_owned(),
+            "2".to_owned(),
+            "--seed".to_owned(),
+            "7".to_owned(),
+            "--molecule".to_owned(),
+            "rna".to_owned(),
+        ],
+        "makeprotseq" => vec![
+            "made_prot".to_owned(),
+            "5".to_owned(),
+            "--seed".to_owned(),
+            "9".to_owned(),
         ],
         "seqcount" => vec![
             repo_root

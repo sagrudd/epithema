@@ -3,28 +3,28 @@
   "report_id": "cohort-health-reprioritization-gate",
   "summary": {
     "total_method_count": 96,
-    "compared_evidence_count": 91,
+    "compared_evidence_count": 93,
     "harvested_legacy_presence_count": 95,
     "retained_backlog_count": 0,
     "largest_retained_backlog_family": null,
     "largest_retained_backlog_size": 0,
-    "weakest_evidence_family": "Core Retain — Sequence editing and manipulation",
-    "weak_evidence_method_count": 3,
+    "weakest_evidence_family": "Core Retain — Core sequence statistics and composition",
+    "weak_evidence_method_count": 1,
     "release_truth_current": true
   },
   "signals": [
     {
       "code": "weak_evidence_burden",
       "severity": "notice",
-      "summary": "'Core Retain — Sequence editing and manipulation' carries the largest weak-evidence burden",
-      "detail": "'Core Retain — Sequence editing and manipulation' has 3 shipped methods below compared evidence and 20 already compared."
+      "summary": "'Core Retain — Core sequence statistics and composition' carries the largest weak-evidence burden",
+      "detail": "'Core Retain — Core sequence statistics and composition' has 1 shipped methods below compared evidence and 15 already compared."
     }
   ],
   "recommendations": [
     {
       "priority": 1,
-      "target": "Core Retain — Sequence editing and manipulation",
-      "rationale": "This family has 3 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
+      "target": "Core Retain — Core sequence statistics and composition",
+      "rationale": "This family has 1 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
       "source_signal": "weak_evidence_burden"
     }
   ]
