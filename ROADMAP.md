@@ -551,11 +551,11 @@ post-`1.0.0` release discipline.
     - Keep this as a narrow acceptance-anchor and generated-report refresh.
 
 50. Finish harvested legacy provenance for the last non-harvested shipped methods.
-    - Current known laggards:
-      - `degapseq`
-      - `complex`
-    - Do not overstate provenance if a defensible legacy reference cannot be
-      documented.
+    - Current known laggards: none.
+    - The shipped cohort now records harvested legacy provenance for all `96`
+      shipped methods.
+    - Keep this task as a no-regression verification point rather than
+      reopening provenance debt that has already been closed honestly.
 
 51. Drive the shipped cohort to full compared evidence.
     - After Tasks `46` through `49`, the target state is:
@@ -634,15 +634,13 @@ This further extension is still derived from the current generated truth
 surface:
 
 - shipped methods: `96`
-- compared evidence: `84`
-- executable evidence: `12`
-- harvested legacy provenance present: `94`
+- compared evidence: `96`
+- executable evidence: `0`
+- harvested legacy provenance present: `96`
 - retained backlog: `0`
-- non-harvested shipped methods: `2`
-  - `degapseq`
-  - `complex`
-- weakest evidence family:
-  `Core Retain — Sequence editing and manipulation`
+- non-harvested shipped methods: `0`
+- weakest evidence family signal: none
+  - all shipped methods currently reach compared evidence
 
 The next tier remains evidence-first. It should not introduce broad new
 implementation work until the remaining shipped-evidence debt is closed or
@@ -680,11 +678,11 @@ explicitly carved out.
     - Keep this scoped to acceptance-anchor execution and report refresh only.
 
 65. Finish the last harvested legacy provenance gaps.
-    - Execute Task `50` for:
-      - `degapseq`
-      - `complex`
-    - If one method still lacks a defensible legacy reference, document that as
-      an explicit exception instead of implying parity.
+    - This milestone is now already satisfied.
+    - Preserve it as a regression check:
+      - harvested legacy provenance should remain complete across the shipped
+        cohort
+      - any future exception must be documented explicitly rather than implied
 
 66. Promote “all shipped methods compared” from milestone to checked report truth.
     - Once Tasks `61` through `64` are complete, add the generated artefact
