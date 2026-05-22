@@ -6,31 +6,17 @@
   "summary": {
     "total_method_count": 96,
     "family_count": 10,
-    "compared_count": 93,
-    "executable_only_count": 3,
-    "harvested_but_not_compared_count": 2
+    "compared_count": 95,
+    "executable_only_count": 1,
+    "harvested_but_not_compared_count": 1
   },
   "families": [
-    {
-      "family": "Core Retain — Core sequence statistics and composition",
-      "shipped_method_count": 16,
-      "compared_count": 15,
-      "executable_only_count": 1,
-      "harvested_but_not_compared_count": 1
-    },
     {
       "family": "Core Retain — Sequence editing and manipulation",
       "shipped_method_count": 23,
       "compared_count": 22,
       "executable_only_count": 1,
       "harvested_but_not_compared_count": 1
-    },
-    {
-      "family": "Core Retain — Simple motif, pattern, and regular-expression search",
-      "shipped_method_count": 12,
-      "compared_count": 11,
-      "executable_only_count": 1,
-      "harvested_but_not_compared_count": 0
     },
     {
       "family": "Core Retain — Alignment read-write and post-processing",
@@ -47,9 +33,23 @@
       "harvested_but_not_compared_count": 0
     },
     {
+      "family": "Core Retain — Core sequence statistics and composition",
+      "shipped_method_count": 16,
+      "compared_count": 16,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
       "family": "Core Retain — ORF and translation-adjacent utilities",
       "shipped_method_count": 4,
       "compared_count": 4,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — Simple motif, pattern, and regular-expression search",
+      "shipped_method_count": 12,
+      "compared_count": 12,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

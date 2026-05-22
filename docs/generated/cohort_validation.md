@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `95`
-- Methods with executable validation: `3`
-- Methods with compared evidence: `93`
-- Methods with visible gaps: `5`
+- Methods with harvested legacy provenance recorded: `96`
+- Methods with executable validation: `1`
+- Methods with compared evidence: `95`
+- Methods with visible gaps: `3`
 
 ## Evidence Level Definitions
 
@@ -96,9 +96,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `recoder` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `silent` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `aaindexextract` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `complex` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `complex` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `compseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `dan` | `sequence_stats` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `dan` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `geecee` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `infobase` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `infoseq` | `sequence_stats` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -130,5 +130,3 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - `maskfeat`: `missing_compared_evidence`
 - `charge`: `validation_report_gap`
 - `pepwindow`: `validation_report_gap`
-- `complex`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
-- `dan`: `missing_compared_evidence`

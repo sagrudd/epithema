@@ -1103,6 +1103,29 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation:
             "wordcount -sequence three_records.fasta -wordsize 2 -outfile stdout",
     },
+    AcceptanceAnchorSpec {
+        tool_name: "dan",
+        autodoc_contract: "docs/autodoc/tools/dan.json",
+        example_id: "report_sliding_window_tm",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/dan_report_sliding_window_tm.tsv",
+        legacy_source: "EMBOSS dan application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dan.acd",
+        legacy_invocation:
+            "dan -sequence three_records.fasta -windowsize 2 -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
+        tool_name: "complex",
+        autodoc_contract: "docs/autodoc/tools/complex.json",
+        example_id: "report_whole_sequence_complexity",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/complex_report_whole_sequence_complexity.tsv",
+        legacy_source: "EMBOSS complex application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/complex.acd",
+        legacy_invocation:
+            "complex -sequence complex_records.fasta -kmin 1 -kmax 2 -outfile stdout",
+    },
 ];
 
 /// Returns the committed acceptance-anchor cohort.
@@ -1784,6 +1807,24 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
             "--word-size".to_owned(),
+            "2".to_owned(),
+        ],
+        "dan" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            "--window".to_owned(),
+            "2".to_owned(),
+        ],
+        "complex" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/complex_records.fasta")
+                .display()
+                .to_string(),
+            "--k-min".to_owned(),
+            "1".to_owned(),
+            "--k-max".to_owned(),
             "2".to_owned(),
         ],
         "recoder" => vec![

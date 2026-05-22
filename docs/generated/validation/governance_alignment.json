@@ -15,8 +15,8 @@
     "retained_backlog_count": 0,
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
-    "shipped_harvested_legacy_presence_count": 95,
-    "shipped_compared_count": 93,
+    "shipped_harvested_legacy_presence_count": 96,
+    "shipped_compared_count": 95,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -639,7 +639,7 @@
       "governance_family": "Core Retain — Simple motif, pattern, and regular-expression search",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "compseq",
@@ -657,7 +657,7 @@
       "governance_family": "Core Retain — Core sequence statistics and composition",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "geecee",
@@ -915,8 +915,8 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 16,
       "shipped_executable_or_better": 16,
-      "shipped_compared": 15,
-      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "shipped_compared": 16,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
     {
@@ -948,8 +948,8 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 12,
       "shipped_executable_or_better": 12,
-      "shipped_compared": 11,
-      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "shipped_compared": 12,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
     {

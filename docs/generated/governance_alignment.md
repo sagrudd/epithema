@@ -13,8 +13,8 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `96`
 - Shipped tools with executable or compared evidence: `96`
-- Shipped tools with harvested legacy provenance: `95`
-- Shipped tools with compared evidence: `93`
+- Shipped tools with harvested legacy provenance: `96`
+- Shipped tools with compared evidence: `95`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -30,10 +30,10 @@ This page is generated from the maintained governance family-to-tool appendix, t
 |---|---:|---:|---:|---:|---:|---:|---|
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 13 | 13 | 13 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 18 | 18 | 18 | family is aligned at the current governance and evidence threshold |
-| Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 15 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 16 | 16 | 16 | family is aligned at the current governance and evidence threshold |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 23 | 23 | 22 | upgrade shipped retained methods to compared evidence |
-| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 11 | upgrade shipped retained methods to compared evidence |
+| Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 12 | 12 | 12 | family is aligned at the current governance and evidence threshold |
 | Defer — Ontology command group | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Defer — Specialized metadata and semantic lookup utilities | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Exclude Permanently — ACD developer tooling | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -134,9 +134,9 @@ All shipped methods are mapped in the governance appendix.
 | `recoder` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `compared_evidence` |
 | `silent` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `compared_evidence` |
 | `aaindexextract` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `complex` | `sequence_stats` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `executable_evidence` |
+| `complex` | `sequence_stats` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `compseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
-| `dan` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `executable_evidence` |
+| `dan` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `geecee` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `infobase` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
 | `infoseq` | `sequence_stats` | Core Retain — Core sequence statistics and composition | retain | yes | `compared_evidence` |
