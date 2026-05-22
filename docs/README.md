@@ -104,12 +104,26 @@ This refreshes both:
 - `docs/generated/validation/comparison_coverage.json`
 - `docs/generated/comparison_coverage.md`
 
+```bash
+make full-compared-cohort-report
+```
+
+This refreshes both:
+
+- `docs/generated/validation/full_compared_cohort.json`
+- `docs/generated/full_compared_cohort.md`
+
 The comparison-coverage report makes one thing easier to scan than the raw
 cohort report alone:
 
 - compared count by family
 - executable-only count by family
 - harvested-but-not-compared count by family
+
+The full-compared-cohort gate makes one release milestone explicit:
+
+- whether every shipped method currently reaches `compared_evidence`
+- and, if not, which shipped methods still sit below that threshold
 
 ```bash
 make retained-backlog-report

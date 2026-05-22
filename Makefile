@@ -17,7 +17,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report full-compared-cohort-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -32,6 +32,7 @@ help:
 		"  make governance-report Refresh the governance/backlog versus shipped-registry alignment report" \
 		"  make cohort-health-report Refresh the standing roadmap reprioritization gate report" \
 		"  make comparison-coverage-report Refresh the family-level compared/executable coverage report" \
+		"  make full-compared-cohort-report Refresh the full-compared-cohort release gate report" \
 		"  make retained-backlog-report Refresh the retained-backlog closure report" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
@@ -95,6 +96,7 @@ release-generated-check:
 	$(MAKE) governance-report
 	$(MAKE) cohort-health-report
 	$(MAKE) comparison-coverage-report
+	$(MAKE) full-compared-cohort-report
 	$(MAKE) retained-backlog-report
 	git diff --exit-code -- docs/generated
 
@@ -165,6 +167,11 @@ comparison-coverage-report:
 	$(RUSTCARGO) run -p emboss-testkit --example write_comparison_coverage_report -- \
 		--json docs/generated/validation/comparison_coverage.json \
 		--markdown docs/generated/comparison_coverage.md
+
+full-compared-cohort-report:
+	$(RUSTCARGO) run -p emboss-testkit --example write_full_compared_cohort_report -- \
+		--json docs/generated/validation/full_compared_cohort.json \
+		--markdown docs/generated/full_compared_cohort.md
 
 retained-backlog-report:
 	$(RUSTCARGO) run -p emboss-testkit --example write_retained_backlog_report -- \

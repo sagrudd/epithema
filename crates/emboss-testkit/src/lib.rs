@@ -10,6 +10,7 @@ pub mod comparison_coverage;
 pub mod cohort_health;
 pub mod cross_surface;
 pub mod evidence;
+pub mod full_compared_cohort;
 pub mod governance;
 pub mod projection;
 pub mod retained_backlog;
@@ -37,6 +38,11 @@ pub use cross_surface::{
 pub use evidence::{
     ComparisonStatus, EvidenceDeclarationStatus, EvidenceNote, EvidenceNoteSeverity,
     EvidenceSourceKind, ExecutionStatus, ToolValidationCase,
+};
+pub use full_compared_cohort::{
+    BelowComparedMethodRecord, FullComparedCohortReport, FullComparedCohortSummary,
+    derive_full_compared_cohort_report, render_full_compared_cohort_markdown,
+    write_full_compared_cohort_markdown, write_full_compared_cohort_report_json,
 };
 pub use governance::{
     GovernanceAlignmentFamilyRecord, GovernanceAlignmentMethodRecord, GovernanceAlignmentReport,

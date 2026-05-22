@@ -17,6 +17,7 @@ For the current evidence posture, see:
 - [Governance Alignment Report](../generated/governance_alignment.md)
 - [Cohort Health Gate](../generated/cohort_health.md)
 - [Comparison Coverage Report](../generated/comparison_coverage.md)
+- [Full Compared Cohort Gate](../generated/full_compared_cohort.md)
 - [Retained Backlog Closure Report](../generated/retained_backlog_closure.md)
 
 ## Highlights

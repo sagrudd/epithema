@@ -130,6 +130,7 @@ Current generated release-truth markers:
 - The cohort-health reprioritization gate is present in both JSON and Markdown
   forms.
 - The comparison-coverage report is present in both JSON and Markdown forms.
+- The full-compared-cohort gate is present in both JSON and Markdown forms.
 - The retained-backlog-closure report is present in both JSON and Markdown
   forms.
 - Release tasks cover version checks, generated-artifact freshness, governance
