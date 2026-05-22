@@ -558,11 +558,12 @@ post-`1.0.0` release discipline.
       reopening provenance debt that has already been closed honestly.
 
 51. Drive the shipped cohort to full compared evidence.
-    - After Tasks `46` through `49`, the target state is:
-      - `compared_evidence_count == shipped_method_count`
+    - This milestone is now satisfied.
+    - Current generated state:
+      - `compared_evidence_count == shipped_method_count == 96`
       - `executable_evidence_count == 0`
-    - This is the cleanest remaining milestone before any broader v1.x scope
-      discussion.
+    - Treat this as a maintained release-truth condition rather than pending
+      implementation work.
 
 52. Add a generated “full compared cohort” release gate.
     - Once every shipped method has compared evidence, encode that milestone as
@@ -642,9 +643,10 @@ surface:
 - weakest evidence family signal: none
   - all shipped methods currently reach compared evidence
 
-The next tier remains evidence-first. It should not introduce broad new
-implementation work until the remaining shipped-evidence debt is closed or
-explicitly carved out.
+The next tier remains evidence-first, but the shipped-evidence debt is now
+closed. The immediate follow-on work should therefore shift from evidence
+creation to evidence gating, exception surfacing, and clearer summary
+semantics before any broader implementation expansion.
 
 61. Close the remaining sequence-editing compared-evidence gap in one governed sweep.
     - Execute the Task `46` family sweep as one coherent anchor-refresh pass.
