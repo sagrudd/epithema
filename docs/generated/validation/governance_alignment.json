@@ -16,7 +16,7 @@
     "shipped_curated_autodoc_count": 96,
     "shipped_executable_or_better_count": 96,
     "shipped_harvested_legacy_presence_count": 96,
-    "shipped_compared_count": 95,
+    "shipped_compared_count": 96,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -369,7 +369,7 @@
       "governance_family": "Core Retain — Sequence editing and manipulation",
       "governance_decision": "retain",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "extractfeat",
@@ -937,8 +937,8 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 23,
       "shipped_executable_or_better": 23,
-      "shipped_compared": 22,
-      "recommendation": "upgrade shipped retained methods to compared evidence",
+      "shipped_compared": 23,
+      "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
     {

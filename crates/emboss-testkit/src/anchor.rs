@@ -230,6 +230,18 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "featcopy -source annotated_feature.gbk -target featcopy_target.fasta -type gene -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "maskfeat",
+        autodoc_contract: "docs/autodoc/tools/maskfeat.json",
+        example_id: "mask_selected_gene_feature",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/maskfeat_mask_selected_gene_feature.fasta",
+        legacy_source: "EMBOSS maskfeat application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/maskfeat.acd",
+        legacy_invocation:
+            "maskfeat -sequence annotated_feature.gbk -type gene -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "coderet",
         autodoc_contract: "docs/autodoc/tools/coderet.json",
         example_id: "translate_default_cds_selection",
@@ -1544,6 +1556,14 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/featcopy_target.fasta")
+                .display()
+                .to_string(),
+            "--kind".to_owned(),
+            "gene".to_owned(),
+        ],
+        "maskfeat" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
                 .display()
                 .to_string(),
             "--kind".to_owned(),

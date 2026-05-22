@@ -6,18 +6,11 @@
   "summary": {
     "total_method_count": 96,
     "family_count": 10,
-    "compared_count": 95,
-    "executable_only_count": 1,
-    "harvested_but_not_compared_count": 1
+    "compared_count": 96,
+    "executable_only_count": 0,
+    "harvested_but_not_compared_count": 0
   },
   "families": [
-    {
-      "family": "Core Retain — Sequence editing and manipulation",
-      "shipped_method_count": 23,
-      "compared_count": 22,
-      "executable_only_count": 1,
-      "harvested_but_not_compared_count": 1
-    },
     {
       "family": "Core Retain — Alignment read-write and post-processing",
       "shipped_method_count": 13,
@@ -43,6 +36,13 @@
       "family": "Core Retain — ORF and translation-adjacent utilities",
       "shipped_method_count": 4,
       "compared_count": 4,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Core Retain — Sequence editing and manipulation",
+      "shipped_method_count": 23,
+      "compared_count": 23,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

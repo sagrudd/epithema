@@ -12,9 +12,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `96`
-- Methods with executable validation: `1`
-- Methods with compared evidence: `95`
-- Methods with visible gaps: `3`
+- Methods with executable validation: `0`
+- Methods with compared evidence: `96`
+- Methods with visible gaps: `2`
 
 ## Evidence Level Definitions
 
@@ -66,7 +66,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `maskseq` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskambignuc` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `maskambigprot` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `maskfeat` | `feature_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `maskfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `extractfeat` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `featcopy` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `coderet` | `feature_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -127,6 +127,5 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-- `maskfeat`: `missing_compared_evidence`
 - `charge`: `validation_report_gap`
 - `pepwindow`: `validation_report_gap`
