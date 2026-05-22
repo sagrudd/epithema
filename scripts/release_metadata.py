@@ -20,6 +20,7 @@ COHORT_VALIDATION = REPO_ROOT / "docs" / "generated" / "validation" / "shipped_c
 GOVERNANCE_ALIGNMENT = REPO_ROOT / "docs" / "generated" / "validation" / "governance_alignment.json"
 COHORT_HEALTH = REPO_ROOT / "docs" / "generated" / "validation" / "cohort_health.json"
 COMPARISON_COVERAGE = REPO_ROOT / "docs" / "generated" / "validation" / "comparison_coverage.json"
+FULL_COMPARED_COHORT = REPO_ROOT / "docs" / "generated" / "validation" / "full_compared_cohort.json"
 HARVEST_COVERAGE = REPO_ROOT / "docs" / "generated" / "validation" / "harvest_coverage.json"
 RETAINED_BACKLOG_CLOSURE = REPO_ROOT / "docs" / "generated" / "validation" / "retained_backlog_closure.json"
 
@@ -35,6 +36,7 @@ REQUIRED_UNRELEASED_MARKERS = [
     "- harvest-coverage reporting",
     "- full-compared-cohort reporting",
     "- retained-backlog-closure reporting",
+    "- explicit full-compared-cohort release status once achieved",
     "- drift-free release-facing counts and report links",
     "- honest release-note wording",
 ]
@@ -48,6 +50,7 @@ REQUIRED_RELEASE_NOTES_MARKERS = [
     "[Harvest Coverage Exceptions](../generated/harvest_coverage.md)",
     "[Full Compared Cohort Gate](../generated/full_compared_cohort.md)",
     "[Retained Backlog Closure Report](../generated/retained_backlog_closure.md)",
+    "- full compared cohort: `yes`",
 ]
 
 REQUIRED_RC_READINESS_MARKERS = [
@@ -61,6 +64,7 @@ REQUIRED_RC_READINESS_MARKERS = [
     "- `docs/generated/harvest_coverage.md`",
     "- `docs/generated/validation/full_compared_cohort.json`",
     "- `docs/generated/full_compared_cohort.md`",
+    "- Full compared cohort: `yes`",
     "- `docs/generated/validation/retained_backlog_closure.json`",
     "- `docs/generated/retained_backlog_closure.md`",
 ]
@@ -129,12 +133,14 @@ def check_release_truth_surface() -> int:
     governance_report = load_json(GOVERNANCE_ALIGNMENT)
     cohort_health_report = load_json(COHORT_HEALTH)
     comparison_coverage_report = load_json(COMPARISON_COVERAGE)
+    full_compared_cohort_report = load_json(FULL_COMPARED_COHORT)
     harvest_coverage_report = load_json(HARVEST_COVERAGE)
     retained_backlog_report = load_json(RETAINED_BACKLOG_CLOSURE)
     cohort_summary = cohort_report["summary"]
     governance_summary = governance_report["summary"]
     health_summary = cohort_health_report["summary"]
     comparison_summary = comparison_coverage_report["summary"]
+    full_compared_summary = full_compared_cohort_report["summary"]
     harvest_summary = harvest_coverage_report["summary"]
     retained_backlog_summary = retained_backlog_report["summary"]
 
@@ -302,6 +308,21 @@ def check_release_truth_surface() -> int:
             "comparison-coverage executable-only count vs cohort executable count",
         ),
         (
+            full_compared_summary["total_method_count"],
+            cohort_summary["total_method_count"],
+            "full-compared-cohort total-method count vs cohort total-method count",
+        ),
+        (
+            full_compared_summary["compared_evidence_count"],
+            cohort_summary["compared_evidence_count"],
+            "full-compared-cohort compared count vs cohort compared count",
+        ),
+        (
+            full_compared_summary["executable_evidence_count"],
+            cohort_summary["executable_evidence_count"],
+            "full-compared-cohort executable count vs cohort executable count",
+        ),
+        (
             harvest_summary["total_method_count"],
             cohort_summary["total_method_count"],
             "harvest-coverage total-method count vs cohort total-method count",
@@ -342,6 +363,11 @@ def check_release_truth_surface() -> int:
             f"{COHORT_HEALTH}: release_truth_current must remain true before release gating passes"
         )
 
+    if not full_compared_summary["full_compared_cohort"]:
+        missing.append(
+            f"{FULL_COMPARED_COHORT}: full_compared_cohort must remain true before release gating passes"
+        )
+
     if not harvest_summary["harvest_coverage_complete"]:
         missing.append(
             f"{HARVEST_COVERAGE}: harvest_coverage_complete must remain true before release gating passes"
@@ -358,6 +384,24 @@ def check_release_truth_surface() -> int:
                     "comparison coverage gate failed: "
                     f"{row['family']!r} has shipped methods but no compared anchor"
                 )
+        if full_compared_summary["full_compared_cohort"]:
+            for row in comparison_coverage_report["families"]:
+                if row["compared_count"] != row["shipped_method_count"]:
+                    missing.append(
+                        "full compared cohort gate failed: "
+                        f"{row['family']!r} is not fully compared "
+                        f"({row['compared_count']} of {row['shipped_method_count']})"
+                    )
+                if row["executable_only_count"] != 0:
+                    missing.append(
+                        "full compared cohort gate failed: "
+                        f"{row['family']!r} still has executable-only methods"
+                    )
+                if row["harvested_but_not_compared_count"] != 0:
+                    missing.append(
+                        "full compared cohort gate failed: "
+                        f"{row['family']!r} still has harvested-but-not-compared methods"
+                    )
 
     if missing:
         raise SystemExit(

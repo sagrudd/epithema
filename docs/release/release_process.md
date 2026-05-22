@@ -122,7 +122,10 @@ New shipped tools must not bypass:
 - cohort-report inclusion
 - at least one compared anchor per shipped family
 - comparison-coverage reporting
+- harvest-coverage reporting
+- full-compared-cohort reporting
 - retained-backlog-closure reporting
+- explicit full-compared-cohort release status once achieved
 - drift-free release-facing counts and report links
 - honest release-note wording
 
@@ -161,6 +164,10 @@ release-truth-check` also treats these as hard release conditions:
   `full_compared_cohort: true`
 - `docs/generated/validation/harvest_coverage.json` must report
   `harvest_coverage_complete: true`
+- release-facing documents must state `Full compared cohort: yes` explicitly
+  rather than leaving the status to be inferred from counts alone
+- every shipped family row in `docs/generated/validation/comparison_coverage.json`
+  must remain fully compared once the full-compared milestone has been reached
 
 If either condition regresses, the release gate must fail until the generated
 reports and underlying evidence state are brought back into alignment.

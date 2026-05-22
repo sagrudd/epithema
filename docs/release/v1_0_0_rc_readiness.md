@@ -117,6 +117,7 @@ Current generated release-truth markers:
 - Compared-evidence methods: `96`
 - Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `96`
+- Full compared cohort: `yes`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready

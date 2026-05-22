@@ -65,6 +65,7 @@ Current evidence posture at the time of this draft:
 - `96` shipped methods carry compared evidence
 - `0` shipped methods carry executable evidence
 - `96` shipped methods record harvested legacy provenance
+- full compared cohort: `yes`
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 

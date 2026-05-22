@@ -587,12 +587,15 @@ post-`1.0.0` release discipline.
       the generated report rather than silently tolerated or implied away.
 
 55. Tighten release gating again after full compared-cohort closure.
-    - Candidate future post-closure rule:
-      - no shipped method may land without a same-family compared anchor refresh
-      - no release-facing count may omit the “full compared cohort” status once
-        achieved
-    - Keep this as a release-process and generated-check change, not a product
-      feature sweep.
+    - Complete.
+    - Release truth now enforces the post-closure conditions directly:
+      - no release-facing truth surface may omit the `full compared cohort`
+        status once achieved
+      - once `full_compared_cohort == true` and retained backlog is `0`, every
+        shipped family row in `comparison_coverage` must remain fully compared
+        with no executable-only or harvested-but-not-compared remainder
+    - This remained a release-process and generated-check change, not a
+      product feature sweep.
 
 56. Reassess the `Rework` families after full compared-cohort closure.
     - Once the retained shipped cohort is fully compared, revisit whether the
