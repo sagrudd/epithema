@@ -611,11 +611,17 @@ post-`1.0.0` release discipline.
       expansion.
 
 57. Decide whether plotting rework should become the first post-v1.x family implementation program.
-    - Preconditions already present:
+    - Complete.
+    - Decision:
+      - plotting is the chosen first post-v1.x family implementation-program
+        candidate
+    - Basis:
       - validated plot contracts
       - R rendering ownership
       - governed producers (`charge`, `pepwindow`, `wordcount`)
-    - This is a planning decision, not permission to silently widen the
+      - lower architectural ambiguity than the other remaining `Rework`
+        families
+    - This remains a planning decision, not permission to silently widen the
       plotting surface.
 
 58. Decide whether remote retrieval rework should become the next alternative to plotting.

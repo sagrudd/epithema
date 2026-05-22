@@ -101,8 +101,12 @@ changes the practical question from "which families still need retained-family
 stabilization?" to "which rework family is mature enough to become the first
 deliberate post-v1.x implementation program?"
 
-This reassessment does **not** pick that family yet, but it does narrow the
-implementation-planning shortlist:
+This reassessment now picks the first implementation-planning candidate while
+still preserving the broader shortlist:
+
+- plotting is the chosen first post-v1.x family implementation program
+  candidate because it combines the clearest governed platform seam with the
+  lowest architectural ambiguity among the remaining rework families
 
 - plotting remains the default first candidate because it already has a clear
   governed computation-to-contract seam and a bounded rendering handoff
@@ -116,6 +120,10 @@ implementation-planning shortlist:
 Accordingly, future implementation planning should start from the top of this
 shortlist rather than reopening family-wide reorder debates unless the
 generated reports show a material regression or a new dependency.
+
+This is still a planning decision only. It does **not** authorize silent
+surface widening, whole-family implementation claims, or bucket reassignment
+without a later explicit rework program.
 
 ### Explicit no-change decisions
 
