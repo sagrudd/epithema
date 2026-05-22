@@ -598,11 +598,17 @@ post-`1.0.0` release discipline.
       product feature sweep.
 
 56. Reassess the `Rework` families after full compared-cohort closure.
-    - Once the retained shipped cohort is fully compared, revisit whether the
-      highest-priority `Rework` family should move from governance ordering to
-      actual implementation planning.
-    - Use the post-backlog reassessment already documented in the governance
-      appendix as the starting point.
+    - Complete.
+    - The governance appendix now records the post-full-compared reassessment
+      explicitly:
+      - no family is reclassified in this pass
+      - implementation-planning attention is now narrowed to the top of the
+        reordered `Rework` shortlist rather than the entire `Rework` surface
+      - plotting remains the default first candidate, with remote retrieval as
+        the strongest alternative and protein-property rework as the next
+        fallback
+    - This remains a governance/planning outcome, not a silent implementation
+      expansion.
 
 57. Decide whether plotting rework should become the first post-v1.x family implementation program.
     - Preconditions already present:

@@ -53,7 +53,9 @@ surface.
 
 - No family is reclassified in this pass.
 - The remaining `Rework` set is **reordered**, not narrowed or expanded.
-- No implementation surface changes are implied by this review.
+- The reassessment now narrows actual implementation-planning attention to the
+  top of the reordered list rather than treating the entire `Rework` surface as
+  equally ripe.
 - Any future bucket promotion or demotion should still follow the rules in
   `scope_and_tool_family_policy.md`, especially the stabilization and
   validation expectations for moving a `Rework` family toward operational core
@@ -91,6 +93,29 @@ the next recommended rework order.
 | 8 | Modernize — Rework — Legacy prediction methods with enduring scientific value | These methods remain scientifically interesting, but they are the least ready for quiet rollout because they demand the heaviest algorithm, dataset, and validation reconsideration. |
 | 9 | Modernize — Rework — External database preparation helpers | These remain downstream of more user-facing retrieval and analysis priorities. They should not advance ahead of the workflows that would actually consume them. |
 | 10 | Modernize — Rework — Command discovery and help-navigation | Important for polish, but not urgent while the governed docs, generated index, and release-truth reports already provide a strong discoverability baseline. |
+
+### Post-full-compared-cohort planning consequence
+
+The shipped retained cohort is now fully compared and fully harvested. That
+changes the practical question from "which families still need retained-family
+stabilization?" to "which rework family is mature enough to become the first
+deliberate post-v1.x implementation program?"
+
+This reassessment does **not** pick that family yet, but it does narrow the
+implementation-planning shortlist:
+
+- plotting remains the default first candidate because it already has a clear
+  governed computation-to-contract seam and a bounded rendering handoff
+- remote retrieval remains the strongest alternative because its provider-aware
+  seams and mocked compared evidence already describe a plausible operational
+  model
+- protein-property rework remains the next fallback after those two because the
+  scientific and implementation substrate is present, but the user-facing
+  redesign pressure is lower
+
+Accordingly, future implementation planning should start from the top of this
+shortlist rather than reopening family-wide reorder debates unless the
+generated reports show a material regression or a new dependency.
 
 ### Explicit no-change decisions
 
