@@ -210,6 +210,24 @@ Current generated release-truth markers:
   and now makes per-family compared-anchor burden explicit after retained
   backlog closure.
 
+### Full compared cohort gate
+
+- Status: `complete`
+- Basis: the full-compared-cohort gate is generated at:
+  - `docs/generated/validation/full_compared_cohort.json`
+  - `docs/generated/full_compared_cohort.md`
+  and currently records `96/96` shipped methods at compared evidence with `0`
+  methods below compared.
+
+### Harvest coverage reporting
+
+- Status: `complete`
+- Basis: the harvest-coverage exceptions report is generated at:
+  - `docs/generated/validation/harvest_coverage.json`
+  - `docs/generated/harvest_coverage.md`
+  and currently records `96/96` shipped methods with harvested legacy
+  provenance and `0` harvest exceptions.
+
 ### Retained backlog closure tracking
 
 - Status: `complete`
@@ -238,6 +256,8 @@ Current generated release-truth markers:
   gates are present and working:
   - `make cohort-health-report`
   - `make comparison-coverage-report`
+  - `make full-compared-cohort-report`
+  - `make harvest-coverage-report`
   - `make retained-backlog-report`
 
 ### Container readiness

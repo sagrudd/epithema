@@ -578,10 +578,13 @@ post-`1.0.0` release discipline.
       compared-evidence milestone is met.
 
 54. Reassess whether `harvested_legacy_presence_count` should become a harder release gate.
-    - Only do this after the real remaining exceptions are visible in generated
-      reports.
-    - Do not convert provenance aspiration into a silent hard requirement
-      without documenting exceptions.
+    - This reassessment is now complete.
+    - Because the generated `harvest_coverage` report currently records `0`
+      exceptions, release truth now treats harvested coverage as a hard gate:
+      - `harvest_coverage_complete == true`
+      - release-facing docs must link to the harvest-coverage report
+    - If future exceptions reappear, they must be surfaced explicitly through
+      the generated report rather than silently tolerated or implied away.
 
 55. Tighten release gating again after full compared-cohort closure.
     - Candidate future post-closure rule:

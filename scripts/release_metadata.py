@@ -20,6 +20,7 @@ COHORT_VALIDATION = REPO_ROOT / "docs" / "generated" / "validation" / "shipped_c
 GOVERNANCE_ALIGNMENT = REPO_ROOT / "docs" / "generated" / "validation" / "governance_alignment.json"
 COHORT_HEALTH = REPO_ROOT / "docs" / "generated" / "validation" / "cohort_health.json"
 COMPARISON_COVERAGE = REPO_ROOT / "docs" / "generated" / "validation" / "comparison_coverage.json"
+HARVEST_COVERAGE = REPO_ROOT / "docs" / "generated" / "validation" / "harvest_coverage.json"
 RETAINED_BACKLOG_CLOSURE = REPO_ROOT / "docs" / "generated" / "validation" / "retained_backlog_closure.json"
 
 REQUIRED_UNRELEASED_MARKERS = [
@@ -31,6 +32,8 @@ REQUIRED_UNRELEASED_MARKERS = [
     "- cohort-report inclusion",
     "- at least one compared anchor per shipped family",
     "- comparison-coverage reporting",
+    "- harvest-coverage reporting",
+    "- full-compared-cohort reporting",
     "- retained-backlog-closure reporting",
     "- drift-free release-facing counts and report links",
     "- honest release-note wording",
@@ -42,14 +45,22 @@ REQUIRED_RELEASE_NOTES_MARKERS = [
     "[Governance Alignment Report](../generated/governance_alignment.md)",
     "[Cohort Health Gate](../generated/cohort_health.md)",
     "[Comparison Coverage Report](../generated/comparison_coverage.md)",
+    "[Harvest Coverage Exceptions](../generated/harvest_coverage.md)",
+    "[Full Compared Cohort Gate](../generated/full_compared_cohort.md)",
     "[Retained Backlog Closure Report](../generated/retained_backlog_closure.md)",
 ]
 
 REQUIRED_RC_READINESS_MARKERS = [
     "- `make comparison-coverage-report`",
+    "- `make harvest-coverage-report`",
+    "- `make full-compared-cohort-report`",
     "- `make retained-backlog-report`",
     "- `docs/generated/validation/comparison_coverage.json`",
     "- `docs/generated/comparison_coverage.md`",
+    "- `docs/generated/validation/harvest_coverage.json`",
+    "- `docs/generated/harvest_coverage.md`",
+    "- `docs/generated/validation/full_compared_cohort.json`",
+    "- `docs/generated/full_compared_cohort.md`",
     "- `docs/generated/validation/retained_backlog_closure.json`",
     "- `docs/generated/retained_backlog_closure.md`",
 ]
@@ -118,11 +129,13 @@ def check_release_truth_surface() -> int:
     governance_report = load_json(GOVERNANCE_ALIGNMENT)
     cohort_health_report = load_json(COHORT_HEALTH)
     comparison_coverage_report = load_json(COMPARISON_COVERAGE)
+    harvest_coverage_report = load_json(HARVEST_COVERAGE)
     retained_backlog_report = load_json(RETAINED_BACKLOG_CLOSURE)
     cohort_summary = cohort_report["summary"]
     governance_summary = governance_report["summary"]
     health_summary = cohort_health_report["summary"]
     comparison_summary = comparison_coverage_report["summary"]
+    harvest_summary = harvest_coverage_report["summary"]
     retained_backlog_summary = retained_backlog_report["summary"]
 
     missing = []
@@ -289,6 +302,16 @@ def check_release_truth_surface() -> int:
             "comparison-coverage executable-only count vs cohort executable count",
         ),
         (
+            harvest_summary["total_method_count"],
+            cohort_summary["total_method_count"],
+            "harvest-coverage total-method count vs cohort total-method count",
+        ),
+        (
+            harvest_summary["harvested_legacy_presence_count"],
+            cohort_summary["harvested_legacy_presence_count"],
+            "harvest-coverage harvested-legacy count vs cohort harvested-legacy count",
+        ),
+        (
             retained_backlog_summary["retained_tool_count"],
             governance_summary["retained_tool_count"],
             "retained-backlog retained-tool count vs governance retained-tool count",
@@ -309,9 +332,19 @@ def check_release_truth_surface() -> int:
             "count exceeds cohort harvested-legacy count"
         )
 
+    if harvest_summary["harvest_exception_count"] > cohort_summary["total_method_count"]:
+        missing.append(
+            "cross-report drift: harvest-coverage exception count exceeds cohort total-method count"
+        )
+
     if not health_summary["release_truth_current"]:
         missing.append(
             f"{COHORT_HEALTH}: release_truth_current must remain true before release gating passes"
+        )
+
+    if not harvest_summary["harvest_coverage_complete"]:
+        missing.append(
+            f"{HARVEST_COVERAGE}: harvest_coverage_complete must remain true before release gating passes"
         )
 
     if governance_summary["retained_backlog_count"] == 0:

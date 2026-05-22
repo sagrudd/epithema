@@ -132,6 +132,8 @@ New shipped tools must not bypass:
 - `docs/generated/governance_alignment.md`
 - `docs/generated/cohort_health.md`
 - `docs/generated/comparison_coverage.md`
+- `docs/generated/harvest_coverage.md`
+- `docs/generated/full_compared_cohort.md`
 - `docs/generated/retained_backlog_closure.md`
 
 This project treats those generated reports as the current truth surface for
@@ -151,3 +153,14 @@ For a conservative local candidate build, run:
 
 The release bundle is written under `dist/release/<version>/`. It is intended
 for inspection and local smoke verification before a `v*` tag is created.
+
+With the shipped cohort now fully compared and fully harvested, `make
+release-truth-check` also treats these as hard release conditions:
+
+- `docs/generated/validation/full_compared_cohort.json` must report
+  `full_compared_cohort: true`
+- `docs/generated/validation/harvest_coverage.json` must report
+  `harvest_coverage_complete: true`
+
+If either condition regresses, the release gate must fail until the generated
+reports and underlying evidence state are brought back into alignment.
