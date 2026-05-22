@@ -652,132 +652,131 @@ post-`1.0.0` release discipline.
       artefact then rather than pre-creating one without real pressure.
 
 60. Extend this roadmap again from generated truth after Task `59`.
-    - Future roadmap rollovers must continue to derive from:
+    - Complete.
+    - This rollover remains derived from:
       - cohort validation
       - governance alignment
       - cohort health
       - comparison coverage
       - retained backlog closure
-    - Do not restart planning from memory or preference once these artefacts
-      exist.
+      - full compared cohort
+      - harvest coverage
+    - Planning continues from generated truth rather than memory or
+      preference.
 
 ## Subsequent Tier Task Map
 
-This further extension is still derived from the current generated truth
-surface:
+This next extension is derived from the current generated truth surface:
 
 - shipped methods: `96`
 - compared evidence: `96`
 - executable evidence: `0`
 - harvested legacy provenance present: `96`
 - retained backlog: `0`
-- non-harvested shipped methods: `0`
-- weakest evidence family signal: none
-  - all shipped methods currently reach compared evidence
+- full compared cohort: `true`
+- harvest coverage complete: `true`
+- retained backlog closed: `true`
+- `gapped_method_count`: `2`
+- weakest evidence family signal is now structurally noisy:
+  - `weak_evidence_method_count: 0`
+  - `weakest_evidence_family` still resolves to a shipped family label
 
-The next tier remains evidence-first, but the shipped-evidence debt is now
-closed. The immediate follow-on work should therefore shift from evidence
-creation to evidence gating, exception surfacing, and clearer summary
-semantics before any broader implementation expansion.
+The retained implementation and shipped-evidence backlog is now closed. The
+next tier should therefore move from evidence creation to:
+- summary-semantic cleanup
+- release-gate hardening
+- post-closure documentation truth maintenance
+- disciplined preparation for the first actual `Rework` implementation program
 
-61. Close the remaining sequence-editing compared-evidence gap in one governed sweep.
-    - Execute the Task `46` family sweep as one coherent anchor-refresh pass.
-    - Keep the target list explicit:
-      - `biosed`
-      - `degapseq`
-      - `revseq`
-      - `msbar`
-      - `trimest`
-      - `trimseq`
-      - `vectorstrip`
-    - Refresh the generated cohort, governance, health, and comparison reports
-      in the same prompt.
+61. Re-evaluate `gapped_method_count` semantics now that the shipped cohort is fully compared and fully harvested.
+    - The current cohort summary still reports `gapped_method_count: 2`.
+    - Determine whether that field now represents:
+      - residual governance-category gaps
+      - summary-model drift
+      - or a category that should be renamed or split
+    - Do not leave the top-line cohort summary numerically misleading once the
+      evidence backlog is fully closed.
 
-62. Close the remaining sequence-construction compared-evidence gap.
-    - Execute the Task `47` pair as one focused sweep:
-      - `makenucseq`
-      - `makeprotseq`
-    - Keep this anchored to deterministic seeds and checked-in expected output.
+62. Re-evaluate `weakest_evidence_family` semantics when `weak_evidence_method_count == 0`.
+    - The current health report still names a family even though no shipped
+      family is below compared evidence.
+    - Decide whether the field should:
+      - become `null` when no weakness exists, or
+      - move to an explicitly tie-broken informational ranking
+    - Keep the output honest and machine-readable.
 
-63. Close the remaining statistics-family compared-evidence gap.
-    - Execute the Task `48` pair as one sweep:
-      - `dan`
-      - `complex`
-    - Preserve honesty if `complex` needs a more limited compared fixture than
-      the other retained tools.
+63. Add a generated “summary semantics” cleanup pass if Task `61` or `62` reveals stale field meanings.
+    - Prefer tightening existing report schemas over adding parallel one-off
+      prose explanations.
+    - If a field no longer communicates useful truth, rename or replace it
+      through governed generated outputs.
 
-64. Close the remaining feature-family compared-evidence gap.
-    - Execute Task `49` for:
-      - `maskfeat`
-    - Keep this scoped to acceptance-anchor execution and report refresh only.
+64. Tighten the release gate to require stable post-closure summary semantics.
+    - Once Tasks `61` through `63` are resolved, make the release truth check
+      fail if release-facing docs or generated summaries drift back into
+      numerically confusing post-closure states.
 
-65. Finish the last harvested legacy provenance gaps.
-    - This milestone is now already satisfied.
-    - Preserve it as a regression check:
-      - harvested legacy provenance should remain complete across the shipped
-        cohort
-      - any future exception must be documented explicitly rather than implied
-
-66. Promote “all shipped methods compared” from milestone to checked report truth.
-    - Once Tasks `61` through `64` are complete, add the generated artefact
-      envisioned in Task `52`.
-    - The report should make the full-compared state visible without depending
-      on prose release notes alone.
-
-67. Promote “harvest exceptions only” from milestone to checked report truth.
-    - Once Task `65` is complete, add the generated artefact envisioned in
-      Task `53`.
-    - This should either:
-      - list the surviving exceptions explicitly, or
-      - state that harvested legacy provenance is complete across the shipped
-        cohort.
-
-68. Re-evaluate `gapped_method_count` semantics after full compared closure.
-    - The current cohort report still shows `gapped_method_count: 14`.
-    - Once executable-only debt is gone, determine whether that field should:
-      - collapse to provenance-only gaps, or
-      - split into stronger named categories
-    - Do not leave the summary numerically confusing after the compared-cohort
-      milestone is reached.
-
-69. Tighten the release gate to require zero executable-only shipped methods.
-    - After the full compared-cohort milestone is real, encode it directly in
-      the release truth/generation path rather than treating it as advisory.
-
-70. Decide whether harvested legacy provenance becomes hard-gated or explicitly exception-based.
-    - This is the operational follow-on to Task `54`.
-    - Make the policy explicit in docs and generated checks rather than leaving
-      it as an implicit expectation.
-
-71. Add a generated “evidence exceptions ledger” if any non-compared or non-harvested cases survive.
-    - This should become the single place to enumerate sanctioned exceptions.
-    - Avoid scattering exception language across multiple release docs.
-
-72. Reassess the post-`1.0.0` release narrative after full compared closure.
-    - Once the cohort is fully compared, revisit the draft release notes and RC
-      readiness framing so they describe the new evidence posture accurately.
+65. Reassess the post-`1.0.0` release narrative now that full compared and full harvest are achieved.
+    - Refresh the draft release notes and RC readiness framing so they describe
+      the current evidence posture directly rather than as a near-term
+      milestone.
     - Keep this as documentation truth maintenance, not marketing expansion.
 
-73. Choose the first actual `Rework` implementation program from generated readiness and governance ordering.
-    - The decision point should explicitly compare:
-      - plotting-first
-      - remote-retrieval-first
-      - protein-property-first
-    - Base that choice on the governance reassessment and the now-closed
-      retained evidence state, not on habit.
+66. Add a generated “post-closure evidence invariants” report if summary drift remains hard to audit across multiple artefacts.
+    - Only add this if the current set of generated reports is no longer enough
+      to explain the post-closure state cleanly.
+    - Do not invent a new artefact if existing reports can be clarified instead.
 
-74. If the first `Rework` program is chosen, generate a dedicated sub-roadmap instead of starting ad hoc work.
-    - The first post-retained implementation program should have its own task
-      map, evidence model, and release-risk framing before code changes begin.
+67. Decide whether the first actual `Rework` implementation program remains plotting after the summary-semantic cleanup.
+    - Reconfirm the Task `57` decision against the cleaned generated surface.
+    - Explicitly verify that nothing in Tasks `61` through `66` changes the
+      plotting-first decision materially.
+
+68. If plotting remains first, generate a dedicated plotting rework sub-roadmap before code changes begin.
+    - The sub-roadmap should define:
+      - bounded initial method subset
+      - plot-contract evidence model
+      - R-rendering handoff constraints
+      - release-risk framing
+    - Do not start broad plotting implementation before this exists.
+
+69. If plotting is later blocked, generate the equivalent remote-retrieval rework sub-roadmap instead of switching informally.
+    - Preserve the explicit fallback ordering already recorded in governance.
+    - Require the same bounded scope and evidence framing as the plotting path.
+
+70. Reassess whether protein-property rework still remains the third candidate after the first-program sub-roadmap is drafted.
+    - This should remain a planning check, not an implicit promotion.
+
+71. Audit `make release-generated-check` for any remaining post-closure ordering hazards or incidental churn.
+    - Earlier roadmap work observed regeneration-order issues and EOF-only
+      churn during broad refreshes.
+    - Determine whether the current release-generated path is clean enough for
+      the post-closure steady state.
+
+72. If release-generated ordering hazards remain, fix them as release-process debt rather than tolerating them as folklore.
+    - Prefer deterministic generation order and clean-tree stability over
+      manual restoration steps.
+
+73. Reassess whether any remaining release-facing generated reports are redundant after post-closure cleanup.
+    - If two artefacts express the same truth with no distinct release value,
+      consider consolidating them.
+    - Do not remove reports that still carry unique governance or release-gate
+      meaning.
+
+74. If the first `Rework` program is approved, capture its acceptance criteria as governed roadmap truth before implementation starts.
+    - The first post-retained implementation program should have explicit entry
+      and exit criteria, not just a family label.
 
 75. Extend this roadmap again after Task `74`.
-    - Continue to derive priorities from generated truth:
+    - Continue to derive priorities from:
       - cohort validation
       - governance alignment
       - cohort health
       - comparison coverage
       - retained backlog closure
-      - any new compared-cohort or harvest-exception reports
+      - full compared cohort
+      - harvest coverage
+      - any new post-closure summary reports
     - Preserve the same repository rules:
       - honest documentation
       - scoped changes
