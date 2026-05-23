@@ -713,10 +713,14 @@ next tier should therefore move from evidence creation to:
       - `recommendations: 0`
 
 63. Add a generated “summary semantics” cleanup pass if Task `61` or `62` reveals stale field meanings.
-    - Prefer tightening existing report schemas over adding parallel one-off
-      prose explanations.
-    - If a field no longer communicates useful truth, rename or replace it
-      through governed generated outputs.
+    - Complete without adding a separate new artefact.
+    - Resolution:
+      - the needed cleanup happened directly in the existing governed report
+        surfaces from Tasks `61` and `62`
+      - `gapped_method_count` now reflects blocking cohort gaps only
+      - `weakest_evidence_family` now becomes `null` in the zero-burden state
+    - The current generated summaries are now internally coherent enough that a
+      separate summary-semantics report would be redundant at this stage.
 
 64. Tighten the release gate to require stable post-closure summary semantics.
     - Once Tasks `61` through `63` are resolved, make the release truth check
