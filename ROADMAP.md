@@ -859,8 +859,17 @@ next tier should therefore move from evidence creation to:
         tolerated folklore
 
 72. If release-generated ordering hazards remain, fix them as release-process debt rather than tolerating them as folklore.
-    - Prefer deterministic generation order and clean-tree stability over
-      manual restoration steps.
+    - Complete.
+    - Fix implemented:
+      - generated tool-page Markdown is now normalized to exactly one trailing
+        newline at emission time
+      - the checked-in generated tool pages were refreshed to match that
+        canonical form
+    - Result:
+      - `make release-generated-check` no longer reproduces the earlier
+        deterministic EOF-only churn in steady-state use
+      - no manual restoration step is needed for the generated tool-page
+        subset audited in Task `71`
 
 73. Reassess whether any remaining release-facing generated reports are redundant after post-closure cleanup.
     - If two artefacts express the same truth with no distinct release value,

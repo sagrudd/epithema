@@ -86,4 +86,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `report_one_exact_shared_region_across_target_set`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

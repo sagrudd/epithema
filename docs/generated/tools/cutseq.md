@@ -74,4 +74,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `cut_after_second_position`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

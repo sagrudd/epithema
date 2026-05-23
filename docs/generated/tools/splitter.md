@@ -74,4 +74,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `split_three_records_into_two_partitions`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

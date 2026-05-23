@@ -84,4 +84,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `per_record_and_aggregate_composition`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-

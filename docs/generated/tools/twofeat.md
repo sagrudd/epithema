@@ -78,4 +78,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `report_gene_cds_neighbour_pair`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

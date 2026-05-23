@@ -76,4 +76,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `render_normalized_feature_text`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

@@ -253,20 +253,15 @@ Current generated release-truth markers:
 
 ### Release task availability
 
-- Status: `present with known limitation`
-- Basis: `make release-version-check`, `make release-check`, and
-  `make release-artifacts` are present, and these generated-report gates are
-  present and working:
+- Status: `complete`
+- Basis: `make release-version-check`, `make release-generated-check`,
+  `make release-check`, and `make release-artifacts` are present, and these
+  generated-report gates are present and working:
   - `make cohort-health-report`
   - `make comparison-coverage-report`
   - `make full-compared-cohort-report`
   - `make harvest-coverage-report`
   - `make retained-backlog-report`
-- `make release-generated-check` still needs one narrow release-process fix:
-  the older acceptance-anchor ordering issue did not reproduce in the latest
-  audit, but the broad refresh path still introduces deterministic EOF-only
-  churn in a small set of generated tool pages and therefore does not yet
-  return a clean diff in steady-state use.
 
 ### Container readiness
 
@@ -346,9 +341,9 @@ candidate hardening and roadmap-governance phase:
 - `cargo test -p emboss-docgen --test doc_coverage`
 - `PYTHON=.venv-docs/bin/python make docs`
 
-The broad generated-refresh target was also re-audited later:
+The broad generated-refresh target was also re-audited and normalized later:
 
 - `PYTHON=.venv-docs/bin/python make release-generated-check`
-  - current result: deterministic EOF-only churn remains in a small generated
-    tool-page subset, so this target is not yet counted as clean post-closure
-    steady-state validation
+  - current result: the older acceptance-anchor ordering issue did not
+    reproduce, and the generated tool-page EOF churn was removed by
+    canonicalizing emitted Markdown to one trailing newline

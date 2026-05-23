@@ -72,4 +72,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `report_ena_run_manifest`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

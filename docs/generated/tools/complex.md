@@ -75,4 +75,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `report_whole_sequence_complexity`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

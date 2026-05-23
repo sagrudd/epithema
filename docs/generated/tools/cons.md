@@ -72,4 +72,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `derive_simple_consensus_from_stockholm_alignment`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

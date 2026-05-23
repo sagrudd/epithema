@@ -89,4 +89,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `basic_local_alignment`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

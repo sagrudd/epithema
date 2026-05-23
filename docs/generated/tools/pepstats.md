@@ -84,4 +84,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `protein_summary_statistics`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-

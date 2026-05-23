@@ -82,4 +82,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `mask_positions_two_to_three`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-

@@ -82,4 +82,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `extract_selected_gene_feature`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-

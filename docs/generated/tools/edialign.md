@@ -76,4 +76,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `derive_shared_exact_block_alignment`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

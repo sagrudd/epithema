@@ -72,4 +72,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `count_three_fasta_records`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

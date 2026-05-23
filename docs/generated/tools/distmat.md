@@ -72,4 +72,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `compute_p_distance_matrix_for_equal_length_records`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

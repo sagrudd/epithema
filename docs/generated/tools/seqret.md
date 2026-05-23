@@ -80,4 +80,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `normalize_local_fasta_records`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-

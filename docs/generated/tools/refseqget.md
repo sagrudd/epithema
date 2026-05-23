@@ -72,4 +72,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `retrieve_provider_qualified_reference_sequence`
 - Future legacy comparison requested: no
 - Future execution must capture provenance: yes
-

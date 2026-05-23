@@ -80,4 +80,3 @@ This section describes what future governed validation should execute or compare
 - Declared required examples for future validation: `extract_stop_bounded_forward_orfs`
 - Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
-
