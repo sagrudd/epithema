@@ -433,6 +433,51 @@ If `hmoment` cannot satisfy these criteria while remaining a narrow
 single-series profile method, the repository should pause and reassess before
 starting the first implementation patch.
 
+#### Exact start conditions for the first `hmoment` implementation patch
+
+The first code-bearing plotting patch should not begin until all of the
+following are treated as explicit start conditions:
+
+- the active family decision still remains:
+  - plotting first
+  - remote retrieval second
+  - protein-property rework third
+- the bounded plotting Phase 1 order still remains:
+  1. `hmoment`
+  2. `octanol`
+  3. `pepinfo`
+- the release-truth surface still remains in the current zero-burden state:
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `gapped_method_count == 0`
+  - `weakest_evidence_family == null`
+- the patch scope remains limited to `hmoment` and the smallest shared support
+  needed for:
+  - deterministic analytical computation
+  - typed single-series plot-contract emission
+  - governed docs and validation plumbing
+- the patch does not widen into:
+  - `octanol`
+  - `pepinfo`
+  - broader plot-contract taxonomies
+  - Rust-side rendering behavior
+- the patch is expected to land with all method-level governed surfaces, not
+  as a half-start:
+  - method-associated Rust implementation
+  - registry/service exposure
+  - governed autodoc contract
+  - generated docs and validation metadata
+  - canonical plot-contract fixture
+  - compared evidence for both table and contract outputs
+- if any required support code spans multiple methods, it must still be named
+  and scoped as a narrow plotting-profile helper rather than a broad shared
+  plotting framework
+
+If any of these start conditions cease to hold before code changes begin, the
+repository should re-open planning rather than starting the first patch under a
+looser scope.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the

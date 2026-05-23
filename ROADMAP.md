@@ -1103,8 +1103,18 @@ implementation-program cycle. The near-term priorities are:
     - This remains a planning checkpoint, not a promotion.
 
 88. If plotting still remains first and `hmoment` is still the lead method, capture the exact start conditions for the first implementation patch.
-    - The goal is to make the first code-bearing rework task unambiguous before
-      it is mapped.
+    - Captured in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - The exact start conditions now make the first code-bearing plotting task
+      unambiguous before it is mapped.
+    - They explicitly require:
+      - plotting-first / retrieval-second / protein-property-third ordering to
+        remain intact
+      - the bounded `hmoment` -> `octanol` -> `pepinfo` order to remain intact
+      - the current zero-burden release-truth state to remain intact
+      - the first patch to stay limited to `hmoment` plus the smallest support
+        needed for computation, contract emission, docs, fixtures, and
+        compared evidence
 
 89. Add the next code-bearing rework task tier to this roadmap only after the plotting-first start conditions are explicit enough to prevent informal widening.
     - The first implementation tier should be bounded enough that each task can
