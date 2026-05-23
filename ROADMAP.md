@@ -1178,13 +1178,30 @@ implementation-program cycle. The near-term priorities are:
       - no registry or service exposure yet
 
 93. Expose `hmoment` through the governed shipped surface.
-    - Scope:
-      - registry/service wiring
-      - governed autodoc contract
-      - generated docs and validation metadata
-    - Constraints:
-      - keep changes method-associated
-      - do not start the next plotting method in the same task
+    - Implemented:
+      - `crates/emboss-tools/src/protein_plots/mod.rs`
+      - `crates/emboss-tools/src/lib.rs`
+      - `crates/emboss-service/src/service.rs`
+      - `crates/emboss-cli/src/app.rs`
+      - `docs/autodoc/tools/hmoment.json`
+      - `docs/generated/tools/hmoment.md`
+      - `docs/generated/validation/hmoment.validation.json`
+    - Result:
+      - `hmoment` is now present in the governed shipped registry and routed
+        through the shared service/CLI surface
+      - the method now ships with executable evidence and harvested legacy
+        provenance
+      - the branch intentionally leaves the zero-burden evidence state here:
+        - shipped methods: `97`
+        - compared evidence: `96`
+        - executable evidence: `1`
+        - `full_compared_cohort: false`
+        - `release_truth_current: true`
+        - `python3 scripts/release_metadata.py truth-check`: still expected to
+          fail until Task `94` restores full-compared status
+    - Constraints preserved:
+      - changes stayed method-associated
+      - no widening into `octanol` or `pepinfo`
 
 94. Add canonical `hmoment` fixtures and compared evidence.
     - Scope:

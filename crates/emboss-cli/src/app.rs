@@ -229,4 +229,12 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("charge"));
     }
+
+    #[test]
+    fn routes_hmoment_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "hmoment", "example.faa"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("hmoment"));
+    }
 }

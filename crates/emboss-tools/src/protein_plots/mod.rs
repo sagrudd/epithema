@@ -9,6 +9,7 @@ use crate::ToolDescriptor;
 const FAMILY: &str = "protein_plots";
 
 pub use charge::{ChargeOutcome, ChargeParams, charge_help, run_charge};
+pub use hmoment::{HmomentOutcome, HmomentParams, hmoment_help, run_hmoment};
 pub use pepwindow::{PepwindowOutcome, PepwindowParams, pepwindow_help, run_pepwindow};
 
 /// `charge` descriptor.
@@ -22,5 +23,12 @@ pub const CHARGE_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const PEPWINDOW_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "pepwindow",
     "report a sliding-window protein hydropathy profile and emit a line-plot contract",
+)
+.with_family(FAMILY);
+
+/// `hmoment` descriptor.
+pub const HMOMENT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "hmoment",
+    "report a sliding-window protein hydrophobic-moment profile and emit a line-plot contract",
 )
 .with_family(FAMILY);

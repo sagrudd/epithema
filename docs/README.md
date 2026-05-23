@@ -174,25 +174,32 @@ They should not be consolidated unless one of those distinct release or
 governance checks truly disappears rather than merely reaching a steady-state
 `0` or `yes` result.
 
-At the current post-closure stage, a separate generated "zero-burden release
-state" report is also intentionally unnecessary. The existing checked surfaces
-already cover that state without leaving one missing invariant:
+During the earlier post-closure steady state, a separate generated
+"zero-burden release state" report was intentionally unnecessary because the
+existing checked surfaces already covered every invariant without leaving a
+missing summary layer.
 
-- `cohort_validation` records `gapped_method_count: 0`
-- `cohort_health` records the zero-burden health state and the absence of
-  weak-evidence or retained-backlog pressure
-- `full_compared_cohort` records `full_compared_cohort: yes`
-- `harvest_coverage` records `harvest_coverage_complete: yes`
-- `retained_backlog_closure` records `retained_backlog_closed: yes`
+The current branch is intentionally no longer in that fully closed state while
+the bounded `hmoment` shipped-surface step is in progress. The checked reports
+now make that interim state explicit without needing another dedicated artefact:
 
-Add a dedicated zero-burden report only if plotting-program preparation or a
-later release cycle reveals a genuinely missing checked summary, not merely
-because several current reports now read as satisfied.
+- `cohort_validation` records `gapped_method_count: 1`
+- `cohort_health` records one weak-evidence signal in the plotting rework
+  family and `release_truth_current: false`
+- `full_compared_cohort` records `full_compared_cohort: no`
+- `harvest_coverage` still records `harvest_coverage_complete: yes`
+- `retained_backlog_closure` still records `retained_backlog_closed: yes`
 
-One current nuance remains intentionally visible in the existing cohort report:
+Add a dedicated zero-burden report only if a later release cycle reveals a
+genuinely missing checked summary, not merely because the branch moves between
+steady-state and bounded in-progress conditions.
+
+Two current nuances remain intentionally visible in the existing cohort report:
 
 - `charge` and `pepwindow` still surface non-blocking plotting notes in the
   visible-gap section
+- `hmoment` now surfaces the expected executable-only gap while its compared
+  acceptance fixture and canonical plot-contract fixture are still pending
 
 Those notes do not indicate missing compared evidence or blocking release debt.
 They currently reflect a narrower issue: the governed examples have harvested
@@ -200,8 +207,16 @@ legacy provenance and committed canonical outputs, but they do not yet carry a
 separate explicit legacy-reference artefact. That is why they remain visible
 while the top-line cohort state still correctly reports:
 
-- `gapped_method_count: 0`
-- `full_compared_cohort: yes`
+- `harvest_coverage_complete: yes`
+
+The `hmoment` gap is intentionally different. It is currently a blocking
+evidence gap because the method is now shipped with executable validation but
+does not yet have compared acceptance evidence.
+
+That is why the top-line cohort state now correctly reports:
+
+- `gapped_method_count: 1`
+- `full_compared_cohort: no`
 - `harvest_coverage_complete: yes`
 
 If that distinction needs a narrower label than the current generic

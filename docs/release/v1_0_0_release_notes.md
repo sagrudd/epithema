@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `96` methods, including:
+of `97` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -38,7 +38,8 @@ of `96` methods, including:
 - alignment utility, global alignment, local alignment, similarity,
   distance-matrix, and consensus tools
 - the retained exception tool `complex`
-- the first governed plot-producing analytical tools `charge` and `pepwindow`
+- the first governed plot-producing analytical tools `charge`, `pepwindow`,
+  and `hmoment`
 
 ### Governed retrieval
 
@@ -63,24 +64,26 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `96` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `96` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped method currently carries executable-only evidence
+- `97` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `0`
-- weakest evidence family: `none`
+- blocking cohort gaps: `1`
+- weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
 legacy-reference artefacts. They do not lower evidence maturity and do not
 change the release gate state above.
+- `hmoment` is now shipped through the governed surface with executable
+  validation, but its canonical checked-in plot-contract fixture and compared
+  acceptance evidence are intentionally deferred to the next bounded task.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort is now fully closed at the current
-governed evidence tier. The remaining limitations in this draft are therefore
-about deliberate scope boundaries and future rework programs, not about
-unfinished shipped-method evidence debt.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the only current shipped-method evidence debt is the
+bounded `hmoment` compared-evidence follow-on.
 
 ### First-class R story
 

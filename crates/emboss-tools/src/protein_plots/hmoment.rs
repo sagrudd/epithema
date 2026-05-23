@@ -1,8 +1,8 @@
 //! Internal `hmoment` implementation under staged plotting rollout.
 
 use emboss_core::{
-    DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES, ProteinHydrophobicMomentError,
-    ProteinHydrophobicMomentProfile, protein_hydrophobic_moment_profile,
+    ProteinHydrophobicMomentError, ProteinHydrophobicMomentProfile,
+    protein_hydrophobic_moment_profile,
 };
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
@@ -40,7 +40,6 @@ pub struct HmomentOutcome {
 
 /// Returns staged `hmoment` help text.
 #[must_use]
-#[allow(dead_code)]
 pub fn hmoment_help() -> &'static str {
     "Usage: emboss-rs hmoment <input> [--window <length>] [--step <length>] [--angle-degrees <degrees>] [--plot-contract-out <path>]\n\nCompute a sliding-window protein hydrophobic-moment profile for exactly one protein record. The bounded v1 model uses a deterministic residue hydrophobicity table with a default turn angle of 100 degrees, emits a table-first single-series profile, and can serialize a typed line-plot contract."
 }
@@ -150,12 +149,12 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{
-        DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES, HmomentParams, build_hmoment_plot, map_error,
-        run_hmoment,
-    };
+    use super::{HmomentParams, build_hmoment_plot, map_error, run_hmoment};
     use crate::sequence_stream::SequenceInput;
-    use emboss_core::{HydrophobicMomentWindow, ProteinHydrophobicMomentError, ProteinHydrophobicMomentProfile};
+    use emboss_core::{
+        DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES, HydrophobicMomentWindow,
+        ProteinHydrophobicMomentError, ProteinHydrophobicMomentProfile,
+    };
 
     fn fixture_path(name: &str) -> PathBuf {
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))

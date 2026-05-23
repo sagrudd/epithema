@@ -54,6 +54,7 @@ tools/fuzzpro
 tools/fuzztran
 tools/geecee
 tools/getorf
+tools/hmoment
 tools/iep
 tools/infoalign
 tools/infobase
