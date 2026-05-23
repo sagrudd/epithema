@@ -1034,12 +1034,19 @@ implementation-program cycle. The near-term priorities are:
     - No new generated report was needed because this is governance/planning
       clarification rather than a new checked truth surface.
 
-82. Translate the plotting Phase 1 acceptance criteria into an implementation sequence.
-    - Break the bounded method slice into an execution order for:
-      - `hmoment`
-      - `octanol`
-      - `pepinfo`
-    - Keep the sequence method-associated and evidence-aware.
+82. Translated the plotting Phase 1 acceptance criteria into an explicit
+    implementation sequence.
+    - The governed execution order is now:
+      1. `hmoment`
+      2. `octanol`
+      3. `pepinfo`
+    - The sequence is recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - It remains method-associated and evidence-aware:
+      - `hmoment` first as the narrowest single-series seam extension
+      - `octanol` second as a second single-series analytical profile
+      - `pepinfo` third because it is the first likely multi-series contract
+        expansion
 
 83. Reassess whether `hmoment` is still the best first plotting method once the implementation sequence is written down.
     - The answer should be explicit, not assumed from the current ordering.

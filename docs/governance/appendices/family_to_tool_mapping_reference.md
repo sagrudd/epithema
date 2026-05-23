@@ -311,6 +311,49 @@ If any item in this checklist cannot be affirmed directly, the repository
 should pause before beginning method-order sequencing and resolve the ambiguity
 explicitly rather than letting the plotting program expand informally.
 
+#### Phase 1 implementation sequence
+
+The bounded plotting slice should be implemented in the following order:
+
+1. `hmoment`
+2. `octanol`
+3. `pepinfo`
+
+This order is preferred because it keeps the program method-associated and
+evidence-aware:
+
+- `hmoment` should go first because it is the narrowest extension of the
+  current line-profile seam:
+  - single analytical series
+  - protein-input profile behavior closest to `pepwindow`
+  - smallest likely contract expansion from the already-governed plotting trio
+- `octanol` should go second because it can reuse the same single-series
+  profile shape after the first method proves the path, while still testing a
+  second analytical model rather than mere duplication
+- `pepinfo` should go third because it is the first bounded Phase 1 method
+  likely to require a broader comparative or multi-series contract surface, so
+  it should only begin after the single-series path is already stable
+
+The sequencing rules for implementation should remain explicit:
+
+- each method should complete its full governed path before the next one is
+  treated as started:
+  - method-associated Rust computation
+  - typed plot-contract emission
+  - governed autodoc and generated docs
+  - canonical contract fixtures
+  - compared evidence for both table and contract outputs
+- if `hmoment` cannot stay inside the current seam cleanly, the repository
+  should pause and reassess before beginning `octanol`
+- if `octanol` requires materially new contract taxonomy beyond the single-line
+  profile path, the repository should pause before beginning `pepinfo`
+- `pepinfo` should only be treated as in scope for this Phase 1 if its
+  comparative line-series output still avoids renderer-coupled layout policy
+
+This sequence establishes implementation order only. It does not broaden the
+bounded plotting subset or imply that any later plotting-family members are
+already approved.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
