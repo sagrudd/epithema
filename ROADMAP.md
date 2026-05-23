@@ -1019,9 +1019,11 @@ implementation-program cycle. The near-term priorities are:
       - `make docs` remained clean
       - `truth-check` still matched the post-closure narrative
 
-80. If the release-process audit exposes any new deterministic churn, fix it as release-process debt before starting rework implementation.
-    - Prefer generator normalization or ordering fixes over manual cleanup
-      habits.
+80. Closed this release-process debt checkpoint after the Task `79` audit.
+    - Result:
+      - no new deterministic churn was exposed
+      - no further generator normalization or ordering fix was required before
+        rework planning
 
 81. Generate a dedicated implementation-readiness checklist for the plotting-first program if the current acceptance criteria still leave operational ambiguity.
     - This should stay narrower than a full new report unless a genuinely new
