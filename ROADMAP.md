@@ -830,10 +830,33 @@ next tier should therefore move from evidence creation to:
     - This remains a planning check only, not a promotion.
 
 71. Audit `make release-generated-check` for any remaining post-closure ordering hazards or incidental churn.
-    - Earlier roadmap work observed regeneration-order issues and EOF-only
-      churn during broad refreshes.
-    - Determine whether the current release-generated path is clean enough for
-      the post-closure steady state.
+    - Complete.
+    - Audit result:
+      - the older acceptance-anchor regeneration-order issue did not reproduce
+        in this pass
+      - the broad refresh path is still not clean enough for steady-state use
+        because it introduces deterministic EOF-only churn across a narrow set
+        of generated tool pages
+    - Current observed churn set:
+      - `aaindexextract`
+      - `biosed`
+      - `iep`
+      - `infobase`
+      - `inforesidue`
+      - `makenucseq`
+      - `makeprotseq`
+      - `megamerger`
+      - `merger`
+      - `msbar`
+      - `oddcomp`
+      - `pepdigest`
+      - `shuffleseq`
+      - `sizeseq`
+      - `trimest`
+      - `vectorstrip`
+    - Follow-on:
+      - treat the remaining churn as release-process debt in Task `72`, not as
+        tolerated folklore
 
 72. If release-generated ordering hazards remain, fix them as release-process debt rather than tolerating them as folklore.
     - Prefer deterministic generation order and clean-tree stability over
