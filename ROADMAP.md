@@ -1406,7 +1406,35 @@ implementation-program cycle. The near-term priorities are:
 
 105. Reconfirm the remote-retrieval fallback again after the second shipped
     plotting method exists.
-    - The fallback should remain ready if `octanol` widens the seam too far.
+    - Complete.
+    - Reconfirmation result:
+      - the remote-retrieval fallback remains ready after the second shipped
+        plotting slice
+      - `octanol` did not widen the plotting seam far enough to activate the
+        fallback
+    - Basis:
+      - the shipped plotting slices remained method-associated, single-series,
+        and fully evidence-closed
+      - the fallback still has a distinct bounded Phase 1:
+        - `seqretsetall`
+        - `seqretsplit`
+        - `infoassembly`
+      - the fallback still preserves a different operational seam:
+        - explicit provider-aware orchestration
+        - deterministic mocked-provider or managed-asset validation
+        - compared evidence on normalized returned sequence or metadata outputs
+      - the governed release-truth surface remained fully green while the
+        fallback stayed dormant:
+        - shipped methods: `98`
+        - compared evidence: `98`
+        - harvested legacy provenance present: `98`
+        - `full_compared_cohort: true`
+        - `harvest_coverage_complete: true`
+        - `release_truth_current: true`
+    - Consequence:
+      - retrieval remains the explicit next alternative if plotting later
+        becomes noisy
+      - no family-order change is justified at this checkpoint
 
 106. Reassess whether protein-property rework still remains the third
     candidate after two shipped plotting slices exist.

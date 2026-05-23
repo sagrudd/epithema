@@ -818,6 +818,43 @@ That conclusion still holds because:
 - its exclusions remain clear enough to prevent an informal expansion into
   broad provider search or acquisition parity work
 
+#### Reconfirmation after the second shipped plotting slice
+
+After shipping both `hmoment` and `octanol`, closing their compared-evidence
+follow-ons, and rerunning the full release-truth surface, the remote-retrieval
+fallback should still be treated as ready but inactive.
+
+That conclusion remains explicit because the second shipped plotting slice did
+not create the kind of pressure that would justify activating the fallback:
+
+- the plotting seam still remained narrow:
+  - both shipped plotting methods stayed method-associated
+  - both shipped plotting methods stayed single-series and table-derived
+  - no renderer-coupled logic or broader plot-contract taxonomy emerged
+- the release-truth surface stayed clean while plotting advanced:
+  - shipped methods: `98`
+  - compared evidence: `98`
+  - harvested legacy provenance present: `98`
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `release_truth_current == true`
+- the retrieval fallback itself still remains bounded and operationally
+  distinct:
+  - Phase 1 remains limited to `seqretsetall`, `seqretsplit`, and
+    `infoassembly`
+  - mocked-provider or managed-asset validation remains the expected evidence
+    model
+  - the fallback still does not depend on the plotting contract seam or on
+    live-network validation
+
+So the repository should preserve the same fallback ordering after the second
+shipped plotting method:
+
+- plotting remains the active first implementation program
+- remote retrieval remains the explicit next alternative if plotting later
+  becomes noisy
+- no family-order change is justified at this checkpoint
+
 So no reordering or widening is needed here. If plotting is later blocked by
 contract sprawl or renderer-coupled pressure, the repository can still switch
 to the retrieval fallback without reopening family-selection ambiguity first.
