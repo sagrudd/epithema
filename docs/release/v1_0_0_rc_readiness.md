@@ -114,13 +114,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `97`
-- Compared-evidence methods: `96`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `97`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `97`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `1`
-- Weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -149,16 +149,13 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- The shipped cohort is fully harvested, but it is no longer fully compared on
-  this branch because the bounded `hmoment` shipped-surface step landed ahead
-  of its compared-evidence follow-on task.
+- The shipped cohort is fully harvested and fully compared on this branch.
 - The retained governance backlog is `0`, so the dominant remaining work is
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
-- Plotting remains intentionally narrow, with `charge`, `pepwindow`, and
-  governed `wordcount` plot contracts as the current stable Rust-side
-  producers, plus the newly shipped `hmoment` analytical slice pending
-  compared-evidence closure.
+- Plotting remains intentionally narrow, with `charge`, `pepwindow`,
+  governed `wordcount`, and now governed `hmoment` as the current stable
+  Rust-side plot-contract producers.
 - The visible plotting notes for `charge` and `pepwindow` are now categorized
   as non-blocking missing explicit legacy-reference artefacts rather than as
   generic validation-report gaps.
@@ -170,9 +167,9 @@ Current generated release-truth markers:
 
 ### Not Ready / Blocked
 
-- The current branch is not in the zero-burden release-truth state because
-  `hmoment` is shipped at executable evidence only until its compared fixture
-  and acceptance anchor land.
+- No shipped-cohort evidence blocker is currently open. Remaining limitations
+  are bounded scope decisions and future rework programs rather than missing
+  compared evidence or harvest coverage.
 
 ## Governance And Release Obligation Audit
 
@@ -184,10 +181,10 @@ Current generated release-truth markers:
 
 ### Validation and evidence presence
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: every shipped method has a validation stub, appears in the cohort
-  report, and records harvested legacy provenance, but `hmoment` is currently
-  shipped at executable evidence only.
+  report, records harvested legacy provenance, and now reaches compared
+  evidence.
 
 ### Cohort-level acceptance reporting
 
@@ -207,12 +204,12 @@ Current generated release-truth markers:
 
 ### Standing cohort-health gate
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: the standing reprioritization gate is generated at:
   - `docs/generated/validation/cohort_health.json`
   - `docs/generated/cohort_health.md`
-  and now honestly reports one weak-evidence signal in the plotting rework
-  family plus `release_truth_current: false`.
+  and now honestly reports zero weak-evidence signals plus
+  `release_truth_current: true`.
 
 ### Family comparison coverage
 
@@ -220,17 +217,17 @@ Current generated release-truth markers:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now makes the single executable-only `hmoment` burden explicit inside
-  the plotting rework family.
+  and now confirms that every shipped family row is fully compared even though
+  the plotting rework family remains the first future implementation program.
 
 ### Full compared cohort gate
 
-- Status: `not ready`
+- Status: `complete`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and currently records `96/97` shipped methods at compared evidence with `1`
-  method below compared.
+  and now records `97/97` shipped methods at compared evidence with `0`
+  methods below compared.
 
 ### Harvest coverage reporting
 
@@ -290,11 +287,10 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-- `1` shipped method still has blocking evidence debt:
-  - `hmoment`
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
-- The dominant remaining weakness is now the single bounded plotting rework
-  slice that was intentionally shipped before its compared-evidence follow-on.
+- The dominant remaining implementation work is now the bounded plotting
+  rework slice itself, not shipped-cohort evidence debt.
 
 ### Legacy harvesting remains partial
 
@@ -303,10 +299,10 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `96` methods with compared evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily red because `hmoment` is still awaiting its
-  canonical fixture and compared acceptance anchor.
+- The cohort report now records `97` methods with compared evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green again after the bounded `hmoment` fixture and anchor
+  closure.
 
 ### Plotting limitations
 
@@ -333,8 +329,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `97`
-- Compared-evidence methods: `96`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `97`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `97`
 - Retained backlog still unshipped: `0`
 

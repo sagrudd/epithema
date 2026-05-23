@@ -10,9 +10,9 @@
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
     "harvested_legacy_presence_count": 97,
-    "executable_evidence_count": 1,
-    "compared_evidence_count": 96,
-    "gapped_method_count": 1
+    "executable_evidence_count": 0,
+    "compared_evidence_count": 97,
+    "gapped_method_count": 0
   },
   "methods": [
     {
@@ -1184,15 +1184,11 @@
         "status": "complete"
       },
       "validation_stub_present": true,
-      "evidence_level": "executable_evidence",
+      "evidence_level": "compared_evidence",
       "harvested_legacy_evidence_present": true,
       "executable_validation_present": true,
-      "compared_validation_present": false,
+      "compared_validation_present": true,
       "unresolved_gaps": [
-        {
-          "code": "missing_compared_evidence",
-          "message": "tool 'hmoment' has no compared validation evidence yet"
-        },
         {
           "code": "missing_explicit_legacy_reference",
           "message": "example 'hmoment_profile_example' needs a legacy reference before comparison can run"

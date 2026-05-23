@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `hmoment` is the go
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs hmoment`. At this task boundary the governed shipped surface and executable validation metadata are in place; compared acceptance evidence for the canonical checked-in plot-contract path is a follow-on step.
+This method is implemented and exposed through `emboss-rs hmoment`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,20 +54,28 @@ v1 supports only the single-record `hmoment` profile and does not add Rust-side 
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/hmoment_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic hmoment validation.
 
+### Canonical hmoment line-plot contract fixture
+
+- Artifact ID: `hmoment_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/hmoment_plot_contract.json`
+- Notes: Repository-managed canonical line-plot contract fixture emitted by the governed hmoment implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic protein hydrophobic-moment profile
 
 - Example ID: `hmoment_profile_example`
 - Description: Reports deterministic sliding-window hydrophobic-moment rows from the committed protein fixture and emits a governed single-series line-plot contract from the same analytical run.
-- Referenced artifacts: `hmoment_fixture`
+- Referenced artifacts: `hmoment_fixture`, `hmoment_plot_contract`
 - Parameters:
   - `window` = `4`
   - `step` = `1`
   - `angle-degrees` = `100`
 - Expected outputs:
-  - `hmoment_table`: Hydrophobic-moment profile table (Stable sliding-window hydrophobic-moment rows emitted by the governed single-sequence analytical path.)
-  - `hmoment_plot`: Hydrophobic-moment line-plot contract (The governed single-series line-plot contract payload emitted from the same deterministic analytical run.)
+  - `hmoment_table`: Hydrophobic-moment profile table (Stable sliding-window hydrophobic-moment rows plus a canonical line-plot contract derived from the same governed output.)
+  - `hmoment_plot`: Hydrophobic-moment line-plot contract (The canonical governed line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 

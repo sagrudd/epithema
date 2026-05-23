@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "hmoment_hmoment_example",
+    "title": "Hydrophobic moment profile for hmoment_example",
+    "subtitle": "Window 4 step 1 angle 100",
+    "provenance": {
+      "tool": "hmoment",
+      "method": "protein_hydrophobic_moment_profile",
+      "source_artifact_ids": [
+        "table:hmoment-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Hydrophobic moment",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "hmoment_profile",
+      "label": "Hydrophobic moment profile",
+      "legend_label": "Hydrophobic moment",
+      "semantic_group": "hydrophobic_moment",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0
+        ]
+      },
+      "y": [
+        0.7018312679359117,
+        1.2228094784885368
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

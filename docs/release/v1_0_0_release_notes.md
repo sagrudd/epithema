@@ -63,27 +63,27 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `96` shipped methods carry compared evidence
-- `1` shipped method currently carries executable-only evidence
+- `97` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `97` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
 legacy-reference artefacts. They do not lower evidence maturity and do not
 change the release gate state above.
-- `hmoment` is now shipped through the governed surface with executable
-  validation, but its canonical checked-in plot-contract fixture and compared
-  acceptance evidence are intentionally deferred to the next bounded task.
+- `hmoment` now ships through the governed surface with canonical checked-in
+  analytical and plot-contract fixtures plus compared acceptance evidence for
+  both surfaces.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the only current shipped-method evidence debt is the
-bounded `hmoment` compared-evidence follow-on.
+remains complete, and the shipped governed cohort is back in the zero-burden
+release-truth state.
 
 ### First-class R story
 

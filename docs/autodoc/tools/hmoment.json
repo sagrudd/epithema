@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs hmoment`. At this task boundary the governed shipped surface and executable validation metadata are in place; compared acceptance evidence for the canonical checked-in plot-contract path is a follow-on step."
+      "content": "This method is implemented and exposed through `emboss-rs hmoment`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, while keeping rendering in the sister `emboss-r` package."
     },
     {
       "id": "caveats",
@@ -62,6 +62,21 @@
         "asset_id": "crates/emboss-tools/tests/fixtures/hmoment_protein.fasta"
       },
       "description": "Repository-managed protein fixture used for deterministic hmoment validation."
+    },
+    {
+      "id": "hmoment_plot_contract",
+      "label": "Canonical hmoment line-plot contract fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/hmoment_plot_contract.json"
+      },
+      "description": "Repository-managed canonical line-plot contract fixture emitted by the governed hmoment implementation."
     }
   ],
   "examples": [
@@ -70,7 +85,8 @@
       "title": "Compute a deterministic protein hydrophobic-moment profile",
       "description": "Reports deterministic sliding-window hydrophobic-moment rows from the committed protein fixture and emits a governed single-series line-plot contract from the same analytical run.",
       "artifact_ids": [
-        "hmoment_fixture"
+        "hmoment_fixture",
+        "hmoment_plot_contract"
       ],
       "parameters": [
         {
@@ -90,12 +106,12 @@
         {
           "id": "hmoment_table",
           "label": "Hydrophobic-moment profile table",
-          "description": "Stable sliding-window hydrophobic-moment rows emitted by the governed single-sequence analytical path."
+          "description": "Stable sliding-window hydrophobic-moment rows plus a canonical line-plot contract derived from the same governed output."
         },
         {
           "id": "hmoment_plot",
           "label": "Hydrophobic-moment line-plot contract",
-          "description": "The governed single-series line-plot contract payload emitted from the same deterministic analytical run."
+          "description": "The canonical governed line-plot contract JSON emitted from the same deterministic analytical run."
         }
       ]
     }

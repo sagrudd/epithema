@@ -1204,11 +1204,27 @@ implementation-program cycle. The near-term priorities are:
       - no widening into `octanol` or `pepinfo`
 
 94. Add canonical `hmoment` fixtures and compared evidence.
-    - Scope:
-      - committed analytical-output fixture
-      - committed plot-contract fixture
-      - compared evidence validating both surfaces
-    - Constraints:
+    - Complete.
+    - Landed:
+      - committed analytical-output fixture:
+        - `crates/emboss-testkit/tests/fixtures/acceptance_anchors/hmoment_hmoment_profile_example.tsv`
+      - committed canonical plot-contract fixture:
+        - `crates/emboss-tools/tests/fixtures/hmoment_plot_contract.json`
+      - governed autodoc update:
+        - `docs/autodoc/tools/hmoment.json`
+      - acceptance-anchor closure:
+        - `crates/emboss-testkit/src/anchor.rs`
+    - Outcome:
+      - `hmoment` now carries compared evidence for both analytical-table and
+        typed plot-contract outputs
+      - the shipped cohort returns to the zero-burden evidence state:
+        - shipped methods: `97`
+        - compared evidence: `97`
+        - executable evidence: `0`
+        - harvested legacy provenance present: `97`
+        - `full_compared_cohort: true`
+        - `release_truth_current: true`
+    - Constraints preserved:
       - no executable-only closeout
       - no special-case release-truth exceptions
 

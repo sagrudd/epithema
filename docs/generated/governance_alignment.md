@@ -14,7 +14,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Shipped tools with curated autodoc: `97`
 - Shipped tools with executable or compared evidence: `97`
 - Shipped tools with harvested legacy provenance: `97`
-- Shipped tools with compared evidence: `96`
+- Shipped tools with compared evidence: `97`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -43,7 +43,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Command discovery and help-navigation | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — External database preparation helpers | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 3 | 3 | 2 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 3 | 3 | 3 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
@@ -130,7 +130,7 @@ All shipped methods are mapped in the governance appendix.
 | `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `charge` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
-| `hmoment` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
+| `hmoment` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
 | `pepwindow` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
 | `recoder` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `compared_evidence` |
 | `silent` | `restriction_tools` | Modernize — Rework — Restriction-enzyme design and analysis | retain | yes | `compared_evidence` |
