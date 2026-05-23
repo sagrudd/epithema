@@ -1257,74 +1257,77 @@ implementation-program cycle. The near-term priorities are:
 
 96. If `hmoment` passes the post-ship reassessment, map the bounded `octanol`
     implementation tier explicitly before writing code for it.
-    - Preserve the same no-widening rule used for `hmoment`.
+    - Complete.
+    - Mapped bounded `octanol` tier:
+      - Task `97`: capture `octanol` method-level acceptance criteria
+      - Task `98`: capture exact start conditions for the first `octanol`
+        implementation patch
+      - Task `99`: implement the bounded analytical core for `octanol`
+      - Task `100`: add the typed `octanol` plot-contract emission path
+      - Task `101`: expose `octanol` through the governed shipped surface
+      - Task `102`: add canonical `octanol` fixtures and compared evidence
+      - Task `103`: re-run the full release-truth surface after shipping
+        `octanol`
+      - Task `104`: reassess the shipped `octanol` slice before starting
+        `pepinfo`
+    - Constraints preserved:
+      - preserve the same no-widening rule used for `hmoment`
+      - keep `octanol` single-series unless implementation proves otherwise
+      - do not widen into `pepinfo` or broader contract taxonomy while mapping
+        the second plotting method
 
-97. Reconfirm the `hmoment` implementation start conditions immediately before
-    beginning the first code-bearing patch.
-    - Check that:
-      - plotting still remains first
-      - `hmoment` still remains the lead method
-      - the zero-burden release-truth state is still intact
-    - If any condition fails, pause before starting Task `91`.
+97. Capture `octanol` method-level acceptance criteria before code changes
+    begin.
+    - Preserve the same method-associated, single-series, no-widening rules
+      used for `hmoment`, but record the distinct analytical model honestly.
 
-98. Implement the bounded analytical core for `hmoment`.
+98. Capture the exact start conditions for the first `octanol`
+    implementation patch.
+    - Do not begin `octanol` code changes without the same explicit boundary
+      now required for `hmoment`.
+
+99. Implement the bounded analytical core for `octanol`.
     - Keep this task limited to deterministic method-associated computation and
       the smallest supporting types required to express the analytical result.
 
-99. Add the typed `hmoment` plot-contract emission path.
+100. Add the typed `octanol` plot-contract emission path.
     - Keep the contract single-series unless implementation proves that a
       broader shape is analytically required.
 
-100. Expose `hmoment` through the governed shipped surface.
+101. Expose `octanol` through the governed shipped surface.
     - Land registry/service wiring plus the governed autodoc contract and
       generated docs/validation metadata in the same bounded patch family.
 
-101. Add canonical `hmoment` fixtures and compared evidence.
+102. Add canonical `octanol` fixtures and compared evidence.
     - Require committed analytical-output and plot-contract fixtures plus
-      compared evidence for both surfaces before treating `hmoment` as shipped.
+      compared evidence for both surfaces before treating `octanol` as shipped.
 
-102. Re-run the full release-truth surface after shipping `hmoment`.
+103. Re-run the full release-truth surface after shipping `octanol`.
     - Confirm:
-      - release-generated-check remains clean
+      - `release-generated-check` remains clean
       - full-compared and harvest-complete gates remain green
       - no special-case exceptions were introduced
 
-103. Reassess the shipped `hmoment` slice before starting `octanol`.
+104. Reassess the shipped `octanol` slice before starting `pepinfo`.
     - Confirm:
       - the seam stayed narrow
       - no renderer-coupled pressure emerged
       - no broad plotting-framework pressure emerged
     - If the reassessment fails, pause plotting and reconsider the retrieval
-      fallback before mapping `octanol`.
+      fallback before mapping `pepinfo`.
 
-104. If `hmoment` passes reassessment, capture `octanol` method-level
-    acceptance criteria before code changes begin.
-    - Preserve the same method-associated, single-series, no-widening rules
-      used for `hmoment`.
-
-105. If `octanol` remains the second method after that acceptance pass, capture
-    the exact start conditions for the first `octanol` implementation patch.
-    - Do not begin `octanol` code changes without the same explicit boundary
-      now required for `hmoment`.
-
-106. Map the bounded `octanol` code-bearing tier only after its start
-    conditions are explicit.
-    - Split the work so implementation, contract emission, governed docs, and
-      compared evidence can each close honestly.
-
-107. Reconfirm the remote-retrieval fallback again after the first shipped
+105. Reconfirm the remote-retrieval fallback again after the second shipped
     plotting method exists.
-    - The fallback should remain ready if the second plotting method widens the
-      seam too far.
+    - The fallback should remain ready if `octanol` widens the seam too far.
 
-108. Reassess whether protein-property rework still remains the third
-    candidate after the first shipped plotting slice exists.
+106. Reassess whether protein-property rework still remains the third
+    candidate after two shipped plotting slices exist.
     - This remains a planning checkpoint, not a promotion.
 
-109. Add the next plotting or retrieval implementation tier to this roadmap
-    only after the post-`hmoment` reassessment is explicit enough to prevent
+107. Add the next plotting or retrieval implementation tier to this roadmap
+    only after the post-`octanol` reassessment is explicit enough to prevent
     informal widening.
 
-110. Extend this roadmap again after Task `109`.
+108. Extend this roadmap again after Task `107`.
     - Keep deriving priorities from the current generated truth plus the
-      observed behavior of the shipped `hmoment` slice.
+      observed behavior of the shipped `octanol` slice.

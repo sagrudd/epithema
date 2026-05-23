@@ -528,6 +528,38 @@ So the repository should treat plotting-first as still valid and may proceed to
 the bounded `octanol` planning tier without reopening the higher-level family
 selection question first.
 
+#### Bounded `octanol` implementation tier after the `hmoment` reassessment
+
+Now that the first plotting slice has shipped and passed explicit
+reassessment, the repository should map the second plotting method as a
+bounded tier before writing any `octanol` code.
+
+That tier should stay parallel to the `hmoment` sequence rather than widening
+the plotting program informally:
+
+1. capture `octanol` method-level acceptance criteria
+2. capture exact start conditions for the first `octanol` implementation patch
+3. implement the bounded analytical core for `octanol`
+4. add the typed `octanol` plot-contract emission path
+5. expose `octanol` through the governed shipped surface
+6. add canonical analytical and plot-contract fixtures plus compared evidence
+7. re-run the full release-truth surface after shipping `octanol`
+8. reassess the shipped `octanol` slice before any `pepinfo` work is mapped
+
+The bounded `octanol` tier should preserve the same architectural constraints
+already proven by `hmoment`:
+
+- method-associated implementation only
+- single-series line-contract output unless implementation proves broader shape
+  is analytically required
+- no widening into `pepinfo`
+- no renderer-coupled Rust logic
+- no broader plot-contract taxonomy unless the analytical needs of `octanol`
+  make that pressure concrete enough to stop and reassess
+
+So the next code-bearing plotting work should not begin as a generic “continue
+plotting” step. It should begin as this explicit bounded `octanol` tier.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
