@@ -52,6 +52,7 @@ REQUIRED_RELEASE_NOTES_MARKERS = [
     "[Full Compared Cohort Gate](../generated/full_compared_cohort.md)",
     "[Retained Backlog Closure Report](../generated/retained_backlog_closure.md)",
     "- full compared cohort: `yes`",
+    "- non-blocking plotting legacy-reference notes remain visible: `yes`",
     "- blocking cohort gaps: `0`",
     "- weakest evidence family: `none`",
 ]
@@ -68,6 +69,7 @@ REQUIRED_RC_READINESS_MARKERS = [
     "- `docs/generated/validation/full_compared_cohort.json`",
     "- `docs/generated/full_compared_cohort.md`",
     "- Full compared cohort: `yes`",
+    "- Non-blocking plotting legacy-reference notes remain visible: `yes`",
     "- Blocking cohort gaps: `0`",
     "- Weakest evidence family: `none`",
     "- `docs/generated/validation/retained_backlog_closure.json`",

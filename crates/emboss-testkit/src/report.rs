@@ -128,6 +128,7 @@ pub enum CohortGapCode {
     MissingHarvestedLegacyEvidence,
     MissingExecutableEvidence,
     MissingComparedEvidence,
+    MissingExplicitLegacyReference,
     ValidationReportGap,
 }
 
@@ -350,7 +351,10 @@ impl CohortValidationSummary {
 }
 
 fn is_blocking_cohort_gap(code: CohortGapCode) -> bool {
-    !matches!(code, CohortGapCode::ValidationReportGap)
+    !matches!(
+        code,
+        CohortGapCode::ValidationReportGap | CohortGapCode::MissingExplicitLegacyReference
+    )
 }
 
 /// Derives the shipped cohort validation report from the governed registry and
@@ -471,7 +475,7 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
     }
     rendered.push_str("\n## Visible Gaps\n\n");
     rendered.push_str(
-        "Visible gaps may include non-blocking validation-report notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above.\n\n",
+        "Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.\n\n",
     );
 
     let grouped = report
@@ -657,7 +661,7 @@ fn derive_method_record(
             ));
         }
         unresolved_gaps.extend(report.unresolved_gaps.iter().map(|gap| {
-            CohortMethodGap::new(CohortGapCode::ValidationReportGap, gap.clone())
+            CohortMethodGap::new(classify_validation_report_gap(report, gap), gap.clone())
         }));
     }
 
@@ -723,8 +727,31 @@ fn gap_code_label(code: CohortGapCode) -> &'static str {
         CohortGapCode::MissingHarvestedLegacyEvidence => "missing_harvested_legacy_evidence",
         CohortGapCode::MissingExecutableEvidence => "missing_executable_evidence",
         CohortGapCode::MissingComparedEvidence => "missing_compared_evidence",
+        CohortGapCode::MissingExplicitLegacyReference => "missing_explicit_legacy_reference",
         CohortGapCode::ValidationReportGap => "validation_report_gap",
     }
+}
+
+fn classify_validation_report_gap(report: &ToolValidationReport, gap: &str) -> CohortGapCode {
+    if gap.contains("needs a legacy reference before comparison can run")
+        && report_has_diagnostic_code(report, "testkit.case.missing_legacy_reference")
+    {
+        return CohortGapCode::MissingExplicitLegacyReference;
+    }
+
+    CohortGapCode::ValidationReportGap
+}
+
+fn report_has_diagnostic_code(report: &ToolValidationReport, code: &str) -> bool {
+    report
+        .diagnostics
+        .iter()
+        .any(|note| note.code.as_deref() == Some(code))
+        || report.cases.iter().any(|case| {
+            case.diagnostics
+                .iter()
+                .any(|note| note.code.as_deref() == Some(code))
+        })
 }
 
 fn yes_no(value: bool) -> &'static str {
@@ -910,6 +937,15 @@ mod tests {
                 .iter()
                 .all(|gap| gap.code != crate::report::CohortGapCode::MissingComparedEvidence)
         );
+        assert!(charge.unresolved_gaps.iter().any(|gap| {
+            gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
+        }));
+
+        let pepwindow = gap_map.get("pepwindow").expect("pepwindow should be present");
+        assert_eq!(pepwindow.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert!(pepwindow.unresolved_gaps.iter().any(|gap| {
+            gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
+        }));
 
         let descseq = gap_map.get("descseq").expect("descseq should be present");
         assert!(descseq.executable_validation_present);

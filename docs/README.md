@@ -208,6 +208,15 @@ If that distinction needs a narrower label than the current generic
 `validation_report_gap`, change it in one coherent report-surface pass rather
 than hiding the note or changing only one layer.
 
+That refinement is now applied in the cohort report as the more precise
+visible-gap code:
+
+- `missing_explicit_legacy_reference`
+
+The note remains non-blocking and intentionally visible because it describes a
+provenance/documentation nuance in the governed plotting examples rather than a
+failure of compared evidence, harvest coverage, or release readiness.
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 

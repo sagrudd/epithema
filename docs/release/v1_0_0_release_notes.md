@@ -66,8 +66,14 @@ Current evidence posture at the time of this draft:
 - `0` shipped methods carry executable evidence
 - `96` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
+- non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
+
+The remaining visible plotting notes for `charge` and `pepwindow` are
+non-blocking provenance/documentation nuances about missing explicit
+legacy-reference artefacts. They do not lower evidence maturity and do not
+change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 

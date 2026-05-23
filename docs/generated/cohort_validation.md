@@ -127,7 +127,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 ## Visible Gaps
 
-Visible gaps may include non-blocking validation-report notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above.
+Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.
 
-- `charge`: `validation_report_gap`
-- `pepwindow`: `validation_report_gap`
+- `charge`: `missing_explicit_legacy_reference`
+- `pepwindow`: `missing_explicit_legacy_reference`

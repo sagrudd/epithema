@@ -1167,7 +1167,7 @@
       "compared_validation_present": true,
       "unresolved_gaps": [
         {
-          "code": "validation_report_gap",
+          "code": "missing_explicit_legacy_reference",
           "message": "example 'charge_profile_example' needs a legacy reference before comparison can run"
         }
       ]
@@ -1190,7 +1190,7 @@
       "compared_validation_present": true,
       "unresolved_gaps": [
         {
-          "code": "validation_report_gap",
+          "code": "missing_explicit_legacy_reference",
           "message": "example 'pepwindow_profile_example' needs a legacy reference before comparison can run"
         }
       ]

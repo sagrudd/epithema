@@ -993,7 +993,24 @@ implementation-program cycle. The near-term priorities are:
         coherently in one pass instead of as a one-off field rename
 
 78. If Task `77` changes visible gap semantics, update cohort, health, release docs, and truth-check rules coherently in one pass.
-    - Avoid field-by-field drift across the generated report family.
+    - Complete.
+    - Cohort/report-surface refinement implemented:
+      - the non-blocking plotting notes for `charge` and `pepwindow` now use
+        the more precise visible gap code
+        `missing_explicit_legacy_reference`
+      - they remain non-blocking and therefore still do not contribute to
+        `gapped_method_count`
+    - Coherent cross-surface updates landed in one pass:
+      - cohort report typing and visible-gap rendering
+      - generated shipped cohort JSON and Markdown
+      - repository docs and release-facing docs
+      - `release_metadata.py truth-check` markers for the release-facing
+        narrative
+    - Resolution:
+      - the note remains visible because it still communicates real provenance
+        nuance
+      - the note is now categorized precisely enough that it no longer reads
+        like a generic unresolved validation deficit
 
 79. Re-run an end-to-end release-process audit after the Task `77`/`78` decision.
     - Confirm that:
