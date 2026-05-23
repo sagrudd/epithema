@@ -114,13 +114,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `98`
-- Compared-evidence methods: `97`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `98`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `98`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `1`
-- Weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -154,8 +154,8 @@ Current generated release-truth markers:
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`,
-  governed `wordcount`, and now governed `hmoment` as the current stable
-  Rust-side plot-contract producers.
+  governed `wordcount`, `hmoment`, and now governed `octanol` as the current
+  stable Rust-side plot-contract producers.
 - The visible plotting notes for `charge` and `pepwindow` are now categorized
   as non-blocking missing explicit legacy-reference artefacts rather than as
   generic validation-report gaps.
@@ -217,8 +217,8 @@ Current generated release-truth markers:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now records one executable-only shipped method in the plotting rework
-  family while the bounded `octanol` shipped-surface step is in progress.
+  and now records no executable-only shipped methods across the current
+  governed cohort.
 
 ### Full compared cohort gate
 
@@ -226,8 +226,8 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `97/98` shipped methods at compared evidence with `1`
-  method below compared while `octanol` is shipped but not yet compared.
+  and now records `98/98` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 

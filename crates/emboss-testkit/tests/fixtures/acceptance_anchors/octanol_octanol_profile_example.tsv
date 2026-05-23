@@ -1,0 +1,5 @@
+sequence_id	window_start	window_end	window_length	interface_minus_octanol
+octanol_example	1	3	3	-2.960000
+octanol_example	2	4	3	-4.240000
+octanol_example	3	5	3	-3.490000
+octanol_example	4	6	3	-0.390000

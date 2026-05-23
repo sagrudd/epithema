@@ -1355,8 +1355,10 @@ implementation-program cycle. The near-term priorities are:
         Task `102`
 
 102. Add canonical `octanol` fixtures and compared evidence.
-    - Require committed analytical-output and plot-contract fixtures plus
-      compared evidence for both surfaces before treating `octanol` as shipped.
+    - Completed. Committed analytical-output and plot-contract fixtures now
+      exist for the bounded `octanol` example.
+    - Completed. Compared evidence now covers both analytical and plot
+      surfaces, returning the shipped cohort to the full-compared state.
 
 103. Re-run the full release-truth surface after shipping `octanol`.
     - Confirm:

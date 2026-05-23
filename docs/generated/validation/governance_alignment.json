@@ -16,7 +16,7 @@
     "shipped_curated_autodoc_count": 98,
     "shipped_executable_or_better_count": 98,
     "shipped_harvested_legacy_presence_count": 98,
-    "shipped_compared_count": 97,
+    "shipped_compared_count": 98,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -612,7 +612,7 @@
       "governance_family": "Modernize — Rework — Plotting and visualization tools",
       "governance_decision": "rework",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "pepwindow",
@@ -1076,7 +1076,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 4,
       "shipped_executable_or_better": 4,
-      "shipped_compared": 3,
+      "shipped_compared": 4,
       "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },

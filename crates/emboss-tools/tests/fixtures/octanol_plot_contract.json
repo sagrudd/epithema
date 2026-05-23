@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "octanol_octanol_example",
+    "title": "White-Wimley profile for octanol_example",
+    "subtitle": "Window 3 step 1",
+    "provenance": {
+      "tool": "octanol",
+      "method": "protein_octanol_profile",
+      "source_artifact_ids": [
+        "table:octanol-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Interface minus octanol",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "octanol_profile",
+      "label": "Interface minus octanol profile",
+      "legend_label": "Interface minus octanol",
+      "semantic_group": "white_wimley_difference",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ]
+      },
+      "y": [
+        -2.96,
+        -4.24,
+        -3.4899999999999993,
+        -0.3899999999999999
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

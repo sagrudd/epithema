@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `octanol` is the go
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs octanol`. Validation currently covers executable evidence for stable analytical rows plus typed line-plot emission, while canonical checked-in contract fixtures and compared acceptance evidence remain pending.
+This method is implemented and exposed through `emboss-rs octanol`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,19 +54,27 @@ v1 supports only the single-record White-Wimley difference profile and does not 
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/octanol_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic octanol validation.
 
+### Canonical octanol line-plot contract fixture
+
+- Artifact ID: `octanol_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/octanol_plot_contract.json`
+- Notes: Repository-managed canonical line-plot contract fixture emitted by the governed octanol implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic White-Wimley interface-minus-octanol profile
 
 - Example ID: `octanol_profile_example`
 - Description: Reports deterministic sliding-window White-Wimley difference rows from the committed protein fixture and emits a governed single-series line-plot contract from the same analytical run.
-- Referenced artifacts: `octanol_fixture`
+- Referenced artifacts: `octanol_fixture`, `octanol_plot_contract`
 - Parameters:
   - `window` = `3`
   - `step` = `1`
 - Expected outputs:
-  - `octanol_table`: White-Wimley interface-minus-octanol table (Stable sliding-window White-Wimley difference rows derived from the governed analytical path.)
-  - `octanol_plot`: White-Wimley line-plot contract (The governed single-series line-plot contract emitted from the same deterministic analytical run.)
+  - `octanol_table`: White-Wimley interface-minus-octanol table (Stable sliding-window White-Wimley difference rows plus a canonical line-plot contract derived from the same governed output.)
+  - `octanol_plot`: White-Wimley line-plot contract (The canonical governed line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 
