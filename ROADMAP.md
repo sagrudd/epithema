@@ -1124,8 +1124,16 @@ implementation-program cycle. The near-term priorities are:
     - The tier is split so each task can close honestly with implementation,
       docs, fixtures, evidence, and release-truth updates.
 
-90. Extend this roadmap again after Task `89`.
-    - Continue to derive priorities from:
+90. Extended the roadmap again after Task `89`.
+    - The next tier now begins from the current zero-burden truth state:
+      - shipped methods: `96`
+      - compared evidence: `96`
+      - harvested legacy provenance present: `96`
+      - retained backlog: `0`
+      - full compared cohort: `true`
+      - harvest coverage complete: `true`
+      - retained backlog closed: `true`
+    - The next mapped work stays anchored to:
       - cohort validation
       - governance alignment
       - cohort health
@@ -1189,3 +1197,73 @@ implementation-program cycle. The near-term priorities are:
 96. If `hmoment` passes the post-ship reassessment, map the bounded `octanol`
     implementation tier explicitly before writing code for it.
     - Preserve the same no-widening rule used for `hmoment`.
+
+97. Reconfirm the `hmoment` implementation start conditions immediately before
+    beginning the first code-bearing patch.
+    - Check that:
+      - plotting still remains first
+      - `hmoment` still remains the lead method
+      - the zero-burden release-truth state is still intact
+    - If any condition fails, pause before starting Task `91`.
+
+98. Implement the bounded analytical core for `hmoment`.
+    - Keep this task limited to deterministic method-associated computation and
+      the smallest supporting types required to express the analytical result.
+
+99. Add the typed `hmoment` plot-contract emission path.
+    - Keep the contract single-series unless implementation proves that a
+      broader shape is analytically required.
+
+100. Expose `hmoment` through the governed shipped surface.
+    - Land registry/service wiring plus the governed autodoc contract and
+      generated docs/validation metadata in the same bounded patch family.
+
+101. Add canonical `hmoment` fixtures and compared evidence.
+    - Require committed analytical-output and plot-contract fixtures plus
+      compared evidence for both surfaces before treating `hmoment` as shipped.
+
+102. Re-run the full release-truth surface after shipping `hmoment`.
+    - Confirm:
+      - release-generated-check remains clean
+      - full-compared and harvest-complete gates remain green
+      - no special-case exceptions were introduced
+
+103. Reassess the shipped `hmoment` slice before starting `octanol`.
+    - Confirm:
+      - the seam stayed narrow
+      - no renderer-coupled pressure emerged
+      - no broad plotting-framework pressure emerged
+    - If the reassessment fails, pause plotting and reconsider the retrieval
+      fallback before mapping `octanol`.
+
+104. If `hmoment` passes reassessment, capture `octanol` method-level
+    acceptance criteria before code changes begin.
+    - Preserve the same method-associated, single-series, no-widening rules
+      used for `hmoment`.
+
+105. If `octanol` remains the second method after that acceptance pass, capture
+    the exact start conditions for the first `octanol` implementation patch.
+    - Do not begin `octanol` code changes without the same explicit boundary
+      now required for `hmoment`.
+
+106. Map the bounded `octanol` code-bearing tier only after its start
+    conditions are explicit.
+    - Split the work so implementation, contract emission, governed docs, and
+      compared evidence can each close honestly.
+
+107. Reconfirm the remote-retrieval fallback again after the first shipped
+    plotting method exists.
+    - The fallback should remain ready if the second plotting method widens the
+      seam too far.
+
+108. Reassess whether protein-property rework still remains the third
+    candidate after the first shipped plotting slice exists.
+    - This remains a planning checkpoint, not a promotion.
+
+109. Add the next plotting or retrieval implementation tier to this roadmap
+    only after the post-`hmoment` reassessment is explicit enough to prevent
+    informal widening.
+
+110. Extend this roadmap again after Task `109`.
+    - Keep deriving priorities from the current generated truth plus the
+      observed behavior of the shipped `hmoment` slice.
