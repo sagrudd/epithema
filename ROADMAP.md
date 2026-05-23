@@ -975,8 +975,22 @@ implementation-program cycle. The near-term priorities are:
       dedicated report then rather than creating one preemptively now.
 
 77. Reassess whether the two non-blocking plotting `validation_report_gap` notes should stay visible as-is or move into a more precise report category.
-    - Do not hide them casually.
-    - If they remain, document why they are visible but non-blocking.
+    - Complete.
+    - Reassessment outcome:
+      - the two plotting notes should remain visible
+      - they should not remain in the long term under the overly generic
+        `validation_report_gap` label
+    - Reason:
+      - `charge` and `pepwindow` already have compared evidence and do not
+        contribute to `gapped_method_count`
+      - the remaining note is narrower: the examples have harvested provenance
+        and committed canonical outputs, but they do not yet carry a separate
+        explicit legacy-reference artefact
+    - Resolution:
+      - keep the notes visible now
+      - treat the report-category refinement as Task `78`, where cohort,
+        health, release docs, and truth-check semantics can be updated
+        coherently in one pass instead of as a one-off field rename
 
 78. If Task `77` changes visible gap semantics, update cohort, health, release docs, and truth-check rules coherently in one pass.
     - Avoid field-by-field drift across the generated report family.

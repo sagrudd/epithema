@@ -189,6 +189,25 @@ Add a dedicated zero-burden report only if plotting-program preparation or a
 later release cycle reveals a genuinely missing checked summary, not merely
 because several current reports now read as satisfied.
 
+One current nuance remains intentionally visible in the existing cohort report:
+
+- `charge` and `pepwindow` still surface non-blocking plotting notes in the
+  visible-gap section
+
+Those notes do not indicate missing compared evidence or blocking release debt.
+They currently reflect a narrower issue: the governed examples have harvested
+legacy provenance and committed canonical outputs, but they do not yet carry a
+separate explicit legacy-reference artefact. That is why they remain visible
+while the top-line cohort state still correctly reports:
+
+- `gapped_method_count: 0`
+- `full_compared_cohort: yes`
+- `harvest_coverage_complete: yes`
+
+If that distinction needs a narrower label than the current generic
+`validation_report_gap`, change it in one coherent report-surface pass rather
+than hiding the note or changing only one layer.
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 
