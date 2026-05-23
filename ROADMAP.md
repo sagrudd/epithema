@@ -815,7 +815,19 @@ next tier should therefore move from evidence creation to:
         compatibility claims
 
 70. Reassess whether protein-property rework still remains the third candidate after the first-program sub-roadmap is drafted.
-    - This should remain a planning check, not an implicit promotion.
+    - Complete.
+    - Reassessment outcome:
+      - protein-property rework still remains the third candidate
+      - plotting remains the first implementation-program candidate
+      - remote retrieval remains the explicit fallback second
+    - Basis:
+      - plotting now has a bounded Phase 1 sub-roadmap
+      - remote retrieval now has a bounded fallback Phase 1 sub-roadmap
+      - protein-property still has a strong scientific substrate, but it does
+        not displace either of the two more explicitly prepared programs
+    - Recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - This remains a planning check only, not a promotion.
 
 71. Audit `make release-generated-check` for any remaining post-closure ordering hazards or incidental churn.
     - Earlier roadmap work observed regeneration-order issues and EOF-only

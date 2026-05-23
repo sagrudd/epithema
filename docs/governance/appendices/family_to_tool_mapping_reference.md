@@ -304,6 +304,26 @@ expansion, not as a claim of general archive and accession parity.
 - if those risks dominate the fallback planning pass, the repository should
   stop and reassess rather than informally widening the retrieval family
 
+### Post-sub-roadmap third-candidate check
+
+Drafting the first plotting program and the explicit retrieval fallback does
+not materially change the rationale for the third position in the shortlist.
+Protein-property rework still remains the next candidate after those two.
+
+That ordering still holds for the same bounded reasons:
+
+- plotting now has the clearest immediate implementation path because its
+  governed contract seam and bounded Phase 1 subset are already written down
+- remote retrieval now has the strongest explicit fallback plan because its
+  provider-aware validation seam and bounded Phase 1 subset are also written
+  down
+- protein-property rework still has a strong scientific substrate, but it does
+  not yet displace either of the two more explicitly prepared implementation
+  programs
+
+This remains a planning check only. It does **not** promote protein-property
+rework, and it does **not** imply that plotting or retrieval are blocked.
+
 ### Explicit no-change decisions
 
 This reassessment does **not** do any of the following:
