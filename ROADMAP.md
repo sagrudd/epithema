@@ -1149,12 +1149,15 @@ implementation-program cycle. The near-term priorities are:
       - commit-and-push completion
       - no unrelated code churn
 
-91. Implement the bounded analytical core for `hmoment`.
-    - Scope:
+91. Implemented the bounded analytical core for `hmoment`.
+    - Landed in:
+      - `crates/emboss-core/src/protein_hydrophobic_moment.rs`
+      - `crates/emboss-core/src/lib.rs`
+    - Result:
       - method-associated Rust computation only
-      - deterministic hydrophobic-moment profile output
-      - no registry/service exposure yet unless strictly required for testing
-    - Constraints:
+      - deterministic sliding-window hydrophobic-moment profile output
+      - no registry/service exposure yet
+    - Constraints preserved:
       - protein input only
       - single-series analytical profile only
       - no renderer-coupled logic

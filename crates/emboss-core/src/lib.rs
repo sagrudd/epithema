@@ -31,6 +31,7 @@ pub mod platform;
 pub mod protein_charge;
 pub mod protein_digest;
 pub mod protein_hydropathy;
+pub mod protein_hydrophobic_moment;
 pub mod protein_isoelectric;
 pub mod residue_properties;
 pub mod revseq;
@@ -83,8 +84,12 @@ pub use protein_digest::{
     DigestProtease, DigestedPeptide, ProteinDigestError, digest_protein_sequence,
 };
 pub use protein_hydropathy::{
-    HydropathyWindow, ProteinHydropathyError, ProteinHydropathyProfile,
-    protein_hydropathy_profile,
+    HydropathyWindow, ProteinHydropathyError, ProteinHydropathyProfile, protein_hydropathy_profile,
+};
+pub use protein_hydrophobic_moment::{
+    DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES, HydrophobicMomentWindow,
+    ProteinHydrophobicMomentError, ProteinHydrophobicMomentProfile,
+    protein_hydrophobic_moment_profile,
 };
 pub use protein_isoelectric::{
     ProteinIsoelectricError, ProteinIsoelectricEstimate, TitratableResidueCounts,
