@@ -759,9 +759,20 @@ next tier should therefore move from evidence creation to:
       checked repository truth rather than clarify it.
 
 67. Decide whether the first actual `Rework` implementation program remains plotting after the summary-semantic cleanup.
-    - Reconfirm the Task `57` decision against the cleaned generated surface.
-    - Explicitly verify that nothing in Tasks `61` through `66` changes the
-      plotting-first decision materially.
+    - Complete.
+    - Reconfirmation:
+      - plotting remains the first actual `Rework` implementation-program
+        candidate
+      - remote retrieval remains the explicit fallback
+    - Basis:
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `weak_evidence_method_count: 0`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+    - Nothing in Tasks `61` through `66` changed the plotting-first decision
+      materially.
 
 68. If plotting remains first, generate a dedicated plotting rework sub-roadmap before code changes begin.
     - The sub-roadmap should define:

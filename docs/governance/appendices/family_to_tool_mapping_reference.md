@@ -124,6 +124,23 @@ Accordingly, future implementation planning should start from the top of this
 shortlist rather than reopening family-wide reorder debates unless the
 generated reports show a material regression or a new dependency.
 
+### Post-summary-semantics recheck
+
+The later post-closure summary cleanup did not change the ordering rationale.
+The cleaned generated surface now shows:
+
+- `gapped_method_count: 0`
+- `weakest_evidence_family: null`
+- `weak_evidence_method_count: 0`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+
+Those results remove misleading summary noise, but they do not create a new
+reason to displace plotting from the first implementation-program slot.
+Remote retrieval therefore remains the explicit fallback rather than the new
+lead candidate.
+
 This is still a planning decision only. It does **not** authorize silent
 surface widening, whole-family implementation claims, or bucket reassignment
 without a later explicit rework program.
