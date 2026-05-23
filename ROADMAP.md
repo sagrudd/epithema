@@ -1468,6 +1468,30 @@ implementation-program cycle. The near-term priorities are:
 107. Add the next plotting or retrieval implementation tier to this roadmap
     only after the post-`octanol` reassessment is explicit enough to prevent
     informal widening.
+    - Complete.
+    - Resolution:
+      - the next tier is now mapped explicitly as the bounded `pepinfo`
+        plotting tier rather than as a generic “continue plotting” step
+      - the retrieval fallback remains documented as the explicit next
+        alternative if `pepinfo` forces contract sprawl or renderer-coupled
+        pressure
+    - The bounded `pepinfo` tier is now:
+      1. capture `pepinfo` method-level acceptance criteria
+      2. capture exact start conditions for the first `pepinfo`
+         implementation patch
+      3. implement the bounded analytical core
+      4. add the typed plot-contract emission path
+      5. expose `pepinfo` through the governed shipped surface
+      6. add canonical fixtures and compared evidence
+      7. re-run the full release-truth surface after shipping `pepinfo`
+      8. reassess the shipped `pepinfo` slice before any broader plotting
+         expansion is mapped
+    - Guardrails remain explicit:
+      - method-associated implementation only
+      - no silent widening into a generic plotting framework
+      - no Rust-side rendering behavior
+      - pause and reassess if `pepinfo` forces materially broader
+        plot-contract taxonomy
 
 108. Extend this roadmap again after Task `107`.
     - Keep deriving priorities from the current generated truth plus the

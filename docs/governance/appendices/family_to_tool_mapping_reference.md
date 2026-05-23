@@ -717,6 +717,41 @@ So the repository should treat plotting-first as still valid after the second
 shipped plotting slice and may proceed to the bounded `pepinfo` planning gate
 without reopening the higher-level family selection question first.
 
+#### Bounded `pepinfo` implementation tier after the `octanol` reassessment
+
+Now that the second plotting slice has shipped and passed explicit
+reassessment, the repository should map the third bounded Phase 1 method as an
+explicit `pepinfo` tier before writing any `pepinfo` code.
+
+That tier should remain method-associated and stop short of any broader
+plotting-family expansion:
+
+1. capture `pepinfo` method-level acceptance criteria
+2. capture exact start conditions for the first `pepinfo` implementation patch
+3. implement the bounded analytical core for `pepinfo`
+4. add the typed `pepinfo` plot-contract emission path
+5. expose `pepinfo` through the governed shipped surface
+6. add canonical analytical and plot-contract fixtures plus compared evidence
+7. re-run the full release-truth surface after shipping `pepinfo`
+8. reassess the shipped `pepinfo` slice before any broader plotting expansion
+   is mapped
+
+The bounded `pepinfo` tier should preserve the same architectural constraints
+already proven by `hmoment` and `octanol`, while acknowledging that `pepinfo`
+is the first likely pressure point for a broader contract shape:
+
+- method-associated implementation only
+- Rust owns deterministic analytical computation and typed contract emission
+- no Rust-side rendering or presentation-heavy layout behavior
+- no silent widening into a generic plotting framework
+- no broader plot-contract taxonomy unless the analytical needs of `pepinfo`
+  make that pressure concrete enough to stop and reassess before further work
+
+So the next code-bearing plotting work should not begin as a vague “expand
+plotting again” step. It should begin as this explicit bounded `pepinfo` tier,
+with the retrieval fallback still preserved as the next alternative if the seam
+widens too far.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
