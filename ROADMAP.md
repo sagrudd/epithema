@@ -1012,11 +1012,12 @@ implementation-program cycle. The near-term priorities are:
       - the note is now categorized precisely enough that it no longer reads
         like a generic unresolved validation deficit
 
-79. Re-run an end-to-end release-process audit after the Task `77`/`78` decision.
-    - Confirm that:
-      - `make release-generated-check` remains clean
-      - `make docs` remains clean
-      - `truth-check` still matches the post-closure narrative
+79. Re-ran an end-to-end release-process audit after the Task `77`/`78`
+    decision.
+    - Result:
+      - `make release-generated-check` completed cleanly on a clean tree
+      - `make docs` remained clean
+      - `truth-check` still matched the post-closure narrative
 
 80. If the release-process audit exposes any new deterministic churn, fix it as release-process debt before starting rework implementation.
     - Prefer generator normalization or ordering fixes over manual cleanup
