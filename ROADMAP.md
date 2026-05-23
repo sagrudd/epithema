@@ -1072,9 +1072,11 @@ implementation-program cycle. The near-term priorities are:
     - `hmoment` is now ready to serve as the first code-bearing plotting task
       boundary without informal widening.
 
-85. If `hmoment` is not the best first method, record the reordered plotting Phase 1 sequence explicitly instead of switching informally.
-    - Preserve the plotting-first family decision while allowing bounded
-      within-family reprioritization.
+85. Closed this bounded reprioritization checkpoint without reordering.
+    - Task `83` confirmed that `hmoment` remains the best first plotting
+      method.
+    - So no reordered Phase 1 sequence was needed, and no within-family
+      reprioritization was recorded.
 
 86. Reconfirm the remote-retrieval fallback plan after the plotting implementation sequence exists.
     - Make sure the fallback still has a bounded Phase 1 and remains ready for
