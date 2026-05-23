@@ -1062,11 +1062,15 @@ implementation-program cycle. The near-term priorities are:
       - `docs/governance/appendices/family_to_tool_mapping_reference.md`
 
 84. If `hmoment` remains first, capture its method-level acceptance criteria before code changes begin.
-    - This should include:
+    - Captured in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - The governed method-level acceptance criteria now cover:
       - analytical output expectations
       - typed contract expectations
       - fixture/evidence expectations
       - explicit non-goals
+    - `hmoment` is now ready to serve as the first code-bearing plotting task
+      boundary without informal widening.
 
 85. If `hmoment` is not the best first method, record the reordered plotting Phase 1 sequence explicitly instead of switching informally.
     - Preserve the plotting-first family decision while allowing bounded
