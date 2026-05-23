@@ -1229,12 +1229,31 @@ implementation-program cycle. The near-term priorities are:
       - no special-case release-truth exceptions
 
 95. Reassess the shipped `hmoment` slice before starting `octanol`.
-    - Confirm:
+    - Complete.
+    - Reassessment outcome:
       - the seam stayed narrow
       - release-truth stayed clean
       - no contract sprawl or renderer-coupled pressure emerged
-    - If that reassessment fails, pause plotting and reconsider the retrieval
-      fallback before starting the second plotting method.
+    - Recorded explicitly in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Basis:
+      - `hmoment` shipped as one bounded analytical helper plus one
+        method-associated tool implementation
+      - no widening into `octanol`, `pepinfo`, or broader plotting-family
+        members was needed
+      - compared evidence now closes both analytical-table and typed
+        plot-contract outputs
+      - the governed release-truth surface remains green:
+        - shipped methods: `97`
+        - compared evidence: `97`
+        - executable evidence: `0`
+        - harvested legacy provenance present: `97`
+        - `full_compared_cohort: true`
+        - `release_truth_current: true`
+    - Decision:
+      - plotting-first remains valid
+      - the repository may proceed to the bounded `octanol` planning tier
+      - the retrieval fallback does not need to activate here
 
 96. If `hmoment` passes the post-ship reassessment, map the bounded `octanol`
     implementation tier explicitly before writing code for it.

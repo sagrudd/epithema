@@ -478,6 +478,56 @@ If any of these start conditions cease to hold before code changes begin, the
 repository should re-open planning rather than starting the first patch under a
 looser scope.
 
+#### Post-ship reassessment of the bounded `hmoment` slice
+
+After shipping `hmoment` and closing its compared-evidence follow-on, the
+repository should treat the first plotting slice as having passed its
+post-ship reassessment.
+
+That conclusion is explicit rather than inferred because the shipped slice
+stayed inside the boundaries set by the plotting-first program:
+
+- the analytical implementation remained method-associated and narrow:
+  - one bounded core helper for the deterministic hydrophobic-moment profile
+  - one method-specific tool implementation for the line-profile and typed
+    plot-contract emission
+- the governed shipped surface remained narrow:
+  - exactly one new shipped method: `hmoment`
+  - no widening into `octanol`, `pepinfo`, or broader plotting-family members
+- the typed contract seam remained narrow:
+  - single-series line contract only
+  - no renderer-coupled styling or layout policy added in Rust
+  - no broader plot-contract taxonomy introduced
+- the evidence path closed completely for the shipped method:
+  - committed analytical fixture
+  - committed canonical plot-contract fixture
+  - compared acceptance evidence for both table and contract outputs
+
+The release-truth surface also remained clean after shipping the method:
+
+- shipped methods: `97`
+- compared evidence: `97`
+- executable evidence: `0`
+- harvested legacy provenance present: `97`
+- `full_compared_cohort == true`
+- `harvest_coverage_complete == true`
+- `retained_backlog_closed == true`
+- `gapped_method_count == 0`
+- `weakest_evidence_family == null`
+- `release_truth_current == true`
+
+No concrete signal emerged that would justify pausing plotting in favor of the
+remote-retrieval fallback:
+
+- no contract sprawl appeared
+- no renderer-coupled pressure appeared
+- no release-truth exception was needed
+- no family-order ambiguity re-opened
+
+So the repository should treat plotting-first as still valid and may proceed to
+the bounded `octanol` planning tier without reopening the higher-level family
+selection question first.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
