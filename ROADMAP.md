@@ -1314,8 +1314,18 @@ implementation-program cycle. The near-term priorities are:
         plotting-framework work without stopping to reassess
 
 99. Implement the bounded analytical core for `octanol`.
-    - Keep this task limited to deterministic method-associated computation and
-      the smallest supporting types required to express the analytical result.
+    - Complete.
+    - Landed as a method-associated core module in `emboss-core`:
+      - deterministic sliding-window White-Wimley interface-minus-octanol
+        profile computation
+      - explicit bounded error types for non-protein input, invalid window,
+        invalid step, short input, and unsupported residues
+      - stable one-based window coordinates plus a single analytical series
+        field for the bounded v1 result
+    - Intentionally not included in this task:
+      - no plot-contract emission yet
+      - no service or CLI exposure yet
+      - no governed docs or validation artefacts yet
 
 100. Add the typed `octanol` plot-contract emission path.
     - Keep the contract single-series unless implementation proves that a

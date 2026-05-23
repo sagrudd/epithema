@@ -33,6 +33,7 @@ pub mod protein_digest;
 pub mod protein_hydropathy;
 pub mod protein_hydrophobic_moment;
 pub mod protein_isoelectric;
+pub mod protein_octanol;
 pub mod residue_properties;
 pub mod revseq;
 pub mod sequence;
@@ -94,6 +95,9 @@ pub use protein_hydrophobic_moment::{
 pub use protein_isoelectric::{
     ProteinIsoelectricError, ProteinIsoelectricEstimate, TitratableResidueCounts,
     estimate_protein_isoelectric_point,
+};
+pub use protein_octanol::{
+    OctanolWindow, ProteinOctanolError, ProteinOctanolProfile, protein_octanol_profile,
 };
 pub use residue_properties::{
     NucleotideBaseInfo, ProteinResidueProperty, nucleotide_base_info, nucleotide_base_infos,
