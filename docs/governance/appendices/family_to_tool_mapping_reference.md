@@ -145,6 +145,84 @@ This is still a planning decision only. It does **not** authorize silent
 surface widening, whole-family implementation claims, or bucket reassignment
 without a later explicit rework program.
 
+### Dedicated plotting rework sub-roadmap
+
+The first plotting rework program should stay tightly inside the already-proven
+Rust-to-R handoff seam. It should not begin by trying to absorb the entire
+historical plotting and visualization family.
+
+#### Bounded initial method subset
+
+Phase 1 should be limited to methods that can plausibly reuse the current
+typed-contract model without inventing a brand-new rendering architecture:
+
+- `hmoment` — protein-sequence analytical profile with a governed line-plot
+  handoff
+- `octanol` — alternate hydropathy-style protein profile with a governed
+  line-plot handoff
+- `pepinfo` — multi-series protein property profile rendered through a bounded
+  comparative line-plot contract
+
+These are the preferred first candidates because they sit closest to the
+already-governed `charge`, `pepwindow`, and `wordcount` seam:
+
+- single-record or bounded-record analytical inputs
+- explicit numerical series that Rust can compute deterministically
+- output shapes that can remain table-first with typed plot-contract payloads
+- no need for circular maps, trace visualization, feature-layout engines, or
+  unrestricted alignment pretty-print rendering
+
+Phase 1 should explicitly exclude the broader plotting family members that
+would require a materially wider contract taxonomy or a heavier rendering
+orchestration model, including:
+
+- dotplot-style methods such as `dotmatcher`, `dotpath`, `dottup`, and
+  `polydot`
+- layout/diagram methods such as `cirdna`, `lindna`, `pepnet`, and `pepwheel`
+- presentation-heavy formatted display methods such as `prettyplot`,
+  `showfeat`, `showpep`, and `showseq`
+- trace or specialized laboratory-plot methods such as `abiview` and `findkm`
+
+#### Plot-contract evidence model
+
+The plotting rework program should preserve the same evidence rules that now
+govern the shipped retained cohort:
+
+- each newly shipped method must emit a stable analytical table payload first
+- any plot payload must be a typed contract derived from that same analytical
+  run rather than a second independent computation path
+- each method must gain governed autodoc, generated validation metadata, and a
+  canonical checked-in plot-contract fixture
+- compared evidence should validate both the analytical table and the canonical
+  plot-contract JSON before a method is treated as complete
+
+#### R-rendering handoff constraints
+
+The program should preserve the existing cross-surface division of ownership:
+
+- Rust owns deterministic computation, table emission, and typed contract
+  production
+- `emboss-r` owns graphical rendering, presentation tuning, and any
+  user-facing figure ergonomics
+- Phase 1 should not widen the Rust surface into figure rendering, ad hoc image
+  generation, or renderer-specific layout policy
+- new contract types should only be introduced when at least one bounded method
+  requires them and the resulting shape remains reusable
+
+#### Release-risk framing
+
+The first plotting rework program should be judged as a narrow platform
+expansion, not as a promise to revive the full historical plotting family.
+
+- success for Phase 1 means proving that the existing seam scales beyond the
+  current governed trio without destabilizing release-truth reporting
+- failure conditions include contract sprawl, renderer-coupled Rust logic, or
+  attempts to absorb diagrammatic/layout-heavy methods before the narrow
+  analytical-profile path is stable
+- if those risks become dominant during detailed planning, the repository
+  should fall back to the already-recorded remote-retrieval alternative instead
+  of switching families informally
+
 ### Explicit no-change decisions
 
 This reassessment does **not** do any of the following:

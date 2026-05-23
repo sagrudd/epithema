@@ -775,12 +775,24 @@ next tier should therefore move from evidence creation to:
       materially.
 
 68. If plotting remains first, generate a dedicated plotting rework sub-roadmap before code changes begin.
-    - The sub-roadmap should define:
-      - bounded initial method subset
-      - plot-contract evidence model
-      - R-rendering handoff constraints
-      - release-risk framing
-    - Do not start broad plotting implementation before this exists.
+    - Complete.
+    - Dedicated plotting rework sub-roadmap is now recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Bounded Phase 1 method subset:
+      - `hmoment`
+      - `octanol`
+      - `pepinfo`
+    - Explicitly out of initial scope:
+      - dotplot-style methods
+      - diagram/layout methods
+      - pretty-display / presentation-heavy methods
+      - trace / specialized laboratory-plot methods
+    - Program guardrails now recorded:
+      - plot-contract evidence remains table-first and contract-validated
+      - Rust continues to own computation and typed contract emission only
+      - `emboss-r` continues to own rendering and presentation ergonomics
+      - broad plotting rollout should not begin until that bounded Phase 1
+        path is accepted as the first rework program
 
 69. If plotting is later blocked, generate the equivalent remote-retrieval rework sub-roadmap instead of switching informally.
     - Preserve the explicit fallback ordering already recorded in governance.
