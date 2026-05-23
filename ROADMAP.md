@@ -1091,6 +1091,15 @@ implementation-program cycle. The near-term priorities are:
     - No reordering or widening was needed.
 
 87. Reassess whether protein-property rework still remains the third candidate after the plotting implementation sequence is fixed.
+    - Reconfirmed in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Result:
+      - protein-property rework still remains the third candidate
+    - Reason:
+      - plotting now has the strongest implementation-readiness detail
+      - remote retrieval remains the clearest prepared fallback
+      - protein-property retains a credible substrate but still lacks the same
+        immediate start-boundary detail as the two higher-ranked programs
     - This remains a planning checkpoint, not a promotion.
 
 88. If plotting still remains first and `hmoment` is still the lead method, capture the exact start conditions for the first implementation patch.

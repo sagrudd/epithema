@@ -558,6 +558,33 @@ That ordering still holds for the same bounded reasons:
 This remains a planning check only. It does **not** promote protein-property
 rework, and it does **not** imply that plotting or retrieval are blocked.
 
+#### Reconfirmation after the plotting lead-method pass
+
+After fixing the plotting implementation order, confirming `hmoment` as the
+explicit lead method, and recording its method-level acceptance criteria,
+protein-property rework still remains the third candidate.
+
+That conclusion still holds because:
+
+- plotting now has the most operationally prepared first patch boundary:
+  - bounded Phase 1 order
+  - explicit lead method
+  - method-level start criteria for `hmoment`
+- remote retrieval still has the clearest prepared fallback if plotting needs
+  to pause
+- protein-property rework still has a credible analytical substrate, but it
+  still lacks the same immediate implementation-readiness detail now written
+  down for the two higher-ranked programs
+
+So the shortlist remains:
+
+1. plotting
+2. remote retrieval
+3. protein-property rework
+
+This is still a planning checkpoint only. It does not start protein-property
+work and does not weaken the plotting-first decision.
+
 ### Explicit no-change decisions
 
 This reassessment does **not** do any of the following:
