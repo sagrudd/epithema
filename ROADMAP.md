@@ -872,10 +872,25 @@ next tier should therefore move from evidence creation to:
         subset audited in Task `71`
 
 73. Reassess whether any remaining release-facing generated reports are redundant after post-closure cleanup.
-    - If two artefacts express the same truth with no distinct release value,
-      consider consolidating them.
-    - Do not remove reports that still carry unique governance or release-gate
-      meaning.
+    - Complete without removing any generated report.
+    - Reassessment outcome:
+      - no current release-facing generated artefact is redundant enough to
+        consolidate safely
+      - several reports now sit at steady-state `0` or `yes`, but each still
+        carries a distinct checked role:
+        - `cohort_validation`: per-method evidence and visible-gap truth
+        - `governance_alignment`: governance mapping and retained-vs-rework
+          reconciliation
+        - `cohort_health`: reprioritization and release-truth-drift signaling
+        - `comparison_coverage`: family-level compared-coverage summary
+        - `full_compared_cohort`: all-shipped-method compared-evidence gate
+        - `harvest_coverage`: harvested-provenance exceptions gate
+        - `retained_backlog_closure`: retained-backlog closure gate
+    - Resolution:
+      - keep the current generated report surface intact
+      - only revisit consolidation if one report's unique checked invariant is
+        later absorbed elsewhere rather than merely reaching a steady-state
+        satisfied condition
 
 74. If the first `Rework` program is approved, capture its acceptance criteria as governed roadmap truth before implementation starts.
     - The first post-retained implementation program should have explicit entry

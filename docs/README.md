@@ -156,6 +156,24 @@ whether the retained backlog is zero or nonzero:
   implemented Rust family, recommended next sweep, and blocker classification
 - or an explicit statement that the retained backlog is fully closed
 
+After the post-closure cleanup pass, these release-facing generated reports are
+still intentionally non-redundant:
+
+- `cohort_validation` remains the per-method evidence and visible-gap source
+  of truth
+- `governance_alignment` remains the governance-mapping and retained-vs-rework
+  reconciliation source of truth
+- `cohort_health` remains the reprioritization and release-truth-drift signal
+  surface
+- `comparison_coverage` remains the family-level compared-coverage summary
+- `full_compared_cohort` remains the all-shipped-method compared-evidence gate
+- `harvest_coverage` remains the harvested-provenance exceptions gate
+- `retained_backlog_closure` remains the retained-backlog closure gate
+
+They should not be consolidated unless one of those distinct release or
+governance checks truly disappears rather than merely reaching a steady-state
+`0` or `yes` result.
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 
