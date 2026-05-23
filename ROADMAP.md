@@ -1117,9 +1117,12 @@ implementation-program cycle. The near-term priorities are:
         compared evidence
 
 89. Add the next code-bearing rework task tier to this roadmap only after the plotting-first start conditions are explicit enough to prevent informal widening.
-    - The first implementation tier should be bounded enough that each task can
-      be closed honestly with governed docs, evidence, and release-truth
-      updates.
+    - Added the first bounded code-bearing plotting tier below.
+    - It is intentionally limited to `hmoment` and the smallest support needed
+      to ship a full governed slice without widening into `octanol` or
+      `pepinfo`.
+    - The tier is split so each task can close honestly with implementation,
+      docs, fixtures, evidence, and release-truth updates.
 
 90. Extend this roadmap again after Task `89`.
     - Continue to derive priorities from:
@@ -1137,3 +1140,52 @@ implementation-program cycle. The near-term priorities are:
       - scoped changes
       - commit-and-push completion
       - no unrelated code churn
+
+91. Implement the bounded analytical core for `hmoment`.
+    - Scope:
+      - method-associated Rust computation only
+      - deterministic hydrophobic-moment profile output
+      - no registry/service exposure yet unless strictly required for testing
+    - Constraints:
+      - protein input only
+      - single-series analytical profile only
+      - no renderer-coupled logic
+
+92. Add the typed `hmoment` plot-contract path and minimal narrow helper
+    support.
+    - Scope:
+      - typed single-series line-plot contract
+      - only the smallest shared support needed for profile-style plotting
+    - Constraints:
+      - no broad plotting framework
+      - no widening into `octanol` or `pepinfo`
+
+93. Expose `hmoment` through the governed shipped surface.
+    - Scope:
+      - registry/service wiring
+      - governed autodoc contract
+      - generated docs and validation metadata
+    - Constraints:
+      - keep changes method-associated
+      - do not start the next plotting method in the same task
+
+94. Add canonical `hmoment` fixtures and compared evidence.
+    - Scope:
+      - committed analytical-output fixture
+      - committed plot-contract fixture
+      - compared evidence validating both surfaces
+    - Constraints:
+      - no executable-only closeout
+      - no special-case release-truth exceptions
+
+95. Reassess the shipped `hmoment` slice before starting `octanol`.
+    - Confirm:
+      - the seam stayed narrow
+      - release-truth stayed clean
+      - no contract sprawl or renderer-coupled pressure emerged
+    - If that reassessment fails, pause plotting and reconsider the retrieval
+      fallback before starting the second plotting method.
+
+96. If `hmoment` passes the post-ship reassessment, map the bounded `octanol`
+    implementation tier explicitly before writing code for it.
+    - Preserve the same no-widening rule used for `hmoment`.
