@@ -368,10 +368,12 @@ fn dominant_weak_evidence_family(
         }
     }
 
-    grouped
+    let dominant = grouped
         .into_iter()
         .max_by(|left, right| left.1 .0.cmp(&right.1 .0).then_with(|| left.0.cmp(&right.0).reverse()))
-        .map(|(family, (weak_count, compared_count))| (family, weak_count, compared_count))
+        .map(|(family, (weak_count, compared_count))| (family, weak_count, compared_count));
+
+    dominant.and_then(|entry| (entry.1 > 0).then_some(entry))
 }
 
 fn assess_readiness_alignment(
@@ -454,8 +456,11 @@ mod tests {
         let report =
             derive_cohort_health_report(repo_root()).expect("cohort health report should derive");
         assert!(report.summary.total_method_count > 0);
-        assert!(!report.recommendations.is_empty());
         assert_eq!(report.summary.largest_retained_backlog_size, 0);
+        assert!(report.summary.weakest_evidence_family.is_none());
+        assert_eq!(report.summary.weak_evidence_method_count, 0);
+        assert!(report.signals.is_empty());
+        assert!(report.recommendations.is_empty());
     }
 
     #[test]
@@ -465,5 +470,7 @@ mod tests {
         let markdown = render_cohort_health_markdown(&report);
         assert!(markdown.contains("# Cohort Health Gate"));
         assert!(markdown.contains("## Ordered Recommendations"));
+        assert!(markdown.contains("Weakest evidence family: `none` (`0` methods below compared evidence)"));
+        assert!(markdown.contains("No reprioritization signals were generated."));
     }
 }

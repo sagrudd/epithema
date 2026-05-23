@@ -8,24 +8,10 @@
     "retained_backlog_count": 0,
     "largest_retained_backlog_family": null,
     "largest_retained_backlog_size": 0,
-    "weakest_evidence_family": "Core Retain — Alignment read-write and post-processing",
+    "weakest_evidence_family": null,
     "weak_evidence_method_count": 0,
     "release_truth_current": true
   },
-  "signals": [
-    {
-      "code": "weak_evidence_burden",
-      "severity": "notice",
-      "summary": "'Core Retain — Alignment read-write and post-processing' carries the largest weak-evidence burden",
-      "detail": "'Core Retain — Alignment read-write and post-processing' has 0 shipped methods below compared evidence and 13 already compared."
-    }
-  ],
-  "recommendations": [
-    {
-      "priority": 1,
-      "target": "Core Retain — Alignment read-write and post-processing",
-      "rationale": "This family has 0 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
-      "source_signal": "weak_evidence_burden"
-    }
-  ]
+  "signals": [],
+  "recommendations": []
 }

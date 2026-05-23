@@ -677,9 +677,9 @@ This next extension is derived from the current generated truth surface:
 - harvest coverage complete: `true`
 - retained backlog closed: `true`
 - `gapped_method_count`: `0`
-- weakest evidence family signal is now structurally noisy:
+- weakest evidence family signal is now cleanly closed:
   - `weak_evidence_method_count: 0`
-  - `weakest_evidence_family` still resolves to a shipped family label
+  - `weakest_evidence_family: null`
 
 The retained implementation and shipped-evidence backlog is now closed. The
 next tier should therefore move from evidence creation to:
@@ -700,12 +700,17 @@ next tier should therefore move from evidence creation to:
         notes without being misrepresented as top-line cohort gaps
 
 62. Re-evaluate `weakest_evidence_family` semantics when `weak_evidence_method_count == 0`.
-    - The current health report still names a family even though no shipped
-      family is below compared evidence.
-    - Decide whether the field should:
-      - become `null` when no weakness exists, or
-      - move to an explicitly tie-broken informational ranking
-    - Keep the output honest and machine-readable.
+    - Complete.
+    - Resolution:
+      - `weakest_evidence_family` now becomes `null` when no shipped family is
+        below compared evidence
+      - the cohort-health gate no longer fabricates a weak-evidence signal or
+        recommendation in the zero-burden state
+    - Current generated result:
+      - `weak_evidence_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `signals: 0`
+      - `recommendations: 0`
 
 63. Add a generated “summary semantics” cleanup pass if Task `61` or `62` reveals stale field meanings.
     - Prefer tightening existing report schemas over adding parallel one-off
@@ -799,8 +804,7 @@ This next extension remains derived from the current generated truth surface:
 - retained backlog closed: `true`
 - `gapped_method_count`: `0`
 - `weak_evidence_method_count`: `0`
-- `weakest_evidence_family` still resolves to a family label despite there
-  being no shipped evidence deficit
+- `weakest_evidence_family`: `null`
 
 The remaining work is no longer about shipping retained methods or deepening
 evidence. It is now about:
@@ -818,12 +822,11 @@ evidence. It is now about:
       in the per-tool visible gap surface rather than inflating the top-line
       cohort summary again.
 
-77. Resolve the meaning of `weakest_evidence_family` when `weak_evidence_method_count == 0`.
-    - Decide whether the field should become `null`, be renamed, or be split
-      into:
-      - weakest evidence family
-      - informational family ranking
-    - Preserve machine-readable stability while removing human ambiguity.
+77. Preserve the resolved zero-burden `weakest_evidence_family` semantics against future drift.
+    - When `weak_evidence_method_count == 0`, the field should remain `null`
+      and should not trigger weak-evidence signals or recommendations.
+    - If a future informational family ranking is needed, add it explicitly as
+      a separate concept rather than overloading the weakness field again.
 
 78. If Tasks `76` or `77` require schema changes, update the generated report families coherently rather than one field at a time.
     - Keep cohort, health, comparison, and release-facing docs aligned in one
