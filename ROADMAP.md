@@ -1048,8 +1048,18 @@ implementation-program cycle. The near-term priorities are:
       - `pepinfo` third because it is the first likely multi-series contract
         expansion
 
-83. Reassess whether `hmoment` is still the best first plotting method once the implementation sequence is written down.
-    - The answer should be explicit, not assumed from the current ordering.
+83. Reassessed whether `hmoment` is still the best first plotting method after
+    the implementation sequence was written down.
+    - Result:
+      - `hmoment` remains the explicit lead method
+    - Reason:
+      - it is still the narrowest single-series extension of the current
+        governed plotting seam
+      - `octanol` remains better as the second analytical-profile check
+      - `pepinfo` still remains the first likely multi-series contract
+        expansion and so should not lead Phase 1
+    - The explicit reassessment is now recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
 
 84. If `hmoment` remains first, capture its method-level acceptance criteria before code changes begin.
     - This should include:

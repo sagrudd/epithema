@@ -354,6 +354,29 @@ This sequence establishes implementation order only. It does not broaden the
 bounded plotting subset or imply that any later plotting-family members are
 already approved.
 
+#### Reassessment of the first method
+
+After writing the bounded implementation sequence down explicitly, `hmoment`
+still remains the best first plotting method.
+
+The reassessment does not change the Phase 1 order because:
+
+- `hmoment` is still the closest extension of the existing governed plotting
+  seam:
+  - protein-sequence input
+  - deterministic numerical profile
+  - single-series line-contract shape
+- `octanol` remains a better second method than a first one because it tests a
+  second analytical profile after the single-series path is proven, rather
+  than reducing the uncertainty of the first expansion step
+- `pepinfo` still remains the least suitable first method because it is the
+  first bounded candidate likely to force comparative or multi-series contract
+  decisions
+
+So the repository should treat `hmoment` as the explicit lead method for the
+first code-bearing plotting patch unless a later method-level acceptance review
+uncovers a concrete blocker that invalidates this reasoning.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
