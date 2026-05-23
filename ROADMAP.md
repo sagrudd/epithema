@@ -745,9 +745,18 @@ next tier should therefore move from evidence creation to:
     - This remained documentation truth maintenance, not marketing expansion.
 
 66. Add a generated “post-closure evidence invariants” report if summary drift remains hard to audit across multiple artefacts.
-    - Only add this if the current set of generated reports is no longer enough
-      to explain the post-closure state cleanly.
-    - Do not invent a new artefact if existing reports can be clarified instead.
+    - Complete without adding a new report.
+    - The current generated surface is already sufficient to express the
+      post-closure invariants cleanly:
+      - cohort validation
+      - cohort health
+      - comparison coverage
+      - full compared cohort
+      - harvest coverage
+      - retained backlog closure
+    - `release_metadata.py truth-check` now cross-validates those artefacts
+      directly, so an additional invariants report would currently duplicate
+      checked repository truth rather than clarify it.
 
 67. Decide whether the first actual `Rework` implementation program remains plotting after the summary-semantic cleanup.
     - Reconfirm the Task `57` decision against the cleaned generated surface.
