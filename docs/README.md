@@ -180,7 +180,7 @@ existing checked surfaces already covered every invariant without leaving a
 missing summary layer.
 
 The current branch is intentionally no longer in that fully closed state while
-the bounded `hmoment` shipped-surface step is in progress. The checked reports
+the bounded `octanol` shipped-surface step is in progress. The checked reports
 now make that interim state explicit without needing another dedicated artefact:
 
 - `cohort_validation` records `gapped_method_count: 1`
@@ -198,7 +198,7 @@ Two current nuances remain intentionally visible in the existing cohort report:
 
 - `charge` and `pepwindow` still surface non-blocking plotting notes in the
   visible-gap section
-- `hmoment` now surfaces the expected executable-only gap while its compared
+- `octanol` now surfaces the expected executable-only gap while its compared
   acceptance fixture and canonical plot-contract fixture are still pending
 
 Those notes do not indicate missing compared evidence or blocking release debt.
@@ -209,7 +209,7 @@ while the top-line cohort state still correctly reports:
 
 - `harvest_coverage_complete: yes`
 
-The `hmoment` gap is intentionally different. It is currently a blocking
+The `octanol` gap is intentionally different. It is currently a blocking
 evidence gap because the method is now shipped with executable validation but
 does not yet have compared acceptance evidence.
 

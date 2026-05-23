@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `97` methods, including:
+of `98` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -39,7 +39,7 @@ of `97` methods, including:
   distance-matrix, and consensus tools
 - the retained exception tool `complex`
 - the first governed plot-producing analytical tools `charge`, `pepwindow`,
-  and `hmoment`
+  `hmoment`, and `octanol`
 
 ### Governed retrieval
 
@@ -64,12 +64,12 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `97` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `97` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped method carries executable evidence
+- `98` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `0`
-- weakest evidence family: `none`
+- blocking cohort gaps: `1`
+- weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -78,12 +78,16 @@ change the release gate state above.
 - `hmoment` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
+- `octanol` now ships through the governed surface with harvested provenance
+  and executable validation while its canonical checked-in fixture and compared
+  acceptance evidence remain pending.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the shipped governed cohort is back in the zero-burden
-release-truth state.
+This means the shipped retained cohort remains fully closed and harvest
+coverage remains complete, but the shipped governed cohort is temporarily out
+of the zero-burden release-truth state until the bounded `octanol` evidence
+closure lands.
 
 ### First-class R story
 

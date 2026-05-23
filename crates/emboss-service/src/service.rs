@@ -58,8 +58,8 @@ use emboss_tools::pattern_tools::{
     wordfinder_help, wordmatch_help,
 };
 use emboss_tools::protein_plots::{
-    ChargeParams, HmomentParams, PepwindowParams, charge_help, hmoment_help, pepwindow_help,
-    run_charge, run_hmoment, run_pepwindow,
+    ChargeParams, HmomentParams, OctanolParams, PepwindowParams, charge_help, hmoment_help,
+    octanol_help, pepwindow_help, run_charge, run_hmoment, run_octanol, run_pepwindow,
 };
 use emboss_tools::restriction_tools::{
     RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
@@ -334,6 +334,7 @@ impl EmbossService {
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "hmoment" => self.invoke_hmoment(request, descriptor),
+            "octanol" => self.invoke_octanol(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
             "silent" => self.invoke_silent(request, descriptor),
@@ -5042,6 +5043,122 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_octanol(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, octanol_help()));
+        }
+
+        let (params, plot_contract_out) = parse_octanol_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_octanol(OctanolParams {
+            input,
+            window: params.window,
+            step: params.step,
+        })?;
+        let status_message = format!(
+            "computed White-Wimley interface-minus-octanol profile across {} windows",
+            outcome.profile.windows.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "interface_minus_octanol".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .windows
+                    .iter()
+                    .map(|window| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            window.window_start.to_string(),
+                            window.window_end.to_string(),
+                            window.window_length.to_string(),
+                            format!("{:.6}", window.interface_minus_octanol),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("White-Wimley interface-minus-octanol profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line(format!("Window: {}", outcome.profile.window))
+                .with_line(format!("Step: {}", outcome.profile.step))
+                .with_line("X axis: 1-based window start")
+                .with_line("Y axis: interface minus octanol")
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize octanol plot contract: {error}"),
+                )
+                .with_code("service.octanol.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write octanol plot contract to {}", path.display()),
+                )
+                .with_code("service.octanol.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("octanol plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("octanol-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Octanol plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_compseq(
         &self,
         request: InvocationRequest,
@@ -8640,6 +8757,85 @@ fn parse_hmoment_params(
     ))
 }
 
+fn parse_octanol_params(
+    arguments: &[String],
+) -> Result<(OctanolParams, Option<PathBuf>), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("octanol", octanol_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut window = 19usize;
+    let mut step = 1usize;
+    let mut plot_contract_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--window=") {
+            window = parse_positive_count("octanol", value, "--window")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --window")
+                    .with_code("service.tool.octanol.window_missing")
+            })?;
+            window = parse_positive_count("octanol", value, "--window")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--step=") {
+            step = parse_positive_count("octanol", value, "--step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --step")
+                    .with_code("service.tool.octanol.step_missing")
+            })?;
+            step = parse_positive_count("octanol", value, "--step")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.octanol.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown octanol argument '{argument}'"),
+        )
+        .with_code("service.tool.octanol.argument_unknown")
+        .with_detail(octanol_help()));
+    }
+
+    Ok((
+        OctanolParams {
+            input,
+            window,
+            step,
+        },
+        plot_contract_out,
+    ))
+}
+
 fn parse_pepwindow_params(
     arguments: &[String],
 ) -> Result<(PepwindowParams, Option<PathBuf>), ServiceError> {
@@ -10488,6 +10684,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "wordfinder" => wordfinder_help(),
         "charge" => charge_help(),
         "hmoment" => hmoment_help(),
+        "octanol" => octanol_help(),
         "pepwindow" => pepwindow_help(),
         "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
@@ -10722,6 +10919,11 @@ mod tests {
     fn hmoment_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/hmoment_protein.fasta")
+    }
+
+    fn octanol_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/octanol_protein.fasta")
     }
 
     fn pepwindow_fixture() -> std::path::PathBuf {
@@ -14757,6 +14959,90 @@ mod tests {
             .invoke(request)
             .expect_err("invalid angle should fail");
         assert_eq!(error.code(), Some("tools.hmoment.angle.invalid"));
+    }
+
+    #[test]
+    fn executes_octanol_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("octanol").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            octanol_fixture().display().to_string(),
+            "--window".to_owned(),
+            "3".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("octanol should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 4);
+                assert_eq!(table.rows[0][0], "octanol_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "3");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("octanol should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+    }
+
+    #[test]
+    fn octanol_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-octanol-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("octanol").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            octanol_fixture().display().to_string(),
+            "--window".to_owned(),
+            "3".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("octanol should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"octanol\""));
+        assert!(emitted.contains("\"method\": \"protein_octanol_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "octanol-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn octanol_rejects_invalid_window() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("octanol").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            octanol_fixture().display().to_string(),
+            "--window".to_owned(),
+            "0".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid window should fail");
+        assert_eq!(error.code(), Some("service.tool.octanol.--window_invalid"));
     }
 
     #[test]

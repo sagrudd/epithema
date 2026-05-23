@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "octanol-v1",
+  "tool": {
+    "name": "octanol",
+    "family": "protein_plots",
+    "summary": "Report a sliding-window White-Wimley interface-minus-octanol profile and emit a line-plot contract",
+    "legacy_names": [
+      "octanol"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`octanol` is the second shipped method in the bounded plotting rework program. The EMBOSS-RS v1 surface computes one deterministic sliding-window White-Wimley interface-minus-octanol profile for exactly one protein sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one protein sequence record. v1 requires supported amino-acid residues, treats `--window` and `--step` as positive residue counts, defaults to `--window 19` and `--step 1`, and rejects sequences shorter than the requested window."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable table with `sequence_id`, `window_start`, `window_end`, `window_length`, and `interface_minus_octanol`, plus a typed line-plot contract payload. The x axis uses 1-based window starts and the y axis reports the deterministic White-Wimley interface-minus-octanol value computed from the same governed analytical path."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `octanol` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `octanol` slice intentionally stays inside the existing single-series line-contract seam already proven by `charge`, `pepwindow`, and `hmoment`."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs octanol`. Validation currently covers executable evidence for stable analytical rows plus typed line-plot emission, while canonical checked-in contract fixtures and compared acceptance evidence remain pending."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record White-Wimley difference profile and does not add Rust-side rendering, multi-series plotting, or a broader plotting-family revival. Additional plotting methods should reuse the same contract-and-renderer split rather than widening the Rust plotting surface informally."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "octanol_fixture",
+      "label": "Protein fixture for governed octanol validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/octanol_protein.fasta"
+      },
+      "description": "Repository-managed protein fixture used for deterministic octanol validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "octanol_profile_example",
+      "title": "Compute a deterministic White-Wimley interface-minus-octanol profile",
+      "description": "Reports deterministic sliding-window White-Wimley difference rows from the committed protein fixture and emits a governed single-series line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "octanol_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "window",
+          "value": "3"
+        },
+        {
+          "name": "step",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "octanol_table",
+          "label": "White-Wimley interface-minus-octanol table",
+          "description": "Stable sliding-window White-Wimley difference rows derived from the governed analytical path."
+        },
+        {
+          "id": "octanol_plot",
+          "label": "White-Wimley line-plot contract",
+          "description": "The governed single-series line-plot contract emitted from the same deterministic analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS octanol application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/octanol.acd",
+        "invocation": "octanol -sequence octanol_protein.fasta -width 3 -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "octanol_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

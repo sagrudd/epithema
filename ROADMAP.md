@@ -1341,8 +1341,18 @@ implementation-program cycle. The near-term priorities are:
       - no canonical committed contract fixture or compared evidence yet
 
 101. Expose `octanol` through the governed shipped surface.
-    - Land registry/service wiring plus the governed autodoc contract and
-      generated docs/validation metadata in the same bounded patch family.
+    - Complete.
+    - Landed the governed shipped-surface exposure:
+      - tool descriptor and governed registry inclusion
+      - service routing, parameter parsing, result shaping, and plot-contract
+        file emission support
+      - CLI tool-path parsing coverage
+      - governed autodoc contract plus generated docs/validation/report
+        refresh
+    - This task intentionally stops at the executable-evidence interim:
+      - `octanol` is shipped and harvested
+      - canonical committed contract fixtures and compared evidence remain for
+        Task `102`
 
 102. Add canonical `octanol` fixtures and compared evidence.
     - Require committed analytical-output and plot-contract fixtures plus

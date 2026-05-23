@@ -77,6 +77,7 @@ tools/newseq
 tools/notseq
 tools/nthseq
 tools/nthseqset
+tools/octanol
 tools/oddcomp
 tools/palindrome
 tools/pasteseq
