@@ -1361,10 +1361,22 @@ implementation-program cycle. The near-term priorities are:
       surfaces, returning the shipped cohort to the full-compared state.
 
 103. Re-run the full release-truth surface after shipping `octanol`.
-    - Confirm:
-      - `release-generated-check` remains clean
-      - full-compared and harvest-complete gates remain green
-      - no special-case exceptions were introduced
+    - Complete.
+    - Confirmation:
+      - `PYTHON=.venv-docs/bin/python make release-generated-check` now passes
+        cleanly after the shipped `octanol` slice
+      - the full-compared and harvest-complete gates remained green throughout
+        the rerun
+      - no special-case exceptions or post-ship release-truth carve-outs were
+        introduced
+    - Current generated state remains:
+      - shipped methods: `98`
+      - compared evidence: `98`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `98`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`
 
 104. Reassess the shipped `octanol` slice before starting `pepinfo`.
     - Confirm:
