@@ -1297,8 +1297,21 @@ implementation-program cycle. The near-term priorities are:
 
 98. Capture the exact start conditions for the first `octanol`
     implementation patch.
-    - Do not begin `octanol` code changes without the same explicit boundary
-      now required for `hmoment`.
+    - Complete.
+    - Recorded explicitly in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - The start gate now requires:
+      - plotting-first ordering to remain intact
+      - `hmoment` to have already passed explicit post-ship reassessment
+      - the current zero-burden release-truth state to remain intact
+      - the patch to stay limited to `octanol` plus the smallest support
+        needed for deterministic computation, typed single-series contract
+        emission, and governed docs/validation plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - Constraints preserved:
+      - do not widen into `pepinfo`
+      - do not introduce broader plot-contract taxonomies or generalized
+        plotting-framework work without stopping to reassess
 
 99. Implement the bounded analytical core for `octanol`.
     - Keep this task limited to deterministic method-associated computation and
