@@ -1438,7 +1438,32 @@ implementation-program cycle. The near-term priorities are:
 
 106. Reassess whether protein-property rework still remains the third
     candidate after two shipped plotting slices exist.
-    - This remains a planning checkpoint, not a promotion.
+    - Complete.
+    - Reassessment result:
+      - protein-property rework still remains the third candidate
+      - no shortlist change is justified after two shipped plotting slices
+    - Basis:
+      - plotting now has two shipped bounded slices with no contract sprawl:
+        - `hmoment`
+        - `octanol`
+      - remote retrieval remains the clearest prepared fallback if plotting
+        later becomes noisy
+      - protein-property rework still has a credible analytical substrate, but
+        it still lacks the same immediate implementation-readiness detail now
+        recorded for the two higher-ranked programs
+      - the governed release-truth surface remained fully green:
+        - shipped methods: `98`
+        - compared evidence: `98`
+        - harvested legacy provenance present: `98`
+        - `full_compared_cohort: true`
+        - `harvest_coverage_complete: true`
+        - `release_truth_current: true`
+    - Shortlist remains:
+      1. plotting
+      2. remote retrieval
+      3. protein-property rework
+    - This remains a planning checkpoint only and does not promote
+      protein-property work.
 
 107. Add the next plotting or retrieval implementation tier to this roadmap
     only after the post-`octanol` reassessment is explicit enough to prevent

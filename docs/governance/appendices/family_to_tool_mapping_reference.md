@@ -906,6 +906,47 @@ So the shortlist remains:
 This is still a planning checkpoint only. It does not start protein-property
 work and does not weaken the plotting-first decision.
 
+#### Reconfirmation after the second shipped plotting slice
+
+After shipping both `hmoment` and `octanol`, closing their compared-evidence
+follow-ons, and confirming that the retrieval fallback remains ready but
+inactive, protein-property rework should still remain the third candidate in
+the shortlist.
+
+That conclusion remains explicit because the two higher-ranked programs are now
+still more implementation-ready in concrete terms:
+
+- plotting now has two shipped bounded slices:
+  - `hmoment`
+  - `octanol`
+- plotting still has the active bounded Phase 1 continuation path toward
+  `pepinfo` without having triggered contract sprawl or renderer-coupled
+  pressure
+- remote retrieval still remains the clearest prepared fallback because its
+  bounded Phase 1 subset, provider-aware seams, and deterministic evidence
+  model are already written down
+- protein-property rework still has a credible scientific substrate, but it
+  still lacks the same immediate start-boundary detail now recorded for the
+  two higher-ranked programs
+
+The fully green release-truth surface does not alter that ordering:
+
+- shipped methods: `98`
+- compared evidence: `98`
+- harvested legacy provenance present: `98`
+- `full_compared_cohort == true`
+- `harvest_coverage_complete == true`
+- `release_truth_current == true`
+
+So the shortlist should remain:
+
+1. plotting
+2. remote retrieval
+3. protein-property rework
+
+This remains a planning checkpoint only. It does not promote protein-property
+work, and it does not weaken the active plotting-first decision.
+
 ### Explicit no-change decisions
 
 This reassessment does **not** do any of the following:
