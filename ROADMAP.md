@@ -1164,12 +1164,18 @@ implementation-program cycle. The near-term priorities are:
 
 92. Add the typed `hmoment` plot-contract path and minimal narrow helper
     support.
-    - Scope:
-      - typed single-series line-plot contract
-      - only the smallest shared support needed for profile-style plotting
-    - Constraints:
+    - Landed in:
+      - `crates/emboss-tools/src/protein_plots/hmoment.rs`
+      - `crates/emboss-tools/src/protein_plots/mod.rs`
+      - `crates/emboss-tools/tests/fixtures/hmoment_protein.fasta`
+    - Result:
+      - typed single-series line-plot contract for the staged `hmoment` path
+      - minimal narrow support kept inside the method-associated module
+      - focused tests for profile execution, plot shape, and error mapping
+    - Constraints preserved:
       - no broad plotting framework
       - no widening into `octanol` or `pepinfo`
+      - no registry or service exposure yet
 
 93. Expose `hmoment` through the governed shipped surface.
     - Scope:

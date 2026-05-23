@@ -1,6 +1,7 @@
 //! Protein plot-producing tools.
 
 mod charge;
+mod hmoment;
 mod pepwindow;
 
 use crate::ToolDescriptor;
