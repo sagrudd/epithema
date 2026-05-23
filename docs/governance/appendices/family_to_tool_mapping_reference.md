@@ -223,6 +223,57 @@ expansion, not as a promise to revive the full historical plotting family.
   should fall back to the already-recorded remote-retrieval alternative instead
   of switching families informally
 
+#### Acceptance criteria for starting the program
+
+The plotting rework program should not be treated as started until all of the
+following are true:
+
+- the family remains the explicitly chosen first `Rework` implementation
+  program in this appendix and the roadmap
+- the bounded Phase 1 scope remains limited to `hmoment`, `octanol`, and
+  `pepinfo`
+- no newly proposed method requires renderer-owned layout or diagram logic to
+  move into Rust
+- the expected contract shapes can still be expressed as analytical table
+  output plus typed plot-contract payloads
+- the release-truth surface remains in the current zero-burden state:
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `gapped_method_count == 0`
+  - `weakest_evidence_family == null`
+
+If any of those conditions stop being true during pre-implementation planning,
+the repository should pause the plotting program rather than widening scope
+implicitly.
+
+#### Acceptance criteria for completing Phase 1
+
+The first plotting rework program should only be considered complete when all
+bounded Phase 1 members are shipped and the platform constraints remain intact.
+That means:
+
+- `hmoment`, `octanol`, and `pepinfo` are present in the governed shipped
+  registry
+- each method has governed autodoc, generated docs, and generated validation
+  metadata committed in the same repository-truth path as the existing shipped
+  cohort
+- each method emits:
+  - deterministic analytical table output
+  - deterministic typed plot-contract output from the same computation path
+- each method has committed canonical plot-contract fixtures and compared
+  evidence that validates both table and contract outputs
+- no Phase 1 method requires Rust-side rendering logic or renderer-coupled
+  layout policy
+- no additional plotting-family members are implied as “effectively started”
+  merely because the bounded Phase 1 slice shipped
+- the release-truth gates continue to pass without special-case exceptions for
+  the new plotting methods
+
+If the repository can ship fewer than all three bounded methods while still
+proving the seam is sound, that should be recorded as an explicit replanning
+decision, not silently treated as “Phase 1 complete”.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the

@@ -893,8 +893,24 @@ next tier should therefore move from evidence creation to:
         satisfied condition
 
 74. If the first `Rework` program is approved, capture its acceptance criteria as governed roadmap truth before implementation starts.
-    - The first post-retained implementation program should have explicit entry
-      and exit criteria, not just a family label.
+    - Complete.
+    - The plotting-first `Rework` program now has explicit governed acceptance
+      criteria recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Recorded entry criteria:
+      - plotting must remain the explicitly chosen first `Rework` program
+      - bounded Phase 1 scope must remain limited to `hmoment`, `octanol`, and
+        `pepinfo`
+      - the current zero-burden release-truth state must remain intact
+      - the work must stay within analytical-table plus typed plot-contract
+        boundaries without moving renderer/layout logic into Rust
+    - Recorded exit criteria:
+      - all three bounded Phase 1 methods must be shipped
+      - each must have governed docs, validation metadata, canonical
+        plot-contract fixtures, and compared evidence for both table and
+        contract outputs
+      - no silent broadening of the plotting family may be implied from Phase
+        1 completion alone
 
 75. Extend this roadmap again after Task `74`.
     - Continue to derive priorities from:
