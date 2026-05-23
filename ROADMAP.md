@@ -795,8 +795,24 @@ next tier should therefore move from evidence creation to:
         path is accepted as the first rework program
 
 69. If plotting is later blocked, generate the equivalent remote-retrieval rework sub-roadmap instead of switching informally.
-    - Preserve the explicit fallback ordering already recorded in governance.
-    - Require the same bounded scope and evidence framing as the plotting path.
+    - Complete.
+    - Dedicated remote-retrieval fallback sub-roadmap is now recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Bounded fallback Phase 1 method subset:
+      - `seqretsetall`
+      - `seqretsplit`
+      - `infoassembly`
+    - Explicitly out of initial scope:
+      - `assemblyget`
+      - `whichdb`
+      - `entret`
+      - broad provider-parity or multi-source search behavior
+    - Program guardrails now recorded:
+      - preserve the explicit fallback ordering after plotting
+      - keep provider seams mocked or managed for deterministic validation
+      - require compared evidence on normalized returned data or metadata
+      - do not widen into hidden live-network dependence or informal database
+        compatibility claims
 
 70. Reassess whether protein-property rework still remains the third candidate after the first-program sub-roadmap is drafted.
     - This should remain a planning check, not an implicit promotion.

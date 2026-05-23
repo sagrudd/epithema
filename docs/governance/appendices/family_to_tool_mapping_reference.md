@@ -223,6 +223,87 @@ expansion, not as a promise to revive the full historical plotting family.
   should fall back to the already-recorded remote-retrieval alternative instead
   of switching families informally
 
+### Dedicated remote-retrieval fallback sub-roadmap
+
+If plotting is later blocked, the remote-retrieval family should become the
+next bounded implementation program without reopening the broader family order.
+That fallback should stay inside the provider-aware seams already proven by the
+shipped `refseqget`, `runinfo`, and `runget` slice.
+
+#### Bounded initial method subset
+
+The retrieval fallback Phase 1 should focus on methods that extend the existing
+retrieval and normalization substrate without immediately forcing a broad
+provider-orchestration redesign:
+
+- `seqretsetall` — bounded many-set retrieval/write workflow built on the same
+  normalized sequence-return path as `seqret`
+- `seqretsplit` — deterministic split-output sequence return path built on the
+  same governed retrieval substrate
+- `infoassembly` — metadata-first assembly information path that can reuse the
+  existing provider-aware reporting model before full data acquisition is
+  widened
+
+These are the preferred fallback candidates because they are the closest
+extensions of the current governed retrieval slice:
+
+- they reuse sequence-return or metadata-reporting patterns that already exist
+- they can stay deterministic under mocked provider fixtures and managed local
+  assets
+- they avoid starting with the heaviest orchestration or “search every
+  configured source” redesign questions
+
+The fallback Phase 1 should explicitly exclude broader retrieval members that
+would demand a larger operational redesign at the start, including:
+
+- `assemblyget`, which would widen the acquisition/orchestration surface before
+  the metadata and return-path extensions are settled
+- `whichdb`, whose old “search all databases” model needs a deliberate modern
+  provider-discovery redesign rather than a compatibility-first port
+- `entret`, whose historical flatfile and remote entry semantics should not be
+  revived without a clear modern source model
+
+#### Evidence model
+
+The retrieval fallback program should preserve the same evidence discipline used
+for the current governed retrieval slice:
+
+- each new method must have a deterministic mocked-provider or managed-asset
+  validation path
+- compared evidence should validate normalized returned sequence or metadata
+  outputs rather than only request orchestration intent
+- governed autodoc, generated validation metadata, and committed expected
+  outputs remain required before a method is treated as complete
+- release-truth reporting should continue to describe provider seams honestly
+  rather than implying generic remote-provider parity
+
+#### Provider and orchestration constraints
+
+The fallback program should preserve the current operational boundaries:
+
+- Rust owns retrieval orchestration, normalization, and stable returned data
+  artifacts
+- provider integrations remain explicit seams with mocked or managed validation
+  inputs, not hidden live-network dependencies inside the core validation path
+- Phase 1 should not introduce best-effort provider fallback chains, silent
+  source switching, or implicit online test dependencies
+- modern retrieval scope should stay provider-aware and explicit rather than
+  reproducing the historical EMBOSS “configured database universe” abstraction
+
+#### Release-risk framing
+
+The remote-retrieval fallback should be treated as a narrow operational
+expansion, not as a claim of general archive and accession parity.
+
+- success for fallback Phase 1 means extending the existing governed retrieval
+  slice through a few well-bounded methods without destabilizing release-truth
+  reporting or offline validation
+- failure conditions include hidden network dependence, unclear provider
+  precedence, or unbounded compatibility pressure around historical database
+  behaviors
+- if those risks dominate the fallback planning pass, the repository should
+  stop and reassess rather than informally widening the retrieval family
+
 ### Explicit no-change decisions
 
 This reassessment does **not** do any of the following:
