@@ -752,6 +752,66 @@ plotting again” step. It should begin as this explicit bounded `pepinfo` tier,
 with the retrieval fallback still preserved as the next alternative if the seam
 widens too far.
 
+#### `pepinfo` method-level acceptance criteria
+
+Before code changes begin for the third bounded plotting method, `pepinfo`
+should have explicit method-level acceptance criteria recorded as follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded protein-sequence input only
+- Rust should compute the analytical `pepinfo` profile directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be recorded honestly as a bounded multi-property
+  protein profile rather than as a cosmetic extension of `hmoment` or
+  `octanol`
+- the primary output should remain a stable analytical table with one row per
+  emitted window and explicit property columns sufficient to reconstruct the
+  emitted plotted series
+- the analytical output should stay within the same table-first contract style
+  already used by the governed plotting seam, even if `pepinfo` needs more
+  than one numerical series
+
+##### Typed contract expectations
+
+- the same run should emit a deterministic typed plot contract derived from the
+  analytical table output
+- the contract may expand beyond the single-series line shape only if the
+  analytical needs of `pepinfo` make that necessary and explicit
+- any multi-series contract shape must still avoid renderer-coupled styling or
+  layout policy
+- Rust should own only:
+  - numerical series construction
+  - axis or domain metadata needed for faithful rendering
+  - stable contract serialization
+- `emboss-r` should remain responsible for presentation choices and figure
+  rendering
+
+##### Fixture and evidence expectations
+
+- the method must gain governed autodoc before it is treated as shipped
+- the method must gain generated docs and generated validation metadata in the
+  same governed path as the shipped cohort
+- canonical checked-in analytical and plot-contract fixtures must be committed
+- compared evidence must validate both:
+  - the analytical table output
+  - the canonical plot-contract JSON
+- the method should not be considered complete on executable-only evidence
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no silent widening into a generic plotting framework
+- no diagram, wheel, map, or presentation-heavy layout behavior
+- no inference that broader plotting-family members are already in scope merely
+  because `pepinfo` ships
+- no broader plot-contract taxonomy unless the distinct analytical needs of
+  `pepinfo` make that pressure concrete enough to stop and reassess
+
+If `pepinfo` cannot satisfy these criteria while remaining a bounded
+method-associated plotting method, the repository should pause and reassess
+before starting the next code-bearing plotting patch.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the

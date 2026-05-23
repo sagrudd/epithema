@@ -1534,3 +1534,20 @@ implementation-program cycle. The near-term priorities are:
       - `122`: extend this roadmap again after Task `120` or `121`, using the
         generated truth plus the observed `pepinfo` seam behavior rather than
         the pre-`pepinfo` assumptions
+
+109. Capture `pepinfo` method-level acceptance criteria.
+    - Complete.
+    - Governed `pepinfo` acceptance criteria are now recorded explicitly in the
+      plotting-governance appendix.
+    - The criteria preserve the same bounded program shape while making the
+      first likely multi-series pressure point explicit:
+      - bounded protein-sequence input only
+      - deterministic Rust-computed analytical output
+      - stable table-first analytical surface
+      - typed plot-contract output derived from the same computation path
+      - compared evidence required for both table and contract outputs
+    - The criteria also make the non-goals explicit:
+      - no Rust-side rendering
+      - no silent widening into a generic plotting framework
+      - no broader contract taxonomy unless `pepinfo` itself forces a real
+        reassessment
