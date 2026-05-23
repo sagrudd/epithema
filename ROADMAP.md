@@ -1025,9 +1025,14 @@ implementation-program cycle. The near-term priorities are:
       - no further generator normalization or ordering fix was required before
         rework planning
 
-81. Generate a dedicated implementation-readiness checklist for the plotting-first program if the current acceptance criteria still leave operational ambiguity.
-    - This should stay narrower than a full new report unless a genuinely new
-      checked truth surface is needed.
+81. Added a dedicated implementation-readiness checklist for the plotting-first
+    program.
+    - The existing acceptance criteria were sufficient on scope but still left
+      operational ambiguity before method-order sequencing.
+    - The checklist is now recorded in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - No new generated report was needed because this is governance/planning
+      clarification rather than a new checked truth surface.
 
 82. Translate the plotting Phase 1 acceptance criteria into an implementation sequence.
     - Break the bounded method slice into an execution order for:

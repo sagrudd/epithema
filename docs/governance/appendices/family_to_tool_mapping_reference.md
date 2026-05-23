@@ -274,6 +274,43 @@ If the repository can ship fewer than all three bounded methods while still
 proving the seam is sound, that should be recorded as an explicit replanning
 decision, not silently treated as “Phase 1 complete”.
 
+#### Implementation-readiness checklist
+
+Before the repository translates the plotting Phase 1 slice into a concrete
+implementation sequence, the following checklist should be satisfied
+explicitly:
+
+- the plotting family is still the chosen first `Rework` implementation
+  program in both this appendix and the roadmap
+- the bounded Phase 1 set is still exactly:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- the release-truth gates are still green in the current zero-burden state:
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `gapped_method_count == 0`
+  - `weakest_evidence_family == null`
+- the current governed plotting seam remains intact and compared:
+  - `charge`
+  - `pepwindow`
+  - `wordcount`
+- no proposed Phase 1 method needs:
+  - Rust-side rendering logic
+  - renderer-coupled layout policy
+  - a diagrammatic or presentation-heavy contract taxonomy
+- each Phase 1 method can still be described as:
+  - deterministic analytical table output first
+  - typed plot-contract output from that same computation path
+  - governed autodoc plus canonical contract fixtures plus compared evidence
+- the retrieval fallback remains documented and operational as the next
+  alternative if this checklist stops holding during sequencing
+
+If any item in this checklist cannot be affirmed directly, the repository
+should pause before beginning method-order sequencing and resolve the ambiguity
+explicitly rather than letting the plotting program expand informally.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
