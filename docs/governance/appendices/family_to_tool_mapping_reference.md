@@ -560,6 +560,65 @@ already proven by `hmoment`:
 So the next code-bearing plotting work should not begin as a generic “continue
 plotting” step. It should begin as this explicit bounded `octanol` tier.
 
+#### `octanol` method-level acceptance criteria
+
+Before code changes begin for the second plotting rework method, `octanol`
+should have explicit method-level acceptance criteria recorded as follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded protein-sequence input only
+- Rust should compute a deterministic `octanol` profile directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be recorded honestly as a distinct hydropathy-
+  style profile rather than being treated as a cosmetic variant of
+  `pepwindow`
+- the primary output should be a stable analytical table with one row per
+  emitted profile window
+- each row should remain sufficient to reconstruct the plotted line without a
+  second computation path
+- the analytical output should stay within the same table-first contract style
+  already used by `charge`, `pepwindow`, and `hmoment`
+
+##### Typed contract expectations
+
+- the same run should emit a deterministic typed line-plot contract derived
+  from the analytical table output
+- the contract should stay single-series unless a concrete analytical need
+  proves otherwise during implementation
+- the contract shape should avoid renderer-coupled styling or layout policy
+- Rust should own only:
+  - numerical series construction
+  - axis/domain metadata needed for faithful rendering
+  - stable contract serialization
+- `emboss-r` should remain responsible for presentation choices and figure
+  rendering
+
+##### Fixture and evidence expectations
+
+- the method must gain governed autodoc before it is treated as shipped
+- the method must gain generated docs and generated validation metadata in the
+  same governed path as the shipped cohort
+- a canonical checked-in plot-contract fixture must be committed
+- compared evidence must validate both:
+  - the analytical table output
+  - the canonical plot-contract JSON
+- the method should not be considered complete on executable-only evidence
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no implicit widening into multi-series comparative plotting
+- no diagram, wheel, map, or presentation-heavy layout behavior
+- no inference that `pepinfo` is already in scope merely because `octanol`
+  shipped
+- no broader plot-contract taxonomy unless the distinct analytical needs of
+  `octanol` make that pressure concrete enough to stop and reassess
+
+If `octanol` cannot satisfy these criteria while remaining a narrow
+single-series profile method, the repository should pause and reassess before
+starting the second plotting implementation patch.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the

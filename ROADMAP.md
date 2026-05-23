@@ -1278,8 +1278,22 @@ implementation-program cycle. The near-term priorities are:
 
 97. Capture `octanol` method-level acceptance criteria before code changes
     begin.
-    - Preserve the same method-associated, single-series, no-widening rules
-      used for `hmoment`, but record the distinct analytical model honestly.
+    - Complete.
+    - Recorded explicitly in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Captured criteria now require:
+      - bounded protein-sequence input only
+      - deterministic Rust-computed `octanol` analytical profile
+      - stable table-first analytical output
+      - deterministic single-series line-plot contract from the same
+        computation path
+      - governed autodoc, generated docs/validation metadata, canonical
+        fixtures, and compared evidence for both table and contract outputs
+    - Constraints preserved:
+      - same method-associated, single-series, no-widening rules used for
+        `hmoment`
+      - the distinct `octanol` analytical model is recorded honestly rather
+        than treated as a cosmetic `pepwindow` variant
 
 98. Capture the exact start conditions for the first `octanol`
     implementation patch.
