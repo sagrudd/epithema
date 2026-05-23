@@ -71,6 +71,11 @@ Current evidence posture at the time of this draft:
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
+This means the shipped retained cohort is now fully closed at the current
+governed evidence tier. The remaining limitations in this draft are therefore
+about deliberate scope boundaries and future rework programs, not about
+unfinished shipped-method evidence debt.
+
 ### First-class R story
 
 Plot rendering remains R-owned through the sister `emboss-r` package. The Rust
@@ -87,11 +92,12 @@ This release does not claim:
 
 - full historical EMBOSS catalog parity
 - full public R exposure of every shipped CLI method
-- full harvested legacy-example coverage across the shipped cohort
-- full expected-output comparison coverage across the shipped cohort
 - protected-data retrieval or broad raw-read orchestration
 - broad multi-platform native packaging beyond the Linux-first release path
 - CRAN or Bioconductor publication for the R package
+- broad plotting-family rollout beyond the governed `charge`, `pepwindow`, and
+  `wordcount` analytical producers
+- broad provider parity beyond the governed shipped retrieval/archive slice
 
 ## Compatibility Statement
 

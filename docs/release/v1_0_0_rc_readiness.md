@@ -8,9 +8,9 @@ Status date: 2026-05-18
 limitations**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
-path, or release automation. The remaining gaps are evidence depth and manual
-release cutover steps, not missing method exposure, retained-backlog closure,
-or broken packaging mechanics.
+path, or release automation. The remaining limitations are release cutover and
+intentional scope boundaries, not evidence-depth debt, retained-backlog
+closure, or broken packaging mechanics.
 
 ## Audited Shipped Cohort
 
@@ -148,18 +148,18 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- Evidence depth remains uneven across the shipped cohort.
-  - `96` methods currently show `compared_evidence`
-  - `0` methods currently show `executable_evidence`
-  - `0` methods show `declared_evidence`
-  - `0` methods remain at `documented_only`
-- `96` shipped methods now record harvested legacy provenance, and all shipped methods now reach compared evidence.
-- The retained governance backlog is now `0`, so the dominant remaining work
-  is evidence deepening rather than method implementation.
+- The shipped cohort is fully compared and fully harvested, but that does not
+  imply whole-catalog EMBOSS parity or unconstrained future expansion.
+- The retained governance backlog is `0`, so the dominant remaining work is
+  post-closure release/process discipline and deliberate `Rework` planning
+  rather than retained-method implementation.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`, and
   governed `wordcount` plot contracts as the current Rust-side producers.
 - The R surface is real and first-class, but it remains a curated subset
   rather than exhaustive parity across every shipped Rust method.
+- Remote retrieval remains governed and compared for the shipped slice, but the
+  broader acquisition/orchestration surface is still a future rework program
+  rather than a claim of general provider parity.
 
 ### Not Ready / Blocked
 
@@ -175,9 +175,9 @@ Current generated release-truth markers:
 
 ### Validation and evidence presence
 
-- Status: `ready with known limitations`
-- Basis: every shipped method has a validation stub and appears in the cohort
-  report, and every shipped method now reaches compared evidence.
+- Status: `complete`
+- Basis: every shipped method has a validation stub, appears in the cohort
+  report, reaches compared evidence, and records harvested legacy provenance.
 
 ### Cohort-level acceptance reporting
 
@@ -201,8 +201,8 @@ Current generated release-truth markers:
 - Basis: the standing reprioritization gate is generated at:
   - `docs/generated/validation/cohort_health.json`
   - `docs/generated/cohort_health.md`
-  and now flags dominant backlog, weak-evidence burden, and release-truth lag
-  explicitly before future roadmap reordering.
+  and now reports a fully closed zero-burden state without fabricating weak
+  family recommendations when no shipped evidence deficit remains.
 
 ### Family comparison coverage
 

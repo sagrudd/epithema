@@ -735,10 +735,14 @@ next tier should therefore move from evidence creation to:
       hidden policy.
 
 65. Reassess the post-`1.0.0` release narrative now that full compared and full harvest are achieved.
-    - Refresh the draft release notes and RC readiness framing so they describe
-      the current evidence posture directly rather than as a near-term
-      milestone.
-    - Keep this as documentation truth maintenance, not marketing expansion.
+    - Complete.
+    - The release-facing narrative now describes the current state directly:
+      - shipped-method evidence debt is closed for the governed cohort
+      - remaining limitations are scope boundaries, release cutover, and future
+        `Rework` programs rather than missing compared/harvested evidence
+      - the cohort-health gate is described as zero-burden rather than as an
+        active weak-evidence reprioritization surface
+    - This remained documentation truth maintenance, not marketing expansion.
 
 66. Add a generated “post-closure evidence invariants” report if summary drift remains hard to audit across multiple artefacts.
     - Only add this if the current set of generated reports is no longer enough
