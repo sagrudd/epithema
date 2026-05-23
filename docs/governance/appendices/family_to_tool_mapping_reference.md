@@ -667,6 +667,56 @@ If any of these start conditions cease to hold before code changes begin, the
 repository should re-open planning rather than starting the second plotting
 patch under a looser scope.
 
+#### Post-ship reassessment of the bounded `octanol` slice
+
+After shipping `octanol`, closing its compared-evidence follow-on, and rerunning
+the full release-truth surface, the repository should treat the second plotting
+slice as having passed its post-ship reassessment.
+
+That conclusion is explicit rather than inferred because the shipped slice
+stayed inside the same narrow boundaries already proven by `hmoment`:
+
+- the analytical implementation remained method-associated and narrow:
+  - one bounded core helper for the deterministic `octanol` profile
+  - one method-specific tool implementation for the analytical table and typed
+    line-contract emission
+- the governed shipped surface remained narrow:
+  - exactly one additional shipped method: `octanol`
+  - no widening into `pepinfo` or other plotting-family members
+- the typed contract seam remained narrow:
+  - single-series line contract only
+  - no renderer-coupled styling or layout policy added in Rust
+  - no broader plot-contract taxonomy introduced
+- the evidence path closed completely for the shipped method:
+  - committed analytical fixture
+  - committed canonical plot-contract fixture
+  - compared acceptance evidence for both table and contract outputs
+
+The release-truth surface also remained clean after shipping the method:
+
+- shipped methods: `98`
+- compared evidence: `98`
+- executable evidence: `0`
+- harvested legacy provenance present: `98`
+- `full_compared_cohort == true`
+- `harvest_coverage_complete == true`
+- `retained_backlog_closed == true`
+- `gapped_method_count == 0`
+- `weakest_evidence_family == null`
+- `release_truth_current == true`
+
+No concrete signal emerged that would justify pausing plotting in favor of the
+remote-retrieval fallback:
+
+- no contract sprawl appeared
+- no renderer-coupled pressure appeared
+- no plotting-framework pressure appeared
+- no release-truth exception was needed
+
+So the repository should treat plotting-first as still valid after the second
+shipped plotting slice and may proceed to the bounded `pepinfo` planning gate
+without reopening the higher-level family selection question first.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the

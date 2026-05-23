@@ -1379,12 +1379,30 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 104. Reassess the shipped `octanol` slice before starting `pepinfo`.
-    - Confirm:
-      - the seam stayed narrow
+    - Complete.
+    - Reassessment result:
+      - the shipped `octanol` seam stayed narrow
       - no renderer-coupled pressure emerged
       - no broad plotting-framework pressure emerged
-    - If the reassessment fails, pause plotting and reconsider the retrieval
-      fallback before mapping `pepinfo`.
+      - no retrieval-fallback activation is justified at this boundary
+    - Basis:
+      - `octanol` shipped as one bounded analytical helper plus one
+        method-associated plotting tool path
+      - the contract seam stayed single-series and table-derived
+      - the evidence path closed fully for both analytical and contract
+        outputs
+      - the governed release-truth surface remained green:
+        - shipped methods: `98`
+        - compared evidence: `98`
+        - executable evidence: `0`
+        - harvested legacy provenance present: `98`
+        - `full_compared_cohort: true`
+        - `harvest_coverage_complete: true`
+        - `release_truth_current: true`
+    - Consequence:
+      - plotting-first remains valid
+      - the repository may proceed to the bounded `pepinfo` planning gate
+        without reopening higher-level family selection yet
 
 105. Reconfirm the remote-retrieval fallback again after the second shipped
     plotting method exists.
