@@ -1551,3 +1551,27 @@ implementation-program cycle. The near-term priorities are:
       - no silent widening into a generic plotting framework
       - no broader contract taxonomy unless `pepinfo` itself forces a real
         reassessment
+
+110. Capture exact start conditions for the first `pepinfo` implementation patch.
+    - Complete.
+    - Governed `pepinfo` patch start conditions are now recorded explicitly in
+      the plotting-governance appendix.
+    - The start gate now requires:
+      - the current shortlist to remain intact:
+        1. plotting
+        2. remote retrieval
+        3. protein-property rework
+      - the bounded plotting order to remain intact:
+        1. `hmoment`
+        2. `octanol`
+        3. `pepinfo`
+      - the current zero-burden release-truth state to remain intact
+      - the patch to stay limited to `pepinfo` plus the smallest support
+        needed for deterministic analytical computation, typed contract
+        emission, and governed docs/validation plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no Rust-side rendering
+      - no silent widening into a generic plotting framework
+      - no broader contract taxonomy unless `pepinfo` itself forces a real
+        reassessment

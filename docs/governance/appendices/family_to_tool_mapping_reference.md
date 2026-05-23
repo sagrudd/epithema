@@ -812,6 +812,54 @@ If `pepinfo` cannot satisfy these criteria while remaining a bounded
 method-associated plotting method, the repository should pause and reassess
 before starting the next code-bearing plotting patch.
 
+#### Exact start conditions for the first `pepinfo` implementation patch
+
+The first code-bearing `pepinfo` patch should not begin until all of the
+following are treated as explicit start conditions:
+
+- the active family decision still remains:
+  - plotting first
+  - remote retrieval second
+  - protein-property rework third
+- the bounded plotting Phase 1 order still remains:
+  1. `hmoment`
+  2. `octanol`
+  3. `pepinfo`
+- both shipped plotting slices have already passed explicit post-ship
+  reassessment without reopening family-selection ambiguity:
+  - `hmoment`
+  - `octanol`
+- the release-truth surface still remains in the current zero-burden state:
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `gapped_method_count == 0`
+  - `weakest_evidence_family == null`
+  - `release_truth_current == true`
+- the patch scope remains limited to `pepinfo` and the smallest shared support
+  needed for:
+  - deterministic analytical computation
+  - typed plot-contract emission
+  - governed docs and validation plumbing
+- the patch does not widen into:
+  - broader plotting-family members beyond `pepinfo`
+  - Rust-side rendering behavior
+  - a generalized plotting framework
+  - broader plot-contract taxonomies unless `pepinfo` itself makes that
+    pressure concrete enough to stop and reassess
+- the patch is expected to land with all method-level governed surfaces, not
+  as a half-start:
+  - method-associated Rust implementation
+  - registry and service exposure
+  - governed autodoc contract
+  - generated docs and validation metadata
+  - canonical analytical and plot-contract fixtures
+  - compared evidence for both table and contract outputs
+
+If any of these start conditions cease to hold before code changes begin, the
+repository should re-open planning rather than starting the third plotting
+patch under a looser scope.
+
 ### Dedicated remote-retrieval fallback sub-roadmap
 
 If plotting is later blocked, the remote-retrieval family should become the
