@@ -211,7 +211,7 @@ pub struct CohortValidationSummary {
     pub executable_evidence_count: usize,
     /// Methods with compared validation.
     pub compared_evidence_count: usize,
-    /// Methods with one or more unresolved gaps.
+    /// Methods with one or more blocking unresolved cohort gaps.
     pub gapped_method_count: usize,
 }
 
@@ -336,13 +336,21 @@ impl CohortValidationSummary {
                 CohortEvidenceLevel::ExecutableEvidence => summary.executable_evidence_count += 1,
                 CohortEvidenceLevel::ComparedEvidence => summary.compared_evidence_count += 1,
             }
-            if !method.unresolved_gaps.is_empty() {
+            if method
+                .unresolved_gaps
+                .iter()
+                .any(|gap| is_blocking_cohort_gap(gap.code))
+            {
                 summary.gapped_method_count += 1;
             }
         }
 
         summary
     }
+}
+
+fn is_blocking_cohort_gap(code: CohortGapCode) -> bool {
+    !matches!(code, CohortGapCode::ValidationReportGap)
 }
 
 /// Derives the shipped cohort validation report from the governed registry and
@@ -425,7 +433,7 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
     );
     rendered.push_str("## Summary\n\n");
     rendered.push_str(&format!(
-        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Documented-only methods: `{}`\n- Methods with declared evidence only: `{}`\n- Methods at harvested-evidence maturity: `{}`\n- Methods with harvested legacy provenance recorded: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with visible gaps: `{}`\n\n",
+        "- Registry source: `{}`\n- Methods in cohort: `{}`\n- Documentation-complete methods: `{}`\n- Methods with validation stubs: `{}`\n- Documented-only methods: `{}`\n- Methods with declared evidence only: `{}`\n- Methods at harvested-evidence maturity: `{}`\n- Methods with harvested legacy provenance recorded: `{}`\n- Methods with executable validation: `{}`\n- Methods with compared evidence: `{}`\n- Methods with blocking cohort gaps: `{}`\n\n",
         report.registry_source,
         report.summary.total_method_count,
         report.summary.documentation_complete_count,
@@ -462,6 +470,9 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
         ));
     }
     rendered.push_str("\n## Visible Gaps\n\n");
+    rendered.push_str(
+        "Visible gaps may include non-blocking validation-report notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above.\n\n",
+    );
 
     let grouped = report
         .methods
@@ -884,6 +895,7 @@ mod tests {
     fn shipped_cohort_report_surfaces_visible_gaps() {
         let report = derive_shipped_cohort_validation_report(repo_root())
             .expect("cohort report should derive");
+        assert_eq!(report.summary.gapped_method_count, 0);
         let gap_map = report
             .methods
             .iter()

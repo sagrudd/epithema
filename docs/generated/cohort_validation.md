@@ -14,7 +14,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with harvested legacy provenance recorded: `96`
 - Methods with executable validation: `0`
 - Methods with compared evidence: `96`
-- Methods with visible gaps: `2`
+- Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
 
@@ -126,6 +126,8 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `shuffleseq` | `sequence_transform` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 
 ## Visible Gaps
+
+Visible gaps may include non-blocking validation-report notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above.
 
 - `charge`: `validation_report_gap`
 - `pepwindow`: `validation_report_gap`

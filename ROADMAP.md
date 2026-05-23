@@ -676,7 +676,7 @@ This next extension is derived from the current generated truth surface:
 - full compared cohort: `true`
 - harvest coverage complete: `true`
 - retained backlog closed: `true`
-- `gapped_method_count`: `2`
+- `gapped_method_count`: `0`
 - weakest evidence family signal is now structurally noisy:
   - `weak_evidence_method_count: 0`
   - `weakest_evidence_family` still resolves to a shipped family label
@@ -689,13 +689,15 @@ next tier should therefore move from evidence creation to:
 - disciplined preparation for the first actual `Rework` implementation program
 
 61. Re-evaluate `gapped_method_count` semantics now that the shipped cohort is fully compared and fully harvested.
-    - The current cohort summary still reports `gapped_method_count: 2`.
-    - Determine whether that field now represents:
-      - residual governance-category gaps
-      - summary-model drift
-      - or a category that should be renamed or split
-    - Do not leave the top-line cohort summary numerically misleading once the
-      evidence backlog is fully closed.
+    - Complete.
+    - Resolution:
+      - `gapped_method_count` now counts only blocking cohort gaps
+      - non-blocking `validation_report_gap` notes remain visible per tool but
+        no longer inflate the top-line summary
+    - Current generated result:
+      - `gapped_method_count: 0`
+      - `charge` and `pepwindow` still surface visible non-blocking plotting
+        notes without being misrepresented as top-line cohort gaps
 
 62. Re-evaluate `weakest_evidence_family` semantics when `weak_evidence_method_count == 0`.
     - The current health report still names a family even though no shipped
@@ -795,7 +797,7 @@ This next extension remains derived from the current generated truth surface:
 - full compared cohort: `true`
 - harvest coverage complete: `true`
 - retained backlog closed: `true`
-- `gapped_method_count`: `2`
+- `gapped_method_count`: `0`
 - `weak_evidence_method_count`: `0`
 - `weakest_evidence_family` still resolves to a family label despite there
   being no shipped evidence deficit
@@ -809,13 +811,12 @@ evidence. It is now about:
 - preparing the first actual `Rework` implementation program without starting
   it prematurely
 
-76. Resolve the meaning of `gapped_method_count` in the shipped cohort summary.
-    - Determine whether the current value of `2` is:
-      - a legitimate residual governance category
-      - a projection artifact
-      - or a field whose semantics no longer match post-closure reality
-    - Prefer a generated-schema fix over prose explanation if the field is no
-      longer self-explanatory.
+76. Preserve the resolved `gapped_method_count` semantics against future drift.
+    - The field now represents blocking cohort gaps only and currently reports
+      `0`.
+    - If future non-blocking validation-report notes reappear, they should stay
+      in the per-tool visible gap surface rather than inflating the top-line
+      cohort summary again.
 
 77. Resolve the meaning of `weakest_evidence_family` when `weak_evidence_method_count == 0`.
     - Decide whether the field should become `null`, be renamed, or be split
