@@ -1328,8 +1328,17 @@ implementation-program cycle. The near-term priorities are:
       - no governed docs or validation artefacts yet
 
 100. Add the typed `octanol` plot-contract emission path.
-    - Keep the contract single-series unless implementation proves that a
-      broader shape is analytically required.
+    - Complete.
+    - Landed as a staged private `octanol` tool path in `emboss-tools`:
+      - typed single-series line-plot contract emitted from the same bounded
+        White-Wimley analytical computation path
+      - focused staged tests for one-record execution, invalid record count,
+        validation-code mapping, and plot-shape invariants
+      - one focused protein fixture for the staged path
+    - Constraints preserved:
+      - no governed shipped-surface exposure yet
+      - no autodoc or generated validation/docs yet
+      - no canonical committed contract fixture or compared evidence yet
 
 101. Expose `octanol` through the governed shipped surface.
     - Land registry/service wiring plus the governed autodoc contract and
