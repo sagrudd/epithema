@@ -913,7 +913,11 @@ next tier should therefore move from evidence creation to:
         1 completion alone
 
 75. Extend this roadmap again after Task `74`.
-    - Continue to derive priorities from:
+    - Complete.
+    - This rollover now replaces the stale placeholder next-tier block with a
+      fresh plan derived from the current zero-burden generated truth and the
+      now-explicit plotting-program acceptance criteria.
+    - The updated extension remains grounded in:
       - cohort validation
       - governance alignment
       - cohort health
@@ -921,7 +925,7 @@ next tier should therefore move from evidence creation to:
       - retained backlog closure
       - full compared cohort
       - harvest coverage
-      - any new post-closure summary reports
+      - plotting-first rework governance
     - Preserve the same repository rules:
       - honest documentation
       - scoped changes
@@ -930,7 +934,7 @@ next tier should therefore move from evidence creation to:
 
 ## Next Tier Task Map
 
-This next extension remains derived from the current generated truth surface:
+This next extension is derived from the current generated truth surface:
 
 - shipped methods: `96`
 - compared evidence: `96`
@@ -944,90 +948,79 @@ This next extension remains derived from the current generated truth surface:
 - `weak_evidence_method_count`: `0`
 - `weakest_evidence_family`: `null`
 
-The remaining work is no longer about shipping retained methods or deepening
-evidence. It is now about:
-- making the generated summaries semantically crisp in the post-closure state
-- eliminating lingering release-generation folklore
-- ensuring the release-truth surface is as deterministic as the code/evidence
-  surface
-- preparing the first actual `Rework` implementation program without starting
-  it prematurely
+The remaining work is now centered on disciplined transition from a fully
+closed retained/evidence cohort into the first actual `Rework`
+implementation-program cycle. The near-term priorities are:
+- preserving the current zero-burden release-truth state
+- turning the plotting-first governance choice into an implementation-ready
+  operating plan
+- keeping the retrieval fallback equally explicit so the repository can switch
+  cleanly if plotting scope breaks down
+- avoiding silent scope creep while the first rework program is being prepared
 
-76. Preserve the resolved `gapped_method_count` semantics against future drift.
-    - The field now represents blocking cohort gaps only and currently reports
-      `0`.
-    - If future non-blocking validation-report notes reappear, they should stay
-      in the per-tool visible gap surface rather than inflating the top-line
-      cohort summary again.
+76. Add a generated zero-burden release-state report if the existing summary set still feels too distributed during plotting-program prep.
+    - Only add a new artefact if it consolidates post-closure release truth
+      without duplicating the current checked reports.
+    - If the current report set remains sufficient, close this honestly
+      without adding a new surface.
 
-77. Preserve the resolved zero-burden `weakest_evidence_family` semantics against future drift.
-    - When `weak_evidence_method_count == 0`, the field should remain `null`
-      and should not trigger weak-evidence signals or recommendations.
-    - If a future informational family ranking is needed, add it explicitly as
-      a separate concept rather than overloading the weakness field again.
+77. Reassess whether the two non-blocking plotting `validation_report_gap` notes should stay visible as-is or move into a more precise report category.
+    - Do not hide them casually.
+    - If they remain, document why they are visible but non-blocking.
 
-78. If Tasks `76` or `77` require schema changes, update the generated report families coherently rather than one field at a time.
-    - Keep cohort, health, comparison, and release-facing docs aligned in one
-      governed summary-semantics pass.
-    - Avoid introducing parallel compatibility shims unless they are strictly
-      necessary for repository consumers.
+78. If Task `77` changes visible gap semantics, update cohort, health, release docs, and truth-check rules coherently in one pass.
+    - Avoid field-by-field drift across the generated report family.
 
-79. Tighten `release_metadata.py truth-check` to enforce the post-closure summary semantics chosen in Tasks `76` through `78`.
-    - The release gate should fail if release-facing docs or generated reports
-      drift back to semantically confusing post-closure summary states.
+79. Re-run an end-to-end release-process audit after the Task `77`/`78` decision.
+    - Confirm that:
+      - `make release-generated-check` remains clean
+      - `make docs` remains clean
+      - `truth-check` still matches the post-closure narrative
 
-80. Reassess the draft `v1.0.0` release narrative once the summary-semantics pass lands.
-    - Make sure RC readiness and release notes describe:
-      - full compared cohort
-      - full harvest coverage
-      - zero retained backlog
-      - post-closure summary meanings
-    - Keep this as release-truth maintenance, not marketing embellishment.
+80. If the release-process audit exposes any new deterministic churn, fix it as release-process debt before starting rework implementation.
+    - Prefer generator normalization or ordering fixes over manual cleanup
+      habits.
 
-81. Audit `make release-generated-check` end to end in the fully closed evidence state.
-    - Confirm whether the historical ordering hazards and incidental EOF churn
-      are still present.
-    - Treat this as process validation, not as permission to edit unrelated
-      generated artefacts casually.
+81. Generate a dedicated implementation-readiness checklist for the plotting-first program if the current acceptance criteria still leave operational ambiguity.
+    - This should stay narrower than a full new report unless a genuinely new
+      checked truth surface is needed.
 
-82. If the release-generated path still has ordering hazards, fix them as deterministic release-process debt.
-    - Prefer stable generation order and clean-tree invariants over manual
-      restoration habits.
-    - Do not leave “known but tolerated” post-closure churn undocumented.
+82. Translate the plotting Phase 1 acceptance criteria into an implementation sequence.
+    - Break the bounded method slice into an execution order for:
+      - `hmoment`
+      - `octanol`
+      - `pepinfo`
+    - Keep the sequence method-associated and evidence-aware.
 
-83. Reassess the generated report set for redundancy after summary cleanup and release-generated stabilization.
-    - Identify whether any pair of generated artefacts now express the same
-      truth with no distinct governance or release-gate value.
-    - Consolidate only if the truth surface becomes clearer, not merely
-      smaller.
+83. Reassess whether `hmoment` is still the best first plotting method once the implementation sequence is written down.
+    - The answer should be explicit, not assumed from the current ordering.
 
-84. If a consolidation candidate exists, perform a governed report-surface simplification pass.
-    - Keep links, docs index membership, and release-truth checks aligned.
-    - Preserve unique governance and release meanings even if two reports look
-      superficially similar.
+84. If `hmoment` remains first, capture its method-level acceptance criteria before code changes begin.
+    - This should include:
+      - analytical output expectations
+      - typed contract expectations
+      - fixture/evidence expectations
+      - explicit non-goals
 
-85. Reconfirm that plotting remains the first actual `Rework` implementation-program candidate after Tasks `76` through `84`.
-    - The confirmation should explicitly test whether any summary/process
-      cleanup changed the ordering rationale materially.
+85. If `hmoment` is not the best first method, record the reordered plotting Phase 1 sequence explicitly instead of switching informally.
+    - Preserve the plotting-first family decision while allowing bounded
+      within-family reprioritization.
 
-86. If plotting still remains first, generate a dedicated plotting rework sub-roadmap with bounded initial scope.
-    - The sub-roadmap should define:
-      - first method slice
-      - contract/evidence expectations
-      - R handoff boundaries
-      - release and migration risks
-    - Do not begin broad plotting implementation before this exists.
+86. Reconfirm the remote-retrieval fallback plan after the plotting implementation sequence exists.
+    - Make sure the fallback still has a bounded Phase 1 and remains ready for
+      a clean switch if plotting becomes architecturally noisy.
 
-87. If plotting is blocked during sub-roadmap generation, generate the equivalent remote-retrieval rework sub-roadmap instead.
-    - Preserve the already documented fallback ordering.
-    - Require the same bounded entry criteria and evidence framing.
+87. Reassess whether protein-property rework still remains the third candidate after the plotting implementation sequence is fixed.
+    - This remains a planning checkpoint, not a promotion.
 
-88. Reassess whether protein-property rework remains the third candidate after the first-program sub-roadmap exists.
-    - This remains a planning checkpoint, not a silent promotion.
+88. If plotting still remains first and `hmoment` is still the lead method, capture the exact start conditions for the first implementation patch.
+    - The goal is to make the first code-bearing rework task unambiguous before
+      it is mapped.
 
-89. Capture the acceptance criteria for the first approved `Rework` program as governed roadmap truth before code changes begin.
-    - Entry and exit criteria should be explicit enough that future work can be
-      judged against them without relying on conversational memory.
+89. Add the next code-bearing rework task tier to this roadmap only after the plotting-first start conditions are explicit enough to prevent informal widening.
+    - The first implementation tier should be bounded enough that each task can
+      be closed honestly with governed docs, evidence, and release-truth
+      updates.
 
 90. Extend this roadmap again after Task `89`.
     - Continue to derive priorities from:
@@ -1038,8 +1031,8 @@ evidence. It is now about:
       - retained backlog closure
       - full compared cohort
       - harvest coverage
-      - any post-closure summary-semantics outputs
-      - any stabilized release-generated findings
+      - release-process audit results
+      - plotting-program readiness decisions
     - Preserve the same repository rules:
       - honest documentation
       - scoped changes
