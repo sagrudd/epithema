@@ -1494,5 +1494,43 @@ implementation-program cycle. The near-term priorities are:
         plot-contract taxonomy
 
 108. Extend this roadmap again after Task `107`.
-    - Keep deriving priorities from the current generated truth plus the
-      observed behavior of the shipped `octanol` slice.
+    - Complete.
+    - The roadmap is now extended from the current generated truth and the
+      bounded `pepinfo` tier that Task `107` mapped.
+    - Current generated state recorded into this extension:
+      - shipped methods: `98`
+      - compared evidence: `98`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `98`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Next mapped tier:
+      - `109`: capture `pepinfo` method-level acceptance criteria
+      - `110`: capture exact start conditions for the first `pepinfo`
+        implementation patch
+      - `111`: implement the bounded analytical core
+      - `112`: add the typed plot-contract emission path
+      - `113`: expose `pepinfo` through the governed shipped surface
+      - `114`: add canonical fixtures and compared evidence
+      - `115`: re-run the full release-truth surface after shipping `pepinfo`
+      - `116`: reassess the shipped `pepinfo` slice before any broader
+        plotting expansion is mapped
+      - `117`: reconfirm the remote-retrieval fallback if `pepinfo` widens the
+        seam more than `hmoment` and `octanol` did
+      - `118`: reassess whether protein-property still remains the third
+        candidate after the full bounded plotting Phase 1 exists
+      - `119`: decide explicitly whether bounded plotting Phase 1 is complete
+        enough to continue plotting, or whether planning should switch to the
+        retrieval fallback instead
+      - `120`: if `pepinfo` passes its reassessment, map the next bounded
+        post-Phase-1 plotting or retrieval gate explicitly before any further
+        code starts
+      - `121`: if `pepinfo` fails its reassessment, map the bounded retrieval
+        fallback implementation tier explicitly before any further code starts
+      - `122`: extend this roadmap again after Task `120` or `121`, using the
+        generated truth plus the observed `pepinfo` seam behavior rather than
+        the pre-`pepinfo` assumptions
