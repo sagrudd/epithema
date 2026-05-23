@@ -959,10 +959,20 @@ implementation-program cycle. The near-term priorities are:
 - avoiding silent scope creep while the first rework program is being prepared
 
 76. Add a generated zero-burden release-state report if the existing summary set still feels too distributed during plotting-program prep.
-    - Only add a new artefact if it consolidates post-closure release truth
-      without duplicating the current checked reports.
-    - If the current report set remains sufficient, close this honestly
-      without adding a new surface.
+    - Complete without adding a new report.
+    - Reassessment outcome:
+      - the current checked report set already covers the zero-burden state
+        cleanly enough for plotting-program preparation
+      - no additional generated surface is needed just to restate a set of
+        already-explicit satisfied conditions
+    - Current zero-burden state already remains visible through:
+      - `cohort_validation`: `gapped_method_count == 0`
+      - `cohort_health`: zero retained-backlog and weak-evidence pressure
+      - `full_compared_cohort`: `full_compared_cohort == true`
+      - `harvest_coverage`: `harvest_coverage_complete == true`
+      - `retained_backlog_closure`: `retained_backlog_closed == true`
+    - If a later cycle reveals a genuinely missing checked invariant, add a
+      dedicated report then rather than creating one preemptively now.
 
 77. Reassess whether the two non-blocking plotting `validation_report_gap` notes should stay visible as-is or move into a more precise report category.
     - Do not hide them casually.

@@ -174,6 +174,21 @@ They should not be consolidated unless one of those distinct release or
 governance checks truly disappears rather than merely reaching a steady-state
 `0` or `yes` result.
 
+At the current post-closure stage, a separate generated "zero-burden release
+state" report is also intentionally unnecessary. The existing checked surfaces
+already cover that state without leaving one missing invariant:
+
+- `cohort_validation` records `gapped_method_count: 0`
+- `cohort_health` records the zero-burden health state and the absence of
+  weak-evidence or retained-backlog pressure
+- `full_compared_cohort` records `full_compared_cohort: yes`
+- `harvest_coverage` records `harvest_coverage_complete: yes`
+- `retained_backlog_closure` records `retained_backlog_closed: yes`
+
+Add a dedicated zero-burden report only if plotting-program preparation or a
+later release cycle reveals a genuinely missing checked summary, not merely
+because several current reports now read as satisfied.
+
 The cohort-health gate turns the cohort and governance reports into a standing
 reprioritization check. It makes three things explicit:
 
