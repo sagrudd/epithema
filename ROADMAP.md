@@ -1079,8 +1079,16 @@ implementation-program cycle. The near-term priorities are:
       reprioritization was recorded.
 
 86. Reconfirm the remote-retrieval fallback plan after the plotting implementation sequence exists.
-    - Make sure the fallback still has a bounded Phase 1 and remains ready for
-      a clean switch if plotting becomes architecturally noisy.
+    - Reconfirmed in:
+      - `docs/governance/appendices/family_to_tool_mapping_reference.md`
+    - Result:
+      - the fallback still has a bounded Phase 1:
+        - `seqretsetall`
+        - `seqretsplit`
+        - `infoassembly`
+      - it remains ready for a clean switch if plotting becomes
+        architecturally noisy
+    - No reordering or widening was needed.
 
 87. Reassess whether protein-property rework still remains the third candidate after the plotting implementation sequence is fixed.
     - This remains a planning checkpoint, not a promotion.

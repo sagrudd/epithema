@@ -514,6 +514,30 @@ expansion, not as a claim of general archive and accession parity.
 - if those risks dominate the fallback planning pass, the repository should
   stop and reassess rather than informally widening the retrieval family
 
+#### Reconfirmation after plotting sequencing
+
+After fixing the bounded plotting implementation order and confirming
+`hmoment` as the explicit lead method, the retrieval fallback remains ready
+for a clean switch if plotting becomes architecturally noisy.
+
+That conclusion still holds because:
+
+- the fallback Phase 1 remains bounded to:
+  - `seqretsetall`
+  - `seqretsplit`
+  - `infoassembly`
+- the fallback still has a distinct operational model instead of depending on
+  the plotting contract seam
+- its evidence path remains explicit and deterministic:
+  - mocked-provider or managed-asset validation
+  - compared evidence on normalized returned sequence or metadata outputs
+- its exclusions remain clear enough to prevent an informal expansion into
+  broad provider search or acquisition parity work
+
+So no reordering or widening is needed here. If plotting is later blocked by
+contract sprawl or renderer-coupled pressure, the repository can still switch
+to the retrieval fallback without reopening family-selection ambiguity first.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does
