@@ -23,6 +23,7 @@ New shipped tools after `1.0.0` must not bypass:
 - full-compared-cohort reporting
 - retained-backlog-closure reporting
 - explicit full-compared-cohort release status once achieved
+- stable post-closure summary semantics once the evidence backlog is closed
 - drift-free release-facing counts and report links
 - honest release-note wording
 

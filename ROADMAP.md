@@ -723,9 +723,16 @@ next tier should therefore move from evidence creation to:
       separate summary-semantics report would be redundant at this stage.
 
 64. Tighten the release gate to require stable post-closure summary semantics.
-    - Once Tasks `61` through `63` are resolved, make the release truth check
-      fail if release-facing docs or generated summaries drift back into
-      numerically confusing post-closure states.
+    - Complete.
+    - `release_metadata.py truth-check` now fails if the fully closed
+      post-closure state regresses into confusing summary semantics:
+      - `gapped_method_count` must remain `0`
+      - `weak_evidence_method_count: 0` must imply
+        `weakest_evidence_family: null`
+      - zero-burden weak-evidence signals and recommendations must remain absent
+    - The release-process and release-facing docs now state those invariants
+      explicitly so the gate is enforcing checked repository truth rather than
+      hidden policy.
 
 65. Reassess the post-`1.0.0` release narrative now that full compared and full harvest are achieved.
     - Refresh the draft release notes and RC readiness framing so they describe

@@ -118,6 +118,8 @@ Current generated release-truth markers:
 - Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `96`
 - Full compared cohort: `yes`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready

@@ -126,6 +126,7 @@ New shipped tools must not bypass:
 - full-compared-cohort reporting
 - retained-backlog-closure reporting
 - explicit full-compared-cohort release status once achieved
+- stable post-closure summary semantics once the evidence backlog is closed
 - drift-free release-facing counts and report links
 - honest release-note wording
 
@@ -168,6 +169,10 @@ release-truth-check` also treats these as hard release conditions:
   rather than leaving the status to be inferred from counts alone
 - every shipped family row in `docs/generated/validation/comparison_coverage.json`
   must remain fully compared once the full-compared milestone has been reached
+- `docs/generated/validation/shipped_cohort.validation.json` must keep
+  `gapped_method_count: 0` in the fully closed post-closure state
+- `docs/generated/validation/cohort_health.json` must keep
+  `weakest_evidence_family: null` when `weak_evidence_method_count: 0`
 
 If either condition regresses, the release gate must fail until the generated
 reports and underlying evidence state are brought back into alignment.

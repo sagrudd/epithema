@@ -66,6 +66,8 @@ Current evidence posture at the time of this draft:
 - `0` shipped methods carry executable evidence
 - `96` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 

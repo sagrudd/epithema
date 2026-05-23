@@ -37,6 +37,7 @@ REQUIRED_UNRELEASED_MARKERS = [
     "- full-compared-cohort reporting",
     "- retained-backlog-closure reporting",
     "- explicit full-compared-cohort release status once achieved",
+    "- stable post-closure summary semantics once the evidence backlog is closed",
     "- drift-free release-facing counts and report links",
     "- honest release-note wording",
 ]
@@ -51,6 +52,8 @@ REQUIRED_RELEASE_NOTES_MARKERS = [
     "[Full Compared Cohort Gate](../generated/full_compared_cohort.md)",
     "[Retained Backlog Closure Report](../generated/retained_backlog_closure.md)",
     "- full compared cohort: `yes`",
+    "- blocking cohort gaps: `0`",
+    "- weakest evidence family: `none`",
 ]
 
 REQUIRED_RC_READINESS_MARKERS = [
@@ -65,6 +68,8 @@ REQUIRED_RC_READINESS_MARKERS = [
     "- `docs/generated/validation/full_compared_cohort.json`",
     "- `docs/generated/full_compared_cohort.md`",
     "- Full compared cohort: `yes`",
+    "- Blocking cohort gaps: `0`",
+    "- Weakest evidence family: `none`",
     "- `docs/generated/validation/retained_backlog_closure.json`",
     "- `docs/generated/retained_backlog_closure.md`",
 ]
@@ -401,6 +406,26 @@ def check_release_truth_surface() -> int:
                     missing.append(
                         "full compared cohort gate failed: "
                         f"{row['family']!r} still has harvested-but-not-compared methods"
+                    )
+            if cohort_summary["gapped_method_count"] != 0:
+                missing.append(
+                    f"{COHORT_VALIDATION}: gapped_method_count must remain 0 once the shipped cohort is fully compared, fully harvested, and backlog-closed"
+                )
+            if health_summary["weak_evidence_method_count"] == 0:
+                if health_summary["weakest_evidence_family"] is not None:
+                    missing.append(
+                        f"{COHORT_HEALTH}: weakest_evidence_family must be null when weak_evidence_method_count is 0"
+                    )
+                if any(signal["code"] == "weak_evidence_burden" for signal in cohort_health_report["signals"]):
+                    missing.append(
+                        f"{COHORT_HEALTH}: weak_evidence_burden signal must be absent when weak_evidence_method_count is 0"
+                    )
+                if any(
+                    recommendation["source_signal"] == "weak_evidence_burden"
+                    for recommendation in cohort_health_report["recommendations"]
+                ):
+                    missing.append(
+                        f"{COHORT_HEALTH}: weak_evidence_burden recommendations must be absent when weak_evidence_method_count is 0"
                     )
 
     if missing:
