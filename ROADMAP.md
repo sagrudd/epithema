@@ -1739,8 +1739,24 @@ implementation-program cycle. The near-term priorities are:
       families by inertia.
 
 120. If `pepinfo` passes its reassessment, map the next bounded post-Phase-1 plotting or retrieval gate explicitly before any further code starts.
-    - Do not continue directly into more plotting implementation without first
-      mapping the next bounded tier from the observed `pepinfo` seam.
+    - Complete.
+    - The next bounded post-Phase-1 gate is now mapped explicitly in the
+      plotting-governance appendix.
+    - Result:
+      - the next gate stays inside plotting-family planning rather than
+        switching families immediately
+      - it is a bounded Phase 2 candidate-selection and seam-compatibility
+        gate for the remaining plotting-family methods
+    - The mapped gate requires the repository to:
+      - inventory the remaining plotting-family methods not already covered by
+        the preexisting governed seam or the bounded Phase 1 slice
+      - classify the remaining methods by seam pressure
+      - decide whether at least one remaining method still fits the proven
+        method-associated, table-derived, renderer-agnostic seam
+      - either map exactly one bounded next-method plotting tier or switch
+        cleanly to the already-prepared retrieval fallback planning path
+    - So no further plotting code should start until that bounded Phase 2 gate
+      is handled explicitly.
 
 121. If `pepinfo` fails its reassessment, map the bounded retrieval fallback implementation tier explicitly before any further code starts.
     - If the plotting seam becomes too broad, switch planning cleanly to the

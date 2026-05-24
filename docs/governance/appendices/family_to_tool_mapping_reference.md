@@ -1138,6 +1138,56 @@ That decision is justified because:
 So the next planning task should be to map the next bounded post-Phase-1 gate
 explicitly, not to switch implementation families by inertia.
 
+#### Next bounded post-Phase-1 gate
+
+Because the bounded plotting Phase 1 passed, the next gate should stay inside
+plotting-family planning, but it should still be a planning gate rather than a
+direct code-start decision.
+
+The next bounded post-Phase-1 gate should therefore be:
+
+- a Phase 2 candidate-selection and seam-compatibility gate for the remaining
+  plotting-family methods
+
+That gate should happen before any further plotting implementation starts, and
+it should answer one bounded question:
+
+- does at least one remaining plotting-family method still fit the proven
+  method-associated, table-derived, renderer-agnostic seam closely enough to
+  justify another bounded plotting tier?
+
+The gate should explicitly do all of the following:
+
+- inventory the remaining plotting-family methods not already covered by:
+  - the preexisting governed seam: `charge`, `pepwindow`, `wordcount`
+  - the bounded Phase 1 slice: `hmoment`, `octanol`, `pepinfo`
+- classify the remaining methods by seam pressure:
+  - likely seam-compatible
+  - requires broader contract taxonomy
+  - requires dotplot-style or layout-heavy behavior
+  - requires specialized laboratory-plot or trace behavior
+- decide whether plotting still has a bounded Phase 2 candidate that is:
+  - method-associated
+  - table-first
+  - typed-contract-friendly
+  - renderer-agnostic in Rust
+- if such a candidate exists:
+  - map exactly one bounded next-method tier before code starts
+- if no such candidate exists:
+  - stop plotting-family continuation cleanly and activate the already-mapped
+    retrieval fallback planning path instead
+
+The gate should **not** do any of the following:
+
+- start implementation for a new plotting method
+- imply that all remaining plotting-family methods are in scope
+- widen the seam into a generic plotting framework by default
+- demote retrieval fallback readiness just because plotting Phase 1 succeeded
+
+So the next bounded post-Phase-1 gate is not “continue plotting” in the
+abstract. It is “prove that a bounded Phase 2 plotting candidate still exists,
+or switch planning cleanly to retrieval fallback.”
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does
