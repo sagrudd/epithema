@@ -1575,3 +1575,25 @@ implementation-program cycle. The near-term priorities are:
       - no silent widening into a generic plotting framework
       - no broader contract taxonomy unless `pepinfo` itself forces a real
         reassessment
+
+111. Implement the bounded analytical core.
+    - Complete.
+    - The bounded `pepinfo` analytical core now exists in `emboss-core` as a
+      method-associated sliding-window multi-property protein profile.
+    - Implemented bounded analytical surface:
+      - one stable window row per emitted window
+      - deterministic governed residue-property rollups:
+        - `mean_hydropathy`
+        - `mean_residue_mass`
+        - `charged_fraction`
+        - `polar_fraction`
+      - bounded validation errors for:
+        - non-protein input
+        - unsupported residues
+        - invalid window
+        - invalid step
+        - sequence shorter than the window
+    - This task intentionally stops at the analytical core:
+      - no plot-contract emission yet
+      - no registry or shipped-surface exposure yet
+      - no governed autodoc or compared evidence yet

@@ -34,6 +34,7 @@ pub mod protein_hydropathy;
 pub mod protein_hydrophobic_moment;
 pub mod protein_isoelectric;
 pub mod protein_octanol;
+pub mod protein_pepinfo;
 pub mod residue_properties;
 pub mod revseq;
 pub mod sequence;
@@ -98,6 +99,9 @@ pub use protein_isoelectric::{
 };
 pub use protein_octanol::{
     OctanolWindow, ProteinOctanolError, ProteinOctanolProfile, protein_octanol_profile,
+};
+pub use protein_pepinfo::{
+    PepinfoWindow, ProteinPepinfoError, ProteinPepinfoProfile, protein_pepinfo_profile,
 };
 pub use residue_properties::{
     NucleotideBaseInfo, ProteinResidueProperty, nucleotide_base_info, nucleotide_base_infos,
