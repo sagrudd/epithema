@@ -2040,8 +2040,24 @@ implementation-program cycle. The near-term priorities are:
          higher-ranked programs
 
 134. Reconfirm that the release-truth surface still remains zero-burden after the Phase 2 candidate-selection decision.
-    - This should remain a documentation/reporting truth check, not a new
-      report unless a real ambiguity appears.
+    - Complete.
+    - The release-truth surface remains zero-burden after the Phase 2
+      candidate-selection decision resolved on the plotting branch.
+    - No new report was needed because the existing generated truth surface
+      already expresses this state cleanly:
+      - shipped cohort summary still reports `99` compared methods, `0`
+        executable-only methods, and `0` blocking gaps
+      - cohort health still reports:
+        - `release_truth_current: true`
+        - `weak_evidence_method_count: 0`
+        - `weakest_evidence_family: null`
+        - `retained_backlog_count: 0`
+      - full compared cohort still reports `below_compared_method_count: 0`
+      - harvest coverage still reports `harvest_exception_count: 0`
+      - retained backlog closure still reports
+        `retained_backlog_closed: true`
+    - This remains a documentation/reporting truth check only, not a prompt
+      for another generated report.
 
 135. If the repository stays on plotting, capture the explicit stop conditions that would finally force fallback activation.
     - Make the failure conditions concrete rather than leaving them as generic
