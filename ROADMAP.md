@@ -2011,8 +2011,16 @@ implementation-program cycle. The near-term priorities are:
       - `infoassembly`
 
 132. If the no-candidate branch is chosen, choose exactly one retrieval fallback lead method.
-    - Keep the retrieval path bounded and method-associated in the same way
-      the plotting path was bounded.
+    - Complete as an untriggered conditional branch.
+    - No retrieval fallback lead method was chosen in this task because the
+      no-candidate branch remains inactive:
+      - bounded Phase 2 plotting remains viable
+      - `density` remains the single selected active Phase 2 candidate
+    - The retrieval path therefore remains documented and prepared, but not
+      promoted to the active planning branch.
+    - If fallback activation ever becomes necessary later, the retrieval path
+      should still be kept bounded and method-associated in the same way the
+      plotting path was bounded.
 
 133. Reconfirm that protein-property still remains the third candidate after the Phase 2 candidate-selection gate resolves.
     - Reassess only after the repository knows whether it stayed on plotting or
