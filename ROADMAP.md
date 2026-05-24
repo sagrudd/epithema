@@ -2165,11 +2165,15 @@ implementation-program cycle. The near-term priorities are:
     `0`, harvested legacy provenance present `100`, full-compared cohort
     `true`, and release-truth current `true`.
 
-141. Re-run the full release-truth surface after shipping `density`.
-    - Run the broad generated-check path, truth-check, docs build, and diff
-      integrity checks.
-    - Record the observed post-ship state rather than assuming it remained
-      green.
+141. Complete. Re-run the full release-truth surface after shipping `density`.
+    The broad post-ship gate stayed clean. `make release-generated-check`,
+    `python3 scripts/release_metadata.py truth-check`, `make docs`, and
+    `git diff --check` all passed after the `density` slice closed. The
+    observed governed state remained fully green: shipped methods `100`,
+    compared evidence `100`, executable evidence `0`, harvested legacy
+    provenance present `100`, full-compared cohort `true`, harvest coverage
+    complete `true`, retained-backlog closed `true`, and release-truth current
+    `true`.
 
 142. Reassess the shipped `density` slice before any further plotting continuation is mapped.
     - Decide whether `density` stayed inside the bounded seam or forced one of
