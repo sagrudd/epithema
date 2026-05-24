@@ -114,10 +114,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `99`
-- Compared-evidence methods: `98`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `99`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `99`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -226,9 +226,8 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `98/99` shipped methods at compared evidence with `1`
-  method below compared evidence while `pepinfo` awaits canonical compared
-  fixtures.
+  and now records `99/99` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -300,10 +299,9 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `98` methods with compared evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily non-green while `pepinfo` awaits its canonical
-  fixture and compared acceptance closure.
+- The cohort report now records `99` methods with compared evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green again after the bounded `pepinfo` evidence closure.
 
 ### Plotting limitations
 
@@ -330,8 +328,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `99`
-- Compared-evidence methods: `98`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `99`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `99`
 - Retained backlog still unshipped: `0`
 

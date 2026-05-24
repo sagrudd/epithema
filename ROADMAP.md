@@ -1517,9 +1517,13 @@ implementation-program cycle. The near-term priorities are:
       - `113`: expose `pepinfo` through the governed shipped surface
         - Status: complete
         - Result: `pepinfo` is now shipped through the governed registry,
-          service, CLI, and autodoc surface as an intentionally interim
-          executable-evidence method pending Task `114`.
+          service, CLI, and autodoc surface.
       - `114`: add canonical fixtures and compared evidence
+        - Status: complete
+        - Result: `pepinfo` now has checked-in analytical and plot-contract
+          fixtures plus compared acceptance evidence, restoring the governed
+          shipped cohort to full compared/full harvest zero-burden state at
+          `99` shipped methods.
       - `115`: re-run the full release-truth surface after shipping `pepinfo`
       - `116`: reassess the shipped `pepinfo` slice before any broader
         plotting expansion is mapped

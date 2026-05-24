@@ -457,14 +457,11 @@ mod tests {
             derive_cohort_health_report(repo_root()).expect("cohort health report should derive");
         assert!(report.summary.total_method_count > 0);
         assert_eq!(report.summary.largest_retained_backlog_size, 0);
-        assert_eq!(
-            report.summary.weakest_evidence_family.as_deref(),
-            Some("Modernize — Rework — Plotting and visualization tools")
-        );
-        assert_eq!(report.summary.weak_evidence_method_count, 1);
+        assert_eq!(report.summary.weakest_evidence_family.as_deref(), None);
+        assert_eq!(report.summary.weak_evidence_method_count, 0);
         assert!(report.summary.release_truth_current);
-        assert_eq!(report.signals.len(), 1);
-        assert_eq!(report.recommendations.len(), 1);
+        assert_eq!(report.signals.len(), 0);
+        assert_eq!(report.recommendations.len(), 0);
     }
 
     #[test]
@@ -473,10 +470,8 @@ mod tests {
             derive_cohort_health_report(repo_root()).expect("cohort health report should derive");
         let markdown = render_cohort_health_markdown(&report);
         assert!(markdown.contains("# Cohort Health Gate"));
-        assert!(markdown.contains(
-            "Weakest evidence family: `Modernize — Rework — Plotting and visualization tools`"
-        ));
-        assert!(markdown.contains("## Reprioritization Signals"));
+        assert!(markdown.contains("Weakest evidence family: `none`"));
+        assert!(markdown.contains("No reprioritization signals were generated."));
         assert!(markdown.contains("Release-truth document current: `yes`"));
     }
 }

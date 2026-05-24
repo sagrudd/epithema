@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "pepinfo_pepinfo_example",
+    "title": "Pepinfo profile for pepinfo_example",
+    "subtitle": "Window 3 step 1",
+    "provenance": {
+      "tool": "pepinfo",
+      "method": "protein_pepinfo_profile",
+      "source_artifact_ids": [
+        "table:pepinfo-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Profile value",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "pepinfo_hydropathy",
+      "label": "Mean hydropathy",
+      "legend_label": "Mean hydropathy",
+      "semantic_group": "hydropathy",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0
+        ]
+      },
+      "y": [
+        -1.8666666666666665,
+        -3.6333333333333333,
+        -1.4000000000000001,
+        -0.3666666666666667,
+        -0.2666666666666668,
+        0.3,
+        -0.8666666666666667
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    },
+    {
+      "id": "pepinfo_residue_mass",
+      "label": "Mean residue mass",
+      "legend_label": "Mean residue mass",
+      "semantic_group": "residue_mass",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0
+        ]
+      },
+      "y": [
+        104.7805,
+        124.12606666666666,
+        130.46023333333332,
+        111.11466666666666,
+        113.78986666666667,
+        102.4508,
+        126.15820000000001
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "secondary"
+      }
+    },
+    {
+      "id": "pepinfo_charged_fraction",
+      "label": "Charged fraction",
+      "legend_label": "Charged fraction",
+      "semantic_group": "charged_fraction",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0
+        ]
+      },
+      "y": [
+        0.6666666666666666,
+        1.0,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "tertiary"
+      }
+    },
+    {
+      "id": "pepinfo_polar_fraction",
+      "label": "Polar fraction",
+      "legend_label": "Polar fraction",
+      "semantic_group": "polar_fraction",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0
+        ]
+      },
+      "y": [
+        0.6666666666666666,
+        1.0,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.6666666666666666
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "quaternary"
+      }
+    }
+  ]
+}

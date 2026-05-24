@@ -63,10 +63,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `98` shipped methods carry compared evidence
-- `1` shipped method carries executable evidence
+- `99` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `99` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -81,17 +81,15 @@ change the release gate state above.
 - `octanol` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
-- `pepinfo` now ships through the governed surface with executable validation
-  for its analytical table and typed multi-series plot-contract path, while
-  canonical committed fixtures and compared acceptance evidence remain the next
-  bounded closure step.
+- `pepinfo` now ships through the governed surface with canonical checked-in
+  analytical and multi-series plot-contract fixtures plus compared acceptance
+  evidence for both surfaces.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the shipped governed cohort is temporarily one bounded
-`pepinfo` evidence-closure step away from returning to the zero-burden
-release-truth state.
+remains complete, and the shipped governed cohort is back in the zero-burden
+release-truth state after the bounded `pepinfo` evidence closure landed.
 
 ### First-class R story
 

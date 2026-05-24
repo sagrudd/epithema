@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `pepinfo` is the go
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pepinfo`. At this task boundary the governed surface includes executable validation for the stable analytical rows and emitted multi-series plot-contract path; canonical committed fixtures and compared acceptance evidence are still pending the next task.
+This method is implemented and exposed through `emboss-rs pepinfo`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in multi-series line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,19 +54,27 @@ v1 supports only the single-record bounded `pepinfo` profile and does not add Ru
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/pepinfo_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic pepinfo validation.
 
+### Canonical pepinfo multi-series line-plot contract fixture
+
+- Artifact ID: `pepinfo_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/pepinfo_plot_contract.json`
+- Notes: Repository-managed canonical multi-series line-plot contract fixture emitted by the governed pepinfo implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic bounded protein profile
 
 - Example ID: `pepinfo_profile_example`
 - Description: Reports deterministic sliding-window multi-property rows from the committed protein fixture and emits a governed multi-series line-plot contract from the same analytical run.
-- Referenced artifacts: `pepinfo_fixture`
+- Referenced artifacts: `pepinfo_fixture`, `pepinfo_plot_contract`
 - Parameters:
   - `window` = `3`
   - `step` = `1`
 - Expected outputs:
   - `pepinfo_table`: Bounded pepinfo profile table (Stable sliding-window multi-property rows derived from the governed analytical path.)
-  - `pepinfo_plot`: Pepinfo multi-series line-plot contract (A deterministic typed multi-series line-plot contract emitted from the same governed analytical run.)
+  - `pepinfo_plot`: Pepinfo multi-series line-plot contract (The canonical governed multi-series line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 

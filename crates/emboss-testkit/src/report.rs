@@ -922,7 +922,7 @@ mod tests {
     fn shipped_cohort_report_surfaces_visible_gaps() {
         let report = derive_shipped_cohort_validation_report(repo_root())
             .expect("cohort report should derive");
-        assert_eq!(report.summary.gapped_method_count, 1);
+        assert_eq!(report.summary.gapped_method_count, 0);
         let gap_map = report
             .methods
             .iter()
@@ -964,9 +964,9 @@ mod tests {
         }));
 
         let pepinfo = gap_map.get("pepinfo").expect("pepinfo should be present");
-        assert_eq!(pepinfo.evidence_level, CohortEvidenceLevel::ExecutableEvidence);
-        assert!(pepinfo.unresolved_gaps.iter().any(|gap| {
-            gap.code == crate::report::CohortGapCode::MissingComparedEvidence
+        assert_eq!(pepinfo.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert!(pepinfo.unresolved_gaps.iter().all(|gap| {
+            gap.code != crate::report::CohortGapCode::MissingComparedEvidence
         }));
     }
 }
