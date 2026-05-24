@@ -2201,9 +2201,32 @@ implementation-program cycle. The near-term priorities are:
       - `seqretsplit`
       - `infoassembly`
 
-145. If `density` remains bounded, inventory the remaining plotting-family Phase 2 pool after removing `density`.
-    - Rebase the candidate pool on the actual post-`density` remainder set,
-      not the pre-`density` assumptions.
+145. Complete. Inventory the remaining plotting-family Phase 2 pool after removing `density`.
+    The post-`density` remainder set is now explicit rather than inherited
+    from the older pre-shipment inventory. With `density` removed, the active
+    plotting-family remainder pool is the remaining `22` methods:
+      - `abiview`
+      - `banana`
+      - `chaos`
+      - `cirdna`
+      - `cpgplot`
+      - `dotmatcher`
+      - `dotpath`
+      - `dottup`
+      - `findkm`
+      - `isochore`
+      - `lindna`
+      - `pepnet`
+      - `pepwheel`
+      - `pepwindowall`
+      - `plotcon`
+      - `polydot`
+      - `prettyplot`
+      - `showfeat`
+      - `showpep`
+      - `showseq`
+      - `syco`
+      - `wobble`
 
 146. If `density` remains bounded, classify the post-`density` plotting remainder by seam pressure again.
     - Re-evaluate whether any previously viable candidate still looks bounded

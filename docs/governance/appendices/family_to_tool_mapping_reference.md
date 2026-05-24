@@ -1611,6 +1611,67 @@ The concrete basis is:
 So the repository remains on the plotting continuation path, and the prepared
 retrieval fallback remains documented and ready but inactive.
 
+#### Post-`density` Phase 2 remainder inventory
+
+Because `density` has now closed as the shipped bounded Phase 2 slice, any
+further plotting continuation should start from an explicit rebased remainder
+set rather than the older pre-`density` inventory.
+
+The plotting-family methods already covered by the current proven seam are now:
+
+- preexisting governed seam:
+  - `charge`
+  - `pepwindow`
+  - `wordcount`
+- bounded Phase 1 shipped slice:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- bounded Phase 2 shipped slice:
+  - `density`
+
+Important scope note:
+
+- `wordcount` remains part of the governed plot-contract seam, but it is not
+  itself a member of the historical plotting-family mapping
+- the actual post-`density` plotting-family remainder therefore excludes the
+  six plotting-family members already covered inside that family:
+  - `charge`
+  - `pepwindow`
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+  - `density`
+
+So the explicit post-`density` plotting-family remainder pool is the remaining
+`22` plotting-family methods:
+
+- `abiview`
+- `banana`
+- `chaos`
+- `cirdna`
+- `cpgplot`
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `findkm`
+- `isochore`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `pepwindowall`
+- `plotcon`
+- `polydot`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+- `syco`
+- `wobble`
+
+This section is inventory only. It does not yet reclassify seam pressure or
+choose the next bounded continuation candidate.
+
 #### Reconfirmation after the Phase 2 candidate-selection gate
 
 After the Phase 2 plotting-candidate gate resolved in favor of staying on the
