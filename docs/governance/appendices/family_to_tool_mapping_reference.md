@@ -1055,6 +1055,51 @@ So no reordering or widening is needed here. If plotting is later blocked by
 contract sprawl or renderer-coupled pressure, the repository can still switch
 to the retrieval fallback without reopening family-selection ambiguity first.
 
+#### Reconfirmation after the third shipped plotting slice
+
+After shipping `pepinfo`, closing its compared-evidence follow-on, and
+rerunning the full release-truth surface, the remote-retrieval fallback should
+still be treated as ready but inactive.
+
+That conclusion remains explicit because the third bounded plotting slice did
+not create the kind of pressure that would justify activating the fallback:
+
+- the plotting seam still remained bounded enough after Phase 1 completion:
+  - all three shipped plotting methods stayed method-associated
+  - the first multi-series method still remained table-derived and
+    renderer-agnostic
+  - no generic plotting framework or broader contract taxonomy emerged
+- the release-truth surface stayed clean while plotting advanced through the
+  full bounded Phase 1:
+  - shipped methods: `99`
+  - compared evidence: `99`
+  - harvested legacy provenance present: `99`
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `release_truth_current == true`
+- the retrieval fallback itself still remains bounded and operationally
+  distinct:
+  - Phase 1 remains limited to `seqretsetall`, `seqretsplit`, and
+    `infoassembly`
+  - mocked-provider or managed-asset validation remains the expected evidence
+    model
+  - the fallback still does not depend on the plotting contract seam or on
+    live-network validation
+
+So the repository should preserve the same fallback ordering after the full
+bounded plotting Phase 1:
+
+- plotting remains the active first implementation program
+- remote retrieval remains the explicit next alternative if plotting later
+  becomes noisy
+- no family-order change is justified at this checkpoint
+
+So no switch, reordering, or widening is needed here. If later plotting work
+crosses the bounded Phase 1 seam into genuine contract sprawl or
+renderer-coupled pressure, the repository can still activate the retrieval
+fallback without reopening the broader family-selection decision first.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

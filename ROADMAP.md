@@ -1686,9 +1686,21 @@ implementation-program cycle. The near-term priorities are:
         decision rather than pausing bounded plotting by default
 
 117. Reconfirm the remote-retrieval fallback if `pepinfo` widens the seam more than `hmoment` and `octanol` did.
-    - If `pepinfo` broadens the plotting seam beyond the bounded Phase 1
-      assumptions, explicitly restate whether the retrieval fallback should now
-      become the next active implementation program.
+    - Complete.
+    - The remote-retrieval fallback has now been explicitly reconfirmed after
+      the shipped `pepinfo` reassessment.
+    - Result:
+      - the fallback remains ready but inactive
+      - no activation is justified because bounded plotting Phase 1 still
+        stayed method-associated, table-derived, and renderer-agnostic even
+        after the first multi-series method shipped
+      - the repository should preserve the same family ordering:
+        1. plotting
+        2. remote retrieval
+        3. protein-property rework
+    - The fallback itself remains unchanged and ready for a clean switch if
+      later plotting work crosses the bounded Phase 1 seam into real contract
+      sprawl or renderer-coupled pressure.
 
 118. Reassess whether protein-property still remains the third candidate after the full bounded plotting Phase 1 exists.
     - Once all three bounded plotting methods exist, check whether the current
