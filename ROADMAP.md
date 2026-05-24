@@ -1954,7 +1954,26 @@ implementation-program cycle. The near-term priorities are:
         reassessment
 
 129. If a plotting Phase 2 candidate exists, capture exact start conditions for its first implementation patch.
-    - Preserve the same no-widening rules used in bounded Phase 1.
+    - Complete.
+    - Governed patch-start conditions for the selected Phase 2 candidate
+      `density` are now recorded explicitly in the plotting-governance
+      appendix.
+    - The start gate preserves the same no-widening rules used in bounded
+      Phase 1 and now requires:
+      - plotting-first ordering to remain intact
+      - bounded plotting Phase 1 reassessment to remain passed
+      - the Phase 2 viability gate to remain passed with `density` as the
+        single selected candidate
+      - the zero-burden release-truth surface to remain intact
+      - the patch to stay limited to `density` plus the smallest support
+        needed for deterministic computation, typed contract emission, and
+        governed docs/validation plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no Rust-side rendering
+      - no generalized plotting framework
+      - no broader contract taxonomy unless `density` itself forces a real
+        reassessment
 
 130. If a plotting Phase 2 candidate exists, map the full bounded implementation tier for that one method before writing code.
     - Map:
