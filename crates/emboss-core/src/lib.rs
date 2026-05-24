@@ -26,6 +26,7 @@ pub mod interval;
 pub mod local_alignment;
 pub mod metadata;
 pub mod molecule;
+pub mod nucleotide_density;
 pub mod pattern;
 pub mod platform;
 pub mod protein_charge;
@@ -77,6 +78,9 @@ pub use local_alignment::{
 };
 pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
+pub use nucleotide_density::{
+    DensityWindow, NucleotideDensityError, NucleotideDensityProfile, nucleotide_density_profile,
+};
 pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern};
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
 pub use protein_charge::{

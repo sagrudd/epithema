@@ -2103,9 +2103,28 @@ implementation-program cycle. The near-term priorities are:
     - The next mapped tier is now:
 
 137. Implement the bounded analytical core for `density`.
-    - Keep it method-associated and table-first.
-    - Prefer the smallest support surface needed to compute the analytical
-      profile directly in Rust.
+    - Complete.
+    - Added the bounded analytical core in `crates/emboss-core` as a
+      method-associated sliding-window nucleotide-density profile.
+    - The core remains table-first and bounded:
+      - nucleotide-sequence input only
+      - explicit window and step controls
+      - one row per emitted window
+      - stable fractions for:
+        - `a`
+        - `c`
+        - `g`
+        - `t/u`
+        - `at`
+        - `gc`
+      - explicit honesty columns for:
+        - canonical symbols
+        - ambiguous symbols
+        - ignored gap symbols
+    - The landed scope stays intentionally narrow:
+      - no typed plot-contract emission yet
+      - no governed shipped-surface exposure yet
+      - no renderer-coupled logic
 
 138. Add the typed plot-contract emission path for `density`.
     - The contract must derive from the same computation path as the table.
