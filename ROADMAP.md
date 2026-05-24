@@ -1670,10 +1670,20 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 116. Reassess the shipped `pepinfo` slice before any broader plotting expansion is mapped.
-    - Reassess whether the `pepinfo` seam stayed method-associated and
-      renderer-agnostic enough to justify further bounded plotting work.
-    - If `pepinfo` forces materially broader contract taxonomy, pause and do
-      not map broader plotting work by inertia.
+    - Complete.
+    - The shipped `pepinfo` slice has now passed explicit reassessment in the
+      plotting-governance appendix.
+    - The observed seam stayed bounded enough to justify further planning
+      without switching families:
+      - `pepinfo` remained method-associated and renderer-agnostic
+      - the first multi-series contract stayed table-derived and bounded to the
+        method rather than widening into a generic plotting framework
+      - no broader plotting-family members were implicitly started
+      - the release-truth surface remained fully green at `99` shipped methods
+    - Result:
+      - no retrieval-fallback activation is justified at this checkpoint
+      - the repository may proceed to the next explicit post-Phase-1 planning
+        decision rather than pausing bounded plotting by default
 
 117. Reconfirm the remote-retrieval fallback if `pepinfo` widens the seam more than `hmoment` and `octanol` did.
     - If `pepinfo` broadens the plotting seam beyond the bounded Phase 1
