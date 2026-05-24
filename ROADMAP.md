@@ -2023,8 +2023,21 @@ implementation-program cycle. The near-term priorities are:
       plotting path was bounded.
 
 133. Reconfirm that protein-property still remains the third candidate after the Phase 2 candidate-selection gate resolves.
-    - Reassess only after the repository knows whether it stayed on plotting or
-      switched to retrieval fallback planning.
+    - Complete.
+    - The Phase 2 candidate-selection gate has now resolved on the plotting
+      branch:
+      - bounded Phase 2 plotting remains viable
+      - `density` is the single selected active continuation candidate
+      - retrieval fallback remains documented, prepared, and inactive
+    - Protein-property rework still remains the third candidate in the
+      shortlist because:
+      1. plotting now has the most immediate next-step readiness through the
+         selected bounded `density` tier
+      2. remote retrieval remains the clearest prepared fallback if plotting
+         later fails a boundedness check
+      3. protein-property still has a credible substrate, but it still lacks
+         the same immediate implementation-readiness detail as the two
+         higher-ranked programs
 
 134. Reconfirm that the release-truth surface still remains zero-burden after the Phase 2 candidate-selection decision.
     - This should remain a documentation/reporting truth check, not a new

@@ -1530,6 +1530,50 @@ already proven by the bounded plotting seam:
 So the next code-bearing plotting work should not begin as a vague “continue
 Phase 2” step. It should begin as this explicit bounded `density` tier.
 
+#### Reconfirmation after the Phase 2 candidate-selection gate
+
+After the Phase 2 plotting-candidate gate resolved in favor of staying on the
+plotting path and selecting `density` as the single active continuation
+candidate, protein-property rework should still remain the third candidate in
+the shortlist.
+
+That conclusion remains explicit because the two higher-ranked programs are
+still more implementation-ready in concrete terms:
+
+- plotting remains the active path because:
+  - bounded plotting Phase 1 passed without forcing generic plotting-framework
+    widening
+  - the Phase 2 seam-compatibility gate also passed
+  - `density` is now the single selected bounded continuation candidate with
+    method-level criteria, patch start conditions, and an explicit full
+    implementation tier already mapped
+- remote retrieval still remains the clearest prepared fallback because its
+  bounded Phase 1 subset, provider-aware seams, and deterministic evidence
+  model are already documented and still inactive
+- protein-property rework still has a credible analytical substrate, but it
+  still lacks the same immediate post-gate implementation-readiness detail now
+  written down for the two higher-ranked programs
+
+The fully green release-truth surface still does not alter that ordering:
+
+- shipped methods: `99`
+- compared evidence: `99`
+- harvested legacy provenance present: `99`
+- `full_compared_cohort == true`
+- `harvest_coverage_complete == true`
+- `retained_backlog_closed == true`
+- `release_truth_current == true`
+
+So the shortlist should still remain:
+
+1. plotting
+2. remote retrieval
+3. protein-property rework
+
+This remains a planning checkpoint only. It does not promote
+protein-property work, and it does not weaken the active plotting-first
+decision.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does
