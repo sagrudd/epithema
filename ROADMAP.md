@@ -1772,4 +1772,107 @@ implementation-program cycle. The near-term priorities are:
       fallback implementation start that the governed decision did not choose.
 
 122. Extend this roadmap again after Task `120` or `121`, using the generated truth plus the observed `pepinfo` seam behavior rather than the pre-`pepinfo` assumptions.
-    - Rebase the next planning tier on the actual post-`pepinfo` state.
+    - Complete.
+    - The roadmap is now rebased on the actual post-`pepinfo` state rather
+      than on the pre-`pepinfo` assumptions.
+    - Current governed truth carried forward into the next tier:
+      - shipped methods: `99`
+      - compared evidence: `99`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `99`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Current planning consequence carried forward:
+      - bounded plotting Phase 1 passed explicit reassessment
+      - the repository remains on the plotting path
+      - the next gate is bounded Phase 2 plotting candidate selection, not
+        direct implementation
+
+## Next Tier Task Map
+
+123. Inventory the remaining plotting-family methods not already covered by the preexisting governed seam or the bounded Phase 1 slice.
+    - Produce the explicit remainder set after excluding:
+      - preexisting governed seam:
+        - `charge`
+        - `pepwindow`
+        - `wordcount`
+      - bounded Phase 1 slice:
+        - `hmoment`
+        - `octanol`
+        - `pepinfo`
+    - The remaining inventory should be written into the roadmap or governance
+      appendix as the concrete Phase 2 candidate pool.
+
+124. Classify the remaining plotting-family methods by seam pressure.
+    - Split the remainder set into bounded decision buckets:
+      - likely seam-compatible
+      - requires broader contract taxonomy
+      - dotplot-style or comparative-matrix heavy
+      - diagram/layout or presentation-heavy
+      - specialized laboratory-trace or kinetic plotting
+    - Keep this classification governance-only and honest; do not imply any
+      method is “next” yet.
+
+125. Reassess whether any remaining plotting-family method still fits the proven bounded seam closely enough to justify Phase 2.
+    - Make the actual pass/fail decision from the classified remainder set.
+    - If no method still fits the proven seam, stop plotting-family
+      continuation cleanly and activate retrieval-fallback planning instead.
+
+126. If at least one plotting-family method remains seam-compatible, choose exactly one bounded Phase 2 candidate.
+    - Do not choose more than one method.
+    - The chosen candidate must be:
+      - method-associated
+      - table-first
+      - typed-contract-friendly
+      - renderer-agnostic in Rust
+
+127. If no plotting-family method remains seam-compatible, promote the retrieval fallback from “ready” to the active next planning program.
+    - Record that decision explicitly rather than leaving it implied.
+    - This task is only for the no-candidate branch.
+
+128. If a plotting Phase 2 candidate exists, capture that method’s bounded acceptance criteria before any code starts.
+    - Keep the acceptance criteria parallel to the `hmoment` / `octanol` /
+      `pepinfo` method-level planning pattern.
+
+129. If a plotting Phase 2 candidate exists, capture exact start conditions for its first implementation patch.
+    - Preserve the same no-widening rules used in bounded Phase 1.
+
+130. If a plotting Phase 2 candidate exists, map the full bounded implementation tier for that one method before writing code.
+    - Map:
+      - analytical core
+      - typed contract path
+      - governed shipped surface
+      - canonical fixtures and compared evidence
+      - post-ship release-truth rerun
+      - post-ship reassessment
+
+131. If the no-candidate branch is chosen, map the bounded retrieval fallback implementation tier explicitly.
+    - Start from the already-governed retrieval fallback shortlist:
+      - `seqretsetall`
+      - `seqretsplit`
+      - `infoassembly`
+
+132. If the no-candidate branch is chosen, choose exactly one retrieval fallback lead method.
+    - Keep the retrieval path bounded and method-associated in the same way
+      the plotting path was bounded.
+
+133. Reconfirm that protein-property still remains the third candidate after the Phase 2 candidate-selection gate resolves.
+    - Reassess only after the repository knows whether it stayed on plotting or
+      switched to retrieval fallback planning.
+
+134. Reconfirm that the release-truth surface still remains zero-burden after the Phase 2 candidate-selection decision.
+    - This should remain a documentation/reporting truth check, not a new
+      report unless a real ambiguity appears.
+
+135. If the repository stays on plotting, capture the explicit stop conditions that would finally force fallback activation.
+    - Make the failure conditions concrete rather than leaving them as generic
+      “contract sprawl” language.
+
+136. Extend the roadmap again after the Phase 2 candidate-selection branch is resolved.
+    - Rebase the following tier on the actual decision:
+      - bounded Phase 2 plotting continuation, or
+      - bounded retrieval fallback activation
