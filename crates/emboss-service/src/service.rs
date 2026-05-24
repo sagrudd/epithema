@@ -45,6 +45,9 @@ use emboss_tools::feature_tools::{
     run_featreport, run_feattext, run_maskambignuc, run_maskambigprot, run_maskfeat,
     run_maskseq, run_splitsource, run_twofeat, splitsource_help, twofeat_help,
 };
+use emboss_tools::nucleotide_plots::{
+    DensityParams, density_help, run_density,
+};
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
     run_needleall, run_water, water_help,
@@ -333,6 +336,7 @@ impl EmbossService {
             "seqmatchall" => self.invoke_seqmatchall(request, descriptor),
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
+            "density" => self.invoke_density(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "hmoment" => self.invoke_hmoment(request, descriptor),
             "octanol" => self.invoke_octanol(request, descriptor),
@@ -5045,6 +5049,139 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_density(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, density_help()));
+        }
+
+        let (params, plot_contract_out) = parse_density_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_density(DensityParams {
+            input,
+            window: params.window,
+            step: params.step,
+        })?;
+        let status_message = format!(
+            "computed bounded nucleotide density profile across {} windows",
+            outcome.profile.windows.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "canonical_symbols".to_owned(),
+                    "ambiguous_symbols".to_owned(),
+                    "ignored_gap_symbols".to_owned(),
+                    "adenine_fraction".to_owned(),
+                    "cytosine_fraction".to_owned(),
+                    "guanine_fraction".to_owned(),
+                    "thymine_or_uracil_fraction".to_owned(),
+                    "at_fraction".to_owned(),
+                    "gc_fraction".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .windows
+                    .iter()
+                    .map(|window| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            window.window_start.to_string(),
+                            window.window_end.to_string(),
+                            window.window_length.to_string(),
+                            window.canonical_symbols.to_string(),
+                            window.ambiguous_symbols.to_string(),
+                            window.ignored_gap_symbols.to_string(),
+                            format!("{:.6}", window.adenine_fraction),
+                            format!("{:.6}", window.cytosine_fraction),
+                            format!("{:.6}", window.guanine_fraction),
+                            format!("{:.6}", window.thymine_or_uracil_fraction),
+                            format!("{:.6}", window.at_fraction),
+                            format!("{:.6}", window.gc_fraction),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("Nucleotide density profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line(format!("Window: {}", outcome.profile.window))
+                .with_line(format!("Step: {}", outcome.profile.step))
+                .with_line("X axis: 1-based window start")
+                .with_line("Y axis: GC fraction")
+                .with_line("Analytical table also reports A/C/G/T(U), AT, GC, canonical, ambiguous, and gap counts")
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize density plot contract: {error}"),
+                )
+                .with_code("service.density.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write density plot contract to {}", path.display()),
+                )
+                .with_code("service.density.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("density plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("density-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Density plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_octanol(
         &self,
         request: InvocationRequest,
@@ -8881,6 +9018,78 @@ fn parse_hmoment_params(
     ))
 }
 
+fn parse_density_params(
+    arguments: &[String],
+) -> Result<(DensityParams, Option<PathBuf>), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("density", density_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut window = 11usize;
+    let mut step = 1usize;
+    let mut plot_contract_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--window=") {
+            window = parse_positive_count("density", value, "--window")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --window")
+                    .with_code("service.tool.density.window_missing")
+            })?;
+            window = parse_positive_count("density", value, "--window")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--step=") {
+            step = parse_positive_count("density", value, "--step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --step")
+                    .with_code("service.tool.density.step_missing")
+            })?;
+            step = parse_positive_count("density", value, "--step")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.density.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown density argument '{argument}'"),
+        )
+        .with_code("service.tool.density.argument_unknown")
+        .with_detail(density_help()));
+    }
+
+    Ok((DensityParams { input, window, step }, plot_contract_out))
+}
+
 fn parse_octanol_params(
     arguments: &[String],
 ) -> Result<(OctanolParams, Option<PathBuf>), ServiceError> {
@@ -10885,6 +11094,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
+        "density" => density_help(),
         "charge" => charge_help(),
         "hmoment" => hmoment_help(),
         "octanol" => octanol_help(),
@@ -11123,6 +11333,11 @@ mod tests {
     fn hmoment_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/hmoment_protein.fasta")
+    }
+
+    fn density_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/density_nucleotide.fasta")
     }
 
     fn octanol_fixture() -> std::path::PathBuf {
@@ -15113,6 +15328,92 @@ mod tests {
             .as_ref()
             .expect("hmoment should attach a plot payload");
         assert_eq!(plot.kind.as_str(), "line");
+    }
+
+    #[test]
+    fn executes_density_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("density").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            density_fixture().display().to_string(),
+            "--window".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("density should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 4);
+                assert_eq!(table.rows[0][0], "density_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "4");
+                assert_eq!(table.rows[0][12], "0.500000");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("density should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+        assert_eq!(plot.series.len(), 1);
+    }
+
+    #[test]
+    fn density_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-density-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("density").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            density_fixture().display().to_string(),
+            "--window".to_owned(),
+            "4".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("density should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"density\""));
+        assert!(emitted.contains("\"method\": \"nucleotide_density_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "density-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn density_rejects_invalid_window() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("density").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            density_fixture().display().to_string(),
+            "--window".to_owned(),
+            "0".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid window should fail");
+        assert_eq!(error.code(), Some("service.tool.density.--window_invalid"));
     }
 
     #[test]

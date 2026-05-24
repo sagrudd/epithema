@@ -2144,7 +2144,14 @@ implementation-program cycle. The near-term priorities are:
       - no autodoc or generated validation/docs yet
       - no canonical fixture or compared evidence yet
 
-139. Expose `density` through the governed shipped surface.
+139. Complete. `density` is now exposed through the governed shipped surface.
+    The staged Phase 2 nucleotide plotting path is now wired through the
+    governed registry, service, CLI, autodoc, generated tool page, and
+    validation stub. This leaves the repository in the intended interim state
+    for this task boundary: shipped methods `100`, compared evidence `99`,
+    executable evidence `1`, harvest coverage complete, and full-compared
+    cohort temporarily false until the canonical fixtures and compared
+    acceptance evidence land in Task 140.
     - Wire the bounded method through registry, service, CLI, and governed
       autodoc.
     - Accept the temporary shipped-plus-executable-evidence interim only until

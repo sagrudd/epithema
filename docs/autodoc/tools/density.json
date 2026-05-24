@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "density-v1",
+  "tool": {
+    "name": "density",
+    "family": "nucleotide_plots",
+    "summary": "Report a sliding-window nucleotide density profile and emit a line-plot contract",
+    "legacy_names": [
+      "density"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`density` is the first shipped Phase 2 method in the bounded plotting rework continuation. The EMBOSS-RS v1 surface computes one deterministic sliding-window nucleotide density profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one nucleotide sequence record. v1 supports DNA and RNA inputs, treats `--window` and `--step` as positive residue counts, defaults to `--window 11` and `--step 1`, and rejects sequences shorter than the requested window."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable analytical table with `sequence_id`, `window_start`, `window_end`, `window_length`, `canonical_symbols`, `ambiguous_symbols`, `ignored_gap_symbols`, `adenine_fraction`, `cytosine_fraction`, `guanine_fraction`, `thymine_or_uracil_fraction`, `at_fraction`, and `gc_fraction`. The staged v1 line-plot contract remains single-series and plots the analytically derived `gc_fraction` values from the same governed computation path."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `density` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `density` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes a richer bounded nucleotide-density surface."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs density`. At this task boundary the method is shipped with executable evidence and harvested historical provenance, but canonical checked-in plot-contract comparison and full compared acceptance evidence are still pending."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record bounded density profile and does not add Rust-side rendering, multi-series plotting, or a generalized plotting framework. Additional plotting continuation should remain bounded by the same explicit fallback-activation stop conditions already recorded in governance."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "density_fixture",
+      "label": "Nucleotide fixture for governed density validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/density_nucleotide.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture used for deterministic density validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "density_profile_example",
+      "title": "Compute a deterministic nucleotide density profile",
+      "description": "Reports deterministic sliding-window nucleotide-density rows from the committed nucleotide fixture and emits a governed single-series GC-fraction line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "density_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "window",
+          "value": "4"
+        },
+        {
+          "name": "step",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "density_table",
+          "label": "Nucleotide density table",
+          "description": "Stable sliding-window nucleotide-density rows with explicit canonical, ambiguous, and gap-accounting columns."
+        },
+        {
+          "id": "density_plot",
+          "label": "GC-fraction line-plot contract",
+          "description": "The staged governed line-plot contract JSON emitted from the same deterministic analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS density application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/density.acd",
+        "invocation": "density -sequence density_nucleotide.fasta -window 4 -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "density_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

@@ -5,8 +5,8 @@ This page is generated from the shipped cohort validation report. It exists to s
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Shipped methods: `99`
-- Methods with harvested legacy provenance recorded: `99`
+- Shipped methods: `100`
+- Methods with harvested legacy provenance recorded: `100`
 - Harvest exceptions: `0`
 - Harvest coverage complete: `yes`
 

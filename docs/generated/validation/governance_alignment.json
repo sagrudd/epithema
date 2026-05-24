@@ -6,16 +6,16 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 99,
-    "shipped_with_governance_mapping_count": 99,
+    "shipped_tool_count": 100,
+    "shipped_with_governance_mapping_count": 100,
     "shipped_retain_count": 90,
-    "shipped_rework_count": 9,
+    "shipped_rework_count": 10,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
     "retained_backlog_count": 0,
-    "shipped_curated_autodoc_count": 99,
-    "shipped_executable_or_better_count": 99,
-    "shipped_harvested_legacy_presence_count": 99,
+    "shipped_curated_autodoc_count": 100,
+    "shipped_executable_or_better_count": 100,
+    "shipped_harvested_legacy_presence_count": 100,
     "shipped_compared_count": 99,
     "shipped_documented_only_count": 0
   },
@@ -588,6 +588,15 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "density",
+      "shipped_family": "nucleotide_plots",
+      "shipped_summary": "report a sliding-window nucleotide density profile and emit a line-plot contract",
+      "governance_family": "Modernize — Rework — Plotting and visualization tools",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "charge",
       "shipped_family": "protein_plots",
       "shipped_summary": "report a sliding-window protein charge profile and emit a line-plot contract",
@@ -1083,8 +1092,8 @@
       "retained_total": 0,
       "retained_shipped": 0,
       "retained_backlog": 0,
-      "shipped_curated_autodoc": 5,
-      "shipped_executable_or_better": 5,
+      "shipped_curated_autodoc": 6,
+      "shipped_executable_or_better": 6,
       "shipped_compared": 5,
       "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []

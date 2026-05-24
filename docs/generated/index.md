@@ -36,6 +36,7 @@ tools/cusp
 tools/cutseq
 tools/dan
 tools/degapseq
+tools/density
 tools/descseq
 tools/diffseq
 tools/distmat
