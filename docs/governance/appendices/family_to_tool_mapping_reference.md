@@ -1393,6 +1393,65 @@ The non-selected viable methods at this checkpoint remain:
 So the next bounded planning step should be to capture `density`-specific
 acceptance criteria and patch start conditions before any code starts.
 
+#### `density` method-level acceptance criteria
+
+Before code changes begin for the selected bounded Phase 2 plotting method,
+`density` should have explicit method-level acceptance criteria recorded as
+follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded nucleotide-sequence input only
+- Rust should compute the analytical `density` profile directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be described honestly as a bounded nucleotide
+  density profile, not as a generic plotting framework extension
+- the primary output should remain a stable analytical table with one row per
+  emitted window or segment and explicit columns sufficient to reconstruct the
+  plotted line
+- the analytical output should stay inside the same table-first contract style
+  already used by the governed plotting seam
+
+##### Typed contract expectations
+
+- the same run should emit a deterministic typed plot contract derived from the
+  analytical table output
+- the contract should remain single-series unless the analytical needs of
+  `density` itself make broader structure unavoidable
+- any contract emitted should stay renderer-agnostic and avoid styling or
+  layout policy in Rust
+- Rust should own only:
+  - numerical series construction
+  - domain metadata needed for faithful rendering
+  - stable contract serialization
+- `emboss-r` should remain responsible for presentation choices and final
+  figure rendering
+
+##### Fixture and evidence expectations
+
+- the method must gain governed autodoc before it is treated as shipped
+- the method must gain generated docs and generated validation metadata in the
+  same governed path as the shipped cohort
+- canonical checked-in analytical and plot-contract fixtures must be committed
+- compared evidence must validate both:
+  - the analytical table output
+  - the canonical plot-contract JSON
+- the method should not be considered complete on executable-only evidence
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no silent widening into a generic plotting framework
+- no dotplot, matrix, circular-map, or pretty-display behavior
+- no inference that other remaining plotting-family members are already in
+  scope merely because `density` ships
+- no broader plot-contract taxonomy unless the analytical needs of `density`
+  make that pressure concrete enough to stop and reassess
+
+If `density` cannot satisfy these criteria while remaining a bounded
+method-associated plotting method, the repository should pause and reassess
+before starting the next code-bearing Phase 2 patch.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

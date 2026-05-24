@@ -1933,8 +1933,25 @@ implementation-program cycle. The near-term priorities are:
       fallback promotion that the governed decision did not choose.
 
 128. If a plotting Phase 2 candidate exists, capture that method’s bounded acceptance criteria before any code starts.
-    - Keep the acceptance criteria parallel to the `hmoment` / `octanol` /
-      `pepinfo` method-level planning pattern.
+    - Complete.
+    - Governed method-level acceptance criteria for the selected Phase 2
+      candidate `density` are now recorded explicitly in the
+      plotting-governance appendix.
+    - The criteria keep the bounded Phase 2 shape parallel to the earlier
+      method-level planning pattern used for `hmoment`, `octanol`, and
+      `pepinfo`.
+    - Recorded expectations:
+      - bounded nucleotide-sequence analytical profile
+      - stable table-first analytical output
+      - deterministic typed plot contract from the same computation path
+      - canonical analytical and plot-contract fixtures
+      - compared evidence for both table and contract outputs
+    - Recorded non-goals:
+      - no Rust-side figure rendering
+      - no generic plotting-framework widening
+      - no dotplot, matrix, circular-map, or pretty-display behavior
+      - no broader contract taxonomy unless `density` itself forces a real
+        reassessment
 
 129. If a plotting Phase 2 candidate exists, capture exact start conditions for its first implementation patch.
     - Preserve the same no-widening rules used in bounded Phase 1.
