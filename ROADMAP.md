@@ -1976,13 +1976,26 @@ implementation-program cycle. The near-term priorities are:
         reassessment
 
 130. If a plotting Phase 2 candidate exists, map the full bounded implementation tier for that one method before writing code.
-    - Map:
-      - analytical core
-      - typed contract path
-      - governed shipped surface
-      - canonical fixtures and compared evidence
-      - post-ship release-truth rerun
-      - post-ship reassessment
+    - Complete.
+    - The full bounded implementation tier for the selected Phase 2 candidate
+      `density` is now mapped explicitly in the plotting-governance appendix.
+    - The mapped tier is:
+      1. implement the bounded analytical core
+      2. add the typed plot-contract emission path
+      3. expose `density` through the governed shipped surface
+      4. add canonical analytical and plot-contract fixtures plus compared
+         evidence
+      5. re-run the full release-truth surface after shipping `density`
+      6. reassess the shipped `density` slice before any further Phase 2
+         plotting continuation is mapped
+    - The mapped tier preserves the same bounded architectural rules:
+      - method-associated implementation only
+      - table-first analytical output
+      - typed contract output from the same computation path
+      - no Rust-side rendering
+      - no generic plotting-framework widening
+      - no broader contract taxonomy unless `density` itself forces a real
+        reassessment
 
 131. If the no-candidate branch is chosen, map the bounded retrieval fallback implementation tier explicitly.
     - Start from the already-governed retrieval fallback shortlist:

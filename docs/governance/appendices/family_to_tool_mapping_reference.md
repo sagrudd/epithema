@@ -1499,6 +1499,37 @@ If any of these start conditions cease to hold before code changes begin, the
 repository should re-open planning rather than starting the Phase 2 patch under
 a looser scope.
 
+#### Bounded `density` implementation tier
+
+Because `density` is now the single selected Phase 2 candidate, the repository
+should map its full bounded implementation tier explicitly before any code
+starts.
+
+That tier should stay parallel to the earlier bounded method sequences rather
+than widening the plotting program informally:
+
+1. implement the bounded analytical core for `density`
+2. add the typed `density` plot-contract emission path
+3. expose `density` through the governed shipped surface
+4. add canonical analytical and plot-contract fixtures plus compared evidence
+5. re-run the full release-truth surface after shipping `density`
+6. reassess the shipped `density` slice before any further Phase 2 plotting
+   continuation is mapped
+
+The bounded `density` tier should preserve the same architectural constraints
+already proven by the bounded plotting seam:
+
+- method-associated implementation only
+- table-first analytical output
+- typed plot-contract output from the same computation path
+- no Rust-side rendering behavior
+- no silent widening into a generic plotting framework
+- no broader contract taxonomy unless `density` itself makes that pressure
+  concrete enough to stop and reassess
+
+So the next code-bearing plotting work should not begin as a vague “continue
+Phase 2” step. It should begin as this explicit bounded `density` tier.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does
