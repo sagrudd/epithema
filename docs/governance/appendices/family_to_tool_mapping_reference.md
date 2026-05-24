@@ -1572,6 +1572,45 @@ If activation is required, the repository should switch directly to the already
 prepared retrieval-fallback path without reopening broader family-order
 ambiguity first.
 
+#### Reassessment after the shipped `density` slice
+
+After the bounded `density` tier closed as a shipped governed slice, the
+repository should make the seam reassessment explicit before mapping any
+further plotting continuation.
+
+The result of that reassessment is affirmative:
+
+- `density` stayed method-associated
+- the analytical surface remained table-first and honest about richer
+  nucleotide-density rows rather than collapsing the method into a plot-only
+  contract
+- the emitted plot contract stayed bounded to a single derived GC-density
+  series
+- no Rust-side rendering or presentation-policy pressure emerged
+- no generalized plotting-framework pressure emerged
+- no fallback-activation stop condition tripped
+
+The concrete basis is:
+
+- `density` shipped as one bounded nucleotide analytical helper plus one
+  method-specific plotting path
+- the richer analytical table remained the primary truth surface, while the
+  contract stayed a bounded renderer-agnostic derivative rather than widening
+  into a broader taxonomy
+- compared evidence closed both analytical and contract outputs
+- the governed release-truth surface remained fully green:
+  - shipped methods: `100`
+  - compared evidence: `100`
+  - executable evidence: `0`
+  - harvested legacy provenance present: `100`
+  - `full_compared_cohort: true`
+  - `harvest_coverage_complete: true`
+  - `retained_backlog_closed: true`
+  - `release_truth_current: true`
+
+So the repository remains on the plotting continuation path, and the prepared
+retrieval fallback remains documented and ready but inactive.
+
 #### Reconfirmation after the Phase 2 candidate-selection gate
 
 After the Phase 2 plotting-candidate gate resolved in favor of staying on the

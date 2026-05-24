@@ -2175,9 +2175,17 @@ implementation-program cycle. The near-term priorities are:
     complete `true`, retained-backlog closed `true`, and release-truth current
     `true`.
 
-142. Reassess the shipped `density` slice before any further plotting continuation is mapped.
-    - Decide whether `density` stayed inside the bounded seam or forced one of
-      the explicit fallback-activation stop conditions.
+142. Complete. Reassess the shipped `density` slice before any further plotting continuation is mapped.
+    The `density` slice stayed inside the bounded seam. It shipped as one
+    method-associated nucleotide analytical helper plus one method-associated
+    plotting path, kept the table-first surface honest with richer base-density
+    rows, and emitted only a bounded single-series GC-density contract rather
+    than forcing broader taxonomy or renderer-coupled pressure. No fallback-
+    activation stop condition tripped, and the governed release-truth surface
+    remained fully green: shipped methods `100`, compared evidence `100`,
+    executable evidence `0`, harvested legacy provenance present `100`,
+    full-compared cohort `true`, harvest coverage complete `true`,
+    retained-backlog closed `true`, and release-truth current `true`.
 
 143. If `density` trips a fallback-activation stop condition, activate the prepared retrieval fallback path explicitly.
     - Promote the retrieval path from prepared to active only if the concrete
