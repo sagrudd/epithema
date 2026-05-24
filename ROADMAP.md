@@ -2252,9 +2252,16 @@ implementation-program cycle. The near-term priorities are:
     and the repository remains on the plotting path for the next bounded
     selection step.
 
-148. Reconfirm that protein-property still remains the third candidate after the `density` shipment gate resolves.
-    - Reassess only after the repository knows whether it stayed on plotting
-      or activated retrieval fallback.
+148. Complete. Reconfirm that protein-property still remains the third candidate after the `density` shipment gate resolves.
+    The shortlist does not change after the `density` shipment gate:
+      1. plotting
+      2. remote retrieval
+      3. protein-property rework
+    Plotting remains the active path because the bounded seam survived a Phase
+    2 shipment and still has a non-empty next-candidate pool, retrieval
+    remains the clearest prepared fallback, and protein-property still lacks
+    the same immediate bounded continuation detail as the two higher-ranked
+    programs.
 
 149. Reconfirm that the release-truth surface still remains zero-burden after the `density` shipment gate resolves.
     - This should remain a documentation/reporting truth check, not a new

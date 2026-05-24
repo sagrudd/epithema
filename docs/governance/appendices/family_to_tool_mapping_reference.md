@@ -1802,12 +1802,11 @@ What this decision does **not** do:
 So the no-candidate branch is not taken here. The repository should continue
 to the next explicit bounded candidate-selection step.
 
-#### Reconfirmation after the Phase 2 candidate-selection gate
+#### Reconfirmation after the `density` shipment gate
 
-After the Phase 2 plotting-candidate gate resolved in favor of staying on the
-plotting path and selecting `density` as the single active continuation
-candidate, protein-property rework should still remain the third candidate in
-the shortlist.
+After the repository stayed on the plotting path through the bounded
+`density` shipment gate, protein-property rework should still remain the third
+candidate in the shortlist.
 
 That conclusion remains explicit because the two higher-ranked programs are
 still more implementation-ready in concrete terms:
@@ -1816,9 +1815,14 @@ still more implementation-ready in concrete terms:
   - bounded plotting Phase 1 passed without forcing generic plotting-framework
     widening
   - the Phase 2 seam-compatibility gate also passed
-  - `density` is now the single selected bounded continuation candidate with
-    method-level criteria, patch start conditions, and an explicit full
-    implementation tier already mapped
+  - `density` has now shipped as a bounded Phase 2 slice without forcing
+    fallback activation
+  - the post-`density` viability gate still leaves a non-empty narrowed
+    next-candidate pool:
+    - `banana`
+    - `isochore`
+    - `syco`
+    - `wobble`
 - remote retrieval still remains the clearest prepared fallback because its
   bounded Phase 1 subset, provider-aware seams, and deterministic evidence
   model are already documented and still inactive
@@ -1828,9 +1832,9 @@ still more implementation-ready in concrete terms:
 
 The fully green release-truth surface still does not alter that ordering:
 
-- shipped methods: `99`
-- compared evidence: `99`
-- harvested legacy provenance present: `99`
+- shipped methods: `100`
+- compared evidence: `100`
+- harvested legacy provenance present: `100`
 - `full_compared_cohort == true`
 - `harvest_coverage_complete == true`
 - `retained_backlog_closed == true`
