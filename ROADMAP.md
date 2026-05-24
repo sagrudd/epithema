@@ -1627,3 +1627,77 @@ implementation-program cycle. The near-term priorities are:
       - no registry or CLI exposure yet
       - no governed autodoc or generated validation/docs yet
       - no canonical fixture or compared evidence yet
+
+113. Expose `pepinfo` through the governed shipped surface.
+    - Complete.
+    - `pepinfo` is now shipped through the governed registry, service, CLI,
+      autodoc, generated docs, and validation-stub surface.
+    - This task intentionally stopped at the interim shipped state:
+      - shipped with executable evidence
+      - harvested legacy provenance present
+      - canonical fixtures and compared evidence still pending in Task `114`
+
+114. Add canonical fixtures and compared evidence.
+    - Complete.
+    - `pepinfo` now has checked-in analytical and multi-series plot-contract
+      fixtures plus compared acceptance evidence.
+    - The governed shipped cohort returned to zero-burden release-truth state:
+      - shipped methods: `99`
+      - compared evidence: `99`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `99`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`
+
+115. Re-run the full release-truth surface after shipping `pepinfo`.
+    - Complete.
+    - The full governed release-generated and release-truth surface was rerun
+      after the bounded `pepinfo` slice closed.
+    - Observed result:
+      - `PYTHON=.venv-docs/bin/python make release-generated-check` passed
+      - `python3 scripts/release_metadata.py truth-check` passed
+      - `PYTHON=.venv-docs/bin/python make docs` passed
+      - `git diff --check` passed
+    - The generated state remained fully green:
+      - shipped methods: `99`
+      - compared evidence: `99`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `99`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
+
+116. Reassess the shipped `pepinfo` slice before any broader plotting expansion is mapped.
+    - Reassess whether the `pepinfo` seam stayed method-associated and
+      renderer-agnostic enough to justify further bounded plotting work.
+    - If `pepinfo` forces materially broader contract taxonomy, pause and do
+      not map broader plotting work by inertia.
+
+117. Reconfirm the remote-retrieval fallback if `pepinfo` widens the seam more than `hmoment` and `octanol` did.
+    - If `pepinfo` broadens the plotting seam beyond the bounded Phase 1
+      assumptions, explicitly restate whether the retrieval fallback should now
+      become the next active implementation program.
+
+118. Reassess whether protein-property still remains the third candidate after the full bounded plotting Phase 1 exists.
+    - Once all three bounded plotting methods exist, check whether the current
+      shortlist still holds:
+      1. plotting
+      2. remote retrieval
+      3. protein-property rework
+
+119. Decide explicitly whether bounded plotting Phase 1 is complete enough to continue plotting, or whether planning should switch to the retrieval fallback instead.
+    - Make the decision explicitly from observed seam behavior rather than from
+      the pre-`pepinfo` assumptions.
+
+120. If `pepinfo` passes its reassessment, map the next bounded post-Phase-1 plotting or retrieval gate explicitly before any further code starts.
+    - Do not continue directly into more plotting implementation without first
+      mapping the next bounded tier from the observed `pepinfo` seam.
+
+121. If `pepinfo` fails its reassessment, map the bounded retrieval fallback implementation tier explicitly before any further code starts.
+    - If the plotting seam becomes too broad, switch planning cleanly to the
+      prepared retrieval fallback rather than widening plotting informally.
+
+122. Extend this roadmap again after Task `120` or `121`, using the generated truth plus the observed `pepinfo` seam behavior rather than the pre-`pepinfo` assumptions.
+    - Rebase the next planning tier on the actual post-`pepinfo` state.
