@@ -1530,6 +1530,48 @@ already proven by the bounded plotting seam:
 So the next code-bearing plotting work should not begin as a vague “continue
 Phase 2” step. It should begin as this explicit bounded `density` tier.
 
+#### Explicit fallback-activation stop conditions for continued plotting
+
+Because the repository has now stayed on the plotting path beyond bounded Phase
+1 and selected `density` as the active Phase 2 continuation candidate, the
+conditions that would finally force fallback activation should be concrete
+rather than described only as generic “contract sprawl.”
+
+The repository should stop continued plotting work and activate the prepared
+remote-retrieval fallback path if any of the following becomes true during the
+bounded `density` tier or any later plotting continuation gate:
+
+1. `density` cannot be expressed as a table-first analytical output plus a
+   typed contract derived from the same computation path without adding a
+   second non-derived plotting-only computation path.
+2. `density` requires Rust-side rendering behavior, layout policy, styling
+   logic, or presentation orchestration rather than remaining
+   renderer-agnostic.
+3. `density` cannot remain method-associated and instead demands a generalized
+   plotting framework before even one bounded shipped slice can close.
+4. `density` forces a broader plot-contract taxonomy that is not clearly
+   method-local, such as introducing fundamentally new chart classes,
+   interactive state, or presentation semantics that are better treated as a
+   separate planning program.
+5. the bounded `density` slice cannot land as a full governed slice with:
+   - implementation
+   - governed shipped-surface exposure
+   - canonical analytical and contract fixtures
+   - compared evidence for both outputs
+   - a green release-truth surface after shipment
+6. a later plotting continuation candidate after `density` fails the same seam
+   test and no equally bounded next plotting candidate remains.
+
+The repository should **not** activate the fallback merely because plotting
+work remains non-trivial, because a method has more than one analytical series,
+or because another viable plotting candidate might also exist. Activation
+should happen only when the bounded seam itself fails in one of the concrete
+ways above.
+
+If activation is required, the repository should switch directly to the already
+prepared retrieval-fallback path without reopening broader family-order
+ambiguity first.
+
 #### Reconfirmation after the Phase 2 candidate-selection gate
 
 After the Phase 2 plotting-candidate gate resolved in favor of staying on the

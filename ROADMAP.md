@@ -2060,8 +2060,24 @@ implementation-program cycle. The near-term priorities are:
       for another generated report.
 
 135. If the repository stays on plotting, capture the explicit stop conditions that would finally force fallback activation.
-    - Make the failure conditions concrete rather than leaving them as generic
-      “contract sprawl” language.
+    - Complete.
+    - The explicit fallback-activation stop conditions are now recorded in the
+      plotting-governance appendix for the bounded `density` tier and any later
+      plotting continuation gate.
+    - Continued plotting should now stop and the prepared retrieval fallback
+      should activate if any of the following becomes true:
+      1. the method cannot stay table-first with a typed contract derived from
+         the same computation path
+      2. the method requires Rust-side rendering, layout, styling, or other
+         presentation policy
+      3. the method cannot remain method-associated and instead demands a
+         generalized plotting framework before one bounded shipped slice closes
+      4. the method forces a broader non-local plot-contract taxonomy
+      5. the bounded slice cannot close as a full governed shipment with
+         fixtures, compared evidence, and a green release-truth surface
+      6. after `density`, no equally bounded next plotting candidate remains
+    - This replaces the earlier generic “contract sprawl” wording with an
+      explicit activation gate.
 
 136. Extend the roadmap again after the Phase 2 candidate-selection branch is resolved.
     - Rebase the following tier on the actual decision:
