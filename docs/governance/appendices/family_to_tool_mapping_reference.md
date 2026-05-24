@@ -1672,6 +1672,92 @@ So the explicit post-`density` plotting-family remainder pool is the remaining
 This section is inventory only. It does not yet reclassify seam pressure or
 choose the next bounded continuation candidate.
 
+#### Post-`density` seam-pressure reclassification
+
+Now that an actual bounded Phase 2 shipment exists, the post-`density`
+remainder pool can be reclassified with a more concrete seam reference than
+the earlier pre-shipment guesswork.
+
+The key new signal from `density` is:
+
+- the current seam comfortably supports a nucleotide analytical table that is
+  richer than the emitted plot
+- the emitted contract can still stay bounded to one derived renderer-agnostic
+  series
+- this makes “table-first with one bounded derived line” look proven, but it
+  does not automatically justify region-track, threshold-call, matrix, or
+  presentation-heavy continuations
+
+The explicit post-`density` remainder buckets are therefore:
+
+##### Strongest remaining seam-compatible candidates
+
+These methods still look closest to the now-proven seam because they appear
+most likely to remain method-associated, analytical, table-first, and
+renderer-agnostic without forcing broader contract vocabulary:
+
+- `banana`
+- `isochore`
+- `syco`
+- `wobble`
+
+##### Conditional region-oriented candidates
+
+These methods may still be bounded, but they now look less direct than the
+strongest bucket because they appear more likely to pressure the seam toward
+region calling, threshold semantics, or event-style reporting rather than a
+simple derived analytical profile:
+
+- `cpgplot`
+
+##### Requires broader contract taxonomy
+
+These methods still look biologically relevant, but they appear more likely to
+need a broader typed-contract vocabulary than the currently proven bounded
+profile seam:
+
+- `chaos`
+- `pepwindowall`
+- `plotcon`
+
+##### Dotplot-style or comparative-matrix heavy
+
+These methods still lean directly into comparative matrix or dotplot behavior,
+which remains outside the currently proven bounded seam:
+
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `polydot`
+
+##### Diagram, layout, or presentation-heavy
+
+These methods still appear to depend more on structural layout, diagram
+rendering, or pretty-display behavior than on the bounded analytical-profile
+seam proven so far:
+
+- `cirdna`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+
+##### Specialized laboratory-trace or kinetic plotting
+
+These methods still appear to need specialized trace or laboratory-kinetic
+handling rather than the current analytical-profile seam:
+
+- `abiview`
+- `findkm`
+
+This reclassification is still governance-only. It does not yet decide whether
+another bounded Phase 2 plotting candidate still exists, but it does narrow
+the strongest next-candidate pool more sharply than the pre-`density`
+classification did.
+
 #### Reconfirmation after the Phase 2 candidate-selection gate
 
 After the Phase 2 plotting-candidate gate resolved in favor of staying on the

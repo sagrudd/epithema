@@ -2228,9 +2228,17 @@ implementation-program cycle. The near-term priorities are:
       - `syco`
       - `wobble`
 
-146. If `density` remains bounded, classify the post-`density` plotting remainder by seam pressure again.
-    - Re-evaluate whether any previously viable candidate still looks bounded
-      after an actual Phase 2 shipment exists.
+146. Complete. Classify the post-`density` plotting remainder by seam pressure again.
+    The rebased remainder pool now splits more narrowly than the earlier
+    pre-`density` view. After an actual bounded Phase 2 shipment exists, the
+    strongest remaining seam-compatible candidates are:
+      - `banana`
+      - `isochore`
+      - `syco`
+      - `wobble`
+    `cpgplot` remains plausible but now sits in a more conditional
+    region-oriented bucket, while the broader-taxonomy, dotplot, diagram, and
+    specialized-trace buckets remain outside the currently proven bounded seam.
 
 147. If `density` remains bounded, decide whether another bounded Phase 2 plotting candidate still exists.
     - Use the explicit stop conditions from Task `135` rather than vague
