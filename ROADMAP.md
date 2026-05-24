@@ -2273,7 +2273,87 @@ implementation-program cycle. The near-term priorities are:
       - cohort health: `weak_evidence_method_count 0`,
         `weakest_evidence_family null`, `release_truth_current true`
 
-150. Extend the roadmap again after the `density` shipment gate resolves.
+150. Complete. Extend the roadmap again after the `density` shipment gate resolves.
+    The roadmap is now rebased on the actual observed branch:
+      - plotting remained the active path
+      - retrieval fallback remained documented, prepared, and inactive
+      - the strongest next-candidate pool narrowed to:
+        - `banana`
+        - `isochore`
+        - `syco`
+        - `wobble`
+    The current governed truth at this extension point remains:
+      - shipped methods: `100`
+      - compared evidence: `100`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `100`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+
+151. Choose exactly one bounded post-`density` plotting continuation candidate from the narrowed strong pool.
+    - Decide among:
+      - `banana`
+      - `isochore`
+      - `syco`
+      - `wobble`
+    - Keep the choice method-associated and seam-aware rather than treating all
+      four as interchangeable.
+
+152. If no credible bounded continuation candidate remains after the selection review, activate the prepared retrieval fallback path explicitly.
+    - Promote retrieval only if the narrowed plotting pool proves deceptive
+      against the explicit fallback stop conditions.
+
+153. If plotting remains active, close the untriggered retrieval-activation branch honestly.
+    - Keep the retrieval shortlist documented and prepared without promoting it
+      by inertia.
+
+154. Capture method-level acceptance criteria for the selected next plotting candidate.
+    - Record analytical expectations, typed-contract expectations, evidence
+      expectations, and explicit non-goals before code starts.
+
+155. Capture exact patch start conditions for the selected next plotting candidate.
+    - Require the current zero-burden release-truth state and keep scope
+      limited to one bounded method slice.
+
+156. Map the full bounded implementation tier for the selected next plotting candidate.
+    - Analytical core
+    - typed contract path
+    - governed shipped-surface exposure
+    - canonical fixtures and compared evidence
+    - post-ship release-truth rerun
+    - post-ship seam reassessment
+
+157. If the selected next plotting candidate widens into region-track, threshold-call, or broader contract-taxonomy pressure before code starts, pause and reconsider the family path.
+    - Do not force-fit a method through the bounded seam once the preconditions
+      are no longer honest.
+
+158. If the selected next plotting candidate stays bounded through planning, implement its bounded analytical core.
+    - Keep computation table-first and method-associated.
+
+159. Add the typed plot-contract emission path for the selected next plotting candidate.
+    - Keep the contract derived from the same analytical computation path.
+
+160. Expose the selected next plotting candidate through the governed shipped surface.
+    - Registry, service, CLI, governed autodoc, and generated validation/docs
+      must all land together.
+
+161. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
+    - Restore full compared/full harvest state after the temporary shipped-plus-
+      executable-only interim.
+
+162. Re-run the full release-truth surface after shipping the selected next plotting candidate.
+    - Use the broad generated-check path, truth-check, docs build, and diff
+      integrity checks.
+
+163. Reassess the shipped next plotting slice before any further continuation is mapped.
+    - Decide whether the seam still remains bounded or whether the prepared
+      retrieval fallback should finally activate.
+
+164. Extend the roadmap again after the next post-`density` plotting gate resolves.
     - Rebase the following tier on the actual observed branch:
       - bounded further plotting continuation, or
       - bounded retrieval fallback activation
