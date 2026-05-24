@@ -1998,7 +1998,14 @@ implementation-program cycle. The near-term priorities are:
         reassessment
 
 131. If the no-candidate branch is chosen, map the bounded retrieval fallback implementation tier explicitly.
-    - Start from the already-governed retrieval fallback shortlist:
+    - Complete as an untriggered conditional branch.
+    - The no-candidate branch was not chosen because Task `125` confirmed that
+      bounded Phase 2 plotting remains viable, and Task `126` selected
+      `density` as the single active Phase 2 candidate.
+    - No bounded retrieval fallback implementation tier was mapped in this
+      task.
+    - The already-governed retrieval fallback shortlist remains documented and
+      prepared, but inactive:
       - `seqretsetall`
       - `seqretsplit`
       - `infoassembly`
