@@ -2193,8 +2193,10 @@ implementation-program cycle. The near-term priorities are:
     repository remains on the plotting continuation branch, while the governed
     retrieval fallback remains documented, prepared, and inactive.
 
-144. If the retrieval fallback is activated, choose exactly one bounded retrieval lead method.
-    - Start from the already-governed shortlist:
+144. Complete. Close the untriggered retrieval-lead branch honestly.
+    No bounded retrieval lead method was chosen here because the retrieval
+    fallback was not activated. The governed shortlist remains documented,
+    prepared, and inactive:
       - `seqretsetall`
       - `seqretsplit`
       - `infoassembly`
