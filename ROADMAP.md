@@ -1721,8 +1721,22 @@ implementation-program cycle. The near-term priorities are:
       protein-property work.
 
 119. Decide explicitly whether bounded plotting Phase 1 is complete enough to continue plotting, or whether planning should switch to the retrieval fallback instead.
-    - Make the decision explicitly from observed seam behavior rather than from
-      the pre-`pepinfo` assumptions.
+    - Complete.
+    - The post-Phase-1 family decision has now been made explicitly in the
+      plotting-governance appendix.
+    - Result:
+      - continue plotting-family planning as the active path
+      - keep remote retrieval as the explicit prepared fallback
+      - do not switch families at this checkpoint
+    - Basis:
+      - all three bounded plotting methods stayed method-associated and
+        renderer-agnostic
+      - `pepinfo` introduced the first multi-series case without forcing a
+        generic plotting framework or broader contract taxonomy
+      - the release-truth surface remained fully green at `99` shipped methods
+    - So the next planning action should be to map the next bounded
+      post-Phase-1 gate explicitly rather than switching implementation
+      families by inertia.
 
 120. If `pepinfo` passes its reassessment, map the next bounded post-Phase-1 plotting or retrieval gate explicitly before any further code starts.
     - Do not continue directly into more plotting implementation without first

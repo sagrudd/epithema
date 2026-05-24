@@ -1100,6 +1100,44 @@ crosses the bounded Phase 1 seam into genuine contract sprawl or
 renderer-coupled pressure, the repository can still activate the retrieval
 fallback without reopening the broader family-selection decision first.
 
+#### Explicit post-Phase-1 family decision
+
+After the full bounded plotting Phase 1 has shipped and passed explicit
+reassessment, the repository should make the family decision explicit rather
+than leaving it implied by the earlier checkpoints.
+
+The correct post-Phase-1 decision is:
+
+- continue plotting-family planning as the active path
+- keep remote retrieval as the explicit prepared fallback
+- do not switch families at this checkpoint
+
+That decision is justified because:
+
+- the full bounded plotting Phase 1 stayed inside the intended architectural
+  seam:
+  - `hmoment` and `octanol` stayed single-series and method-associated
+  - `pepinfo` introduced the first multi-series case without widening into a
+    generic plotting framework
+  - all three methods remained table-derived and renderer-agnostic
+- the release-truth surface remained fully green through the full Phase 1:
+  - shipped methods: `99`
+  - compared evidence: `99`
+  - harvested legacy provenance present: `99`
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `release_truth_current == true`
+- the remote-retrieval fallback remains strong, but it is not being activated
+  in response to a real plotting failure condition here:
+  - no contract sprawl
+  - no renderer-coupled pressure
+  - no release-truth exception
+  - no family-order ambiguity
+
+So the next planning task should be to map the next bounded post-Phase-1 gate
+explicitly, not to switch implementation families by inertia.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does
