@@ -1247,6 +1247,71 @@ This section is inventory only. It does not yet classify seam pressure, select
 the next candidate, or imply that all of these methods remain plausible Phase 2
 continuations.
 
+#### Phase 2 seam-pressure classification
+
+The explicit Phase 2 candidate pool can now be split into bounded seam-pressure
+buckets without yet choosing the next implementation candidate.
+
+##### Likely seam-compatible
+
+These methods still look closest to the proven bounded seam because they appear
+most likely to remain analytical, table-first, and renderer-agnostic with a
+method-associated Rust computation path:
+
+- `banana`
+- `cpgplot`
+- `density`
+- `isochore`
+- `syco`
+- `wobble`
+
+##### Requires broader contract taxonomy
+
+These methods still look biologically relevant, but they appear more likely to
+need a broader typed-contract vocabulary than the current bounded line-profile
+seam:
+
+- `chaos`
+- `pepwindowall`
+- `plotcon`
+
+##### Dotplot-style or comparative-matrix heavy
+
+These methods lean directly into comparative matrix or dotplot behavior, which
+is outside the currently proven bounded seam:
+
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `polydot`
+
+##### Diagram, layout, or presentation-heavy
+
+These methods appear to depend more on structural layout, diagram rendering, or
+pretty-display behavior than on the narrow analytical-profile seam proven so
+far:
+
+- `cirdna`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+
+##### Specialized laboratory-trace or kinetic plotting
+
+These methods appear to need specialized trace or laboratory-kinetic plot
+handling rather than the current general analytical-profile seam:
+
+- `abiview`
+- `findkm`
+
+This classification is still governance-only. It does not yet choose the next
+Phase 2 candidate, and it does not imply that every method in the seam-
+compatible bucket is equally suitable.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

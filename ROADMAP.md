@@ -1839,14 +1839,41 @@ implementation-program cycle. The near-term priorities are:
       choose the Phase 2 candidate.
 
 124. Classify the remaining plotting-family methods by seam pressure.
-    - Split the remainder set into bounded decision buckets:
-      - likely seam-compatible
-      - requires broader contract taxonomy
-      - dotplot-style or comparative-matrix heavy
-      - diagram/layout or presentation-heavy
-      - specialized laboratory-trace or kinetic plotting
-    - Keep this classification governance-only and honest; do not imply any
-      method is “next” yet.
+    - Complete.
+    - The explicit Phase 2 plotting-family pool is now classified in the
+      plotting-governance appendix as bounded seam-pressure buckets.
+    - Classification result:
+      - likely seam-compatible:
+        - `banana`
+        - `cpgplot`
+        - `density`
+        - `isochore`
+        - `syco`
+        - `wobble`
+      - requires broader contract taxonomy:
+        - `chaos`
+        - `pepwindowall`
+        - `plotcon`
+      - dotplot-style or comparative-matrix heavy:
+        - `dotmatcher`
+        - `dotpath`
+        - `dottup`
+        - `polydot`
+      - diagram/layout or presentation-heavy:
+        - `cirdna`
+        - `lindna`
+        - `pepnet`
+        - `pepwheel`
+        - `prettyplot`
+        - `showfeat`
+        - `showpep`
+        - `showseq`
+      - specialized laboratory-trace or kinetic plotting:
+        - `abiview`
+        - `findkm`
+    - This remains governance-only classification. It does not yet choose the
+      Phase 2 candidate or imply that every seam-compatible method is equally
+      suitable.
 
 125. Reassess whether any remaining plotting-family method still fits the proven bounded seam closely enough to justify Phase 2.
     - Make the actual pass/fail decision from the classified remainder set.
