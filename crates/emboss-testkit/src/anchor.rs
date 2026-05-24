@@ -1235,8 +1235,8 @@ pub fn derive_acceptance_anchor_report(
         .with_detail(format!("{}: {error}", repo_root.join(spec.expected_output).display()))
     })?;
 
-    let actual_normalized = normalize_text(&actual.payload);
-    let expected_normalized = normalize_text(&expected);
+    let actual_normalized = normalize_text(repo_root, &actual.payload);
+    let expected_normalized = normalize_text(repo_root, &expected);
     if actual_normalized != expected_normalized {
         return Err(
             PlatformError::new(
@@ -1276,8 +1276,8 @@ pub fn derive_acceptance_anchor_report(
                     repo_root.join(expected_plot_output).display()
                 ))
             })?;
-        let actual_plot_normalized = normalize_text(&actual_plot);
-        let expected_plot_normalized = normalize_text(&expected_plot);
+        let actual_plot_normalized = normalize_text(repo_root, &actual_plot);
+        let expected_plot_normalized = normalize_text(repo_root, &expected_plot);
         if actual_plot_normalized != expected_plot_normalized {
             return Err(
                 PlatformError::new(
@@ -2375,13 +2375,44 @@ fn mocked_provider_request(tool_name: &str) -> (InvocationRequest, AnchorMockHtt
     }
 }
 
-fn normalize_text(text: &str) -> String {
-    text.replace("\r\n", "\n").trim_end().to_owned()
+fn normalize_text(repo_root: &Path, text: &str) -> String {
+    let repo_root = repo_root
+        .canonicalize()
+        .unwrap_or_else(|_| repo_root.to_path_buf());
+    text.replace("\r\n", "\n")
+        .trim_end()
+        .lines()
+        .map(|line| {
+            line.split('\t')
+                .map(|cell| normalize_repo_local_path(&repo_root, cell))
+                .collect::<Vec<_>>()
+                .join("\t")
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn normalize_repo_local_path(repo_root: &Path, cell: &str) -> String {
+    let path = Path::new(cell);
+    if path.is_absolute() {
+        if let Ok(relative) = path.strip_prefix(repo_root) {
+            return relative.display().to_string();
+        }
+
+        let normalized = cell.replace('\\', "/");
+        if let Some((_, relative)) = normalized.split_once("/emboss-rs/") {
+            return relative.to_owned();
+        }
+    }
+
+    cell.to_owned()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{acceptance_anchor_specs, derive_acceptance_anchor_report};
+    use std::path::Path;
+
+    use super::{acceptance_anchor_specs, derive_acceptance_anchor_report, normalize_text};
     use crate::{ComparisonStatus, ExecutionStatus};
 
     fn repo_root() -> std::path::PathBuf {
@@ -2409,5 +2440,18 @@ mod tests {
             assert_eq!(case.execution_status, ExecutionStatus::Executed);
             assert_eq!(case.comparison_status, ComparisonStatus::Passed);
         }
+    }
+
+    #[test]
+    fn normalizes_repo_local_absolute_paths_to_repo_relative_form() {
+        let repo_root = Path::new("/home/runner/work/emboss-rs/emboss-rs");
+        let text = "input\tcount\n/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta\t3\n/home/runner/work/emboss-rs/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta\t3";
+
+        let normalized = normalize_text(repo_root, text);
+
+        assert_eq!(
+            normalized,
+            "input\tcount\ncrates/emboss-tools/tests/fixtures/three_records.fasta\t3\ncrates/emboss-tools/tests/fixtures/three_records.fasta\t3"
+        );
     }
 }

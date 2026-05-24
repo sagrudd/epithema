@@ -1,2 +1,2 @@
 query	target	mode	query_length	target_length	compared_length	identity_count	mismatch_count	identity_percent	length_difference
-/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/needle_query.fasta	/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/needle_target.fasta	nucleotide	4	3	3	2	1	66	-1
+crates/emboss-tools/tests/fixtures/needle_query.fasta	crates/emboss-tools/tests/fixtures/needle_target.fasta	nucleotide	4	3	3	2	1	66	-1
