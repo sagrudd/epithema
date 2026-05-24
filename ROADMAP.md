@@ -1921,8 +1921,16 @@ implementation-program cycle. The near-term priorities are:
       starts.
 
 127. If no plotting-family method remains seam-compatible, promote the retrieval fallback from “ready” to the active next planning program.
-    - Record that decision explicitly rather than leaving it implied.
-    - This task is only for the no-candidate branch.
+    - Complete as not triggered.
+    - The no-candidate branch was not activated because Task `125` confirmed
+      that bounded Phase 2 plotting remains viable and Task `126` selected
+      `density` as the single bounded next-method candidate.
+    - Result:
+      - retrieval fallback remains documented, prepared, and inactive
+      - it was not promoted to the active planning path here
+      - the repository remains on the plotting continuation branch
+    - This closes the conditional branch honestly instead of inventing a
+      fallback promotion that the governed decision did not choose.
 
 128. If a plotting Phase 2 candidate exists, capture that method’s bounded acceptance criteria before any code starts.
     - Keep the acceptance criteria parallel to the `hmoment` / `octanol` /
