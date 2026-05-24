@@ -83,6 +83,7 @@ tools/palindrome
 tools/pasteseq
 tools/patmatdb
 tools/pepdigest
+tools/pepinfo
 tools/pepstats
 tools/pepwindow
 tools/preg

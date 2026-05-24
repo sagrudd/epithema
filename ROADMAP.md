@@ -1515,6 +1515,10 @@ implementation-program cycle. The near-term priorities are:
       - `111`: implement the bounded analytical core
       - `112`: add the typed plot-contract emission path
       - `113`: expose `pepinfo` through the governed shipped surface
+        - Status: complete
+        - Result: `pepinfo` is now shipped through the governed registry,
+          service, CLI, and autodoc surface as an intentionally interim
+          executable-evidence method pending Task `114`.
       - `114`: add canonical fixtures and compared evidence
       - `115`: re-run the full release-truth surface after shipping `pepinfo`
       - `116`: reassess the shipped `pepinfo` slice before any broader

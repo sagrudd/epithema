@@ -113,11 +113,11 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `98`
+- Shipped methods audited: `99`
 - Compared-evidence methods: `98`
-- Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `98`
-- Full compared cohort: `yes`
+- Executable-evidence methods: `1`
+- Methods with harvested legacy provenance recorded: `99`
+- Full compared cohort: `no`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -126,9 +126,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `98` shipped methods are documented and present in the generated docs
+- All `99` shipped methods are documented and present in the generated docs
   index.
-- All `98` shipped methods have a checked-in validation stub.
+- All `99` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -226,8 +226,9 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `98/98` shipped methods at compared evidence with `0`
-  methods below compared evidence.
+  and now records `98/99` shipped methods at compared evidence with `1`
+  method below compared evidence while `pepinfo` awaits canonical compared
+  fixtures.
 
 ### Harvest coverage reporting
 
@@ -235,7 +236,7 @@ Current generated release-truth markers:
 - Basis: the harvest-coverage exceptions report is generated at:
   - `docs/generated/validation/harvest_coverage.json`
   - `docs/generated/harvest_coverage.md`
-  and currently records `98/98` shipped methods with harvested legacy
+  and currently records `99/99` shipped methods with harvested legacy
   provenance and `0` harvest exceptions.
 
 ### Retained backlog closure tracking
@@ -294,14 +295,14 @@ Current generated release-truth markers:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `98` methods with harvested legacy provenance.
+- The cohort report now records `99` methods with harvested legacy provenance.
 - Harvest coverage is complete across the shipped cohort.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `97` methods with compared evidence.
+- The cohort report now records `98` methods with compared evidence.
 - The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily non-green while `octanol` awaits its canonical
+  cohort gate is temporarily non-green while `pepinfo` awaits its canonical
   fixture and compared acceptance closure.
 
 ### Plotting limitations
@@ -328,10 +329,10 @@ Current generated release-truth markers:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `98`
-- Compared-evidence methods: `97`
+- Shipped methods audited: `99`
+- Compared-evidence methods: `98`
 - Executable-evidence methods: `1`
-- Methods with harvested legacy provenance recorded: `98`
+- Methods with harvested legacy provenance recorded: `99`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `98` methods, including:
+of `99` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -39,7 +39,7 @@ of `98` methods, including:
   distance-matrix, and consensus tools
 - the retained exception tool `complex`
 - the first governed plot-producing analytical tools `charge`, `pepwindow`,
-  `hmoment`, and `octanol`
+  `hmoment`, `octanol`, and `pepinfo`
 
 ### Governed retrieval
 
@@ -64,9 +64,9 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `98` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `98` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped method carries executable evidence
+- `99` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -81,12 +81,17 @@ change the release gate state above.
 - `octanol` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
+- `pepinfo` now ships through the governed surface with executable validation
+  for its analytical table and typed multi-series plot-contract path, while
+  canonical committed fixtures and compared acceptance evidence remain the next
+  bounded closure step.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the shipped governed cohort is back in the zero-burden
-release-truth state after the bounded `octanol` evidence closure landed.
+remains complete, and the shipped governed cohort is temporarily one bounded
+`pepinfo` evidence-closure step away from returning to the zero-burden
+release-truth state.
 
 ### First-class R story
 

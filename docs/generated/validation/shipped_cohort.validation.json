@@ -3,16 +3,16 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 98,
-    "documentation_complete_count": 98,
-    "validation_stub_count": 98,
+    "total_method_count": 99,
+    "documentation_complete_count": 99,
+    "validation_stub_count": 99,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "harvested_legacy_presence_count": 98,
-    "executable_evidence_count": 0,
+    "harvested_legacy_presence_count": 99,
+    "executable_evidence_count": 1,
     "compared_evidence_count": 98,
-    "gapped_method_count": 0
+    "gapped_method_count": 1
   },
   "methods": [
     {
@@ -1215,6 +1215,33 @@
         {
           "code": "missing_explicit_legacy_reference",
           "message": "example 'octanol_profile_example' needs a legacy reference before comparison can run"
+        }
+      ]
+    },
+    {
+      "tool_name": "pepinfo",
+      "family": "protein_plots",
+      "summary": "report a bounded sliding-window multi-property protein profile and emit a multi-series line-plot contract",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'pepinfo' has no compared validation evidence yet"
+        },
+        {
+          "code": "missing_explicit_legacy_reference",
+          "message": "example 'pepinfo_profile_example' needs a legacy reference before comparison can run"
         }
       ]
     },

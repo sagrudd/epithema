@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "pepinfo-v1",
+  "tool": {
+    "name": "pepinfo",
+    "family": "protein_plots",
+    "summary": "Report a bounded sliding-window multi-property protein profile and emit a multi-series line-plot contract",
+    "legacy_names": [
+      "pepinfo"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`pepinfo` is the third shipped method in the bounded plotting rework program. The EMBOSS-RS v1 surface computes one deterministic sliding-window multi-property protein profile for exactly one protein sequence and emits both a stable analytical table and a typed multi-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one protein sequence record. v1 requires supported amino-acid residues, treats `--window` and `--step` as positive residue counts, defaults to `--window 9` and `--step 1`, and rejects sequences shorter than the requested window."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable table with `sequence_id`, `window_start`, `window_end`, `window_length`, `mean_hydropathy`, `mean_residue_mass`, `charged_fraction`, and `polar_fraction`, plus a typed multi-series line-plot contract payload. The x axis uses 1-based window starts and every plotted series is derived from the same governed analytical table."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `pepinfo` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `pepinfo` slice is the first bounded multi-series contract in the plotting rework, but it still stays table-derived, renderer-agnostic, and method-associated."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs pepinfo`. At this task boundary the governed surface includes executable validation for the stable analytical rows and emitted multi-series plot-contract path; canonical committed fixtures and compared acceptance evidence are still pending the next task."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record bounded `pepinfo` profile and does not add Rust-side rendering, broader plotting-family revival, or generic plotting-framework behavior. Additional plotting work should continue to reuse the same contract-and-renderer split rather than widening the Rust surface informally."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "pepinfo_fixture",
+      "label": "Protein fixture for governed pepinfo validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/pepinfo_protein.fasta"
+      },
+      "description": "Repository-managed protein fixture used for deterministic pepinfo validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "pepinfo_profile_example",
+      "title": "Compute a deterministic bounded protein profile",
+      "description": "Reports deterministic sliding-window multi-property rows from the committed protein fixture and emits a governed multi-series line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "pepinfo_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "window",
+          "value": "3"
+        },
+        {
+          "name": "step",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "pepinfo_table",
+          "label": "Bounded pepinfo profile table",
+          "description": "Stable sliding-window multi-property rows derived from the governed analytical path."
+        },
+        {
+          "id": "pepinfo_plot",
+          "label": "Pepinfo multi-series line-plot contract",
+          "description": "A deterministic typed multi-series line-plot contract emitted from the same governed analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS pepinfo application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepinfo.acd",
+        "invocation": "pepinfo -sequence pepinfo_protein.fasta -winsize 3 -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "pepinfo_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

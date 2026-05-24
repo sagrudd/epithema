@@ -58,8 +58,9 @@ use emboss_tools::pattern_tools::{
     wordfinder_help, wordmatch_help,
 };
 use emboss_tools::protein_plots::{
-    ChargeParams, HmomentParams, OctanolParams, PepwindowParams, charge_help, hmoment_help,
-    octanol_help, pepwindow_help, run_charge, run_hmoment, run_octanol, run_pepwindow,
+    ChargeParams, HmomentParams, OctanolParams, PepinfoParams, PepwindowParams, charge_help,
+    hmoment_help, octanol_help, pepinfo_help, pepwindow_help, run_charge, run_hmoment,
+    run_octanol, run_pepinfo, run_pepwindow,
 };
 use emboss_tools::restriction_tools::{
     RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
@@ -335,6 +336,7 @@ impl EmbossService {
             "charge" => self.invoke_charge(request, descriptor),
             "hmoment" => self.invoke_hmoment(request, descriptor),
             "octanol" => self.invoke_octanol(request, descriptor),
+            "pepinfo" => self.invoke_pepinfo(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
             "silent" => self.invoke_silent(request, descriptor),
@@ -5159,6 +5161,128 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_pepinfo(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, pepinfo_help()));
+        }
+
+        let (params, plot_contract_out) = parse_pepinfo_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_pepinfo(PepinfoParams {
+            input,
+            window: params.window,
+            step: params.step,
+        })?;
+        let status_message = format!(
+            "computed bounded pepinfo profile across {} windows",
+            outcome.profile.windows.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "mean_hydropathy".to_owned(),
+                    "mean_residue_mass".to_owned(),
+                    "charged_fraction".to_owned(),
+                    "polar_fraction".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .windows
+                    .iter()
+                    .map(|window| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            window.window_start.to_string(),
+                            window.window_end.to_string(),
+                            window.window_length.to_string(),
+                            format!("{:.6}", window.mean_hydropathy),
+                            format!("{:.6}", window.mean_residue_mass),
+                            format!("{:.6}", window.charged_fraction),
+                            format!("{:.6}", window.polar_fraction),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("Pepinfo protein profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line(format!("Window: {}", outcome.profile.window))
+                .with_line(format!("Step: {}", outcome.profile.step))
+                .with_line("X axis: 1-based window start")
+                .with_line("Series: hydropathy, residue mass, charged fraction, polar fraction")
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize pepinfo plot contract: {error}"),
+                )
+                .with_code("service.pepinfo.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write pepinfo plot contract to {}", path.display()),
+                )
+                .with_code("service.pepinfo.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("pepinfo plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("pepinfo-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Pepinfo plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_compseq(
         &self,
         request: InvocationRequest,
@@ -8836,6 +8960,85 @@ fn parse_octanol_params(
     ))
 }
 
+fn parse_pepinfo_params(
+    arguments: &[String],
+) -> Result<(PepinfoParams, Option<PathBuf>), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("pepinfo", pepinfo_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut window = 9usize;
+    let mut step = 1usize;
+    let mut plot_contract_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--window=") {
+            window = parse_positive_count("pepinfo", value, "--window")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --window")
+                    .with_code("service.tool.pepinfo.window_missing")
+            })?;
+            window = parse_positive_count("pepinfo", value, "--window")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--step=") {
+            step = parse_positive_count("pepinfo", value, "--step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --step")
+                    .with_code("service.tool.pepinfo.step_missing")
+            })?;
+            step = parse_positive_count("pepinfo", value, "--step")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.pepinfo.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown pepinfo argument '{argument}'"),
+        )
+        .with_code("service.tool.pepinfo.argument_unknown")
+        .with_detail(pepinfo_help()));
+    }
+
+    Ok((
+        PepinfoParams {
+            input,
+            window,
+            step,
+        },
+        plot_contract_out,
+    ))
+}
+
 fn parse_pepwindow_params(
     arguments: &[String],
 ) -> Result<(PepwindowParams, Option<PathBuf>), ServiceError> {
@@ -10685,6 +10888,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "charge" => charge_help(),
         "hmoment" => hmoment_help(),
         "octanol" => octanol_help(),
+        "pepinfo" => pepinfo_help(),
         "pepwindow" => pepwindow_help(),
         "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
@@ -10924,6 +11128,11 @@ mod tests {
     fn octanol_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/octanol_protein.fasta")
+    }
+
+    fn pepinfo_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/pepinfo_protein.fasta")
     }
 
     fn pepwindow_fixture() -> std::path::PathBuf {
@@ -15043,6 +15252,91 @@ mod tests {
             .invoke(request)
             .expect_err("invalid window should fail");
         assert_eq!(error.code(), Some("service.tool.octanol.--window_invalid"));
+    }
+
+    #[test]
+    fn executes_pepinfo_against_protein_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepinfo").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            pepinfo_fixture().display().to_string(),
+            "--window".to_owned(),
+            "3".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("pepinfo should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 7);
+                assert_eq!(table.rows[0][0], "pepinfo_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "3");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("pepinfo should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+        assert_eq!(plot.series.len(), 4);
+    }
+
+    #[test]
+    fn pepinfo_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-pepinfo-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepinfo").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            pepinfo_fixture().display().to_string(),
+            "--window".to_owned(),
+            "3".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("pepinfo should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"pepinfo\""));
+        assert!(emitted.contains("\"method\": \"protein_pepinfo_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "pepinfo-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn pepinfo_rejects_invalid_window() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("pepinfo").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            pepinfo_fixture().display().to_string(),
+            "--window".to_owned(),
+            "0".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid window should fail");
+        assert_eq!(error.code(), Some("service.tool.pepinfo.--window_invalid"));
     }
 
     #[test]
