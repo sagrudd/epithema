@@ -1597,3 +1597,25 @@ implementation-program cycle. The near-term priorities are:
       - no plot-contract emission yet
       - no registry or shipped-surface exposure yet
       - no governed autodoc or compared evidence yet
+
+112. Add the typed plot-contract emission path.
+    - Complete.
+    - The staged typed `pepinfo` plot-contract path now exists in
+      `emboss-tools` as a private method-associated plotting module.
+    - Implemented staged surface:
+      - one-record-only staged execution path over the Task `111` analytical
+        core
+      - deterministic table-derived typed line-plot contract
+      - four explicit staged series:
+        - `mean_hydropathy`
+        - `mean_residue_mass`
+        - `charged_fraction`
+        - `polar_fraction`
+      - governed provenance:
+        - tool: `pepinfo`
+        - method: `protein_pepinfo_profile`
+        - source artifact: `table:pepinfo-profile`
+    - This task intentionally stops before the shipped surface:
+      - no registry or CLI exposure yet
+      - no governed autodoc or generated validation/docs yet
+      - no canonical fixture or compared evidence yet

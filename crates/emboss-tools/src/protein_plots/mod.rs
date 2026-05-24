@@ -3,6 +3,7 @@
 mod charge;
 mod hmoment;
 mod octanol;
+mod pepinfo;
 mod pepwindow;
 
 use crate::ToolDescriptor;
