@@ -2080,6 +2080,90 @@ implementation-program cycle. The near-term priorities are:
       explicit activation gate.
 
 136. Extend the roadmap again after the Phase 2 candidate-selection branch is resolved.
-    - Rebase the following tier on the actual decision:
-      - bounded Phase 2 plotting continuation, or
+    - Complete.
+    - The roadmap has now been extended from the actual resolved branch rather
+      than the earlier placeholder split.
+    - Current governed truth at this extension point:
+      - shipped methods: `99`
+      - compared evidence: `99`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `99`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - The resolved planning state is now explicit:
+      - bounded plotting Phase 1 passed
+      - the Phase 2 seam-compatibility gate passed
+      - `density` is the single active bounded continuation candidate
+      - retrieval fallback remains documented and prepared, but inactive unless
+        the explicit stop conditions are triggered
+    - The next mapped tier is now:
+
+137. Implement the bounded analytical core for `density`.
+    - Keep it method-associated and table-first.
+    - Prefer the smallest support surface needed to compute the analytical
+      profile directly in Rust.
+
+138. Add the typed plot-contract emission path for `density`.
+    - The contract must derive from the same computation path as the table.
+    - Do not introduce Rust-side rendering behavior or a generalized plotting
+      framework.
+
+139. Expose `density` through the governed shipped surface.
+    - Wire the bounded method through registry, service, CLI, and governed
+      autodoc.
+    - Accept the temporary shipped-plus-executable-evidence interim only until
+      the compared-evidence follow-on closes.
+
+140. Add canonical analytical and plot-contract fixtures plus compared evidence for `density`.
+    - Close the `density` slice back to full compared/full harvest state.
+    - Regenerate the governed report surface and restore a green
+      release-truth posture.
+
+141. Re-run the full release-truth surface after shipping `density`.
+    - Run the broad generated-check path, truth-check, docs build, and diff
+      integrity checks.
+    - Record the observed post-ship state rather than assuming it remained
+      green.
+
+142. Reassess the shipped `density` slice before any further plotting continuation is mapped.
+    - Decide whether `density` stayed inside the bounded seam or forced one of
+      the explicit fallback-activation stop conditions.
+
+143. If `density` trips a fallback-activation stop condition, activate the prepared retrieval fallback path explicitly.
+    - Promote the retrieval path from prepared to active only if the concrete
+      activation gate is actually crossed.
+
+144. If the retrieval fallback is activated, choose exactly one bounded retrieval lead method.
+    - Start from the already-governed shortlist:
+      - `seqretsetall`
+      - `seqretsplit`
+      - `infoassembly`
+
+145. If `density` remains bounded, inventory the remaining plotting-family Phase 2 pool after removing `density`.
+    - Rebase the candidate pool on the actual post-`density` remainder set,
+      not the pre-`density` assumptions.
+
+146. If `density` remains bounded, classify the post-`density` plotting remainder by seam pressure again.
+    - Re-evaluate whether any previously viable candidate still looks bounded
+      after an actual Phase 2 shipment exists.
+
+147. If `density` remains bounded, decide whether another bounded Phase 2 plotting candidate still exists.
+    - Use the explicit stop conditions from Task `135` rather than vague
+      “continue plotting” momentum.
+
+148. Reconfirm that protein-property still remains the third candidate after the `density` shipment gate resolves.
+    - Reassess only after the repository knows whether it stayed on plotting
+      or activated retrieval fallback.
+
+149. Reconfirm that the release-truth surface still remains zero-burden after the `density` shipment gate resolves.
+    - This should remain a documentation/reporting truth check, not a new
+      report unless a real ambiguity appears.
+
+150. Extend the roadmap again after the `density` shipment gate resolves.
+    - Rebase the following tier on the actual observed branch:
+      - bounded further plotting continuation, or
       - bounded retrieval fallback activation
