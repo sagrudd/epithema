@@ -7,6 +7,7 @@ pub mod alignment_tools;
 pub mod archive_tools;
 pub mod codon_tools;
 pub mod feature_tools;
+pub mod nucleotide_plots;
 pub mod pairwise_alignment;
 pub mod pattern_tools;
 pub mod protein_plots;

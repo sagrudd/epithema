@@ -2127,9 +2127,22 @@ implementation-program cycle. The near-term priorities are:
       - no renderer-coupled logic
 
 138. Add the typed plot-contract emission path for `density`.
-    - The contract must derive from the same computation path as the table.
-    - Do not introduce Rust-side rendering behavior or a generalized plotting
-      framework.
+    - Complete.
+    - Added the staged typed plot-contract path in `crates/emboss-tools` as a
+      separate nucleotide plotting module over the bounded core.
+    - The staged `density` path remains bounded:
+      - exactly one nucleotide record
+      - analytical table from the same computation path as Task `137`
+      - deterministic single-series line contract
+      - no Rust-side rendering behavior
+      - no generalized plotting framework
+    - The bounded v1 contract uses the analytically derived `gc_fraction` line
+      as the emitted series while preserving the richer base-fraction table in
+      the analytical output.
+    - The landed scope stays intentionally narrow:
+      - no governed shipped-surface exposure yet
+      - no autodoc or generated validation/docs yet
+      - no canonical fixture or compared evidence yet
 
 139. Expose `density` through the governed shipped surface.
     - Wire the bounded method through registry, service, CLI, and governed
