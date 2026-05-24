@@ -1312,6 +1312,49 @@ This classification is still governance-only. It does not yet choose the next
 Phase 2 candidate, and it does not imply that every method in the seam-
 compatible bucket is equally suitable.
 
+#### Phase 2 viability decision
+
+The Phase 2 gate now has enough information to answer its pass/fail question.
+
+The decision is:
+
+- yes, plotting still has bounded Phase 2 candidates that fit the proven seam
+  closely enough to justify another bounded plotting tier
+
+That decision is justified because the seam-compatible bucket is non-empty and
+contains multiple methods that still look plausibly:
+
+- method-associated
+- analytical and table-first
+- typed-contract-friendly
+- renderer-agnostic in Rust
+
+The current viable Phase 2 pool is therefore:
+
+- `banana`
+- `cpgplot`
+- `density`
+- `isochore`
+- `syco`
+- `wobble`
+
+At this gate, the repository should therefore:
+
+- remain on the plotting-family path
+- not activate the retrieval fallback
+- move to the next bounded decision: choose exactly one Phase 2 candidate from
+  this viable pool
+
+What this decision does **not** do:
+
+- it does not say that all six viable methods are equally strong
+- it does not start implementation
+- it does not widen scope beyond one bounded next-method tier
+- it does not weaken retrieval-fallback readiness
+
+So the no-candidate branch is not taken here. The repository should continue to
+the single-candidate selection step.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

@@ -1876,9 +1876,24 @@ implementation-program cycle. The near-term priorities are:
       suitable.
 
 125. Reassess whether any remaining plotting-family method still fits the proven bounded seam closely enough to justify Phase 2.
-    - Make the actual pass/fail decision from the classified remainder set.
-    - If no method still fits the proven seam, stop plotting-family
-      continuation cleanly and activate retrieval-fallback planning instead.
+    - Complete.
+    - The actual Phase 2 pass/fail decision has now been made from the
+      classified remainder set.
+    - Result:
+      - yes, plotting still has bounded Phase 2 candidates that fit the proven
+        seam closely enough to justify another bounded plotting tier
+      - the no-candidate branch is not taken
+      - retrieval fallback remains ready, but it is not activated here
+    - The current viable Phase 2 pool is:
+      - `banana`
+      - `cpgplot`
+      - `density`
+      - `isochore`
+      - `syco`
+      - `wobble`
+    - So the repository should remain on the plotting-family path and proceed
+      to the next bounded decision: choose exactly one Phase 2 candidate from
+      this viable pool.
 
 126. If at least one plotting-family method remains seam-compatible, choose exactly one bounded Phase 2 candidate.
     - Do not choose more than one method.
