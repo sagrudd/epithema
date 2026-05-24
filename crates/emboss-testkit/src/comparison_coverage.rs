@@ -279,8 +279,8 @@ mod tests {
         let report = derive_comparison_coverage_report(repo_root())
             .expect("comparison coverage report should derive");
 
-        assert_eq!(report.summary.total_method_count, 99);
-        assert_eq!(report.summary.compared_count, 99);
+        assert_eq!(report.summary.total_method_count, 100);
+        assert_eq!(report.summary.compared_count, 100);
         assert_eq!(report.summary.executable_only_count, 0);
         assert_eq!(report.summary.harvested_but_not_compared_count, 0);
 
@@ -289,7 +289,7 @@ mod tests {
             .iter()
             .find(|family| family.family == "Modernize — Rework — Plotting and visualization tools")
             .expect("plotting rework family should be present");
-        assert_eq!(family.compared_count, 5);
+        assert_eq!(family.compared_count, 6);
         assert_eq!(family.executable_only_count, 0);
     }
 

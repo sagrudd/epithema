@@ -2157,10 +2157,13 @@ implementation-program cycle. The near-term priorities are:
     - Accept the temporary shipped-plus-executable-evidence interim only until
       the compared-evidence follow-on closes.
 
-140. Add canonical analytical and plot-contract fixtures plus compared evidence for `density`.
-    - Close the `density` slice back to full compared/full harvest state.
-    - Regenerate the governed report surface and restore a green
-      release-truth posture.
+140. Complete. Add canonical analytical and plot-contract fixtures plus compared evidence for `density`.
+    The `density` slice now carries a checked-in analytical fixture, a
+    canonical GC-density plot-contract fixture, and acceptance-anchor coverage
+    for both surfaces. The governed report surface is back to the zero-burden
+    state: shipped methods `100`, compared evidence `100`, executable evidence
+    `0`, harvested legacy provenance present `100`, full-compared cohort
+    `true`, and release-truth current `true`.
 
 141. Re-run the full release-truth surface after shipping `density`.
     - Run the broad generated-check path, truth-check, docs build, and diff

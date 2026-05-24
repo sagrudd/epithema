@@ -114,10 +114,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `100`
-- Compared-evidence methods: `99`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `100`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `100`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -226,9 +226,8 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `99/100` shipped methods at compared evidence with `1`
-  methods below compared evidence while the bounded `density` slice remains
-  executable-only pending canonical fixtures.
+  and now records `100/100` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -288,10 +287,10 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-- `1` shipped method still has blocking evidence debt.
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
 - The dominant remaining implementation work is now the bounded plotting
-  rework slice itself, not shipped-cohort evidence debt.
+  rework continuation itself, not shipped-cohort evidence debt.
 
 ### Legacy harvesting remains partial
 
@@ -300,10 +299,9 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `99` methods with compared evidence.
+- The cohort report now records `100` methods with compared evidence.
 - The comparison framework remains real and reusable, and the full compared
-  cohort gate is temporarily amber while the bounded `density` slice is shipped
-  with executable evidence but not yet closed by canonical fixtures.
+  cohort gate is green again after the bounded `density` evidence closure.
 
 ### Plotting limitations
 
@@ -330,8 +328,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `100`
-- Compared-evidence methods: `99`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `100`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `100`
 - Retained backlog still unshipped: `0`
 

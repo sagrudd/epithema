@@ -63,10 +63,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `99` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `100` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `100` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -84,16 +84,15 @@ change the release gate state above.
 - `pepinfo` now ships through the governed surface with canonical checked-in
   analytical and multi-series plot-contract fixtures plus compared acceptance
   evidence for both surfaces.
-- `density` now ships through the governed surface with executable evidence and
-  harvested historical provenance, with canonical checked-in analytical and
-  plot-contract fixtures still pending in the next bounded task.
+- `density` now ships through the governed surface with canonical checked-in
+  analytical and plot-contract fixtures plus compared acceptance evidence for
+  both surfaces.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed and harvest coverage
-remains complete, but the shipped governed cohort is in the expected temporary
-interim state while the bounded `density` slice waits for canonical fixtures and
-compared acceptance evidence.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the shipped governed cohort is back in the zero-burden
+release-truth state after the bounded `density` evidence closure landed.
 
 ### First-class R story
 

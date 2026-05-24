@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `density` is the go
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs density`. At this task boundary the method is shipped with executable evidence and harvested historical provenance, but canonical checked-in plot-contract comparison and full compared acceptance evidence are still pending.
+This method is implemented and exposed through `emboss-rs density`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-density line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,19 +54,27 @@ v1 supports only the single-record bounded density profile and does not add Rust
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/density_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic density validation.
 
+### Canonical density line-plot contract fixture
+
+- Artifact ID: `density_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/density_plot_contract.json`
+- Notes: Repository-managed canonical GC-density line-plot contract fixture emitted by the governed density implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic nucleotide density profile
 
 - Example ID: `density_profile_example`
 - Description: Reports deterministic sliding-window nucleotide-density rows from the committed nucleotide fixture and emits a governed single-series GC-fraction line-plot contract from the same analytical run.
-- Referenced artifacts: `density_fixture`
+- Referenced artifacts: `density_fixture`, `density_plot_contract`
 - Parameters:
   - `window` = `4`
   - `step` = `1`
 - Expected outputs:
   - `density_table`: Nucleotide density table (Stable sliding-window nucleotide-density rows with explicit canonical, ambiguous, and gap-accounting columns.)
-  - `density_plot`: GC-fraction line-plot contract (The staged governed line-plot contract JSON emitted from the same deterministic analytical run.)
+  - `density_plot`: GC-fraction line-plot contract (The canonical governed single-series GC-density line-plot contract JSON emitted from the same deterministic analytical run.)
 
 ## Provenance
 

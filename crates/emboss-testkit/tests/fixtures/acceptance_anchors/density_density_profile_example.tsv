@@ -1,0 +1,5 @@
+sequence_id	window_start	window_end	window_length	canonical_symbols	ambiguous_symbols	ignored_gap_symbols	adenine_fraction	cytosine_fraction	guanine_fraction	thymine_or_uracil_fraction	at_fraction	gc_fraction
+density_example	1	4	4	4	0	0	0.500000	0.250000	0.250000	0.000000	0.500000	0.500000
+density_example	2	5	4	4	0	0	0.250000	0.250000	0.250000	0.250000	0.500000	0.500000
+density_example	3	6	4	3	1	0	0.000000	0.333333	0.333333	0.333333	0.333333	0.666667
+density_example	4	7	4	2	2	0	0.000000	0.000000	0.500000	0.500000	0.500000	0.500000

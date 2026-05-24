@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "density_density_example",
+    "title": "GC density profile for density_example",
+    "subtitle": "Window 4 step 1 (single-series bounded v1 GC line)",
+    "provenance": {
+      "tool": "density",
+      "method": "nucleotide_density_profile",
+      "source_artifact_ids": [
+        "table:density-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "GC fraction",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "density_gc_fraction",
+      "label": "GC fraction",
+      "legend_label": "GC fraction",
+      "semantic_group": "gc_fraction",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ]
+      },
+      "y": [
+        0.5,
+        0.5,
+        0.6666666666666666,
+        0.5
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

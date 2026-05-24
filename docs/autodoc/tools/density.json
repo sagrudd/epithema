@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs density`. At this task boundary the method is shipped with executable evidence and harvested historical provenance, but canonical checked-in plot-contract comparison and full compared acceptance evidence are still pending."
+      "content": "This method is implemented and exposed through `emboss-rs density`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-density line-plot contract emission path, while keeping rendering in the sister `emboss-r` package."
     },
     {
       "id": "caveats",
@@ -62,6 +62,21 @@
         "asset_id": "crates/emboss-tools/tests/fixtures/density_nucleotide.fasta"
       },
       "description": "Repository-managed nucleotide fixture used for deterministic density validation."
+    },
+    {
+      "id": "density_plot_contract",
+      "label": "Canonical density line-plot contract fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/density_plot_contract.json"
+      },
+      "description": "Repository-managed canonical GC-density line-plot contract fixture emitted by the governed density implementation."
     }
   ],
   "examples": [
@@ -70,7 +85,8 @@
       "title": "Compute a deterministic nucleotide density profile",
       "description": "Reports deterministic sliding-window nucleotide-density rows from the committed nucleotide fixture and emits a governed single-series GC-fraction line-plot contract from the same analytical run.",
       "artifact_ids": [
-        "density_fixture"
+        "density_fixture",
+        "density_plot_contract"
       ],
       "parameters": [
         {
@@ -91,7 +107,7 @@
         {
           "id": "density_plot",
           "label": "GC-fraction line-plot contract",
-          "description": "The staged governed line-plot contract JSON emitted from the same deterministic analytical run."
+          "description": "The canonical governed single-series GC-density line-plot contract JSON emitted from the same deterministic analytical run."
         }
       ]
     }
