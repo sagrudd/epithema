@@ -1703,11 +1703,22 @@ implementation-program cycle. The near-term priorities are:
       sprawl or renderer-coupled pressure.
 
 118. Reassess whether protein-property still remains the third candidate after the full bounded plotting Phase 1 exists.
-    - Once all three bounded plotting methods exist, check whether the current
-      shortlist still holds:
-      1. plotting
-      2. remote retrieval
-      3. protein-property rework
+    - Complete.
+    - Protein-property rework has now been explicitly reassessed after the full
+      bounded plotting Phase 1 exists.
+    - Result:
+      - the shortlist still holds:
+        1. plotting
+        2. remote retrieval
+        3. protein-property rework
+      - plotting now has three shipped bounded methods, including the first
+        multi-series case, without forcing framework sprawl
+      - remote retrieval still remains the clearest prepared fallback
+      - protein-property still has a credible substrate, but it does not yet
+        have the same immediate implementation-readiness detail as the two
+        higher-ranked programs
+    - This remains a planning checkpoint only and does not promote
+      protein-property work.
 
 119. Decide explicitly whether bounded plotting Phase 1 is complete enough to continue plotting, or whether planning should switch to the retrieval fallback instead.
     - Make the decision explicitly from observed seam behavior rather than from
