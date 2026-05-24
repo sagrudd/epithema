@@ -2187,9 +2187,11 @@ implementation-program cycle. The near-term priorities are:
     full-compared cohort `true`, harvest coverage complete `true`,
     retained-backlog closed `true`, and release-truth current `true`.
 
-143. If `density` trips a fallback-activation stop condition, activate the prepared retrieval fallback path explicitly.
-    - Promote the retrieval path from prepared to active only if the concrete
-      activation gate is actually crossed.
+143. Complete. Close the conditional retrieval-activation branch honestly.
+    No fallback-activation stop condition was crossed by the shipped `density`
+    slice, so the prepared retrieval path was not promoted here. The
+    repository remains on the plotting continuation branch, while the governed
+    retrieval fallback remains documented, prepared, and inactive.
 
 144. If the retrieval fallback is activated, choose exactly one bounded retrieval lead method.
     - Start from the already-governed shortlist:
