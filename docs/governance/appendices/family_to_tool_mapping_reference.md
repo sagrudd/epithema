@@ -1355,6 +1355,44 @@ What this decision does **not** do:
 So the no-candidate branch is not taken here. The repository should continue to
 the single-candidate selection step.
 
+#### Selected bounded Phase 2 candidate
+
+The repository should now choose exactly one bounded Phase 2 plotting candidate
+from the viable pool.
+
+The selected candidate is:
+
+- `density`
+
+This is the best bounded next-method choice because it appears to be the
+closest extension of the already-proven seam:
+
+- it most plausibly stays a single-series nucleotide analytical profile
+- it appears more naturally table-first and typed-contract-friendly than the
+  more event- or region-oriented candidates such as `cpgplot` or `isochore`
+- it avoids the extra coding-sequence or codon-usage specificity likely to
+  arise in `syco` or `wobble`
+- it does not immediately signal the broader contract-taxonomy pressure that
+  sits closer to `chaos`, `pepwindowall`, or `plotcon`
+
+This choice also keeps the next tier bounded in the intended way:
+
+- exactly one candidate is promoted
+- the other seam-compatible methods remain viable but inactive
+- no implementation begins yet
+- retrieval fallback readiness is preserved
+
+The non-selected viable methods at this checkpoint remain:
+
+- `banana`
+- `cpgplot`
+- `isochore`
+- `syco`
+- `wobble`
+
+So the next bounded planning step should be to capture `density`-specific
+acceptance criteria and patch start conditions before any code starts.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

@@ -1896,12 +1896,29 @@ implementation-program cycle. The near-term priorities are:
       this viable pool.
 
 126. If at least one plotting-family method remains seam-compatible, choose exactly one bounded Phase 2 candidate.
-    - Do not choose more than one method.
-    - The chosen candidate must be:
-      - method-associated
-      - table-first
-      - typed-contract-friendly
-      - renderer-agnostic in Rust
+    - Complete.
+    - Exactly one bounded Phase 2 plotting candidate has now been chosen in
+      the plotting-governance appendix:
+      - `density`
+    - Selection basis:
+      - it appears to be the closest extension of the proven seam as a likely
+        single-series nucleotide analytical profile
+      - it looks more naturally table-first and typed-contract-friendly than
+        the more event- or region-oriented candidates such as `cpgplot` or
+        `isochore`
+      - it avoids the extra coding-sequence or codon-usage specificity likely
+        to arise in `syco` or `wobble`
+      - it does not immediately signal the broader contract-taxonomy pressure
+        associated with methods like `chaos`, `pepwindowall`, or `plotcon`
+    - The non-selected viable methods remain viable but inactive:
+      - `banana`
+      - `cpgplot`
+      - `isochore`
+      - `syco`
+      - `wobble`
+    - So the next bounded planning step is to capture `density`-specific
+      acceptance criteria and exact patch start conditions before any code
+      starts.
 
 127. If no plotting-family method remains seam-compatible, promote the retrieval fallback from “ready” to the active next planning program.
     - Record that decision explicitly rather than leaving it implied.
