@@ -1758,6 +1758,50 @@ another bounded Phase 2 plotting candidate still exists, but it does narrow
 the strongest next-candidate pool more sharply than the pre-`density`
 classification did.
 
+#### Post-`density` bounded-candidate viability decision
+
+After the `density` shipment gate and the rebased seam-pressure
+reclassification, the repository can now answer the next pass/fail question
+explicitly: does another bounded plotting continuation candidate still exist,
+or has the seam narrowed to the point where the prepared retrieval fallback
+should activate?
+
+The decision is:
+
+- yes, another bounded plotting continuation candidate still exists
+
+That decision is justified because the strongest current seam-compatible pool
+remains non-empty and still contains multiple methods that look plausibly:
+
+- method-associated
+- analytical and table-first
+- typed-contract-friendly without broad taxonomy expansion
+- renderer-agnostic in Rust
+
+The strongest current next-candidate pool is therefore:
+
+- `banana`
+- `isochore`
+- `syco`
+- `wobble`
+
+At this gate, the repository should therefore:
+
+- remain on the plotting-family path
+- not activate the retrieval fallback
+- move to the next bounded decision: choose exactly one next continuation
+  candidate from this narrowed pool
+
+What this decision does **not** do:
+
+- it does not say that all four remaining strong candidates are equally good
+- it does not start implementation
+- it does not widen scope beyond one next-method selection
+- it does not weaken retrieval-fallback readiness
+
+So the no-candidate branch is not taken here. The repository should continue
+to the next explicit bounded candidate-selection step.
+
 #### Reconfirmation after the Phase 2 candidate-selection gate
 
 After the Phase 2 plotting-candidate gate resolved in favor of staying on the
