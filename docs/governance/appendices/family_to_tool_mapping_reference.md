@@ -1188,6 +1188,65 @@ So the next bounded post-Phase-1 gate is not “continue plotting” in the
 abstract. It is “prove that a bounded Phase 2 plotting candidate still exists,
 or switch planning cleanly to retrieval fallback.”
 
+#### Phase 2 candidate-pool inventory
+
+Before any Phase 2 classification or candidate selection begins, the remaining
+plotting-family method pool should be stated explicitly.
+
+The plotting-family methods already covered by the current proven seam are:
+
+- preexisting governed seam:
+  - `charge`
+  - `pepwindow`
+  - `wordcount`
+- bounded Phase 1 shipped slice:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+
+Important scope note:
+
+- `wordcount` is part of the governed plot-contract seam, but it is not itself
+  a member of the historical plotting-family mapping
+- the actual plotting-family remainder set therefore excludes only the five
+  plotting-family members already covered inside that family:
+  - `charge`
+  - `pepwindow`
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+
+So the explicit Phase 2 plotting-family candidate pool is the remaining `23`
+plotting-family methods:
+
+- `abiview`
+- `banana`
+- `chaos`
+- `cirdna`
+- `cpgplot`
+- `density`
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `findkm`
+- `isochore`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `pepwindowall`
+- `plotcon`
+- `polydot`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+- `syco`
+- `wobble`
+
+This section is inventory only. It does not yet classify seam pressure, select
+the next candidate, or imply that all of these methods remain plausible Phase 2
+continuations.
+
 ### Post-sub-roadmap third-candidate check
 
 Drafting the first plotting program and the explicit retrieval fallback does

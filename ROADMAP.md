@@ -1795,17 +1795,48 @@ implementation-program cycle. The near-term priorities are:
 ## Next Tier Task Map
 
 123. Inventory the remaining plotting-family methods not already covered by the preexisting governed seam or the bounded Phase 1 slice.
-    - Produce the explicit remainder set after excluding:
-      - preexisting governed seam:
+    - Complete.
+    - The explicit Phase 2 plotting-family candidate pool is now recorded in
+      the plotting-governance appendix.
+    - The inventory preserves the seam distinction honestly:
+      - governed seam precedents:
         - `charge`
         - `pepwindow`
         - `wordcount`
-      - bounded Phase 1 slice:
+      - bounded Phase 1 shipped plotting-family slice:
         - `hmoment`
         - `octanol`
         - `pepinfo`
-    - The remaining inventory should be written into the roadmap or governance
-      appendix as the concrete Phase 2 candidate pool.
+      - important note:
+        - `wordcount` is part of the governed plotting seam, but it is not
+          itself a member of the plotting-family mapping
+    - The actual remaining plotting-family candidate pool is therefore the
+      remaining `23` plotting-family methods:
+      - `abiview`
+      - `banana`
+      - `chaos`
+      - `cirdna`
+      - `cpgplot`
+      - `density`
+      - `dotmatcher`
+      - `dotpath`
+      - `dottup`
+      - `findkm`
+      - `isochore`
+      - `lindna`
+      - `pepnet`
+      - `pepwheel`
+      - `pepwindowall`
+      - `plotcon`
+      - `polydot`
+      - `prettyplot`
+      - `showfeat`
+      - `showpep`
+      - `showseq`
+      - `syco`
+      - `wobble`
+    - This task is inventory only. It does not yet classify seam pressure or
+      choose the Phase 2 candidate.
 
 124. Classify the remaining plotting-family methods by seam pressure.
     - Split the remainder set into bounded decision buckets:
