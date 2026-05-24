@@ -1759,8 +1759,17 @@ implementation-program cycle. The near-term priorities are:
       is handled explicitly.
 
 121. If `pepinfo` fails its reassessment, map the bounded retrieval fallback implementation tier explicitly before any further code starts.
-    - If the plotting seam becomes too broad, switch planning cleanly to the
-      prepared retrieval fallback rather than widening plotting informally.
+    - Complete as not triggered.
+    - `pepinfo` passed its reassessment, so this branch was not activated.
+    - Result:
+      - no bounded retrieval-fallback implementation tier was mapped here
+      - the repository remains on the `120` path:
+        - bounded Phase 2 plotting candidate-selection and seam-compatibility
+          gating
+      - the prepared retrieval fallback remains documented and ready, but it
+        was not promoted to the active planning path
+    - This closes the conditional branch honestly instead of inventing a
+      fallback implementation start that the governed decision did not choose.
 
 122. Extend this roadmap again after Task `120` or `121`, using the generated truth plus the observed `pepinfo` seam behavior rather than the pre-`pepinfo` assumptions.
     - Rebase the next planning tier on the actual post-`pepinfo` state.
