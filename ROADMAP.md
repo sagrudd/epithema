@@ -2412,9 +2412,18 @@ implementation-program cycle. The near-term priorities are:
       - no governed autodoc or generated validation/docs yet
       - no canonical fixtures or compared evidence yet
 
-160. Expose the selected next plotting candidate through the governed shipped surface.
-    - Registry, service, CLI, governed autodoc, and generated validation/docs
-      must all land together.
+160. Complete. Expose the selected next plotting candidate through the governed shipped surface.
+    `wobble` is now wired through the governed shipped surface:
+      - tool descriptor and registry
+      - shared service invocation path
+      - CLI tool routing
+      - governed autodoc contract
+      - generated docs and validation stub
+    This task intentionally stops at the same interim state used by earlier
+    shipment steps:
+      - shipped plus executable evidence
+      - not yet restored to full compared state
+      - canonical compared fixtures remain the next task
 
 161. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
     - Restore full compared/full harvest state after the temporary shipped-plus-

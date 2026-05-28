@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "wobble-v1",
+  "tool": {
+    "name": "wobble",
+    "family": "nucleotide_plots",
+    "summary": "Report a bounded third-base-position variability profile and emit a line-plot contract",
+    "legacy_names": [
+      "wobble"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`wobble` is the next bounded plotting continuation after the shipped `density` slice. The EMBOSS-RS v1 surface computes one deterministic codon-windowed third-base-position variability profile for exactly one coding nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one coding nucleotide sequence record. v1 supports DNA and RNA inputs that pass strict coding-sequence validation, treats `--codon-window` and `--codon-step` as positive codon counts, defaults to `--codon-window 11` and `--codon-step 1`, rejects ambiguous or non-coding inputs, and ignores only a terminal stop codon after validation."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable analytical table with `sequence_id`, `window_start`, `window_end`, `window_length`, `codon_window_length`, `wobble_positions`, `adenine_fraction`, `cytosine_fraction`, `guanine_fraction`, `thymine_fraction`, `dominant_wobble_fraction`, and `wobble_variability`. The staged v1 line-plot contract remains single-series and plots the analytically derived `wobble_variability` values from the same governed computation path."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `wobble` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `wobble` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes richer bounded third-position composition detail."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is now implemented and exposed through `emboss-rs wobble`. At this task boundary the governed surface includes executable analytical and plot-contract validation, but compared acceptance evidence for the canonical checked-in fixtures has not landed yet."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record bounded wobble profile and does not add Rust-side rendering, multi-series plotting, region-track behavior, or a generalized plotting framework. Additional continuation should remain bounded by the explicit fallback-activation stop conditions already recorded in governance."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "wobble_fixture",
+      "label": "Coding nucleotide fixture for governed wobble validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/wobble_coding_nucleotide.fasta"
+      },
+      "description": "Repository-managed coding nucleotide fixture used for deterministic wobble validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "wobble_profile_example",
+      "title": "Compute a deterministic wobble variability profile",
+      "description": "Reports deterministic codon-windowed wobble-variability rows from the committed coding nucleotide fixture and emits a governed single-series wobble-variability line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "wobble_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "codon_window",
+          "value": "3"
+        },
+        {
+          "name": "codon_step",
+          "value": "1"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "wobble_table",
+          "label": "Wobble variability table",
+          "description": "Stable codon-windowed wobble rows with explicit third-position composition and derived variability columns."
+        },
+        {
+          "id": "wobble_plot",
+          "label": "Wobble-variability line-plot contract",
+          "description": "The governed single-series wobble-variability line-plot contract JSON emitted from the same deterministic analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS wobble application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wobble.acd",
+        "invocation": "wobble -sequence wobble_coding_nucleotide.fasta -window 3 -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "wobble_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

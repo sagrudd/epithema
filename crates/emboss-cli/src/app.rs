@@ -232,10 +232,18 @@ mod tests {
 
     #[test]
     fn routes_density_to_tool_path() {
-        let cli =
-            Cli::try_parse_from(["emboss-rs", "density", "example.fna"]).expect("tool should parse");
+        let cli = Cli::try_parse_from(["emboss-rs", "density", "example.fna"])
+            .expect("tool should parse");
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("density"));
+    }
+
+    #[test]
+    fn routes_wobble_to_tool_path() {
+        let cli =
+            Cli::try_parse_from(["emboss-rs", "wobble", "example.fna"]).expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("wobble"));
     }
 
     #[test]

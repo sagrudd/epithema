@@ -8,19 +8,19 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `100`
-- Shipped tools with governance mapping: `100`
+- Shipped tools: `101`
+- Shipped tools with governance mapping: `101`
 - Retained backlog still unshipped: `0`
-- Shipped tools with curated autodoc: `100`
-- Shipped tools with executable or compared evidence: `100`
-- Shipped tools with harvested legacy provenance: `100`
+- Shipped tools with curated autodoc: `101`
+- Shipped tools with executable or compared evidence: `101`
+- Shipped tools with harvested legacy provenance: `101`
 - Shipped tools with compared evidence: `100`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
 - Shipped retain methods: `90`
-- Shipped rework methods: `10`
+- Shipped rework methods: `11`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
 
@@ -43,7 +43,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Command discovery and help-navigation | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — External database preparation helpers | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 6 | 6 | 6 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 7 | 7 | 6 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 4 | 4 | 4 | family is aligned at the current governance and evidence threshold |
@@ -130,6 +130,7 @@ All shipped methods are mapped in the governance appendix.
 | `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `density` | `nucleotide_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
+| `wobble` | `nucleotide_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `executable_evidence` |
 | `charge` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
 | `hmoment` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
 | `octanol` | `protein_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |

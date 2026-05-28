@@ -112,6 +112,7 @@ tools/twofeat
 tools/union
 tools/vectorstrip
 tools/water
+tools/wobble
 tools/wordcount
 tools/wordfinder
 tools/wordmatch

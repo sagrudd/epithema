@@ -16,3 +16,10 @@ pub const DENSITY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "report a sliding-window nucleotide density profile and emit a line-plot contract",
 )
 .with_family(FAMILY);
+
+/// `wobble` descriptor.
+pub const WOBBLE_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "wobble",
+    "report a bounded third-base-position variability profile and emit a line-plot contract",
+)
+.with_family(FAMILY);

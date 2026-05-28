@@ -269,8 +269,8 @@ mod tests {
         let report = derive_harvest_coverage_report(repo_root())
             .expect("harvest-coverage report should derive");
 
-        assert_eq!(report.summary.total_method_count, 100);
-        assert_eq!(report.summary.harvested_legacy_presence_count, 100);
+        assert_eq!(report.summary.total_method_count, 101);
+        assert_eq!(report.summary.harvested_legacy_presence_count, 101);
         assert_eq!(report.summary.harvest_exception_count, 0);
         assert!(report.summary.harvest_coverage_complete);
         assert!(report.exceptions.is_empty());

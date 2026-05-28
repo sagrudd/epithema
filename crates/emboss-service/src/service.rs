@@ -5,8 +5,8 @@ use std::str::FromStr;
 
 use emboss_config::PlatformConfig;
 use emboss_core::{
-    FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PLATFORM_IDENTITY,
-    PatternError, ProteinPattern, RevseqMode, Strand,
+    FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PatternError,
+    ProteinPattern, RevseqMode, Strand, PLATFORM_IDENTITY,
 };
 use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
@@ -16,105 +16,104 @@ use emboss_providers::{
     AcquisitionRequest, ArchiveObjectClass, ProviderHttpClient, ProviderRegistry,
     RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
 };
-use emboss_tools::ToolDescriptor;
 use emboss_tools::alignment_analysis::{
-    ConsParams, ConsambigParams, DistmatParams, MatcherParams, cons_help, consambig_help,
-    distmat_help, matcher_help, run_cons, run_consambig, run_distmat, run_matcher,
+    cons_help, consambig_help, distmat_help, matcher_help, run_cons, run_consambig, run_distmat,
+    run_matcher, ConsParams, ConsambigParams, DistmatParams, MatcherParams,
 };
 use emboss_tools::alignment_tools::{
-    AligncopyParams, AligncopypairParams, AlignmentInput, DiffseqParams, EdialignParams,
-    ExtractalignParams, InfoalignParams, NthseqsetParams, aligncopy_help, aligncopypair_help,
-    diffseq_help, edialign_help, extractalign_help, infoalign_help, nthseqset_help,
-    run_aligncopy, run_aligncopypair, run_diffseq, run_edialign, run_extractalign,
-    run_infoalign, run_nthseqset,
+    aligncopy_help, aligncopypair_help, diffseq_help, edialign_help, extractalign_help,
+    infoalign_help, nthseqset_help, run_aligncopy, run_aligncopypair, run_diffseq, run_edialign,
+    run_extractalign, run_infoalign, run_nthseqset, AligncopyParams, AligncopypairParams,
+    AlignmentInput, DiffseqParams, EdialignParams, ExtractalignParams, InfoalignParams,
+    NthseqsetParams,
 };
 use emboss_tools::archive_tools::{
-    RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
+    run_runget, run_runinfo, runget_help, runinfo_help, RungetParams, RuninfoParams,
 };
 use emboss_tools::codon_tools::{
-    CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
-    codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai, run_chips, run_codcmp,
-    run_codcopy, run_cusp,
+    cai_help, chips_help, codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai,
+    run_chips, run_codcmp, run_codcopy, run_cusp, CaiParams, ChipsParams, CodcmpParams,
+    CodcopyParams, CuspParams,
 };
 use emboss_tools::feature_tools::{
-    CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
-    FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams, MaskseqParams,
-    SplitsourceParams, TwofeatParams, coderet_help, extractfeat_help, featcopy_help,
-    featmerge_help, featreport_help, feattext_help, maskambignuc_help, maskambigprot_help,
-    maskfeat_help, maskseq_help, run_coderet, run_extractfeat, run_featcopy, run_featmerge,
-    run_featreport, run_feattext, run_maskambignuc, run_maskambigprot, run_maskfeat,
-    run_maskseq, run_splitsource, run_twofeat, splitsource_help, twofeat_help,
+    coderet_help, extractfeat_help, featcopy_help, featmerge_help, featreport_help, feattext_help,
+    maskambignuc_help, maskambigprot_help, maskfeat_help, maskseq_help, run_coderet,
+    run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext, run_maskambignuc,
+    run_maskambigprot, run_maskfeat, run_maskseq, run_splitsource, run_twofeat, splitsource_help,
+    twofeat_help, CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams,
+    FeatreportParams, FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams,
+    MaskseqParams, SplitsourceParams, TwofeatParams,
 };
 use emboss_tools::nucleotide_plots::{
-    DensityParams, density_help, run_density,
+    density_help, run_density, run_wobble, wobble_help, DensityParams, WobbleParams,
 };
 use emboss_tools::pairwise_alignment::{
-    NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
-    run_needleall, run_water, water_help,
+    needle_help, needleall_help, run_needle, run_needleall, run_water, water_help, NeedleParams,
+    NeedleallParams, WaterParams,
 };
 use emboss_tools::pattern_tools::{
-    DregParams, EinvertedParams, FuzznucParams, FuzzproParams, FuzztranParams, PalindromeParams,
-    PatmatdbParams, PregParams, SeqmatchallParams, WordfinderParams, WordmatchParams, dreg_help,
-    einverted_help, fuzznuc_help, fuzzpro_help, fuzztran_help, palindrome_help, patmatdb_help,
-    preg_help, run_dreg, run_einverted, run_fuzznuc, run_fuzzpro, run_fuzztran, run_palindrome,
-    run_patmatdb, run_preg, run_seqmatchall, run_wordfinder, run_wordmatch, seqmatchall_help,
-    wordfinder_help, wordmatch_help,
+    dreg_help, einverted_help, fuzznuc_help, fuzzpro_help, fuzztran_help, palindrome_help,
+    patmatdb_help, preg_help, run_dreg, run_einverted, run_fuzznuc, run_fuzzpro, run_fuzztran,
+    run_palindrome, run_patmatdb, run_preg, run_seqmatchall, run_wordfinder, run_wordmatch,
+    seqmatchall_help, wordfinder_help, wordmatch_help, DregParams, EinvertedParams, FuzznucParams,
+    FuzzproParams, FuzztranParams, PalindromeParams, PatmatdbParams, PregParams, SeqmatchallParams,
+    WordfinderParams, WordmatchParams,
 };
 use emboss_tools::protein_plots::{
-    ChargeParams, HmomentParams, OctanolParams, PepinfoParams, PepwindowParams, charge_help,
-    hmoment_help, octanol_help, pepinfo_help, pepwindow_help, run_charge, run_hmoment,
-    run_octanol, run_pepinfo, run_pepwindow,
+    charge_help, hmoment_help, octanol_help, pepinfo_help, pepwindow_help, run_charge, run_hmoment,
+    run_octanol, run_pepinfo, run_pepwindow, ChargeParams, HmomentParams, OctanolParams,
+    PepinfoParams, PepwindowParams,
 };
 use emboss_tools::restriction_tools::{
-    RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
+    recoder_help, run_recoder, run_silent, silent_help, RecoderParams, SilentParams,
 };
 use emboss_tools::retrieval_tools::{
-    RefseqgetParams, SeqretParams, SeqretSource, refseqget_help, run_refseqget, run_seqret,
-    seqret_help,
+    refseqget_help, run_refseqget, run_seqret, seqret_help, RefseqgetParams, SeqretParams,
+    SeqretSource,
 };
 use emboss_tools::sequence_edit::{
-    BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
-    TrimestParams, TrimseqParams, VectorstripParams, biosed_help, degapseq_help, descseq_help,
-    msbar_help, revseq_help, run_biosed, run_degapseq, run_descseq, run_msbar, run_revseq,
-    run_trimest, run_trimseq, run_vectorstrip, trimest_help, trimseq_help, vectorstrip_help,
+    biosed_help, degapseq_help, descseq_help, msbar_help, revseq_help, run_biosed, run_degapseq,
+    run_descseq, run_msbar, run_revseq, run_trimest, run_trimseq, run_vectorstrip, trimest_help,
+    trimseq_help, vectorstrip_help, BiosedParams, DegapseqParams, DescseqParams, MsbarMutation,
+    MsbarParams, RevseqParams, TrimestParams, TrimseqParams, VectorstripParams,
 };
 use emboss_tools::sequence_stats::{
-    AaindexextractParams, ComplexParams, CompseqParams, DanParams, GeeceeParams, InfobaseParams,
-    InfoseqParams, InforesidueParams, IepParams, OddcompParams, PepdigestParams,
-    PepdigestProtease, PepstatsParams, WordcountParams,
-    aaindexextract_help, complex_help, compseq_help, dan_help, geecee_help, infobase_help,
-    infoseq_help, inforesidue_help, iep_help, oddcomp_help, parse_aaindexextract_index,
+    aaindexextract_help, complex_help, compseq_help, dan_help, geecee_help, iep_help,
+    infobase_help, inforesidue_help, infoseq_help, oddcomp_help, parse_aaindexextract_index,
     pepdigest_help, pepstats_help, run_aaindexextract, run_complex, run_compseq, run_dan,
-    run_geecee, run_iep, run_infobase, run_infoseq, run_inforesidue, run_oddcomp,
-    run_pepdigest, run_pepstats, run_wordcount, word_frequency, wordcount_help,
+    run_geecee, run_iep, run_infobase, run_inforesidue, run_infoseq, run_oddcomp, run_pepdigest,
+    run_pepstats, run_wordcount, word_frequency, wordcount_help, AaindexextractParams,
+    ComplexParams, CompseqParams, DanParams, GeeceeParams, IepParams, InfobaseParams,
+    InforesidueParams, InfoseqParams, OddcompParams, PepdigestParams, PepdigestProtease,
+    PepstatsParams, WordcountParams,
 };
 use emboss_tools::sequence_stream::{
-    ListorParams, MakenucseqParams, MakeprotseqParams, NewseqParams, NotseqParams, NthseqParams,
-    SeqcountParams, SequenceInput, SequenceSetOperator, SkipredundantParams, SkipseqParams,
     listor_help, load_sequence_records, makenucseq_help, makeprotseq_help, newseq_help,
-    notseq_help, nthseq_help, run_listor, run_makenucseq, run_makeprotseq, run_newseq,
-    run_notseq, run_nthseq, run_seqcount, run_skipredundant, run_skipseq, seqcount_help,
-    skipredundant_help, skipseq_help,
+    notseq_help, nthseq_help, run_listor, run_makenucseq, run_makeprotseq, run_newseq, run_notseq,
+    run_nthseq, run_seqcount, run_skipredundant, run_skipseq, seqcount_help, skipredundant_help,
+    skipseq_help, ListorParams, MakenucseqParams, MakeprotseqParams, NewseqParams, NotseqParams,
+    NthseqParams, SeqcountParams, SequenceInput, SequenceSetOperator, SkipredundantParams,
+    SkipseqParams,
 };
 use emboss_tools::sequence_transform::{
+    cutseq_help, extractseq_help, megamerger_help, merger_help, pasteseq_help, run_cutseq,
+    run_extractseq, run_megamerger, run_merger, run_pasteseq, run_shuffleseq, run_sizeseq,
+    run_splitter, run_union, shuffleseq_help, sizeseq_help, splitter_help, union_help,
     CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, PasteseqParams,
-    ShuffleseqParams, SizeseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
-    megamerger_help, merger_help, pasteseq_help, run_cutseq, run_extractseq, run_megamerger,
-    run_merger, run_pasteseq, run_shuffleseq, run_sizeseq, run_splitter, run_union,
-    shuffleseq_help, sizeseq_help, splitter_help, union_help,
+    ShuffleseqParams, SizeseqParams, SplitterParams, UnionParams,
 };
 use emboss_tools::translation_tools::{
-    BacktranambigParams, BacktranseqParams, ChecktransParams, GetorfParams, PrettyseqParams,
-    TranalignParams, TranseqParams, TranslationFrameSelection, backtranambig_help,
-    backtranseq_help, checktrans_help, getorf_help, prettyseq_help, run_backtranambig,
-    run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign, run_transeq,
-    tranalign_help, transeq_help,
+    backtranambig_help, backtranseq_help, checktrans_help, getorf_help, prettyseq_help,
+    run_backtranambig, run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign,
+    run_transeq, tranalign_help, transeq_help, BacktranambigParams, BacktranseqParams,
+    ChecktransParams, GetorfParams, PrettyseqParams, TranalignParams, TranseqParams,
+    TranslationFrameSelection,
 };
+use emboss_tools::ToolDescriptor;
 
-use crate::ServiceDocumentationAcquisition;
 use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
-use crate::error::{ServiceError, unknown_tool};
+use crate::error::{unknown_tool, ServiceError};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
@@ -124,6 +123,7 @@ use crate::result::{
     TextReport,
 };
 use crate::sequence_retrieval::ServiceSequenceRetrieval;
+use crate::ServiceDocumentationAcquisition;
 
 /// Front-end-neutral EMBOSS-RS service façade.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
@@ -337,6 +337,7 @@ impl EmbossService {
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
             "density" => self.invoke_density(request, descriptor),
+            "wobble" => self.invoke_wobble(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "hmoment" => self.invoke_hmoment(request, descriptor),
             "octanol" => self.invoke_octanol(request, descriptor),
@@ -614,7 +615,10 @@ impl EmbossService {
         diagnostics.extend(bsequence_diagnostics);
         let report = self.success_report(
             &request.context,
-            format!("reported {} contiguous difference blocks", outcome.blocks.len()),
+            format!(
+                "reported {} contiguous difference blocks",
+                outcome.blocks.len()
+            ),
             diagnostics,
             vec![asequence_provenance, bsequence_provenance],
         );
@@ -721,7 +725,10 @@ impl EmbossService {
             ResultPayload::Alignment(outcome.alignment),
             ResultSummary::new("Exact shared local alignment derived")
                 .with_line(format!("Input: {}", outcome.input.path.display()))
-                .with_line(format!("Minimum shared block length: {}", outcome.min_length))
+                .with_line(format!(
+                    "Minimum shared block length: {}",
+                    outcome.min_length
+                ))
                 .with_line(format!("Shared block: {}", outcome.block))
                 .with_line(format!("Rows: {}", outcome.rows.len()))
                 .with_line("Alignment model: longest exact shared block")
@@ -1863,8 +1870,8 @@ impl EmbossService {
 
         let mut diagnostics = first_diagnostics;
         diagnostics.extend(second_diagnostics);
-        let output_provenance =
-            ArtifactProvenance::generated_output("stdout").with_description("logical set FASTA output");
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("logical set FASTA output");
         let report = self.success_report(
             &request.context,
             format!(
@@ -2412,8 +2419,8 @@ impl EmbossService {
             replacement: params.replacement,
         })?;
 
-        let output_provenance = ArtifactProvenance::generated_output("stdout")
-            .with_description("biosed FASTA output");
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("biosed FASTA output");
         let report = self.success_report(
             &request.context,
             format!("edited {} records", outcome.records.len()),
@@ -2520,11 +2527,14 @@ impl EmbossService {
             min_tail: params.min_tail,
         })?;
 
-        let output_provenance = ArtifactProvenance::generated_output("stdout")
-            .with_description("trimest FASTA output");
+        let output_provenance =
+            ArtifactProvenance::generated_output("stdout").with_description("trimest FASTA output");
         let report = self.success_report(
             &request.context,
-            format!("trimmed poly-A tails from {} records", outcome.records.len()),
+            format!(
+                "trimmed poly-A tails from {} records",
+                outcome.records.len()
+            ),
             input_diagnostics,
             vec![input_provenance, output_provenance.clone()],
         );
@@ -2576,9 +2586,16 @@ impl EmbossService {
             .with_description("vectorstrip FASTA output");
         let report = self.success_report(
             &request.context,
-            format!("stripped vector matches from {} records", outcome.records.len()),
+            format!(
+                "stripped vector matches from {} records",
+                outcome.records.len()
+            ),
             diagnostics,
-            vec![input_provenance, vector_provenance, output_provenance.clone()],
+            vec![
+                input_provenance,
+                vector_provenance,
+                output_provenance.clone(),
+            ],
         );
         let result = MethodResult::new(
             request.tool.clone(),
@@ -3564,7 +3581,10 @@ impl EmbossService {
             .with_description("split source-fragment FASTA output");
         let report = self.success_report(
             &request.context,
-            format!("split synthetic input into {} source fragments", outcome.fragment_count),
+            format!(
+                "split synthetic input into {} source fragments",
+                outcome.fragment_count
+            ),
             input_diagnostics,
             vec![input_provenance, output_provenance.clone()],
         );
@@ -4659,7 +4679,10 @@ impl EmbossService {
             .collect();
         let report = self.success_report(
             &request.context,
-            format!("reported {} exact shared regions across target set", outcome.hits.len()),
+            format!(
+                "reported {} exact shared regions across target set",
+                outcome.hits.len()
+            ),
             diagnostics,
             vec![query_provenance, targets_provenance],
         );
@@ -4985,7 +5008,10 @@ impl EmbossService {
                 .with_line(format!("Sequence: {}", outcome.profile.identifier))
                 .with_line(format!("Window: {}", outcome.profile.window))
                 .with_line(format!("Step: {}", outcome.profile.step))
-                .with_line(format!("Angle: {:.1} degrees", outcome.profile.angle_degrees))
+                .with_line(format!(
+                    "Angle: {:.1} degrees",
+                    outcome.profile.angle_degrees
+                ))
                 .with_line("X axis: 1-based window start")
                 .with_line("Y axis: hydrophobic moment")
                 .with_line(format!(
@@ -5015,7 +5041,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write hmoment plot contract to {}", path.display()),
+                    format!(
+                        "failed to write hmoment plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.hmoment.plot.write_failed")
                 .with_detail(error.to_string())
@@ -5148,7 +5177,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write density plot contract to {}", path.display()),
+                    format!(
+                        "failed to write density plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.density.plot.write_failed")
                 .with_detail(error.to_string())
@@ -5160,6 +5192,139 @@ impl EmbossService {
             result = result.with_artifact(
                 ArtifactReference::new("density-plot-contract", ArtifactKind::Auxiliary)
                     .with_label("Density plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_wobble(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, wobble_help()));
+        }
+
+        let (params, plot_contract_out) = parse_wobble_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_wobble(WobbleParams {
+            input,
+            codon_window: params.codon_window,
+            codon_step: params.codon_step,
+        })?;
+        let status_message = format!(
+            "computed bounded wobble variability profile across {} windows",
+            outcome.profile.windows.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "codon_window_length".to_owned(),
+                    "wobble_positions".to_owned(),
+                    "adenine_fraction".to_owned(),
+                    "cytosine_fraction".to_owned(),
+                    "guanine_fraction".to_owned(),
+                    "thymine_fraction".to_owned(),
+                    "dominant_wobble_fraction".to_owned(),
+                    "wobble_variability".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .windows
+                    .iter()
+                    .map(|window| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            window.window_start.to_string(),
+                            window.window_end.to_string(),
+                            window.window_length.to_string(),
+                            window.codon_window_length.to_string(),
+                            window.wobble_positions.to_string(),
+                            format!("{:.6}", window.adenine_fraction),
+                            format!("{:.6}", window.cytosine_fraction),
+                            format!("{:.6}", window.guanine_fraction),
+                            format!("{:.6}", window.thymine_fraction),
+                            format!("{:.6}", window.dominant_wobble_fraction),
+                            format!("{:.6}", window.wobble_variability),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("Wobble variability profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line(format!("Codon window: {}", outcome.profile.codon_window))
+                .with_line(format!("Codon step: {}", outcome.profile.codon_step))
+                .with_line("X axis: 1-based window start")
+                .with_line("Y axis: wobble variability")
+                .with_line(
+                    "Analytical table also reports third-position A/C/G/T composition and dominant wobble fraction",
+                )
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize wobble plot contract: {error}"),
+                )
+                .with_code("service.wobble.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write wobble plot contract to {}", path.display()),
+                )
+                .with_code("service.wobble.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("wobble plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("wobble-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Wobble plot contract")
                     .with_local_path(path)
                     .with_provenance(plot_provenance),
             );
@@ -5264,7 +5429,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write octanol plot contract to {}", path.display()),
+                    format!(
+                        "failed to write octanol plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.octanol.plot.write_failed")
                 .with_detail(error.to_string())
@@ -5386,7 +5554,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write pepinfo plot contract to {}", path.display()),
+                    format!(
+                        "failed to write pepinfo plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.pepinfo.plot.write_failed")
                 .with_detail(error.to_string())
@@ -5550,7 +5721,10 @@ impl EmbossService {
             ResultSummary::new("Nucleotide base metadata reported")
                 .with_line(format!("Query: {}", outcome.info.symbol))
                 .with_line(format!("Class: {}", outcome.info.base_class))
-                .with_line(format!("Canonical expansion: {}", outcome.info.canonical_expansion)),
+                .with_line(format!(
+                    "Canonical expansion: {}",
+                    outcome.info.canonical_expansion
+                )),
             report.clone(),
         );
 
@@ -6383,7 +6557,9 @@ impl EmbossService {
                 .with_line(format!("Input: {}", outcome.input.path.display()))
                 .with_line(format!("Site: {}", outcome.site))
                 .with_line("Model: synonymous single-codon disruption of exact forward DNA sites")
-                .with_line("Coding validation: strict canonical DNA CDS with optional terminal stop")
+                .with_line(
+                    "Coding validation: strict canonical DNA CDS with optional terminal stop",
+                )
                 .with_line(format!("Candidates: {}", outcome.candidates.len())),
             report.clone(),
         );
@@ -6466,7 +6642,9 @@ impl EmbossService {
                 .with_line(format!("Input: {}", outcome.input.path.display()))
                 .with_line(format!("Site: {}", outcome.site))
                 .with_line("Model: synonymous single-codon creation of exact forward DNA sites")
-                .with_line("Coding validation: strict canonical DNA CDS with optional terminal stop")
+                .with_line(
+                    "Coding validation: strict canonical DNA CDS with optional terminal stop",
+                )
                 .with_line(format!("Candidates: {}", outcome.candidates.len())),
             report.clone(),
         );
@@ -6505,10 +6683,7 @@ impl EmbossService {
                 vec![
                     record.record_id.clone(),
                     record.residue_length.to_string(),
-                    record
-                        .titratable_counts
-                        .total_side_chains()
-                        .to_string(),
+                    record.titratable_counts.total_side_chains().to_string(),
                     record.titratable_counts.aspartate.to_string(),
                     record.titratable_counts.glutamate.to_string(),
                     record.titratable_counts.cysteine.to_string(),
@@ -6803,7 +6978,10 @@ impl EmbossService {
             ]);
         }
 
-        let status_message = format!("reported sequence words for {} records", outcome.records.len());
+        let status_message = format!(
+            "reported sequence words for {} records",
+            outcome.records.len()
+        );
         let mut provenance = vec![input_provenance];
         let mut report = self.success_report(
             &request.context,
@@ -6877,7 +7055,12 @@ impl EmbossService {
             }
         }
 
-        report = self.success_report(&request.context, status_message, input_diagnostics, provenance);
+        report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
         result.report = report.clone();
 
         Ok(InvocationResponse::completed(
@@ -6928,7 +7111,12 @@ impl EmbossService {
             &request.context,
             format!(
                 "reported exact protein word composition for {} records",
-                outcome.rows.iter().map(|row| &row.record_id).collect::<std::collections::BTreeSet<_>>().len()
+                outcome
+                    .rows
+                    .iter()
+                    .map(|row| &row.record_id)
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .len()
             ),
             input_diagnostics,
             vec![input_provenance],
@@ -8311,11 +8499,7 @@ fn parse_infoseq_params(arguments: &[String]) -> Result<InfoseqParams, ServiceEr
     })
 }
 
-fn parse_single_char_argument(
-    tool: &str,
-    value: &str,
-    label: &str,
-) -> Result<char, ServiceError> {
+fn parse_single_char_argument(tool: &str, value: &str, label: &str) -> Result<char, ServiceError> {
     let mut chars = value.chars();
     let character = chars.next().ok_or_else(|| {
         PlatformError::new(
@@ -9087,7 +9271,96 @@ fn parse_density_params(
         .with_detail(density_help()));
     }
 
-    Ok((DensityParams { input, window, step }, plot_contract_out))
+    Ok((
+        DensityParams {
+            input,
+            window,
+            step,
+        },
+        plot_contract_out,
+    ))
+}
+
+fn parse_wobble_params(
+    arguments: &[String],
+) -> Result<(WobbleParams, Option<PathBuf>), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("wobble", wobble_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut codon_window = 11usize;
+    let mut codon_step = 1usize;
+    let mut plot_contract_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--codon-window=") {
+            codon_window = parse_positive_count("wobble", value, "--codon-window")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--codon-window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --codon-window",
+                )
+                .with_code("service.tool.wobble.codon_window_missing")
+            })?;
+            codon_window = parse_positive_count("wobble", value, "--codon-window")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--codon-step=") {
+            codon_step = parse_positive_count("wobble", value, "--codon-step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--codon-step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --codon-step")
+                    .with_code("service.tool.wobble.codon_step_missing")
+            })?;
+            codon_step = parse_positive_count("wobble", value, "--codon-step")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.wobble.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown wobble argument '{argument}'"),
+        )
+        .with_code("service.tool.wobble.argument_unknown")
+        .with_detail(wobble_help()));
+    }
+
+    Ok((
+        WobbleParams {
+            input,
+            codon_window,
+            codon_step,
+        },
+        plot_contract_out,
+    ))
 }
 
 fn parse_octanol_params(
@@ -11095,6 +11368,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
         "density" => density_help(),
+        "wobble" => wobble_help(),
         "charge" => charge_help(),
         "hmoment" => hmoment_help(),
         "octanol" => octanol_help(),
@@ -11135,7 +11409,7 @@ mod tests {
     use emboss_core::MoleculeKind;
     use emboss_diagnostics::PlatformError;
     use emboss_providers::{HttpRequest, HttpResponse, ProviderHttpClient};
-    use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
+    use emboss_tools::{governed_tool_descriptors, ToolDescriptor};
 
     use super::EmbossService;
     use crate::{
@@ -11204,24 +11478,18 @@ mod tests {
     #[test]
     fn starts_with_default_platform_configuration_and_builtin_sequence_providers() {
         let service = EmbossService::empty();
-        assert!(
-            service
-                .providers()
-                .find(&emboss_providers::ProviderId::new("ena").expect("valid provider"))
-                .is_some()
-        );
-        assert!(
-            service
-                .providers()
-                .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
-                .is_some()
-        );
-        assert!(
-            service
-                .providers()
-                .find(&emboss_providers::ProviderId::new("sra").expect("valid provider"))
-                .is_some()
-        );
+        assert!(service
+            .providers()
+            .find(&emboss_providers::ProviderId::new("ena").expect("valid provider"))
+            .is_some());
+        assert!(service
+            .providers()
+            .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
+            .is_some());
+        assert!(service
+            .providers()
+            .find(&emboss_providers::ProviderId::new("sra").expect("valid provider"))
+            .is_some());
         assert!(service.config().acquisition.allow_remote_acquisition);
     }
 
@@ -11338,6 +11606,11 @@ mod tests {
     fn density_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/density_nucleotide.fasta")
+    }
+
+    fn wobble_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/wobble_coding_nucleotide.fasta")
     }
 
     fn octanol_fixture() -> std::path::PathBuf {
@@ -11779,14 +12052,12 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response
-                .result
-                .summary
-                .lines
-                .iter()
-                .any(|line| line == "Provider: ena")
-        );
+        assert!(response
+            .result
+            .summary
+            .lines
+            .iter()
+            .any(|line| line == "Provider: ena"));
     }
 
     #[test]
@@ -11814,14 +12085,12 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response
-                .result
-                .summary
-                .lines
-                .iter()
-                .any(|line| line == "Provider: sra")
-        );
+        assert!(response
+            .result
+            .summary
+            .lines
+            .iter()
+            .any(|line| line == "Provider: sra"));
     }
 
     #[test]
@@ -11997,22 +12266,18 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response
-                .result
-                .summary
-                .lines
-                .iter()
-                .any(|line| line == "Query span: 3-7")
-        );
-        assert!(
-            response
-                .result
-                .summary
-                .lines
-                .iter()
-                .any(|line| line == "Target span: 3-7")
-        );
+        assert!(response
+            .result
+            .summary
+            .lines
+            .iter()
+            .any(|line| line == "Query span: 3-7"));
+        assert!(response
+            .result
+            .summary
+            .lines
+            .iter()
+            .any(|line| line == "Target span: 3-7"));
     }
 
     #[test]
@@ -12589,9 +12854,7 @@ mod tests {
             "9".to_owned(),
         ]);
 
-        let response = service
-            .invoke(request)
-            .expect("makeprotseq should execute");
+        let response = service.invoke(request).expect("makeprotseq should execute");
         match &response.result.payload {
             ResultPayload::SequenceCollection(records) => {
                 assert_eq!(records.len(), 1);
@@ -13225,9 +13488,7 @@ mod tests {
             vectorstrip_vector_fixture().display().to_string(),
         ]);
 
-        let response = service
-            .invoke(request)
-            .expect("vectorstrip should execute");
+        let response = service.invoke(request).expect("vectorstrip should execute");
         match &response.result.payload {
             ResultPayload::SequenceCollection(records) => {
                 assert_eq!(records[0].residues(), "ACGT");
@@ -13350,7 +13611,9 @@ mod tests {
         )
         .with_arguments(vec!["hydropathy".to_owned()]);
 
-        let response = service.invoke(request).expect("aaindexextract should execute");
+        let response = service
+            .invoke(request)
+            .expect("aaindexextract should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
                 assert_eq!(
@@ -13978,11 +14241,9 @@ mod tests {
         match &response.result.payload {
             ResultPayload::TextReport(report) => {
                 assert!(report.body.contains("ID   FEAT1"));
-                assert!(
-                    report
-                        .body
-                        .contains("FEATURES             Location/Qualifiers")
-                );
+                assert!(report
+                    .body
+                    .contains("FEATURES             Location/Qualifiers"));
                 assert!(report.body.contains("/product=\"short peptide\""));
             }
             payload => panic!("unexpected payload: {payload:?}"),
@@ -14076,10 +14337,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"));
         assert_eq!(response.result.summary.lines[1], "Frame selection: frame 1");
         assert_eq!(response.result.summary.lines[2], "Genetic code: standard");
     }
@@ -14253,10 +14512,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
         assert_eq!(response.result.summary.lines[1], "Pattern: ACGN");
         assert_eq!(
             response.result.summary.lines[2],
@@ -14293,10 +14550,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/protein_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/protein_records.fasta"));
         assert_eq!(response.result.summary.lines[1], "Pattern: MX");
         assert_eq!(
             response.result.summary.lines[2],
@@ -14336,10 +14591,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"));
         assert_eq!(response.result.summary.lines[1], "Pattern: MA");
         assert_eq!(
             response.result.summary.lines[2],
@@ -14714,9 +14967,7 @@ mod tests {
             "4".to_owned(),
         ]);
 
-        let response = service
-            .invoke(request)
-            .expect("seqmatchall should execute");
+        let response = service.invoke(request).expect("seqmatchall should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
                 assert_eq!(table.rows.len(), 3);
@@ -14811,19 +15062,15 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record" && row[1] == "nucA" && row[4] == "N" && row[5] == "1"
                 }));
-                assert!(
-                    table
-                        .rows
-                        .iter()
-                        .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" })
-                );
+                assert!(table
+                    .rows
+                    .iter()
+                    .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
         assert_eq!(
             response.result.summary.lines[1],
             "Scope: per-record plus aggregate summary"
@@ -14854,12 +15101,10 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record" && row[1] == "protA" && row[4] == "*" && row[5] == "1"
                 }));
-                assert!(
-                    table
-                        .rows
-                        .iter()
-                        .any(|row| { row[0] == "aggregate" && row[4] == "L" && row[5] == "1" })
-                );
+                assert!(table
+                    .rows
+                    .iter()
+                    .any(|row| { row[0] == "aggregate" && row[4] == "L" && row[5] == "1" }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -14921,10 +15166,8 @@ mod tests {
 
     #[test]
     fn wordcount_writes_canonical_plot_contract_fixture() {
-        let output_path = std::env::temp_dir().join(format!(
-            "emboss-wordcount-plot-{}.json",
-            std::process::id()
-        ));
+        let output_path =
+            std::env::temp_dir().join(format!("emboss-wordcount-plot-{}.json", std::process::id()));
         let service = implemented_service();
         let request = InvocationRequest::new(
             ExecutionContext::default(),
@@ -14939,8 +15182,8 @@ mod tests {
         ]);
 
         let response = service.invoke(request).expect("wordcount should execute");
-        let emitted = std::fs::read_to_string(&output_path)
-            .expect("wordcount should write a plot contract");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("wordcount should write a plot contract");
         let canonical = std::fs::read_to_string(wordcount_plot_fixture())
             .expect("canonical wordcount plot contract should be readable");
         std::fs::remove_file(&output_path).ok();
@@ -15417,6 +15660,95 @@ mod tests {
     }
 
     #[test]
+    fn executes_wobble_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wobble").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            wobble_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "3".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("wobble should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[0][0], "wobble_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "9");
+                assert_eq!(table.rows[0][11], "0.333333");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("wobble should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+        assert_eq!(plot.series.len(), 1);
+    }
+
+    #[test]
+    fn wobble_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-wobble-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wobble").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            wobble_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "3".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("wobble should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"wobble\""));
+        assert!(emitted.contains("\"method\": \"nucleotide_wobble_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "wobble-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn wobble_rejects_invalid_codon_window() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wobble").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            wobble_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "0".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid codon window should fail");
+        assert_eq!(
+            error.code(),
+            Some("service.tool.wobble.--codon-window_invalid")
+        );
+    }
+
+    #[test]
     fn hmoment_writes_plot_contract_output() {
         let service = implemented_service();
         let output_path = std::env::temp_dir().join(format!(
@@ -15685,10 +16017,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
         assert_eq!(
             response.result.summary.lines[1],
             "Scope: per-record plus aggregate summary"
@@ -15776,10 +16106,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta"));
         assert_eq!(
             response.result.summary.lines[1],
             "Mass convention: average residue masses plus one water molecule"
@@ -15848,15 +16176,16 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/iep_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/iep_records.fasta"));
         assert_eq!(
             response.result.summary.lines[1],
             "Model: fixed explicit pKa set for termini and D/E/C/Y/H/K/R"
         );
-        assert_eq!(response.result.summary.lines[2], "Net charge reported at pH 7.0");
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Net charge reported at pH 7.0"
+        );
     }
 
     #[test]
@@ -15937,10 +16266,8 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(
-            response.result.summary.lines[0]
-                .ends_with("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta")
-        );
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta"));
         assert_eq!(response.result.summary.lines[1], "Protease: trypsin");
         assert_eq!(
             response.result.summary.lines[2],
@@ -16033,10 +16360,7 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert_eq!(
-            response.result.summary.lines[1],
-            "Site: GAATTC"
-        );
+        assert_eq!(response.result.summary.lines[1], "Site: GAATTC");
     }
 
     #[test]
@@ -16079,10 +16403,7 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert_eq!(
-            response.result.summary.lines[1],
-            "Site: GAATTC"
-        );
+        assert_eq!(response.result.summary.lines[1], "Site: GAATTC");
     }
 
     #[test]
@@ -16133,12 +16454,10 @@ mod tests {
         let response = service.invoke(request).expect("chips should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
-                assert!(
-                    table
-                        .rows
-                        .iter()
-                        .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" })
-                );
+                assert!(table
+                    .rows
+                    .iter()
+                    .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -16215,12 +16534,10 @@ mod tests {
         let response = service.invoke(request).expect("codcmp should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
-                assert!(
-                    table
-                        .rows
-                        .iter()
-                        .any(|row| { row[0] == "CTT" && row[2] == "5" && row[4] == "0" })
-                );
+                assert!(table
+                    .rows
+                    .iter()
+                    .any(|row| { row[0] == "CTT" && row[2] == "5" && row[4] == "0" }));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
