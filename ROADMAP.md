@@ -2437,9 +2437,22 @@ implementation-program cycle. The near-term priorities are:
       - `full_compared_cohort: true`
       - `release_truth_current: true`
 
-162. Re-run the full release-truth surface after shipping the selected next plotting candidate.
-    - Use the broad generated-check path, truth-check, docs build, and diff
-      integrity checks.
+162. Complete. Re-run the full release-truth surface after shipping the selected next plotting candidate.
+    The broad post-`wobble` release-truth rerun completed cleanly:
+      - `PYTHON=.venv-docs/bin/python make release-generated-check`
+      - `python3 scripts/release_metadata.py truth-check`
+      - `PYTHON=.venv-docs/bin/python make docs`
+      - `git diff --check`
+    The governed release surface remains fully green after the `wobble`
+    evidence closure:
+      - shipped methods: `101`
+      - compared evidence: `101`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `101`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
 
 163. Reassess the shipped next plotting slice before any further continuation is mapped.
     - Decide whether the seam still remains bounded or whether the prepared
