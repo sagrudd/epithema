@@ -44,15 +44,22 @@ pub fn run_cusp(params: CuspParams) -> Result<CuspOutcome, ToolExecutionError> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::{CuspParams, run_cusp};
     use crate::sequence_stream::SequenceInput;
+
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
 
     #[test]
     fn reports_per_record_and_aggregate_codon_profiles() {
         let outcome = run_cusp(CuspParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/codon_reference.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("codon_reference.fasta")),
         })
         .expect("cusp should execute");
 

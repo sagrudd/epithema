@@ -92,16 +92,23 @@ fn topology_label(metadata: &SequenceMetadata) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use emboss_core::{Alphabet, MoleculeKind, SequenceIdentifier, SequenceRecord};
 
     use super::{DescseqParams, run_descseq};
     use crate::sequence_stream::SequenceInput;
 
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
+
     #[test]
     fn summarizes_plain_record_metadata() {
-        let fixture = SequenceInput::new(
-            "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-        );
+        let fixture = SequenceInput::new(fixture_path("three_records.fasta"));
 
         let outcome = run_descseq(DescseqParams { input: fixture }).expect("descseq should run");
         assert_eq!(outcome.rows.len(), 3);
@@ -119,9 +126,7 @@ mod tests {
 
     #[test]
     fn summarizes_annotation_aware_metadata() {
-        let fixture = SequenceInput::new(
-            "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/annotated_feature.gbk",
-        );
+        let fixture = SequenceInput::new(fixture_path("annotated_feature.gbk"));
 
         let outcome = run_descseq(DescseqParams { input: fixture }).expect("descseq should run");
         assert_eq!(outcome.rows.len(), 1);

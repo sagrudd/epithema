@@ -170,9 +170,17 @@ fn estimate_tm_celsius(sequence: &str) -> f64 {
 #[cfg(test)]
 mod tests {
     use std::fs;
+    use std::path::PathBuf;
 
     use super::{DanParams, estimate_tm_celsius, run_dan};
     use crate::sequence_stream::SequenceInput;
+
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
 
     fn write_temp_sequence_file(name: &str, contents: &str) -> std::path::PathBuf {
         let path = std::env::temp_dir().join(format!(
@@ -187,9 +195,7 @@ mod tests {
     #[test]
     fn reports_whole_sequence_tm_by_default() {
         let outcome = run_dan(DanParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
             window: None,
             step: 1,
         })
@@ -205,9 +211,7 @@ mod tests {
     #[test]
     fn reports_sliding_windows() {
         let outcome = run_dan(DanParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
             window: Some(2),
             step: 1,
         })
@@ -238,9 +242,7 @@ mod tests {
     #[test]
     fn rejects_ambiguous_input() {
         let error = run_dan(DanParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("nucleotide_pattern_records.fasta")),
             window: None,
             step: 1,
         })

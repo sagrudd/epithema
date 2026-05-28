@@ -153,15 +153,22 @@ fn count_query_word(sequence: &str, query_word: &str) -> (usize, usize) {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::{OddcompParams, run_oddcomp};
     use crate::sequence_stream::SequenceInput;
+
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
 
     #[test]
     fn reports_per_record_word_counts() {
         let outcome = run_oddcomp(OddcompParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/oddcomp_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("oddcomp_records.fasta")),
             query_words: vec!["MAM".to_owned(), "QQQ".to_owned()],
         })
         .expect("oddcomp should execute");
@@ -178,9 +185,7 @@ mod tests {
     #[test]
     fn rejects_nucleotide_input() {
         let error = run_oddcomp(OddcompParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
             query_words: vec!["AAA".to_owned()],
         })
         .expect_err("nucleotide input should fail");
@@ -191,9 +196,7 @@ mod tests {
     #[test]
     fn rejects_invalid_query_words() {
         let error = run_oddcomp(OddcompParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/oddcomp_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("oddcomp_records.fasta")),
             query_words: vec!["AX?".to_owned()],
         })
         .expect_err("invalid query word should fail");

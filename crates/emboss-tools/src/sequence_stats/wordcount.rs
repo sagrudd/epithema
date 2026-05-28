@@ -198,15 +198,22 @@ pub fn word_frequency(record: &WordcountRecord, word: &str) -> f64 {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::{WordcountParams, run_wordcount, word_frequency};
     use crate::sequence_stream::SequenceInput;
+
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
 
     #[test]
     fn counts_overlapping_words_per_record_and_aggregate() {
         let outcome = run_wordcount(WordcountParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
             word_size: 2,
             min_count: 1,
         })
@@ -223,9 +230,7 @@ mod tests {
     #[test]
     fn skips_gap_windows() {
         let outcome = run_wordcount(WordcountParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/gapped_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("gapped_records.fasta")),
             word_size: 2,
             min_count: 1,
         })
@@ -240,9 +245,7 @@ mod tests {
     #[test]
     fn returns_empty_counts_when_word_is_longer_than_sequence() {
         let outcome = run_wordcount(WordcountParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
             word_size: 10,
             min_count: 1,
         })

@@ -102,17 +102,24 @@ fn looks_like_nucleotide_record(record: &SequenceRecord) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use emboss_core::{MoleculeKind, SequenceIdentifier, SequenceMetadata, SequenceTopology};
 
     use super::{InfoseqParams, run_infoseq, summarize_record};
     use crate::sequence_stream::SequenceInput;
 
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
+
     #[test]
     fn reports_basic_plain_sequence_information() {
         let outcome = run_infoseq(InfoseqParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/three_records.fasta",
-            ),
+            input: SequenceInput::new(fixture_path("three_records.fasta")),
         })
         .expect("infoseq should execute");
 
@@ -130,9 +137,7 @@ mod tests {
     #[test]
     fn reports_annotation_aware_metadata() {
         let outcome = run_infoseq(InfoseqParams {
-            input: SequenceInput::new(
-                "/Users/stephen/Projects/emboss-rs/crates/emboss-tools/tests/fixtures/annotated_feature.gbk",
-            ),
+            input: SequenceInput::new(fixture_path("annotated_feature.gbk")),
         })
         .expect("infoseq should execute");
 

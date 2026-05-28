@@ -439,10 +439,10 @@ fn looks_like_explicit_path(token: &str) -> bool {
 }
 
 fn expand_tilde(token: &str) -> PathBuf {
-    if let Some(rest) = token.strip_prefix("~/")
-        && let Ok(home) = std::env::var("HOME")
-    {
-        return PathBuf::from(home).join(rest);
+    if let Some(rest) = token.strip_prefix("~/") {
+        if let Ok(home) = std::env::var("HOME") {
+            return PathBuf::from(home).join(rest);
+        }
     }
     PathBuf::from(token)
 }
