@@ -2477,7 +2477,109 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
     - Retrieval fallback remains documented and prepared, but inactive.
 
-164. Extend the roadmap again after the next post-`density` plotting gate resolves.
-    - Rebase the following tier on the actual observed branch:
-      - bounded further plotting continuation, or
-      - bounded retrieval fallback activation
+164. Complete.
+    - Extended the roadmap from the actual post-`wobble` branch outcome rather
+      than the unused fallback branch.
+    - The current governed truth at this extension point remains:
+      - shipped methods: `101`
+      - compared evidence: `101`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `101`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Bounded plotting continuation remains the active branch after `wobble`.
+      The prepared retrieval fallback remains documented and ready, but inactive
+      unless the narrowed plotting pool fails honest seam review.
+    - The remaining narrowed plotting continuation pool is now:
+      - `banana`
+      - `isochore`
+      - `syco`
+    - The next mapped tier is now Tasks `165` through `180`, centered on:
+      - inventorying and reclassifying the post-`wobble` plotting remainder
+      - deciding whether another bounded plotting continuation candidate still
+        exists
+      - either activating the prepared retrieval fallback if no credible
+        bounded candidate remains, or choosing exactly one next plotting method
+      - capturing acceptance criteria, exact start conditions, and explicit stop
+        conditions for the chosen method
+      - mapping and shipping one full bounded method slice
+      - rerunning release truth and reassessing the seam before any further
+        continuation is mapped
+
+165. Inventory the remaining plotting-family continuation pool after the shipped `wobble` slice.
+    - Rebase the active remainder set on the actual post-`wobble` state rather
+      than the pre-`wobble` shortlist assumptions.
+
+166. Reclassify the post-`wobble` plotting remainder by seam pressure.
+    - Confirm which remaining methods still look closest to the proven bounded
+      plotting seam and which now sit outside it.
+
+167. Decide explicitly whether another bounded plotting continuation candidate still exists after `wobble`.
+    - Either keep the plotting branch active with a non-empty narrowed pool, or
+      trigger the no-candidate branch honestly.
+
+168. If no credible bounded continuation candidate remains after the post-`wobble` review, activate the prepared retrieval fallback path explicitly.
+    - Do not keep plotting active by inertia if the narrowed pool fails honest
+      seam review.
+
+169. If plotting remains viable, choose exactly one next bounded plotting continuation candidate.
+    - Select one method only from the narrowed remaining pool:
+      - `banana`
+      - `isochore`
+      - `syco`
+
+170. If plotting remains viable, close the untriggered retrieval-activation branch explicitly.
+    - Keep retrieval fallback documented and prepared, but do not promote it by
+      inertia.
+
+171. Capture explicit method-level acceptance criteria for the selected next plotting candidate.
+    - Record the bounded analytical surface, typed contract expectations,
+      compared-evidence obligations, and method-local non-goals before code
+      starts.
+
+172. Capture the exact start conditions for the first implementation patch of the selected next plotting candidate.
+    - Require the current zero-burden release-truth state and keep the patch
+      limited to the method plus the smallest support needed to ship a full
+      governed slice.
+
+173. Map the full bounded implementation tier for the selected next plotting candidate.
+    - Record the complete method-associated slice before code starts:
+      1. analytical core
+      2. typed plot-contract emission path
+      3. governed shipped-surface exposure
+      4. canonical fixtures and compared evidence
+      5. post-ship release-truth rerun
+      6. post-ship reassessment
+
+174. Capture the explicit seam-pressure stop conditions for the selected next plotting candidate.
+    - Make the pause-and-reassess triggers explicit before implementation starts
+      so the bounded seam is not stretched informally.
+
+175. Implement the bounded analytical core for the selected next plotting candidate.
+    - Keep the implementation table-first, method-associated, and renderer-
+      agnostic.
+
+176. Add the typed plot-contract emission path for the selected next plotting candidate.
+    - Emit a deterministic method-associated contract from the same analytical
+      computation path without widening into a generic plotting framework.
+
+177. Expose the selected next plotting candidate through the governed shipped surface.
+    - Wire the method through the registry, service, CLI, governed autodoc, and
+      generated docs/validation stub.
+
+178. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
+    - Restore the shipped cohort from the temporary executable-only shipment
+      state back to full compared/full-harvest truth.
+
+179. Re-run the full release-truth surface after shipping the selected next plotting candidate.
+    - Reconfirm `make release-generated-check`, `truth-check`, generated docs,
+      and zero-burden summary semantics after the new slice closes.
+
+180. Reassess the shipped selected next plotting slice before any further continuation is mapped.
+    - Decide whether the bounded plotting seam still remains credible after the
+      new slice, or whether the prepared retrieval fallback should finally
+      activate.
