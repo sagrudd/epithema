@@ -1848,6 +1848,22 @@ So the repository should not promote remote retrieval here. The prepared
 retrieval shortlist remains documented, ready, and inactive while the
 repository stays on the plotting continuation branch.
 
+#### Explicit closeout of the untriggered retrieval-activation branch
+
+Because plotting remains active after the bounded selection review, the
+untriggered retrieval-activation branch should now be closed explicitly rather
+than left implied.
+
+That closeout means:
+
+- the retrieval shortlist remains documented and prepared
+- retrieval is not promoted by inertia
+- the repository continues on the active `wobble` plotting branch
+
+So there is no branch ambiguity at this checkpoint. The next planning work
+should stay method-associated to `wobble` rather than reopening fallback
+promotion.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

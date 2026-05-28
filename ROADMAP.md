@@ -2324,9 +2324,12 @@ implementation-program cycle. The near-term priorities are:
     So the repository does not activate the retrieval fallback here. The
     prepared retrieval shortlist remains documented, ready, and inactive.
 
-153. If plotting remains active, close the untriggered retrieval-activation branch honestly.
-    - Keep the retrieval shortlist documented and prepared without promoting it
-      by inertia.
+153. Complete. If plotting remains active, close the untriggered retrieval-activation branch honestly.
+    Plotting remains active after the bounded selection review, so this branch
+    is now closed explicitly rather than left implied. The repository should:
+      - keep the retrieval shortlist documented and prepared
+      - not promote retrieval by inertia
+      - continue on the active `wobble` plotting branch
 
 154. Capture method-level acceptance criteria for the selected next plotting candidate.
     - Record analytical expectations, typed-contract expectations, evidence
