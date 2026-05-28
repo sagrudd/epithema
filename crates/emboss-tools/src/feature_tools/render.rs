@@ -35,21 +35,21 @@ pub fn render_feature_text(feature: &Feature) -> String {
         render_feature_location(&feature.location)
     )];
 
-    if let Some(name) = &feature.name
-        && !feature.qualifiers.values().any(|value| value == name)
-    {
-        lines.push(format!(
-            "                     /name=\"{}\"",
-            escape_qualifier_value(name)
-        ));
+    if let Some(name) = &feature.name {
+        if !feature.qualifiers.values().any(|value| value == name) {
+            lines.push(format!(
+                "                     /name=\"{}\"",
+                escape_qualifier_value(name)
+            ));
+        }
     }
-    if let Some(note) = &feature.note
-        && feature.qualifiers.get("note") != Some(note)
-    {
-        lines.push(format!(
-            "                     /note=\"{}\"",
-            escape_qualifier_value(note)
-        ));
+    if let Some(note) = &feature.note {
+        if feature.qualifiers.get("note") != Some(note) {
+            lines.push(format!(
+                "                     /note=\"{}\"",
+                escape_qualifier_value(note)
+            ));
+        }
     }
     for (key, value) in &feature.qualifiers {
         lines.push(format!(
