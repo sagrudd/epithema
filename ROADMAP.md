@@ -2315,9 +2315,14 @@ implementation-program cycle. The near-term priorities are:
     acceptance criteria and exact patch start conditions before any code
     starts.
 
-152. If no credible bounded continuation candidate remains after the selection review, activate the prepared retrieval fallback path explicitly.
-    - Promote retrieval only if the narrowed plotting pool proves deceptive
-      against the explicit fallback stop conditions.
+152. Complete. If no credible bounded continuation candidate remains after the selection review, activate the prepared retrieval fallback path explicitly.
+    This conditional branch was not triggered. After the bounded selection
+    review:
+      - the narrowed plotting pool did not collapse
+      - `wobble` was selected as the active next bounded continuation
+        candidate
+    So the repository does not activate the retrieval fallback here. The
+    prepared retrieval shortlist remains documented, ready, and inactive.
 
 153. If plotting remains active, close the untriggered retrieval-activation branch honestly.
     - Keep the retrieval shortlist documented and prepared without promoting it

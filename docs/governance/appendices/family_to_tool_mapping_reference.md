@@ -1834,6 +1834,20 @@ The non-selected strong candidates remain viable but inactive:
 So the next bounded planning step should be to capture `wobble`-specific
 acceptance criteria and exact patch start conditions before any code starts.
 
+#### Untriggered retrieval-activation branch after candidate selection
+
+The conditional retrieval-activation branch is not taken at this checkpoint.
+
+That branch would only activate if the narrowed plotting pool had proven
+deceptive against the explicit fallback stop conditions. Instead:
+
+- the narrowed plotting pool remained credible
+- `wobble` was selected as the active next bounded continuation candidate
+
+So the repository should not promote remote retrieval here. The prepared
+retrieval shortlist remains documented, ready, and inactive while the
+repository stays on the plotting continuation branch.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
