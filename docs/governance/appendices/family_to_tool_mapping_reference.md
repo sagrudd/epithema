@@ -2058,6 +2058,53 @@ So the repository remains on the plotting continuation path. The retrieval
 fallback remains documented, prepared, and inactive unless a later bounded
 continuation slice trips the explicit stop conditions.
 
+#### Post-`wobble` plotting-family remainder inventory
+
+After the bounded `wobble` slice shipped and passed its reassessment gate, the
+repository should rebase the active plotting-family continuation pool on the
+actual post-`wobble` state rather than on the earlier post-`density`
+shortlist.
+
+The plotting-family remainder now excludes:
+
+- the preexisting governed seam precedents:
+  - `charge`
+  - `pepwindow`
+- the bounded shipped plotting-family continuations:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+  - `density`
+  - `wobble`
+
+So the explicit post-`wobble` plotting-family continuation pool is the
+remaining `21` plotting-family methods:
+
+- `abiview`
+- `banana`
+- `chaos`
+- `cirdna`
+- `cpgplot`
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `findkm`
+- `isochore`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `pepwindowall`
+- `plotcon`
+- `polydot`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+- `syco`
+
+This section is inventory only. It does not yet reclassify seam pressure or
+choose the next bounded continuation candidate.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

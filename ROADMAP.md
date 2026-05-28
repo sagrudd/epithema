@@ -2510,9 +2510,45 @@ implementation-program cycle. The near-term priorities are:
       - rerunning release truth and reassessing the seam before any further
         continuation is mapped
 
-165. Inventory the remaining plotting-family continuation pool after the shipped `wobble` slice.
-    - Rebase the active remainder set on the actual post-`wobble` state rather
-      than the pre-`wobble` shortlist assumptions.
+165. Complete. Inventory the remaining plotting-family continuation pool after the shipped `wobble` slice.
+    - Rebased the active continuation pool on the actual post-`wobble` state
+      rather than the pre-`wobble` shortlist assumptions.
+    - The plotting-family remainder pool now excludes the preexisting governed
+      seam precedents plus the bounded shipped continuations:
+      - seam precedents:
+        - `charge`
+        - `pepwindow`
+      - bounded shipped plotting-family continuations:
+        - `hmoment`
+        - `octanol`
+        - `pepinfo`
+        - `density`
+        - `wobble`
+    - The remaining plotting-family continuation pool is therefore the
+      remaining `21` methods:
+      - `abiview`
+      - `banana`
+      - `chaos`
+      - `cirdna`
+      - `cpgplot`
+      - `dotmatcher`
+      - `dotpath`
+      - `dottup`
+      - `findkm`
+      - `isochore`
+      - `lindna`
+      - `pepnet`
+      - `pepwheel`
+      - `pepwindowall`
+      - `plotcon`
+      - `polydot`
+      - `prettyplot`
+      - `showfeat`
+      - `showpep`
+      - `showseq`
+      - `syco`
+    - This task is inventory only. It does not yet reclassify seam pressure or
+      choose the next bounded continuation candidate.
 
 166. Reclassify the post-`wobble` plotting remainder by seam pressure.
     - Confirm which remaining methods still look closest to the proven bounded
