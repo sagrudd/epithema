@@ -2425,9 +2425,17 @@ implementation-program cycle. The near-term priorities are:
       - not yet restored to full compared state
       - canonical compared fixtures remain the next task
 
-161. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
-    - Restore full compared/full harvest state after the temporary shipped-plus-
-      executable-only interim.
+161. Complete. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
+    `wobble` now has canonical checked-in analytical and plot-contract fixtures
+    wired into the acceptance-anchor harness. The governed reports are restored
+    to the full compared/full harvest state after the temporary shipped-plus-
+    executable-only interim:
+      - shipped methods: `101`
+      - compared evidence: `101`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `101`
+      - `full_compared_cohort: true`
+      - `release_truth_current: true`
 
 162. Re-run the full release-truth surface after shipping the selected next plotting candidate.
     - Use the broad generated-check path, truth-check, docs build, and diff

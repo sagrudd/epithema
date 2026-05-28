@@ -1017,6 +1017,18 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
             "density -sequence density_nucleotide.fasta -window 4 -graph data",
     },
     AcceptanceAnchorSpec {
+        tool_name: "wobble",
+        autodoc_contract: "docs/autodoc/tools/wobble.json",
+        example_id: "wobble_profile_example",
+        expected_output:
+            "crates/emboss-testkit/tests/fixtures/acceptance_anchors/wobble_wobble_profile_example.tsv",
+        legacy_source: "EMBOSS wobble application",
+        legacy_locator:
+            "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wobble.acd",
+        legacy_invocation:
+            "wobble -sequence wobble_coding_nucleotide.fasta -window 3 -graph data",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -2116,6 +2128,16 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
             "--step".to_owned(),
             "1".to_owned(),
         ],
+        "wobble" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/wobble_coding_nucleotide.fasta")
+                .display()
+                .to_string(),
+            "--codon-window".to_owned(),
+            "3".to_owned(),
+            "--codon-step".to_owned(),
+            "1".to_owned(),
+        ],
         "descseq" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
@@ -2305,6 +2327,7 @@ fn expected_plot_output(tool_name: &str) -> Option<&'static str> {
         "octanol" => Some("crates/emboss-tools/tests/fixtures/octanol_plot_contract.json"),
         "pepinfo" => Some("crates/emboss-tools/tests/fixtures/pepinfo_plot_contract.json"),
         "density" => Some("crates/emboss-tools/tests/fixtures/density_plot_contract.json"),
+        "wobble" => Some("crates/emboss-tools/tests/fixtures/wobble_plot_contract.json"),
         "wordcount" => Some("crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"),
         _ => None,
     }

@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `100` methods, including:
+of `101` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -63,9 +63,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `100` shipped methods carry compared evidence
+- `101` shipped methods carry compared evidence
 - `0` shipped methods carry executable evidence
-- `100` shipped methods record harvested legacy provenance
+- `101` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
@@ -87,12 +87,15 @@ change the release gate state above.
 - `density` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
+- `wobble` now ships through the governed surface with canonical checked-in
+  analytical and plot-contract fixtures plus compared acceptance evidence for
+  both surfaces.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
 remains complete, and the shipped governed cohort is back in the zero-burden
-release-truth state after the bounded `density` evidence closure landed.
+release-truth state after the bounded `wobble` evidence closure landed.
 
 ### First-class R story
 

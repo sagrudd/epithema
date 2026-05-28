@@ -1,0 +1,4 @@
+sequence_id	window_start	window_end	window_length	codon_window_length	wobble_positions	adenine_fraction	cytosine_fraction	guanine_fraction	thymine_fraction	dominant_wobble_fraction	wobble_variability
+wobble_example	1	9	9	3	3	0.000000	0.333333	0.000000	0.666667	0.666667	0.333333
+wobble_example	4	12	9	3	3	0.333333	0.333333	0.000000	0.333333	0.333333	0.666667
+wobble_example	7	15	9	3	3	0.333333	0.333333	0.333333	0.000000	0.333333	0.666667

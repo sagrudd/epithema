@@ -113,10 +113,10 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `100`
-- Compared-evidence methods: `100`
+- Shipped methods audited: `101`
+- Compared-evidence methods: `101`
 - Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `100`
+- Methods with harvested legacy provenance recorded: `101`
 - Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
@@ -126,9 +126,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `100` shipped methods are documented and present in the generated docs
+- All `101` shipped methods are documented and present in the generated docs
   index.
-- All `100` shipped methods have a checked-in validation stub.
+- All `101` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -154,8 +154,8 @@ Current generated release-truth markers:
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`,
-  governed `wordcount`, `hmoment`, and now governed `octanol` as the current
-  stable Rust-side plot-contract producers.
+  governed `wordcount`, `hmoment`, `octanol`, `pepinfo`, `density`, and now
+  governed `wobble` as the current stable Rust-side plot-contract producers.
 - The visible plotting notes for `charge` and `pepwindow` are now categorized
   as non-blocking missing explicit legacy-reference artefacts rather than as
   generic validation-report gaps.
@@ -301,7 +301,7 @@ Current generated release-truth markers:
 
 - The cohort report now records `100` methods with compared evidence.
 - The comparison framework remains real and reusable, and the full compared
-  cohort gate is green again after the bounded `density` evidence closure.
+  cohort gate is green again after the bounded `wobble` evidence closure.
 
 ### Plotting limitations
 

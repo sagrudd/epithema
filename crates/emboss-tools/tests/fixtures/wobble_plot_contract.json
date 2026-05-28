@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "wobble_wobble_example",
+    "title": "Wobble variability profile for wobble_example",
+    "subtitle": "Codon window 3 step 1 (single-series bounded wobble variability line)",
+    "provenance": {
+      "tool": "wobble",
+      "method": "nucleotide_wobble_profile",
+      "source_artifact_ids": [
+        "table:wobble-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Wobble variability",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "wobble_variability",
+      "label": "Wobble variability",
+      "legend_label": "Wobble variability",
+      "semantic_group": "wobble_variability",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          4.0,
+          7.0
+        ]
+      },
+      "y": [
+        0.33333333333333337,
+        0.6666666666666667,
+        0.6666666666666667
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

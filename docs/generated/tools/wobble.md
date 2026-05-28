@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `wobble` is the gov
 
 ## Current Status
 
-This method is now implemented and exposed through `emboss-rs wobble`. At this task boundary the governed surface includes executable analytical and plot-contract validation, but compared acceptance evidence for the canonical checked-in fixtures has not landed yet.
+This method is implemented and exposed through `emboss-rs wobble`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in wobble-variability line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,13 +54,21 @@ v1 supports only the single-record bounded wobble profile and does not add Rust-
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/wobble_coding_nucleotide.fasta`
 - Notes: Repository-managed coding nucleotide fixture used for deterministic wobble validation.
 
+### Canonical wobble line-plot contract fixture
+
+- Artifact ID: `wobble_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/wobble_plot_contract.json`
+- Notes: Repository-managed canonical wobble-variability line-plot contract fixture emitted by the governed wobble implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic wobble variability profile
 
 - Example ID: `wobble_profile_example`
 - Description: Reports deterministic codon-windowed wobble-variability rows from the committed coding nucleotide fixture and emits a governed single-series wobble-variability line-plot contract from the same analytical run.
-- Referenced artifacts: `wobble_fixture`
+- Referenced artifacts: `wobble_fixture`, `wobble_plot_contract`
 - Parameters:
   - `codon_window` = `3`
   - `codon_step` = `1`
