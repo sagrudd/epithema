@@ -1971,6 +1971,38 @@ If any of these start conditions cease to hold before code changes begin, the
 repository should re-open planning rather than starting the continuation patch
 under a looser scope.
 
+#### Bounded `wobble` implementation tier
+
+Because `wobble` is now the single selected next bounded continuation
+candidate, the repository should map its full bounded implementation tier
+explicitly before any code starts.
+
+That tier should stay parallel to the earlier bounded method sequences rather
+than widening the plotting program informally:
+
+1. implement the bounded analytical core for `wobble`
+2. add the typed `wobble` plot-contract emission path
+3. expose `wobble` through the governed shipped surface
+4. add canonical analytical and plot-contract fixtures plus compared evidence
+5. re-run the full release-truth surface after shipping `wobble`
+6. reassess the shipped `wobble` slice before any further continuation is
+   mapped
+
+The bounded `wobble` tier should preserve the same architectural constraints
+already proven by the governed plotting seam and the bounded continuation
+methods shipped so far:
+
+- method-associated implementation only
+- table-first analytical output
+- typed contract output from the same computation path
+- no Rust-side rendering
+- no generic plotting-framework widening
+- no broader contract taxonomy unless `wobble` itself makes that pressure
+  concrete enough to stop and reassess
+
+So the next code-bearing continuation should not begin as a vague “keep going
+with plotting” step. It should begin as this explicit bounded `wobble` tier.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

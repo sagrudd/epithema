@@ -2355,13 +2355,22 @@ implementation-program cycle. The near-term priorities are:
         governed docs/validation plumbing
       - the patch to land as a full governed slice rather than a half-start
 
-156. Map the full bounded implementation tier for the selected next plotting candidate.
-    - Analytical core
-    - typed contract path
-    - governed shipped-surface exposure
-    - canonical fixtures and compared evidence
-    - post-ship release-truth rerun
-    - post-ship seam reassessment
+156. Complete. Map the full bounded implementation tier for the selected next plotting candidate.
+    The bounded `wobble` implementation tier is now explicit:
+      1. implement the bounded analytical core
+      2. add the typed plot-contract emission path
+      3. expose `wobble` through the governed shipped surface
+      4. add canonical analytical and plot-contract fixtures plus compared
+         evidence
+      5. re-run the full release-truth surface after shipping `wobble`
+      6. reassess the shipped `wobble` slice before any further continuation
+         is mapped
+    The same bounded constraints remain explicit:
+      - method-associated implementation only
+      - table-first analytical output
+      - typed contract output from the same computation path
+      - no Rust-side rendering
+      - no generic plotting-framework widening
 
 157. If the selected next plotting candidate widens into region-track, threshold-call, or broader contract-taxonomy pressure before code starts, pause and reconsider the family path.
     - Do not force-fit a method through the bounded seam once the preconditions
