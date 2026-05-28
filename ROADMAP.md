@@ -2331,9 +2331,17 @@ implementation-program cycle. The near-term priorities are:
       - not promote retrieval by inertia
       - continue on the active `wobble` plotting branch
 
-154. Capture method-level acceptance criteria for the selected next plotting candidate.
-    - Record analytical expectations, typed-contract expectations, evidence
-      expectations, and explicit non-goals before code starts.
+154. Complete. Capture method-level acceptance criteria for the selected next plotting candidate.
+    `wobble` now has explicit method-level acceptance criteria recorded in the
+    plotting-governance appendix. Those criteria now make four things explicit
+    before code starts:
+      - analytical expectations
+      - typed-contract expectations
+      - fixture and evidence expectations
+      - explicit non-goals
+    The governed shape keeps `wobble` bounded as a coding-sequence analytical
+    profile with a table-first output and a deterministic typed plot contract
+    derived from the same computation path.
 
 155. Capture exact patch start conditions for the selected next plotting candidate.
     - Require the current zero-burden release-truth state and keep scope
