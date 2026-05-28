@@ -2603,9 +2603,14 @@ implementation-program cycle. The near-term priorities are:
     - Either keep the plotting branch active with a non-empty narrowed pool, or
       trigger the no-candidate branch honestly.
 
-168. If no credible bounded continuation candidate remains after the post-`wobble` review, activate the prepared retrieval fallback path explicitly.
-    - Do not keep plotting active by inertia if the narrowed pool fails honest
-      seam review.
+168. Complete. If no credible bounded continuation candidate remains after the post-`wobble` review, activate the prepared retrieval fallback path explicitly.
+    - Closed this as an untriggered conditional branch.
+    - The post-`wobble` viability gate stayed affirmative, so the narrowed pool
+      did not fail honest seam review.
+    - The repository therefore does not activate the prepared retrieval
+      fallback at this checkpoint.
+    - Retrieval fallback remains documented, prepared, and inactive while the
+      repository stays on the plotting continuation branch.
 
 169. If plotting remains viable, choose exactly one next bounded plotting continuation candidate.
     - Select one method only from the narrowed remaining pool:

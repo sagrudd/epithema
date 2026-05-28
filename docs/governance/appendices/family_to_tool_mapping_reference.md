@@ -2212,6 +2212,11 @@ plotting continuation path, and the prepared retrieval fallback remains
 documented, ready, and inactive unless a later selection or shipment gate
 trips the explicit stop conditions.
 
+That means the conditional “activate retrieval fallback now” branch is closed
+as untriggered at this checkpoint. The repository should not promote the
+fallback by inertia when the narrowed plotting continuation pool remains
+credible.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
