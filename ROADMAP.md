@@ -2612,11 +2612,25 @@ implementation-program cycle. The near-term priorities are:
     - Retrieval fallback remains documented, prepared, and inactive while the
       repository stays on the plotting continuation branch.
 
-169. If plotting remains viable, choose exactly one next bounded plotting continuation candidate.
-    - Select one method only from the narrowed remaining pool:
-      - `banana`
+169. Complete. If plotting remains viable, choose exactly one next bounded plotting continuation candidate.
+    - Chose the single next bounded plotting continuation candidate from the
+      narrowed remaining pool.
+    - The selected candidate is:
       - `isochore`
+    - Selection basis:
+      - `isochore` looks like the narrowest remaining extension of the proven
+        bounded nucleotide plotting seam as an analytical, table-first profile
+        with a likely single derived continuation line
+      - it appears less likely than `banana` to force a heavier biophysical
+        model surface
+      - it appears less likely than `syco` to force codon-usage-specific
+        structure or coding-sequence-only seam pressure
+    - The non-selected viable methods remain documented but inactive:
+      - `banana`
       - `syco`
+    - So the next bounded planning step is to capture `isochore`-specific
+      acceptance criteria and exact patch start conditions before any code
+      starts.
 
 170. If plotting remains viable, close the untriggered retrieval-activation branch explicitly.
     - Keep retrieval fallback documented and prepared, but do not promote it by
