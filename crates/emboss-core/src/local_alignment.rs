@@ -1,7 +1,7 @@
 //! Deterministic local pairwise alignment primitives.
 
 use crate::{
-    Alignment, AlignmentRow, AlignmentMode, MoleculeKind, SequenceIdentifier, SequenceRecord,
+    Alignment, AlignmentMode, AlignmentRow, MoleculeKind, SequenceIdentifier, SequenceRecord,
     infer_alignment_mode,
 };
 

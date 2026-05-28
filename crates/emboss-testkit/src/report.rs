@@ -363,8 +363,8 @@ pub fn derive_shipped_cohort_validation_report(
     repo_root: impl AsRef<Path>,
 ) -> Result<CohortValidationReport, PlatformError> {
     let repo_root = repo_root.as_ref();
-    let generated_index = fs::read_to_string(repo_root.join("docs/generated/index.md")).map_err(
-        |error| {
+    let generated_index =
+        fs::read_to_string(repo_root.join("docs/generated/index.md")).map_err(|error| {
             PlatformError::new(
                 ErrorCategory::Configuration,
                 "failed to read generated docs index for cohort validation",
@@ -374,8 +374,7 @@ pub fn derive_shipped_cohort_validation_report(
                 "{}: {error}",
                 repo_root.join("docs/generated/index.md").display()
             ))
-        },
-    )?;
+        })?;
 
     let methods = governed_tool_descriptors()
         .into_iter()
@@ -453,9 +452,13 @@ pub fn render_cohort_validation_markdown(report: &CohortValidationReport) -> Str
     rendered.push_str("## Evidence Level Definitions\n\n");
     rendered.push_str("- `documented_only`: the tool has documentation artefacts but no declared validation cases yet.\n");
     rendered.push_str("- `declared_evidence`: the tool has declared validation cases, but no runnable or executed evidence yet.\n");
-    rendered.push_str("- `harvested_evidence`: the tool has legacy-derived or legacy-backed declared evidence.\n");
+    rendered.push_str(
+        "- `harvested_evidence`: the tool has legacy-derived or legacy-backed declared evidence.\n",
+    );
     rendered.push_str("- `executable_evidence`: the tool has at least one runnable or executed validation case.\n");
-    rendered.push_str("- `compared_evidence`: the tool has at least one completed comparison result.\n\n");
+    rendered.push_str(
+        "- `compared_evidence`: the tool has at least one completed comparison result.\n\n",
+    );
     rendered.push_str("## Cohort Table\n\n");
     rendered.push_str("| Tool | Family | Evidence level | Docs | Stub | Harvested | Executable | Compared | Gap count |\n");
     rendered.push_str("| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n");
@@ -536,8 +539,12 @@ fn derive_method_record(
     descriptor: emboss_tools::ToolDescriptor,
 ) -> Result<CohortMethodValidationRecord, PlatformError> {
     let slug = descriptor.name;
-    let contract_path = repo_root.join("docs/autodoc/tools").join(format!("{slug}.json"));
-    let page_path = repo_root.join("docs/generated/tools").join(format!("{slug}.md"));
+    let contract_path = repo_root
+        .join("docs/autodoc/tools")
+        .join(format!("{slug}.json"));
+    let page_path = repo_root
+        .join("docs/generated/tools")
+        .join(format!("{slug}.md"));
     let validation_path = repo_root
         .join("docs/generated/validation")
         .join(format!("{slug}.validation.json"));
@@ -550,7 +557,9 @@ fn derive_method_record(
     let autodoc_contract_valid = if autodoc_contract_present {
         match load_document_from_path(&contract_path) {
             Ok(document) => {
-                if document.tool.name != descriptor.name || document.tool.family.as_deref() != Some(descriptor.family) {
+                if document.tool.name != descriptor.name
+                    || document.tool.family.as_deref() != Some(descriptor.family)
+                {
                     unresolved_gaps.push(CohortMethodGap::new(
                         CohortGapCode::InvalidAutodocContract,
                         format!(
@@ -582,13 +591,19 @@ fn derive_method_record(
     if !generated_page_present {
         unresolved_gaps.push(CohortMethodGap::new(
             CohortGapCode::MissingGeneratedPage,
-            format!("missing generated documentation page for shipped tool '{}'", slug),
+            format!(
+                "missing generated documentation page for shipped tool '{}'",
+                slug
+            ),
         ));
     }
     if !indexed_in_generated_docs {
         unresolved_gaps.push(CohortMethodGap::new(
             CohortGapCode::MissingGeneratedIndexEntry,
-            format!("generated docs index does not contain shipped tool '{}'", slug),
+            format!(
+                "generated docs index does not contain shipped tool '{}'",
+                slug
+            ),
         ));
     }
 
@@ -620,15 +635,14 @@ fn derive_method_record(
         .map(|report| {
             report.summary.harvested_case_count > 0
                 || !report.provenance.is_empty()
-                || report
-                    .cases
-                    .iter()
-                    .any(|case| !case.provenance.is_empty())
+                || report.cases.iter().any(|case| !case.provenance.is_empty())
         })
         .unwrap_or(false);
     let executable_validation_present = parsed_validation
         .as_ref()
-        .map(|report| report.summary.runnable_case_count > 0 || report.summary.executed_case_count > 0)
+        .map(|report| {
+            report.summary.runnable_case_count > 0 || report.summary.executed_case_count > 0
+        })
         .unwrap_or(false);
     let compared_validation_present = parsed_validation
         .as_ref()
@@ -645,13 +659,19 @@ fn derive_method_record(
         if !harvested_legacy_evidence_present {
             unresolved_gaps.push(CohortMethodGap::new(
                 CohortGapCode::MissingHarvestedLegacyEvidence,
-                format!("tool '{}' has no harvested legacy evidence recorded yet", slug),
+                format!(
+                    "tool '{}' has no harvested legacy evidence recorded yet",
+                    slug
+                ),
             ));
         }
         if !executable_validation_present {
             unresolved_gaps.push(CohortMethodGap::new(
                 CohortGapCode::MissingExecutableEvidence,
-                format!("tool '{}' has no runnable or executed validation case yet", slug),
+                format!(
+                    "tool '{}' has no runnable or executed validation case yet",
+                    slug
+                ),
             ));
         }
         if !compared_validation_present {
@@ -765,7 +785,7 @@ mod tests {
     use emboss_tools::governed_tool_descriptors;
 
     use crate::{
-        ComparisonStatus, CohortDocumentationStatus, CohortEvidenceLevel,
+        CohortDocumentationStatus, CohortEvidenceLevel, ComparisonStatus,
         EvidenceDeclarationStatus, EvidenceSourceKind, ExecutionStatus, ToolValidationCase,
         ToolValidationReport, ValidationContext, ValidationEvidenceSummary,
         derive_shipped_cohort_validation_report, render_cohort_validation_markdown,
@@ -862,11 +882,11 @@ mod tests {
         assert_eq!(report.tool_name, "aligncopy");
         assert_eq!(report.summary.total_case_count, 1);
         assert_eq!(report.summary.passed_case_count, 0);
-        assert_eq!(report.source_mode, emboss_docgen::AutodocSourceMode::Curated);
         assert_eq!(
-            report.evidence_source,
-            EvidenceSourceKind::CuratedAutodoc
+            report.source_mode,
+            emboss_docgen::AutodocSourceMode::Curated
         );
+        assert_eq!(report.evidence_source, EvidenceSourceKind::CuratedAutodoc);
         assert!(report.provenance.is_empty());
     }
 
@@ -893,15 +913,18 @@ mod tests {
                 .iter()
                 .all(|method| method.documentation.status == CohortDocumentationStatus::Complete)
         );
-        assert!(report.methods.iter().all(|method| method.validation_stub_present));
         assert!(
             report
                 .methods
                 .iter()
-                .all(|method| method.unresolved_gaps.iter().all(
-                    |gap| gap.code != crate::report::CohortGapCode::InvalidValidationStub
-                ))
+                .all(|method| method.validation_stub_present)
         );
+        assert!(report.methods.iter().all(|method| {
+            method
+                .unresolved_gaps
+                .iter()
+                .all(|gap| gap.code != crate::report::CohortGapCode::InvalidValidationStub)
+        }));
     }
 
     #[test]
@@ -941,39 +964,62 @@ mod tests {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
         }));
 
-        let pepwindow = gap_map.get("pepwindow").expect("pepwindow should be present");
-        assert_eq!(pepwindow.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        let pepwindow = gap_map
+            .get("pepwindow")
+            .expect("pepwindow should be present");
+        assert_eq!(
+            pepwindow.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
         assert!(pepwindow.unresolved_gaps.iter().any(|gap| {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
         }));
 
         let descseq = gap_map.get("descseq").expect("descseq should be present");
         assert!(descseq.executable_validation_present);
-        assert_eq!(descseq.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert_eq!(
+            descseq.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
 
         let hmoment = gap_map.get("hmoment").expect("hmoment should be present");
-        assert_eq!(hmoment.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert_eq!(
+            hmoment.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
         assert!(hmoment.unresolved_gaps.iter().any(|gap| {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
         }));
 
         let octanol = gap_map.get("octanol").expect("octanol should be present");
-        assert_eq!(octanol.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert_eq!(
+            octanol.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
         assert!(octanol.unresolved_gaps.iter().any(|gap| {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
         }));
 
         let pepinfo = gap_map.get("pepinfo").expect("pepinfo should be present");
-        assert_eq!(pepinfo.evidence_level, CohortEvidenceLevel::ComparedEvidence);
-        assert!(pepinfo.unresolved_gaps.iter().all(|gap| {
-            gap.code != crate::report::CohortGapCode::MissingComparedEvidence
-        }));
+        assert_eq!(
+            pepinfo.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
+        assert!(
+            pepinfo
+                .unresolved_gaps
+                .iter()
+                .all(|gap| { gap.code != crate::report::CohortGapCode::MissingComparedEvidence })
+        );
 
         let wobble = gap_map.get("wobble").expect("wobble should be present");
         assert_eq!(wobble.evidence_level, CohortEvidenceLevel::ComparedEvidence);
-        assert!(wobble.unresolved_gaps.iter().all(|gap| {
-            gap.code != crate::report::CohortGapCode::MissingComparedEvidence
-        }));
+        assert!(
+            wobble
+                .unresolved_gaps
+                .iter()
+                .all(|gap| { gap.code != crate::report::CohortGapCode::MissingComparedEvidence })
+        );
         assert!(wobble.unresolved_gaps.iter().any(|gap| {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
         }));

@@ -45,11 +45,12 @@ pub fn run_tranalign(params: TranalignParams) -> Result<TranalignOutcome, ToolEx
         .map(|row| project_row(row, &nucleotide_records))
         .collect::<Result<Vec<_>, _>>()?;
 
-    let alignment = Alignment::with_identifier(protein_alignment.identifier().map(str::to_owned), rows)
-        .map_err(|error| {
-            PlatformError::new(ErrorCategory::Validation, error.to_string())
-                .with_code("tools.tranalign.alignment.invalid")
-        })?;
+    let alignment =
+        Alignment::with_identifier(protein_alignment.identifier().map(str::to_owned), rows)
+            .map_err(|error| {
+                PlatformError::new(ErrorCategory::Validation, error.to_string())
+                    .with_code("tools.tranalign.alignment.invalid")
+            })?;
 
     Ok(TranalignOutcome {
         protein_alignment: params.protein_alignment,

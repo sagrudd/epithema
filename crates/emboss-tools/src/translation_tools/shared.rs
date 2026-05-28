@@ -1,8 +1,8 @@
 //! Shared helpers for translation-adjacent tools.
 
 use emboss_core::{
-    Alphabet, MoleculeKind, SequenceIdentifier, SequenceMetadata, SequenceRecord,
-    TranslationError, translate_dna_frame, translate_dna_strict,
+    Alphabet, MoleculeKind, SequenceIdentifier, SequenceMetadata, SequenceRecord, TranslationError,
+    translate_dna_frame, translate_dna_strict,
 };
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 

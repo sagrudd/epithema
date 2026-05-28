@@ -372,9 +372,7 @@ fn declared_evidence_baseline_label(document: &AutodocDocument) -> &'static str 
         {
             "documented_only"
         }
-        crate::AutodocSourceMode::Curated | crate::AutodocSourceMode::Mixed => {
-            "declared_evidence"
-        }
+        crate::AutodocSourceMode::Curated | crate::AutodocSourceMode::Mixed => "declared_evidence",
     }
 }
 

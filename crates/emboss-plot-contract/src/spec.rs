@@ -188,15 +188,16 @@ impl PlotSpec {
             if series.x.kind_label() != first_kind {
                 return Err(PlotContractError::MixedXValueKinds);
             }
-            if let Some(style) = &series.style
-                && let Some(geometry_hint) = style.geometry_hint
-                && geometry_hint != expected_geometry
-            {
-                return Err(PlotContractError::GeometryKindMismatch {
-                    series_id: series.id.clone(),
-                    plot_kind: self.kind.as_str(),
-                    geometry_hint: geometry_hint.as_str(),
-                });
+            if let Some(style) = &series.style {
+                if let Some(geometry_hint) = style.geometry_hint {
+                    if geometry_hint != expected_geometry {
+                        return Err(PlotContractError::GeometryKindMismatch {
+                            series_id: series.id.clone(),
+                            plot_kind: self.kind.as_str(),
+                            geometry_hint: geometry_hint.as_str(),
+                        });
+                    }
+                }
             }
         }
 

@@ -85,7 +85,12 @@ pub fn run_diffseq(params: DiffseqParams) -> Result<DiffseqOutcome, ToolExecutio
         },
     };
     let result = global_align(&left, &right, scoring).map_err(map_alignment_error)?;
-    let blocks = collect_difference_blocks(&left, &right, result.alignment.rows()[0].aligned(), result.alignment.rows()[1].aligned());
+    let blocks = collect_difference_blocks(
+        &left,
+        &right,
+        result.alignment.rows()[0].aligned(),
+        result.alignment.rows()[1].aligned(),
+    );
 
     Ok(DiffseqOutcome {
         asequence: params.asequence,
@@ -181,8 +186,11 @@ fn collect_difference_blocks(
 }
 
 fn map_alignment_error(error: emboss_core::GlobalAlignmentError) -> ToolExecutionError {
-    emboss_diagnostics::PlatformError::new(emboss_diagnostics::ErrorCategory::Validation, error.to_string())
-        .with_code("tools.diffseq.alignment.invalid")
+    emboss_diagnostics::PlatformError::new(
+        emboss_diagnostics::ErrorCategory::Validation,
+        error.to_string(),
+    )
+    .with_code("tools.diffseq.alignment.invalid")
 }
 
 #[cfg(test)]

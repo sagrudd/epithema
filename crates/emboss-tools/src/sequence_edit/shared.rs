@@ -50,8 +50,7 @@ fn looks_nucleotide_like(residues: &str) -> bool {
     residues.chars().all(|symbol| {
         matches!(
             symbol,
-            'A'
-                | 'C'
+            'A' | 'C'
                 | 'G'
                 | 'T'
                 | 'U'

@@ -129,6 +129,10 @@ mod tests {
     #[test]
     fn rejects_zero_width_regex() {
         let error = CompiledProteinRegex::parse(".*").expect_err("zero-width capable regex");
-        assert!(error.to_string().contains("must consume at least one residue"));
+        assert!(
+            error
+                .to_string()
+                .contains("must consume at least one residue")
+        );
     }
 }

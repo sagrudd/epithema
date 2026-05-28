@@ -2,9 +2,9 @@
 
 mod cai;
 mod chips;
-mod cusp;
 mod codcmp;
 mod codcopy;
+mod cusp;
 mod shared;
 
 use crate::ToolDescriptor;
@@ -13,9 +13,9 @@ const FAMILY: &str = "codon_tools";
 
 pub use cai::{CaiOutcome, CaiParams, cai_help, run_cai};
 pub use chips::{ChipsOutcome, ChipsParams, chips_help, run_chips};
-pub use cusp::{CuspOutcome, CuspParams, cusp_help, run_cusp};
 pub use codcmp::{CodcmpOutcome, CodcmpParams, codcmp_help, run_codcmp};
 pub use codcopy::{CodcopyOutcome, CodcopyParams, codcopy_help, run_codcopy};
+pub use cusp::{CuspOutcome, CuspParams, cusp_help, run_cusp};
 pub use shared::render_profile_rows;
 
 /// `cai` descriptor.

@@ -1,8 +1,8 @@
 //! Sliding-window bounded multi-property protein profiles for `pepinfo`.
 
+use crate::Alphabet;
 use crate::residue_properties::protein_residue_property;
 use crate::sequence::SequenceRecord;
-use crate::Alphabet;
 
 /// Errors for `pepinfo` profile computation.
 #[derive(Clone, Debug, PartialEq)]
@@ -187,7 +187,7 @@ fn residue_metrics(residues: &str) -> Result<Vec<ResiduePepinfoMetrics>, Protein
 mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{protein_pepinfo_profile, ProteinPepinfoError};
+    use super::{ProteinPepinfoError, protein_pepinfo_profile};
 
     #[test]
     fn computes_expected_multi_property_profile() {

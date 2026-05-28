@@ -33,9 +33,7 @@ pub fn featreport_help() -> &'static str {
 }
 
 /// Executes `featreport`.
-pub fn run_featreport(
-    params: FeatreportParams,
-) -> Result<FeatreportOutcome, ToolExecutionError> {
+pub fn run_featreport(params: FeatreportParams) -> Result<FeatreportOutcome, ToolExecutionError> {
     let mut rows = Vec::new();
 
     for record in load_sequence_records(&params.input)? {

@@ -1,6 +1,6 @@
 //! Bounded third-base-position variability profiles for `wobble`.
 
-use crate::codon_usage::{summarize_coding_sequence, CodonUsageError};
+use crate::codon_usage::{CodonUsageError, summarize_coding_sequence};
 use crate::sequence::SequenceRecord;
 
 /// Errors for `wobble` profile computation.
@@ -236,7 +236,7 @@ fn wobble_counts(codons: &[String]) -> WobbleCounts {
 mod tests {
     use crate::{CodonUsageError, MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{nucleotide_wobble_profile, NucleotideWobbleError};
+    use super::{NucleotideWobbleError, nucleotide_wobble_profile};
 
     #[test]
     fn computes_expected_wobble_profile_for_coding_dna() {

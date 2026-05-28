@@ -38,7 +38,10 @@ pub fn render_feature_text(feature: &Feature) -> String {
     if let Some(name) = &feature.name
         && !feature.qualifiers.values().any(|value| value == name)
     {
-        lines.push(format!("                     /name=\"{}\"", escape_qualifier_value(name)));
+        lines.push(format!(
+            "                     /name=\"{}\"",
+            escape_qualifier_value(name)
+        ));
     }
     if let Some(note) = &feature.note
         && feature.qualifiers.get("note") != Some(note)
@@ -88,8 +91,14 @@ mod tests {
     #[test]
     fn renders_joined_reverse_aware_locations() {
         let location = FeatureLocation::from_spans(vec![
-            FeatureSpan::new(Interval::new(1, 4).expect("valid interval"), Strand::Reverse),
-            FeatureSpan::new(Interval::new(7, 9).expect("valid interval"), Strand::Reverse),
+            FeatureSpan::new(
+                Interval::new(1, 4).expect("valid interval"),
+                Strand::Reverse,
+            ),
+            FeatureSpan::new(
+                Interval::new(7, 9).expect("valid interval"),
+                Strand::Reverse,
+            ),
         ])
         .expect("valid location");
 
@@ -103,7 +112,10 @@ mod tests {
     fn renders_normalized_feature_text() {
         let feature = Feature::new(
             FeatureKind::Gene,
-            FeatureLocation::new(Interval::new(1, 6).expect("valid interval"), Strand::Forward),
+            FeatureLocation::new(
+                Interval::new(1, 6).expect("valid interval"),
+                Strand::Forward,
+            ),
         )
         .with_name("geneA")
         .with_note("example")

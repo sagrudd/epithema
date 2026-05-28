@@ -3,8 +3,8 @@
 //! This family provides a first real shipped slice for EMBOSS-RS:
 //! `newseq`, `seqcount`, `notseq`, `nthseq`, `skipseq`, and deterministic set operations.
 
-mod listor;
 mod generation;
+mod listor;
 mod makenucseq;
 mod makeprotseq;
 mod newseq;

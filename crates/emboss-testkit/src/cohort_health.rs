@@ -126,8 +126,9 @@ pub fn derive_cohort_health_report(
         compared_evidence_count: cohort.summary.compared_evidence_count,
         harvested_legacy_presence_count: cohort.summary.harvested_legacy_presence_count,
         retained_backlog_count: governance.summary.retained_backlog_count,
-        largest_retained_backlog_family: largest_backlog_family
-            .and_then(|family| (family.retained_backlog > 0).then(|| family.governance_family.clone())),
+        largest_retained_backlog_family: largest_backlog_family.and_then(|family| {
+            (family.retained_backlog > 0).then(|| family.governance_family.clone())
+        }),
         largest_retained_backlog_size: largest_backlog_family
             .map(|family| family.retained_backlog)
             .unwrap_or_default(),
@@ -146,10 +147,7 @@ pub fn derive_cohort_health_report(
         signals.push(CohortHealthSignal {
             code: CohortHealthSignalCode::DominantRetainedBacklog,
             severity: CohortHealthSignalSeverity::Warning,
-            summary: format!(
-                "largest retained backlog remains in '{}'",
-                family
-            ),
+            summary: format!("largest retained backlog remains in '{}'", family),
             detail: format!(
                 "The governance report shows {} retained unshipped methods in '{}'.",
                 summary.largest_retained_backlog_size, family
@@ -370,7 +368,12 @@ fn dominant_weak_evidence_family(
 
     let dominant = grouped
         .into_iter()
-        .max_by(|left, right| left.1 .0.cmp(&right.1 .0).then_with(|| left.0.cmp(&right.0).reverse()))
+        .max_by(|left, right| {
+            left.1
+                .0
+                .cmp(&right.1.0)
+                .then_with(|| left.0.cmp(&right.0).reverse())
+        })
         .map(|(family, (weak_count, compared_count))| (family, weak_count, compared_count));
 
     dominant.and_then(|entry| (entry.1 > 0).then_some(entry))
@@ -392,7 +395,10 @@ fn assess_readiness_alignment(
     })?;
 
     let expected_markers = [
-        format!("- Shipped methods audited: `{}`", cohort.summary.total_method_count),
+        format!(
+            "- Shipped methods audited: `{}`",
+            cohort.summary.total_method_count
+        ),
         format!(
             "- Compared-evidence methods: `{}`",
             cohort.summary.compared_evidence_count

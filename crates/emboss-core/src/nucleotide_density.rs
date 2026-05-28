@@ -207,7 +207,7 @@ fn fraction(count: usize, denominator: f64) -> f64 {
 mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{nucleotide_density_profile, NucleotideDensityError};
+    use super::{NucleotideDensityError, nucleotide_density_profile};
 
     #[test]
     fn computes_expected_density_profile_for_dna() {

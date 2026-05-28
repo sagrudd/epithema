@@ -8,9 +8,7 @@ use emboss_diagnostics::{ErrorCategory, PlatformError};
 use serde::{Deserialize, Serialize};
 
 use crate::governance::derive_governance_alignment_report;
-use crate::report::{
-    CohortEvidenceLevel, derive_shipped_cohort_validation_report,
-};
+use crate::report::{CohortEvidenceLevel, derive_shipped_cohort_validation_report};
 
 /// Aggregate comparison-coverage summary.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
@@ -218,7 +216,9 @@ pub fn render_comparison_coverage_markdown(report: &ComparisonCoverageReport) ->
     ));
 
     rendered.push_str("## Family Coverage Table\n\n");
-    rendered.push_str("| Family | Shipped methods | Compared | Executable-only | Harvested but not compared |\n");
+    rendered.push_str(
+        "| Family | Shipped methods | Compared | Executable-only | Harvested but not compared |\n",
+    );
     rendered.push_str("|---|---:|---:|---:|---:|\n");
     for family in &report.families {
         rendered.push_str(&format!(
@@ -263,9 +263,7 @@ pub fn write_comparison_coverage_markdown(
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        derive_comparison_coverage_report, render_comparison_coverage_markdown,
-    };
+    use super::{derive_comparison_coverage_report, render_comparison_coverage_markdown};
 
     fn repo_root() -> std::path::PathBuf {
         std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))

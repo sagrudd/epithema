@@ -99,11 +99,7 @@ fn collect_harvest_exceptions(
             evidence_level: evidence_level_label(method.evidence_level).to_owned(),
             executable_validation_present: method.executable_validation_present,
             compared_validation_present: method.compared_validation_present,
-            unresolved_gap_codes: method
-                .unresolved_gaps
-                .iter()
-                .map(gap_code_label)
-                .collect(),
+            unresolved_gap_codes: method.unresolved_gaps.iter().map(gap_code_label).collect(),
             reason: infer_reason(method.unresolved_gaps.as_slice()),
         })
         .collect()
@@ -113,10 +109,12 @@ fn infer_reason(gaps: &[CohortMethodGap]) -> Option<String> {
     if gaps.is_empty() {
         return None;
     }
-    if gaps
-        .iter()
-        .any(|gap| matches!(gap.code, crate::report::CohortGapCode::MissingHarvestedLegacyEvidence))
-    {
+    if gaps.iter().any(|gap| {
+        matches!(
+            gap.code,
+            crate::report::CohortGapCode::MissingHarvestedLegacyEvidence
+        )
+    }) {
         return Some(
             "harvested legacy provenance is not yet recorded for the governed validation surface"
                 .to_owned(),

@@ -278,7 +278,10 @@ mod tests {
         );
 
         let report = derive_validation_report(&document).expect("report should derive");
-        assert_eq!(report.source_mode, emboss_docgen::AutodocSourceMode::RegistryStub);
+        assert_eq!(
+            report.source_mode,
+            emboss_docgen::AutodocSourceMode::RegistryStub
+        );
         assert_eq!(
             report.evidence_source,
             crate::EvidenceSourceKind::RegistryStubAutodoc

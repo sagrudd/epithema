@@ -40,9 +40,7 @@ pub fn featmerge_help() -> &'static str {
 }
 
 /// Executes `featmerge`.
-pub fn run_featmerge(
-    params: FeatmergeParams,
-) -> Result<FeatmergeOutcome, ToolExecutionError> {
+pub fn run_featmerge(params: FeatmergeParams) -> Result<FeatmergeOutcome, ToolExecutionError> {
     let left_records = load_sequence_records(&params.left)?;
     let right_records = load_sequence_records(&params.right)?;
     let right_by_id = index_records("right", &right_records)?;
@@ -79,7 +77,11 @@ pub fn run_featmerge(
         let selected = copy_selected_features(right, &params.selector);
         let mut merged = left.clone();
         for feature in selected {
-            if merged.features().iter().any(|existing| *existing == feature) {
+            if merged
+                .features()
+                .iter()
+                .any(|existing| *existing == feature)
+            {
                 continue;
             }
             merged.add_feature(feature).map_err(|error| {

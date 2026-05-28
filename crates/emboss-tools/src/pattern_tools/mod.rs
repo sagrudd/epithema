@@ -1,8 +1,8 @@
 //! Simple deterministic pattern-search tool cohort.
 
 mod dreg;
-mod exact_words;
 mod einverted;
+mod exact_words;
 mod fuzznuc;
 mod fuzzpro;
 mod fuzztran;

@@ -7,8 +7,8 @@ use crate::ToolDescriptor;
 
 const FAMILY: &str = "nucleotide_plots";
 
-pub use density::{density_help, run_density, DensityOutcome, DensityParams};
-pub use wobble::{run_wobble, wobble_help, WobbleOutcome, WobbleParams};
+pub use density::{DensityOutcome, DensityParams, density_help, run_density};
+pub use wobble::{WobbleOutcome, WobbleParams, run_wobble, wobble_help};
 
 /// `density` descriptor.
 pub const DENSITY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

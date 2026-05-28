@@ -184,9 +184,7 @@ pub fn render_retained_backlog_markdown(report: &RetainedBacklogReport) -> Strin
 
     rendered.push_str("## Remaining Retained Backlog\n\n");
     if report.remaining_methods.is_empty() {
-        rendered.push_str(
-            "No retained governance backlog remains outside the shipped registry.\n",
-        );
+        rendered.push_str("No retained governance backlog remains outside the shipped registry.\n");
     } else {
         rendered.push_str("| Tool | Governance family | Nearest implemented Rust family | Recommended next sweep | Blocker |\n");
         rendered.push_str("|---|---|---|---|---|\n");
@@ -235,9 +233,7 @@ pub fn write_retained_backlog_markdown(
     })
 }
 
-fn nearest_family_by_governance(
-    governance: &GovernanceAlignmentReport,
-) -> BTreeMap<&str, String> {
+fn nearest_family_by_governance(governance: &GovernanceAlignmentReport) -> BTreeMap<&str, String> {
     let mut grouped = BTreeMap::<&str, BTreeMap<&str, usize>>::new();
     for method in &governance.shipped_methods {
         let Some(governance_family) = method.governance_family.as_deref() else {
@@ -252,7 +248,11 @@ fn nearest_family_by_governance(
         .filter_map(|(governance_family, families)| {
             families
                 .into_iter()
-                .max_by(|left, right| left.1.cmp(&right.1).then_with(|| left.0.cmp(right.0).reverse()))
+                .max_by(|left, right| {
+                    left.1
+                        .cmp(&right.1)
+                        .then_with(|| left.0.cmp(right.0).reverse())
+                })
                 .map(|(family, _)| (governance_family, family.to_owned()))
         })
         .collect()

@@ -107,14 +107,20 @@ mod tests {
     #[test]
     fn generates_rna_from_rna_alphabet() {
         let residues = generate_rna_residues(32, 11);
-        assert!(residues.chars().all(|symbol| matches!(symbol, 'A' | 'C' | 'G' | 'U')));
+        assert!(
+            residues
+                .chars()
+                .all(|symbol| matches!(symbol, 'A' | 'C' | 'G' | 'U'))
+        );
     }
 
     #[test]
     fn generates_protein_from_canonical_alphabet() {
         let residues = generate_protein_residues(32, 11);
-        assert!(residues
-            .chars()
-            .all(|symbol| "ACDEFGHIKLMNPQRSTVWY".contains(symbol)));
+        assert!(
+            residues
+                .chars()
+                .all(|symbol| "ACDEFGHIKLMNPQRSTVWY".contains(symbol))
+        );
     }
 }

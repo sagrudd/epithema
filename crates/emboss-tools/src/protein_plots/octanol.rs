@@ -1,13 +1,13 @@
 //! Internal `octanol` implementation under staged plotting rollout.
 
-use emboss_core::{protein_octanol_profile, ProteinOctanolError, ProteinOctanolProfile};
+use emboss_core::{ProteinOctanolError, ProteinOctanolProfile, protein_octanol_profile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
     PlotProvenance, PlotSeries, PlotSpec, SeriesStyle,
 };
 
-use crate::sequence_stream::{load_sequence_records, SequenceInput, ToolExecutionError};
+use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
 
 /// Typed parameters for the staged `octanol` tool path.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -75,29 +75,31 @@ fn build_octanol_plot(profile: &ProteinOctanolProfile) -> Result<PlotPayload, To
         }),
         PlotAxis::new("Window start").with_scale_hint(AxisScaleHint::Linear),
         PlotAxis::new("Interface minus octanol").with_scale_hint(AxisScaleHint::Linear),
-        vec![PlotSeries::new(
-            "octanol_profile",
-            "Interface minus octanol profile",
-            DataVector::Numeric(
+        vec![
+            PlotSeries::new(
+                "octanol_profile",
+                "Interface minus octanol profile",
+                DataVector::Numeric(
+                    profile
+                        .windows
+                        .iter()
+                        .map(|window| window.window_start as f64)
+                        .collect(),
+                ),
                 profile
                     .windows
                     .iter()
-                    .map(|window| window.window_start as f64)
+                    .map(|window| window.interface_minus_octanol)
                     .collect(),
+            )
+            .with_legend_label("Interface minus octanol")
+            .with_semantic_group("white_wimley_difference")
+            .with_style(
+                SeriesStyle::empty()
+                    .with_geometry_hint(GeometryHint::Line)
+                    .with_color_role("primary"),
             ),
-            profile
-                .windows
-                .iter()
-                .map(|window| window.interface_minus_octanol)
-                .collect(),
-        )
-        .with_legend_label("Interface minus octanol")
-        .with_semantic_group("white_wimley_difference")
-        .with_style(
-            SeriesStyle::empty()
-                .with_geometry_hint(GeometryHint::Line)
-                .with_color_role("primary"),
-        )],
+        ],
     );
     plot.validate().map_err(|error| {
         PlatformError::new(ErrorCategory::Validation, error.to_string())
@@ -126,7 +128,7 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{build_octanol_plot, map_error, run_octanol, OctanolParams};
+    use super::{OctanolParams, build_octanol_plot, map_error, run_octanol};
     use crate::sequence_stream::SequenceInput;
     use emboss_core::{OctanolWindow, ProteinOctanolError, ProteinOctanolProfile};
 

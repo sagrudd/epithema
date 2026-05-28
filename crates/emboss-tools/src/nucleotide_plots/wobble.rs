@@ -1,13 +1,13 @@
 //! Internal `wobble` implementation under staged plotting rollout.
 
-use emboss_core::{nucleotide_wobble_profile, NucleotideWobbleError, NucleotideWobbleProfile};
+use emboss_core::{NucleotideWobbleError, NucleotideWobbleProfile, nucleotide_wobble_profile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
     PlotProvenance, PlotSeries, PlotSpec, SeriesStyle,
 };
 
-use crate::sequence_stream::{load_sequence_records, SequenceInput, ToolExecutionError};
+use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
 
 /// Typed parameters for the staged `wobble` tool path.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -78,29 +78,31 @@ fn build_wobble_plot(profile: &NucleotideWobbleProfile) -> Result<PlotPayload, T
         }),
         PlotAxis::new("Window start").with_scale_hint(AxisScaleHint::Linear),
         PlotAxis::new("Wobble variability").with_scale_hint(AxisScaleHint::Linear),
-        vec![PlotSeries::new(
-            "wobble_variability",
-            "Wobble variability",
-            DataVector::Numeric(
+        vec![
+            PlotSeries::new(
+                "wobble_variability",
+                "Wobble variability",
+                DataVector::Numeric(
+                    profile
+                        .windows
+                        .iter()
+                        .map(|window| window.window_start as f64)
+                        .collect(),
+                ),
                 profile
                     .windows
                     .iter()
-                    .map(|window| window.window_start as f64)
+                    .map(|window| window.wobble_variability)
                     .collect(),
+            )
+            .with_legend_label("Wobble variability")
+            .with_semantic_group("wobble_variability")
+            .with_style(
+                SeriesStyle::empty()
+                    .with_geometry_hint(GeometryHint::Line)
+                    .with_color_role("primary"),
             ),
-            profile
-                .windows
-                .iter()
-                .map(|window| window.wobble_variability)
-                .collect(),
-        )
-        .with_legend_label("Wobble variability")
-        .with_semantic_group("wobble_variability")
-        .with_style(
-            SeriesStyle::empty()
-                .with_geometry_hint(GeometryHint::Line)
-                .with_color_role("primary"),
-        )],
+        ],
     );
     plot.validate().map_err(|error| {
         PlatformError::new(ErrorCategory::Validation, error.to_string())
@@ -138,7 +140,7 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{build_wobble_plot, map_error, run_wobble, WobbleParams};
+    use super::{WobbleParams, build_wobble_plot, map_error, run_wobble};
     use crate::sequence_stream::SequenceInput;
     use emboss_core::{
         CodonUsageError, NucleotideWobbleError, NucleotideWobbleProfile, WobbleWindow,

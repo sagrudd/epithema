@@ -1,6 +1,6 @@
 //! `iep` implementation.
 
-use emboss_core::{estimate_protein_isoelectric_point, TitratableResidueCounts};
+use emboss_core::{TitratableResidueCounts, estimate_protein_isoelectric_point};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 use crate::sequence_stats::protein_support::validate_protein_record;
@@ -49,10 +49,11 @@ pub fn run_iep(params: IepParams) -> Result<IepOutcome, ToolExecutionError> {
         .into_iter()
         .map(|record| -> Result<IepRecord, ToolExecutionError> {
             validate_protein_record("iep", &record)?;
-            let estimate = estimate_protein_isoelectric_point(record.residues()).map_err(|error| {
-                PlatformError::new(ErrorCategory::Validation, error.to_string())
-                    .with_code("tools.iep.residue.unsupported")
-            })?;
+            let estimate =
+                estimate_protein_isoelectric_point(record.residues()).map_err(|error| {
+                    PlatformError::new(ErrorCategory::Validation, error.to_string())
+                        .with_code("tools.iep.residue.unsupported")
+                })?;
 
             Ok(IepRecord {
                 record_id: record.identifier().accession().to_owned(),

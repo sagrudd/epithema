@@ -20,11 +20,11 @@ pub use extractseq::{ExtractseqOutcome, ExtractseqParams, extractseq_help, run_e
 pub use megamerger::{MegamergerOutcome, MegamergerParams, megamerger_help, run_megamerger};
 pub use merger::{MergerOutcome, MergerParams, merger_help, run_merger};
 pub use pasteseq::{PasteseqOutcome, PasteseqParams, pasteseq_help, run_pasteseq};
+pub(crate) use shared::load_exactly_one_record;
 pub use shuffleseq::{ShuffleseqOutcome, ShuffleseqParams, run_shuffleseq, shuffleseq_help};
 pub use sizeseq::{SizeseqOutcome, SizeseqParams, run_sizeseq, sizeseq_help};
 pub use splitter::{SplitterOutcome, SplitterParams, run_splitter, splitter_help};
 pub use union::{UnionOutcome, UnionParams, run_union, union_help};
-pub(crate) use shared::load_exactly_one_record;
 
 /// `extractseq` descriptor.
 pub const EXTRACTSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

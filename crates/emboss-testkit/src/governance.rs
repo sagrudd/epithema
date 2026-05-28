@@ -261,8 +261,8 @@ pub fn derive_governance_alignment_report(
     Ok(GovernanceAlignmentReport {
         schema_version: 1,
         report_id: "governance-registry-alignment".to_owned(),
-        governance_source:
-            "docs/governance/appendices/family_to_tool_mapping_reference.md".to_owned(),
+        governance_source: "docs/governance/appendices/family_to_tool_mapping_reference.md"
+            .to_owned(),
         registry_source: cohort.registry_source,
         summary,
         shipped_methods,
@@ -367,14 +367,21 @@ pub fn render_governance_alignment_markdown(report: &GovernanceAlignmentReport) 
             .retained_backlog
             .cmp(&left.retained_backlog)
             .then_with(|| {
-                let left_gap = left.shipped_curated_autodoc.saturating_sub(left.shipped_compared);
-                let right_gap =
-                    right.shipped_curated_autodoc.saturating_sub(right.shipped_compared);
+                let left_gap = left
+                    .shipped_curated_autodoc
+                    .saturating_sub(left.shipped_compared);
+                let right_gap = right
+                    .shipped_curated_autodoc
+                    .saturating_sub(right.shipped_compared);
                 right_gap.cmp(&left_gap)
             })
             .then_with(|| left.governance_family.cmp(&right.governance_family))
     });
-    for family in ranked.into_iter().filter(|family| family.retained_backlog > 0).take(5) {
+    for family in ranked
+        .into_iter()
+        .filter(|family| family.retained_backlog > 0)
+        .take(5)
+    {
         let backlog = if family.retained_backlog_tools.is_empty() {
             "none".to_owned()
         } else {
@@ -422,10 +429,7 @@ pub fn render_governance_alignment_markdown(report: &GovernanceAlignmentReport) 
             "| `{}` | `{}` | {} | {} | {} | `{}` |\n",
             method.tool_name,
             method.shipped_family,
-            method
-                .governance_family
-                .as_deref()
-                .unwrap_or("unmapped"),
+            method.governance_family.as_deref().unwrap_or("unmapped"),
             method
                 .governance_decision
                 .map(governance_decision_label)
@@ -700,8 +704,8 @@ mod tests {
     use std::path::Path;
 
     use super::{
-        GovernanceDecision, derive_governance_alignment_report,
-        parse_governance_mapping_reference, render_governance_alignment_markdown,
+        GovernanceDecision, derive_governance_alignment_report, parse_governance_mapping_reference,
+        render_governance_alignment_markdown,
     };
 
     fn repo_root() -> std::path::PathBuf {
@@ -713,8 +717,8 @@ mod tests {
 
     #[test]
     fn parses_known_governance_entries() {
-        let entries =
-            parse_governance_mapping_reference(repo_root()).expect("governance appendix should parse");
+        let entries = parse_governance_mapping_reference(repo_root())
+            .expect("governance appendix should parse");
         let getorf = entries
             .iter()
             .find(|entry| entry.tool_name == "getorf")
@@ -734,10 +738,13 @@ mod tests {
 
     #[test]
     fn derives_alignment_report_for_current_registry() {
-        let report =
-            derive_governance_alignment_report(repo_root()).expect("alignment report should derive");
+        let report = derive_governance_alignment_report(repo_root())
+            .expect("alignment report should derive");
 
-        assert_eq!(report.summary.shipped_tool_count, report.shipped_methods.len());
+        assert_eq!(
+            report.summary.shipped_tool_count,
+            report.shipped_methods.len()
+        );
         assert!(report.shipped_without_governance_mapping.is_empty());
         assert_eq!(report.summary.retained_backlog_count, 0);
 
@@ -746,7 +753,10 @@ mod tests {
             .iter()
             .find(|method| method.tool_name == "transeq")
             .expect("transeq should be present");
-        assert_eq!(transeq.governance_decision, Some(GovernanceDecision::Retain));
+        assert_eq!(
+            transeq.governance_decision,
+            Some(GovernanceDecision::Retain)
+        );
         assert!(transeq.curated_autodoc_present);
 
         let charge = report
@@ -759,8 +769,8 @@ mod tests {
 
     #[test]
     fn renders_stable_alignment_markdown() {
-        let report =
-            derive_governance_alignment_report(repo_root()).expect("alignment report should derive");
+        let report = derive_governance_alignment_report(repo_root())
+            .expect("alignment report should derive");
         let markdown = render_governance_alignment_markdown(&report);
 
         assert!(markdown.contains("# Governance and Registry Alignment Report"));

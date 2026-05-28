@@ -121,7 +121,9 @@ pub fn run_edialign(params: EdialignParams) -> Result<EdialignOutcome, ToolExecu
 
 fn validate_molecule_compatibility(records: &[SequenceRecord]) -> Result<(), ToolExecutionError> {
     let first = records[0].molecule();
-    let all_nucleotide = records.iter().all(|record| record.molecule().is_nucleotide());
+    let all_nucleotide = records
+        .iter()
+        .all(|record| record.molecule().is_nucleotide());
     let all_protein = records.iter().all(|record| record.molecule().is_protein());
     let all_unknown = records.iter().all(|record| record.molecule() == first);
     if all_nucleotide || all_protein || all_unknown {

@@ -2,6 +2,7 @@
 
 use std::io::{self, Read};
 
+use emboss_r_bridge::list_tools;
 use emboss_r_bridge::protocol::{BridgeRequest, BridgeResponse};
 use emboss_r_bridge::{
     backtranslate_ambiguous_sequences, backtranslate_representative_sequences, charge_profile,
@@ -10,10 +11,9 @@ use emboss_r_bridge::{
     describe_sequence_file, describe_sequences, direct_match_sequences, extract_features,
     extract_sequences, fuzz_nucleotide, fuzz_protein, fuzz_translated_frames, mask_features,
     mask_sequences, new_sequence, not_sequence, nth_sequence, p_distance_for_sequences,
-    pepstats_summary, reverse_sequences, sequence_count, skip_sequences,
-    split_sequence_partitions, trim_sequences, union_sequence_collections, update_descriptions,
+    pepstats_summary, reverse_sequences, sequence_count, skip_sequences, split_sequence_partitions,
+    trim_sequences, union_sequence_collections, update_descriptions,
 };
-use emboss_r_bridge::list_tools;
 use emboss_service::{EmbossService, ServiceRegistry};
 use emboss_tools::governed_tool_descriptors;
 

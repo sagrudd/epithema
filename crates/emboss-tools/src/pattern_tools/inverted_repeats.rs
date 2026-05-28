@@ -73,7 +73,8 @@ pub fn exact_palindromes(
                 break;
             }
             let window = &normalized[start..start + length];
-            let reverse = reverse_complement_residues(molecule, window).map_err(map_revseq_error)?;
+            let reverse =
+                reverse_complement_residues(molecule, window).map_err(map_revseq_error)?;
             if reverse == window {
                 hits.push(PalindromeRegion {
                     start,
@@ -111,7 +112,8 @@ pub fn exact_inverted_repeats(
             }
 
             let left_arm = &normalized[left_start..left_end];
-            let reverse = reverse_complement_residues(molecule, left_arm).map_err(map_revseq_error)?;
+            let reverse =
+                reverse_complement_residues(molecule, left_arm).map_err(map_revseq_error)?;
 
             for gap_length in 0..=max_gap_length {
                 let right_start = left_end + gap_length;

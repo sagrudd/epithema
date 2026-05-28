@@ -44,7 +44,14 @@ pub fn biosed_help() -> &'static str {
 pub fn run_biosed(params: BiosedParams) -> Result<BiosedOutcome, ToolExecutionError> {
     let records = load_sequence_records(&params.input)?
         .into_iter()
-        .map(|record| edit_record(&record, params.start, params.end, params.replacement.as_deref()))
+        .map(|record| {
+            edit_record(
+                &record,
+                params.start,
+                params.end,
+                params.replacement.as_deref(),
+            )
+        })
         .collect::<Result<Vec<_>, _>>()?;
 
     Ok(BiosedOutcome {

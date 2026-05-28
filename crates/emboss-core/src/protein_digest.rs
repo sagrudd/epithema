@@ -139,9 +139,7 @@ fn cleaves_after(residues: &[char], index: usize, protease: DigestProtease) -> b
     let next = residues.get(index + 1).copied();
 
     match protease {
-        DigestProtease::Trypsin => {
-            (residue == 'K' || residue == 'R') && !matches!(next, Some('P'))
-        }
+        DigestProtease::Trypsin => (residue == 'K' || residue == 'R') && !matches!(next, Some('P')),
         DigestProtease::LysC => residue == 'K',
         DigestProtease::ArgC => residue == 'R',
         DigestProtease::CnBr => residue == 'M',
@@ -166,8 +164,7 @@ mod tests {
 
     #[test]
     fn digests_with_cnbr_after_methionine() {
-        let peptides =
-            digest_protein_sequence("MAMK", DigestProtease::CnBr).expect("digest ok");
+        let peptides = digest_protein_sequence("MAMK", DigestProtease::CnBr).expect("digest ok");
 
         assert_eq!(peptides.len(), 3);
         assert_eq!(peptides[0].sequence, "M");

@@ -84,7 +84,11 @@ mod tests {
         .expect("feattext should execute");
 
         assert!(outcome.body.contains("ID   FEAT1"));
-        assert!(outcome.body.contains("FEATURES             Location/Qualifiers"));
+        assert!(
+            outcome
+                .body
+                .contains("FEATURES             Location/Qualifiers")
+        );
         assert!(outcome.body.contains("/product=\"short peptide\""));
     }
 }

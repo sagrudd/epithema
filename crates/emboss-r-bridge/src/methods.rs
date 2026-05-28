@@ -29,9 +29,9 @@ use crate::conversion::project_plot_contract;
 use crate::types::{
     BridgeAlignmentInput, BridgeAlignmentRowInput, BridgeChargeProfile, BridgeChargeWindow,
     BridgeComplexityResult, BridgeComplexitySummary, BridgeComplexityWindow, BridgeCompositionRow,
-    BridgeDescseqRow, BridgeDistanceMatrix, BridgeFeatureSummary, BridgeGcRow,
-    BridgeIntervalInput, BridgeMatcherSummary, BridgePatternHit, BridgePepstatsResult,
-    BridgePepstatsSummaryRow, BridgeSequenceInput, BridgeSequenceRecord, BridgeTranslationCheck,
+    BridgeDescseqRow, BridgeDistanceMatrix, BridgeFeatureSummary, BridgeGcRow, BridgeIntervalInput,
+    BridgeMatcherSummary, BridgePatternHit, BridgePepstatsResult, BridgePepstatsSummaryRow,
+    BridgeSequenceInput, BridgeSequenceRecord, BridgeTranslationCheck,
 };
 
 /// Creates a validated bridge-safe sequence record from in-memory input.
@@ -1547,8 +1547,8 @@ mod tests {
         charge_profile, compare_translation_sets, complexity_profile, composition_summary,
         consensus_simple, copy_features, count_gc_content, describe_sequence_file,
         describe_sequences, direct_match_sequences, extract_features, extract_sequences,
-        fuzz_nucleotide, mask_features, mask_sequences, new_sequence, not_sequence,
-        nth_sequence, p_distance_for_sequences, reverse_sequences, sequence_count, skip_sequences,
+        fuzz_nucleotide, mask_features, mask_sequences, new_sequence, not_sequence, nth_sequence,
+        p_distance_for_sequences, reverse_sequences, sequence_count, skip_sequences,
     };
 
     fn fixture(name: &str) -> String {

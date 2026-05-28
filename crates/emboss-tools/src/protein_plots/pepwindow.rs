@@ -1,8 +1,6 @@
 //! `pepwindow` implementation.
 
-use emboss_core::{
-    ProteinHydropathyError, ProteinHydropathyProfile, protein_hydropathy_profile,
-};
+use emboss_core::{ProteinHydropathyError, ProteinHydropathyProfile, protein_hydropathy_profile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,

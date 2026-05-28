@@ -248,7 +248,12 @@ mod tests {
         })
         .expect("wordcount should execute");
 
-        assert!(outcome.records.iter().all(|record| record.counts.is_empty()));
+        assert!(
+            outcome
+                .records
+                .iter()
+                .all(|record| record.counts.is_empty())
+        );
         assert!(outcome.aggregate.counts.is_empty());
         assert!(outcome.plot.is_none());
     }

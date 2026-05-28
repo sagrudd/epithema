@@ -260,7 +260,10 @@ mod tests {
         assert_eq!(document.tool.name, "aligncopy");
         assert_eq!(document.tool.family.as_deref(), Some("alignment_tools"));
         assert!(document.tool.summary.is_some());
-        assert_eq!(document.provenance.source_mode, AutodocSourceMode::RegistryStub);
+        assert_eq!(
+            document.provenance.source_mode,
+            AutodocSourceMode::RegistryStub
+        );
     }
 
     #[test]

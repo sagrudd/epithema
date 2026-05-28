@@ -58,7 +58,13 @@ pub fn run_wordmatch(params: WordmatchParams) -> Result<WordmatchOutcome, ToolEx
     let target = load_single_record(&params.target, "wordmatch", "target")?;
     let hits = maximal_exact_regions("wordmatch", &query, &target, params.word_size)?
         .into_iter()
-        .map(|region| map_hit(query.identifier().accession(), target.identifier().accession(), region))
+        .map(|region| {
+            map_hit(
+                query.identifier().accession(),
+                target.identifier().accession(),
+                region,
+            )
+        })
         .collect();
 
     Ok(WordmatchOutcome {

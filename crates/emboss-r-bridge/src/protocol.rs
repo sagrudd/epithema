@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     BridgeAlignmentInput, BridgeChargeProfile, BridgeComplexityResult, BridgeCompositionRow,
-    BridgeDescseqRow, BridgeDistanceMatrix, BridgeGcRow, BridgeIntervalInput,
-    BridgeMatcherSummary, BridgePatternHit, BridgePepstatsResult, BridgeSequenceInput,
-    BridgeSequenceRecord, BridgeToolSummary, BridgeTranslationCheck,
+    BridgeDescseqRow, BridgeDistanceMatrix, BridgeGcRow, BridgeIntervalInput, BridgeMatcherSummary,
+    BridgePatternHit, BridgePepstatsResult, BridgeSequenceInput, BridgeSequenceRecord,
+    BridgeToolSummary, BridgeTranslationCheck,
 };
 
 /// JSON bridge request envelope.

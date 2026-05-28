@@ -1,7 +1,7 @@
 //! Sliding-window White-Wimley octanol profiles for plot-producing analytical tools.
 
-use crate::sequence::SequenceRecord;
 use crate::Alphabet;
+use crate::sequence::SequenceRecord;
 
 /// Errors for octanol-profile computation.
 #[derive(Clone, Debug, PartialEq)]
@@ -175,7 +175,7 @@ fn residue_interface_minus_octanol(residues: &str) -> Result<Vec<f64>, ProteinOc
 mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{protein_octanol_profile, ProteinOctanolError};
+    use super::{ProteinOctanolError, protein_octanol_profile};
 
     #[test]
     fn computes_expected_profile() {

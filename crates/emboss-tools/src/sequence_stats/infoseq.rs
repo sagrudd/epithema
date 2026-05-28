@@ -121,7 +121,10 @@ mod tests {
         assert_eq!(outcome.rows[0].length, 4);
         assert_eq!(outcome.rows[0].molecule, "dna");
         assert_eq!(outcome.rows[0].gc_percent, Some(50.0));
-        assert_eq!(outcome.rows[0].description.as_deref(), Some("first example"));
+        assert_eq!(
+            outcome.rows[0].description.as_deref(),
+            Some("first example")
+        );
     }
 
     #[test]

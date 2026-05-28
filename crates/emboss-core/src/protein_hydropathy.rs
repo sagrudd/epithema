@@ -164,8 +164,7 @@ mod tests {
         )
         .expect("protein sequence should build");
 
-        let profile =
-            protein_hydropathy_profile(&record, 2, 1).expect("profile should compute");
+        let profile = protein_hydropathy_profile(&record, 2, 1).expect("profile should compute");
         assert_eq!(profile.windows.len(), 3);
         assert!((profile.windows[0].mean_hydropathy - 4.35).abs() < 1e-9);
         assert!((profile.windows[1].mean_hydropathy - 4.0).abs() < 1e-9);
@@ -181,8 +180,8 @@ mod tests {
         )
         .expect("protein sequence should build");
 
-        let error = protein_hydropathy_profile(&record, 3, 1)
-            .expect_err("unsupported residue should fail");
+        let error =
+            protein_hydropathy_profile(&record, 3, 1).expect_err("unsupported residue should fail");
         assert_eq!(
             error,
             ProteinHydropathyError::UnsupportedResidue {

@@ -75,7 +75,8 @@ pub fn run_patmatdb(params: PatmatdbParams) -> Result<PatmatdbOutcome, ToolExecu
         validate_protein_record("patmatdb", &record)?;
         for motif in &motifs {
             hits.extend(
-                motif.pattern
+                motif
+                    .pattern
                     .scan(record.residues())
                     .into_iter()
                     .map(|hit| PatmatdbHit {
@@ -103,7 +104,10 @@ fn load_motif_database(path: &PathBuf) -> Result<Vec<PatmatdbMotif>, ToolExecuti
     let contents = fs::read_to_string(path).map_err(|error| {
         PlatformError::new(
             ErrorCategory::Invocation,
-            format!("failed to read patmatdb motif database '{}': {error}", path.display()),
+            format!(
+                "failed to read patmatdb motif database '{}': {error}",
+                path.display()
+            ),
         )
         .with_code("tools.patmatdb.database.read_failed")
     })?;
