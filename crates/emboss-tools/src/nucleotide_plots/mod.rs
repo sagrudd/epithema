@@ -1,12 +1,14 @@
 //! Nucleotide plot-producing tools under staged rollout.
 
 mod density;
+mod wobble;
 
 use crate::ToolDescriptor;
 
 const FAMILY: &str = "nucleotide_plots";
 
-pub use density::{DensityOutcome, DensityParams, density_help, run_density};
+pub use density::{density_help, run_density, DensityOutcome, DensityParams};
+pub use wobble::{run_wobble, wobble_help, WobbleOutcome, WobbleParams};
 
 /// `density` descriptor.
 pub const DENSITY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

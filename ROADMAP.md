@@ -2399,8 +2399,18 @@ implementation-program cycle. The near-term priorities are:
       - no shipped-surface exposure yet
       - no fixtures or compared evidence yet
 
-159. Add the typed plot-contract emission path for the selected next plotting candidate.
-    - Keep the contract derived from the same analytical computation path.
+159. Complete. Add the typed plot-contract emission path for the selected next plotting candidate.
+    The staged `wobble` plotting path now exists in the tools layer as a
+    table-derived single-series line contract over the bounded analytical
+    core. The emitted contract stays method-associated and renderer-agnostic:
+      - tool: `wobble`
+      - method: `nucleotide_wobble_profile`
+      - source artifact: `table:wobble-profile`
+      - emitted series: `wobble_variability`
+    This task intentionally stops short of shipping the governed surface:
+      - no registry or CLI exposure yet
+      - no governed autodoc or generated validation/docs yet
+      - no canonical fixtures or compared evidence yet
 
 160. Expose the selected next plotting candidate through the governed shipped surface.
     - Registry, service, CLI, governed autodoc, and generated validation/docs
