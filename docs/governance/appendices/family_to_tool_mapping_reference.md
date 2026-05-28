@@ -2003,6 +2003,27 @@ methods shipped so far:
 So the next code-bearing continuation should not begin as a vague “keep going
 with plotting” step. It should begin as this explicit bounded `wobble` tier.
 
+#### Pre-code seam-pressure stop conditions for `wobble`
+
+Before the first `wobble` code patch starts, the repository should make the
+pause-and-reconsider conditions explicit rather than treating them as implied.
+
+The repository should pause and reopen planning if any of the following
+becomes true during the pre-code review:
+
+1. `wobble` cannot remain table-first with a typed contract derived from the
+   same computation path
+2. `wobble` requires Rust-side rendering behavior, layout policy, styling, or
+   other presentation logic
+3. `wobble` cannot remain method-associated and instead demands a generalized
+   plotting framework before one bounded shipped slice closes
+4. `wobble` forces region-track, threshold-call, or broader plot-contract
+   taxonomy pressure that is not clearly local to the method
+
+If one of these conditions becomes true, the repository should not force-fit
+`wobble` through the bounded seam. It should stop and reassess whether the
+active plotting branch still remains the right next implementation path.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

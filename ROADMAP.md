@@ -2372,9 +2372,20 @@ implementation-program cycle. The near-term priorities are:
       - no Rust-side rendering
       - no generic plotting-framework widening
 
-157. If the selected next plotting candidate widens into region-track, threshold-call, or broader contract-taxonomy pressure before code starts, pause and reconsider the family path.
-    - Do not force-fit a method through the bounded seam once the preconditions
-      are no longer honest.
+157. Complete. If the selected next plotting candidate widens into region-track, threshold-call, or broader contract-taxonomy pressure before code starts, pause and reconsider the family path.
+    The pre-code seam-pressure stop conditions are now explicit for `wobble`.
+    The repository should pause and reopen planning if, before code starts:
+      - `wobble` cannot remain table-first with a typed contract derived from
+        the same computation path
+      - `wobble` requires Rust-side rendering, layout, styling, or other
+        presentation policy
+      - `wobble` cannot remain method-associated and instead demands a
+        generalized plotting framework
+      - `wobble` forces region-track, threshold-call, or broader
+        plot-contract-taxonomy pressure that is not clearly local to the
+        method
+    This keeps the branch honest and prevents force-fitting `wobble` through a
+    seam it no longer actually matches.
 
 158. If the selected next plotting candidate stays bounded through planning, implement its bounded analytical core.
     - Keep computation table-first and method-associated.
