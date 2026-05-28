@@ -2550,9 +2550,40 @@ implementation-program cycle. The near-term priorities are:
     - This task is inventory only. It does not yet reclassify seam pressure or
       choose the next bounded continuation candidate.
 
-166. Reclassify the post-`wobble` plotting remainder by seam pressure.
-    - Confirm which remaining methods still look closest to the proven bounded
-      plotting seam and which now sit outside it.
+166. Complete. Reclassify the post-`wobble` plotting remainder by seam pressure.
+    - Reclassified the post-`wobble` remainder against the now-proven bounded
+      seam rather than the earlier post-`density` shortlist.
+    - The strongest remaining seam-compatible continuation candidates are now:
+      - `banana`
+      - `isochore`
+      - `syco`
+    - `cpgplot` remains plausible, but only as a more conditional
+      region-oriented candidate.
+    - The broader buckets remain outside the currently proven bounded seam:
+      - requires broader contract taxonomy:
+        - `chaos`
+        - `pepwindowall`
+        - `plotcon`
+      - dotplot-style or comparative-matrix heavy:
+        - `dotmatcher`
+        - `dotpath`
+        - `dottup`
+        - `polydot`
+      - diagram, layout, or presentation-heavy:
+        - `cirdna`
+        - `lindna`
+        - `pepnet`
+        - `pepwheel`
+        - `prettyplot`
+        - `showfeat`
+        - `showpep`
+        - `showseq`
+      - specialized laboratory-trace or kinetic plotting:
+        - `abiview`
+        - `findkm`
+    - This remains governance-only reclassification. It narrows the next
+      candidate pool, but it does not yet choose the next bounded continuation
+      candidate.
 
 167. Decide explicitly whether another bounded plotting continuation candidate still exists after `wobble`.
     - Either keep the plotting branch active with a non-empty narrowed pool, or
