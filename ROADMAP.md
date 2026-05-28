@@ -2343,9 +2343,17 @@ implementation-program cycle. The near-term priorities are:
     profile with a table-first output and a deterministic typed plot contract
     derived from the same computation path.
 
-155. Capture exact patch start conditions for the selected next plotting candidate.
-    - Require the current zero-burden release-truth state and keep scope
-      limited to one bounded method slice.
+155. Complete. Capture exact patch start conditions for the selected next plotting candidate.
+    `wobble` now has explicit start conditions recorded in the
+    plotting-governance appendix. The start gate now requires:
+      - plotting-first ordering to remain intact
+      - the post-`density` continuation gate to remain passed with `wobble`
+        as the single selected candidate
+      - the current zero-burden release-truth state to remain intact
+      - the first patch to stay limited to `wobble` plus the smallest support
+        needed for deterministic computation, typed contract emission, and
+        governed docs/validation plumbing
+      - the patch to land as a full governed slice rather than a half-start
 
 156. Map the full bounded implementation tier for the selected next plotting candidate.
     - Analytical core

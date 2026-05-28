@@ -1924,6 +1924,53 @@ If `wobble` cannot satisfy these criteria while remaining a bounded
 method-associated plotting method, the repository should pause and reassess
 before starting the next code-bearing continuation patch.
 
+#### Exact start conditions for the first `wobble` implementation patch
+
+The first code-bearing `wobble` patch should not begin until all of the
+following are treated as explicit start conditions:
+
+- the active family decision still remains:
+  - plotting first
+  - remote retrieval second
+  - protein-property rework third
+- bounded plotting Phase 1 has already passed explicit reassessment:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- the post-`density` continuation gate has already passed:
+  - bounded plotting continuation remains viable
+  - `wobble` is the single selected next bounded continuation candidate
+- the release-truth surface still remains in the current zero-burden state:
+  - `full_compared_cohort == true`
+  - `harvest_coverage_complete == true`
+  - `retained_backlog_closed == true`
+  - `gapped_method_count == 0`
+  - `weakest_evidence_family == null`
+  - `release_truth_current == true`
+- the patch scope remains limited to `wobble` and the smallest shared support
+  needed for:
+  - deterministic analytical computation
+  - typed plot-contract emission
+  - governed docs and validation plumbing
+- the patch does not widen into:
+  - broader plotting-family members beyond `wobble`
+  - Rust-side rendering behavior
+  - a generalized plotting framework
+  - broader plot-contract taxonomies unless `wobble` itself makes that
+    pressure concrete enough to stop and reassess
+- the patch is expected to land with all method-level governed surfaces, not
+  as a half-start:
+  - method-associated Rust implementation
+  - registry and service exposure
+  - governed autodoc contract
+  - generated docs and validation metadata
+  - canonical analytical and plot-contract fixtures
+  - compared evidence for both table and contract outputs
+
+If any of these start conditions cease to hold before code changes begin, the
+repository should re-open planning rather than starting the continuation patch
+under a looser scope.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
