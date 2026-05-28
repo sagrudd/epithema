@@ -2632,9 +2632,12 @@ implementation-program cycle. The near-term priorities are:
       acceptance criteria and exact patch start conditions before any code
       starts.
 
-170. If plotting remains viable, close the untriggered retrieval-activation branch explicitly.
-    - Keep retrieval fallback documented and prepared, but do not promote it by
-      inertia.
+170. Complete. If plotting remains viable, close the untriggered retrieval-activation branch explicitly.
+    - Closed the retrieval-activation branch explicitly after selecting
+      `isochore`.
+    - Retrieval fallback remains documented, prepared, and inactive.
+    - The repository does not promote retrieval by inertia while the active
+      bounded plotting continuation branch remains credible.
 
 171. Capture explicit method-level acceptance criteria for the selected next plotting candidate.
     - Record the bounded analytical surface, typed contract expectations,

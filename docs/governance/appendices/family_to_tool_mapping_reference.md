@@ -2246,6 +2246,11 @@ The non-selected viable methods remain documented but inactive:
 So the next bounded planning step should be to capture `isochore`-specific
 acceptance criteria and exact patch start conditions before any code starts.
 
+That also closes the retrieval-activation branch explicitly as untriggered
+after candidate selection. Retrieval fallback remains documented, prepared, and
+inactive while the active bounded `isochore` continuation branch remains
+credible.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
