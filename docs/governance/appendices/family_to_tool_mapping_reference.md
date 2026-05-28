@@ -2024,6 +2024,40 @@ If one of these conditions becomes true, the repository should not force-fit
 `wobble` through the bounded seam. It should stop and reassess whether the
 active plotting branch still remains the right next implementation path.
 
+#### Reassessment after the shipped `wobble` slice
+
+After the bounded `wobble` implementation tier closed as a shipped governed
+slice, the repository should reassess whether the plotting seam still remains
+bounded or whether the prepared retrieval fallback should finally activate.
+
+The reassessment result is affirmative. The shipped `wobble` slice stayed
+bounded:
+
+- `wobble` stayed method-associated.
+- The analytical surface stayed table-first and coding-sequence-specific.
+- The richer third-position composition remained in the analytical table rather
+  than widening the emitted contract.
+- The emitted contract stayed bounded to a single derived
+  `wobble_variability` series.
+- No renderer-coupled pressure emerged.
+- No generalized plotting-framework pressure emerged.
+- No fallback-activation stop condition tripped.
+
+The governed release-truth surface remained fully green after `wobble` closed:
+
+- shipped methods: `101`
+- compared evidence: `101`
+- executable evidence: `0`
+- harvested legacy provenance present: `101`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
+So the repository remains on the plotting continuation path. The retrieval
+fallback remains documented, prepared, and inactive unless a later bounded
+continuation slice trips the explicit stop conditions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
