@@ -2387,8 +2387,17 @@ implementation-program cycle. The near-term priorities are:
     This keeps the branch honest and prevents force-fitting `wobble` through a
     seam it no longer actually matches.
 
-158. If the selected next plotting candidate stays bounded through planning, implement its bounded analytical core.
-    - Keep computation table-first and method-associated.
+158. Complete. If the selected next plotting candidate stays bounded through planning, implement its bounded analytical core.
+    The bounded analytical core for `wobble` now exists in the Rust core
+    layer as a method-associated third-base-position variability profile.
+    The shipped core stays table-first and coding-sequence-specific:
+      - codon-windowed analytical rows
+      - explicit wobble-base composition columns
+      - a single derived `wobble_variability` metric for later plotting
+    This task intentionally stops at the analytical core:
+      - no plot-contract emission yet
+      - no shipped-surface exposure yet
+      - no fixtures or compared evidence yet
 
 159. Add the typed plot-contract emission path for the selected next plotting candidate.
     - Keep the contract derived from the same analytical computation path.
