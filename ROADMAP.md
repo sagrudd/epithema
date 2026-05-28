@@ -2294,14 +2294,26 @@ implementation-program cycle. The near-term priorities are:
       - `weakest_evidence_family: null`
       - `release_truth_current: true`
 
-151. Choose exactly one bounded post-`density` plotting continuation candidate from the narrowed strong pool.
-    - Decide among:
+151. Complete. Choose exactly one bounded post-`density` plotting continuation candidate from the narrowed strong pool.
+    The selected next bounded plotting candidate is:
+      - `wobble`
+    The selection basis is:
+      - `wobble` looks like the closest remaining extension of the currently
+        proven seam as a likely single-series nucleotide analytical profile
+      - it appears more naturally table-first and typed-contract-friendly than
+        the more region-oriented `isochore`
+      - it appears narrower and easier to keep method-associated than
+        `banana`, which signals a heavier biophysical model surface, or `syco`,
+        which signals a broader synonymous-codon-usage interpretation surface
+      - it does not immediately imply the broader contract-taxonomy or
+        presentation pressure already excluded elsewhere in the plotting family
+    The non-selected strong candidates remain viable but inactive:
       - `banana`
       - `isochore`
       - `syco`
-      - `wobble`
-    - Keep the choice method-associated and seam-aware rather than treating all
-      four as interchangeable.
+    So the next bounded planning step is to capture `wobble`-specific
+    acceptance criteria and exact patch start conditions before any code
+    starts.
 
 152. If no credible bounded continuation candidate remains after the selection review, activate the prepared retrieval fallback path explicitly.
     - Promote retrieval only if the narrowed plotting pool proves deceptive

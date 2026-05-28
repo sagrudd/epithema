@@ -1802,6 +1802,38 @@ What this decision does **not** do:
 So the no-candidate branch is not taken here. The repository should continue
 to the next explicit bounded candidate-selection step.
 
+#### Post-`density` bounded-candidate selection
+
+Because the post-`density` viability gate still left a non-empty narrowed
+strong pool, the repository should now choose exactly one bounded next-method
+continuation candidate rather than carrying all four forward as if they were
+interchangeable.
+
+The selected next bounded plotting candidate is:
+
+- `wobble`
+
+The selection basis is:
+
+- `wobble` appears to be the closest remaining extension of the currently
+  proven seam as a likely single-series nucleotide analytical profile
+- it appears more naturally table-first and typed-contract-friendly than the
+  more region-oriented `isochore`
+- it appears narrower and easier to keep method-associated than `banana`,
+  which signals a heavier biophysical model surface, or `syco`, which signals
+  a broader synonymous-codon-usage interpretation surface
+- it does not immediately imply the broader contract-taxonomy or presentation
+  pressure already excluded elsewhere in the plotting family
+
+The non-selected strong candidates remain viable but inactive:
+
+- `banana`
+- `isochore`
+- `syco`
+
+So the next bounded planning step should be to capture `wobble`-specific
+acceptance criteria and exact patch start conditions before any code starts.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
