@@ -2190,6 +2190,28 @@ This reclassification remains governance-only. It narrows the strongest
 next-candidate pool more sharply than the post-`density` view, but it does not
 yet choose the next bounded continuation candidate.
 
+#### Post-`wobble` bounded-candidate viability decision
+
+After the shipped `wobble` slice and the rebased post-`wobble` seam-pressure
+reclassification, the repository can now answer the next pass/fail question
+explicitly: does another bounded plotting continuation candidate still exist,
+or has the seam narrowed to the point where the prepared retrieval fallback
+should activate?
+
+The decision is affirmative. Another bounded plotting continuation candidate
+still exists after `wobble`.
+
+The current viable post-`wobble` continuation pool is:
+
+- `banana`
+- `isochore`
+- `syco`
+
+So the no-candidate branch is not taken here. The repository remains on the
+plotting continuation path, and the prepared retrieval fallback remains
+documented, ready, and inactive unless a later selection or shipment gate
+trips the explicit stop conditions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

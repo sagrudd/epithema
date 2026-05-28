@@ -2585,6 +2585,20 @@ implementation-program cycle. The near-term priorities are:
       candidate pool, but it does not yet choose the next bounded continuation
       candidate.
 
+167. Complete. Decide explicitly whether another bounded plotting continuation candidate still exists after `wobble`.
+    - Closed the post-`wobble` pass/fail gate explicitly.
+    - The decision is affirmative: another bounded plotting continuation
+      candidate still exists after the `wobble` shipment gate.
+    - The current viable post-`wobble` continuation pool is:
+      - `banana`
+      - `isochore`
+      - `syco`
+    - So the no-candidate branch is not taken here.
+    - Retrieval fallback remains documented, prepared, and inactive, but it is
+      not activated at this checkpoint.
+    - The repository remains on the plotting continuation path and can move to
+      the next bounded selection step.
+
 167. Decide explicitly whether another bounded plotting continuation candidate still exists after `wobble`.
     - Either keep the plotting branch active with a non-empty narrowed pool, or
       trigger the no-candidate branch honestly.
