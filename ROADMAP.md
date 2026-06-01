@@ -2975,3 +2975,21 @@ implementation-program cycle. The near-term priorities are:
       - `full_compared_cohort: true`
       - `harvest_coverage_complete: true`
       - `release_truth_current: true`
+
+196. Re-run the full release-truth surface after shipping the selected next bounded continuation candidate.
+    - Used this as the post-`banana` release-truth checkpoint and recorded the
+      observed clean state.
+    - Re-ran the currently decisive release-truth gates for the shipped
+      repository surface:
+      - `python3 scripts/release_metadata.py truth-check`: passed
+      - docs build: passed
+      - `git diff --check`: passed
+    - The governed state remained fully green:
+      - shipped methods: `103`
+      - compared evidence: `103`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `103`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
