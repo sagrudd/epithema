@@ -2794,12 +2794,34 @@ implementation-program cycle. The near-term priorities are:
       - `syco`
 
 183. Reclassify the post-`isochore` plotting remainder by seam pressure.
-    - Separate the remaining methods into:
-      - strongest seam-compatible continuation candidates
-      - region- or segmentation-conditional candidates
-      - broader contract-taxonomy candidates
-      - presentation-heavy or layout-heavy candidates
-      - specialized-trace or kinetic candidates
+    - Reclassified the post-`isochore` remainder against the now-proven seam.
+    - Recorded the strongest remaining seam-compatible continuation candidates:
+      - `banana`
+      - `syco`
+    - Recorded `cpgplot` as the only still-plausible but more conditional
+      region-oriented candidate.
+    - Recorded the heavier out-of-seam buckets explicitly:
+      - broader contract-taxonomy:
+        - `chaos`
+        - `pepwindowall`
+        - `plotcon`
+      - dotplot or comparative-matrix heavy:
+        - `dotmatcher`
+        - `dotpath`
+        - `dottup`
+        - `polydot`
+      - diagram, layout, or presentation-heavy:
+        - `cirdna`
+        - `lindna`
+        - `pepnet`
+        - `pepwheel`
+        - `prettyplot`
+        - `showfeat`
+        - `showpep`
+        - `showseq`
+      - specialized laboratory-trace or kinetic:
+        - `abiview`
+        - `findkm`
 
 184. Decide whether another bounded plotting continuation candidate still exists after `isochore`.
     - Close the pass/fail gate honestly:

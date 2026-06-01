@@ -2493,6 +2493,62 @@ remaining `20` plotting-family methods:
 This inventory remains governance-only. It does not yet reclassify seam
 pressure or choose the next bounded continuation candidate.
 
+#### Post-`isochore` seam-pressure reclassification
+
+Now that `isochore` has shipped as another bounded continuation slice, the
+remainder can be reclassified against a more concrete seam than the earlier
+post-`wobble` shortlist.
+
+The key new signal from `isochore` is:
+
+- the bounded plotting seam can still support a nucleotide analytical profile
+  that keeps richer categorical information in the table while emitting one
+  derived continuation line
+- but the method still stayed table-first, method-associated, and free of
+  renderer-coupled region-track or segmentation-framework pressure
+
+That means the strongest remaining seam-compatible continuation candidates are
+now:
+
+- `banana`
+- `syco`
+
+`cpgplot` remains plausible, but only as a more conditional region-oriented
+candidate whose surface may still drift toward threshold or track pressure.
+
+The explicit post-`isochore` remainder buckets are therefore:
+
+- strongest seam-compatible continuation candidates:
+  - `banana`
+  - `syco`
+- region- or threshold-conditional candidate:
+  - `cpgplot`
+- broader contract-taxonomy candidates:
+  - `chaos`
+  - `pepwindowall`
+  - `plotcon`
+- dotplot or comparative-matrix heavy:
+  - `dotmatcher`
+  - `dotpath`
+  - `dottup`
+  - `polydot`
+- diagram, layout, or presentation-heavy:
+  - `cirdna`
+  - `lindna`
+  - `pepnet`
+  - `pepwheel`
+  - `prettyplot`
+  - `showfeat`
+  - `showpep`
+  - `showseq`
+- specialized laboratory-trace or kinetic plotting:
+  - `abiview`
+  - `findkm`
+
+This reclassification remains governance-only. It narrows the strongest
+next-candidate pool more sharply than the post-`wobble` view, but it does not
+yet choose the next bounded continuation candidate.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
