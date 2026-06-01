@@ -3013,3 +3013,37 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+198. Complete. Extend the roadmap from the actual post-`banana` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `103`
+      - compared evidence: `103`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `103`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the actual post-`banana` planning consequence:
+      - bounded plotting still remains credible
+      - the prepared retrieval fallback remains ready but inactive
+      - the narrowed active plotting continuation pool is now:
+        - `syco`
+    - Added the next mapped tier as Tasks `199` through `212`, centered on:
+      - rebasing the plotting-family remainder onto the actual post-`banana`
+        state
+      - deciding whether the last narrowed plotting candidate still passes an
+        honest seam review
+      - either activating the prepared retrieval fallback if the remaining
+        plotting continuation pool fails that review, or selecting `syco` as
+        the final bounded plotting continuation candidate
+      - capturing method-level acceptance criteria, exact patch start
+        conditions, and explicit stop conditions for `syco` if that branch
+        remains active
+      - mapping and shipping one full bounded `syco` slice through analytical
+        core, typed contract path, governed shipped exposure, and compared
+        evidence closure
+      - rerunning release truth and reassessing the seam again before any
+        further continuation is mapped
