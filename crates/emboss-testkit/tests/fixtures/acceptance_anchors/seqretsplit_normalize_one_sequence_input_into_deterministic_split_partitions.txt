@@ -1,0 +1,11 @@
+# Partition 1
+>alpha first example
+ACGT
+
+# Partition 2
+>beta second example
+TTTT
+
+# Partition 3
+>gamma third example
+GGCC

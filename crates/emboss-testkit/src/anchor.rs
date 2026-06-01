@@ -78,6 +78,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "seqretsplit",
+        autodoc_contract: "docs/autodoc/tools/seqretsplit.json",
+        example_id: "normalize_one_sequence_input_into_deterministic_split_partitions",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/seqretsplit_normalize_one_sequence_input_into_deterministic_split_partitions.txt",
+        legacy_source: "EMBOSS seqretsplit application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsplit.acd",
+        legacy_invocation: "seqretsplit -sequence three_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "refseqget",
         autodoc_contract: "docs/autodoc/tools/refseqget.json",
         example_id: "retrieve_provider_qualified_reference_sequence",
@@ -1331,6 +1340,12 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/two_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "seqretsplit" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
                 .display()
                 .to_string(),
         ],

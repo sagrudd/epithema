@@ -4,19 +4,10 @@
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
     "total_method_count": 106,
-    "compared_evidence_count": 105,
-    "executable_evidence_count": 1,
-    "below_compared_method_count": 1,
-    "full_compared_cohort": false
+    "compared_evidence_count": 106,
+    "executable_evidence_count": 0,
+    "below_compared_method_count": 0,
+    "full_compared_cohort": true
   },
-  "below_compared_methods": [
-    {
-      "tool_name": "seqretsplit",
-      "family": "retrieval_tools",
-      "evidence_level": "executable_evidence",
-      "harvested_legacy_evidence_present": true,
-      "executable_validation_present": true,
-      "compared_validation_present": false
-    }
-  ]
+  "below_compared_methods": []
 }

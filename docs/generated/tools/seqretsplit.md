@@ -34,11 +34,11 @@ The result is a partitioned normalized sequence collection rendered through the 
 
 ## Legacy Context
 
-This bounded release keeps the historical `seqretsplit` user need in scope while modernizing around deterministic normalized record partitions instead of raw legacy file-writing behavior. The first shipped slice proves the governed split-output surface without claiming broad filename-policy or provider-parity equivalence.
+This bounded release keeps one historical `seqretsplit` user need in scope while modernizing around deterministic normalized record partitions instead of raw legacy file-writing behavior. The committed compared example stays local and narrow: one managed FASTA input is resolved through the governed retrieval substrate and compared against a checked-in expected split-partition payload.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqretsplit`. The bounded local path and the explicit-provider mocked path both execute through Rust service coverage, but this task boundary stops at shipped executable evidence only; canonical compared fixtures have not landed yet.
+This method is implemented and exposed through `emboss-rs seqretsplit`. The bounded local split-output path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises an explicit-provider mocked path through the same governed retrieval seam. That proves the shipped retrieval surface without claiming harvested live-provider acceptance evidence or broad filename-policy parity.
 
 ## Caveats
 

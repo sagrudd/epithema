@@ -64,13 +64,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `105` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `106` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `106` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
-- weakest evidence family: `Modernize — Rework — Remote retrieval and archive acquisition`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -100,10 +100,9 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed and harvest
-coverage remains complete, but the shipped governed cohort is temporarily not
-fully compared because `seqretsplit` is currently executable-only pending its
-canonical compared-evidence closure.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the shipped governed cohort is back to a fully compared
+state after the bounded `seqretsplit` compared-evidence closure.
 
 ### First-class R story
 

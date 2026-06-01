@@ -3829,3 +3829,19 @@ implementation-program cycle. The near-term priorities are:
       - canonical fixtures and compared evidence still belong to Task `241`
       - the full release-truth gate is expected to fail until that closure
         lands
+
+241. Complete. Close the `seqretsplit` compared-evidence slice.
+    - Added the canonical bounded split-partition acceptance anchor for
+      `seqretsplit` and refreshed the autodoc contract to reflect the real
+      compared-evidence posture.
+    - Restored the generated cohort/report surface from the temporary
+      executable-only state back to full release truth:
+      - shipped methods `106`
+      - compared evidence `106`
+      - executable evidence `0`
+      - harvested legacy provenance present `106`
+      - full-compared cohort `true`
+      - harvest coverage complete `true`
+    - This closes the bounded `seqretsplit` retrieval slice at compared
+      evidence without widening retrieval-family scope beyond the selected
+      method.

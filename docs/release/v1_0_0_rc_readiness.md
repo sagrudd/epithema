@@ -116,13 +116,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `106`
-- Compared-evidence methods: `105`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `106`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `106`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
-- Weakest evidence family: `Modernize — Rework — Remote retrieval and archive acquisition`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -151,8 +151,7 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- The shipped cohort is fully harvested on this branch, but not yet fully
-  compared because `seqretsplit` is currently executable-only.
+- The shipped cohort is fully harvested and fully compared on this branch.
 - The retained governance backlog is `0`, so the dominant remaining work is
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
@@ -185,11 +184,10 @@ Current generated release-truth markers:
 
 ### Validation and evidence presence
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: every shipped method has a validation stub, appears in the cohort
-  report, and records harvested legacy provenance. `seqretsplit` is still
-  executable-only at this checkpoint, so the shipped cohort is not yet fully
-  compared.
+  report, records harvested legacy provenance, and now reaches compared
+  evidence.
 
 ### Cohort-level acceptance reporting
 
@@ -213,7 +211,7 @@ Current generated release-truth markers:
 - Basis: the standing reprioritization gate is generated at:
   - `docs/generated/validation/cohort_health.json`
   - `docs/generated/cohort_health.md`
-  and now honestly reports one weak-evidence signal in remote retrieval plus
+  and now honestly reports zero weak-evidence signals plus
   `release_truth_current: true`.
 
 ### Family comparison coverage
@@ -222,17 +220,17 @@ Current generated release-truth markers:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now records one executable-only shipped method across the current
+  and now records no executable-only shipped methods across the current
   governed cohort.
 
 ### Full compared cohort gate
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `105/106` shipped methods at compared evidence with `1`
-  method below compared evidence.
+  and now records `106/106` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -292,11 +290,10 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-- `1` shipped methods still have remaining compared-evidence debt.
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
-- The dominant remaining implementation work is now closing the bounded
-  `seqretsplit` compared-evidence slice rather than widening the shipped
-  cohort further.
+- The dominant remaining implementation work is now future bounded retrieval
+  continuation planning rather than shipped-cohort evidence debt.
 
 ### Legacy harvesting remains partial
 
@@ -307,9 +304,8 @@ Current generated release-truth markers:
 ### Comparison-based acceptance remains partial
 
 - The cohort report now records `105` methods with compared evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily not green because `seqretsplit` is still
-  executable-only at this checkpoint.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green again after the bounded `seqretsplit` evidence closure.
 
 ### Plotting limitations
 
@@ -336,8 +332,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `106`
-- Compared-evidence methods: `105`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `106`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `106`
 - Retained backlog still unshipped: `0`
 
