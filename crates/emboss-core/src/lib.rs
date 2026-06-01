@@ -29,6 +29,7 @@ pub mod molecule;
 pub mod nucleotide_density;
 pub mod nucleotide_banana;
 pub mod nucleotide_isochore;
+pub mod nucleotide_syco;
 pub mod nucleotide_wobble;
 pub mod pattern;
 pub mod platform;
@@ -90,6 +91,9 @@ pub use nucleotide_banana::{
 pub use nucleotide_isochore::{
     IsochoreBand, IsochoreWindow, NucleotideIsochoreError, NucleotideIsochoreProfile,
     nucleotide_isochore_profile,
+};
+pub use nucleotide_syco::{
+    NucleotideSycoError, NucleotideSycoProfile, SycoWindow, nucleotide_syco_profile,
 };
 pub use nucleotide_wobble::{
     NucleotideWobbleError, NucleotideWobbleProfile, WobbleWindow, nucleotide_wobble_profile,

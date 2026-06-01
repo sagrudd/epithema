@@ -3208,3 +3208,11 @@ implementation-program cycle. The near-term priorities are:
       governance appendix and roadmap.
     - Recorded the pause-and-reassess triggers before code starts so the final
       bounded plotting seam is not stretched informally.
+
+208. Implement the bounded analytical core for the final bounded plotting continuation candidate.
+    - Added the bounded `syco` analytical core in `emboss-core` and exported
+      it through the crate root.
+    - Landed a method-associated coding-sequence profile over codon windows
+      using a bounded reference-profile synonymous preference score.
+    - Kept the implementation table-first, coding-sequence-specific, and
+      renderer-agnostic.
