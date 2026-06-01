@@ -3480,3 +3480,19 @@ implementation-program cycle. The near-term priorities are:
       5. re-run the full release-truth surface after shipping `seqretsetall`
       6. reassess the shipped `seqretsetall` slice before any further
          retrieval continuation is mapped
+
+222. Capture the explicit provider/seam stop conditions for `seqretsetall`.
+    - Complete.
+    - Recorded the explicit provider/seam stop conditions in the governance
+      appendix and roadmap.
+    - The repository should now pause and reopen planning before code starts
+      if:
+      1. `seqretsetall` cannot remain deterministic under mocked-provider or
+         managed-asset validation
+      2. `seqretsetall` requires hidden live-network dependencies, implicit
+         provider fallback chains, or unclear provider precedence
+      3. `seqretsetall` cannot remain a bounded extension of the normalized
+         `seqret` return path and instead demands broader retrieval-family
+         orchestration before one shipped slice closes
+      4. `seqretsetall` forces broad filesystem-policy, batching-policy, or
+         provider-parity claims that are not clearly local to the method
