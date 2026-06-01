@@ -3863,3 +3863,27 @@ implementation-program cycle. The near-term priorities are:
       - harvest coverage complete `true`
       - retained backlog closed `true`
       - release-truth current `true`
+
+243. Complete. Reassess the shipped `seqretsplit` slice before any further
+    retrieval continuation is mapped.
+    - Recorded the post-ship `seqretsplit` reassessment in the governance
+      appendix and roadmap.
+    - The result is affirmative:
+      - the shipped `seqretsplit` slice stayed bounded, provider-aware, and
+        deterministic
+      - it remained a local extension of normalized sequence-return behavior
+        rather than forcing broader retrieval-family orchestration
+      - it did not require hidden live-network behavior, implicit provider
+        fallback chains, or unclear provider precedence
+      - it did not force broad filename-policy, directory-policy,
+        batching-policy, or provider-parity claims beyond the local method
+        slice
+    - The governed release-truth surface remained fully green:
+      - shipped methods `106`
+      - compared evidence `106`
+      - executable evidence `0`
+      - harvested legacy provenance present `106`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
