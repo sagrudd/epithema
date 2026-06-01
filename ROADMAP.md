@@ -3673,3 +3673,23 @@ implementation-program cycle. The near-term priorities are:
     - The active viable bounded continuation pool remains:
       - `seqretsplit`
       - `infoassembly`
+
+233. Complete. Choose exactly one next bounded retrieval continuation
+    candidate from the narrowed viable pool.
+    - Recorded the retrieval lead-method decision explicitly in the governance
+      appendix and roadmap.
+    - The selected bounded continuation candidate is:
+      - `seqretsplit`
+    - Selection basis:
+      - it is the narrowest remaining extension of the already-shipped
+        governed retrieval slice because it stays closest to normalized
+        sequence-return behavior while only adding deterministic split-output
+        partitioning
+      - it appears easier to keep deterministic under mocked-provider or
+        managed-asset validation than `infoassembly`
+      - it avoids starting the next retrieval slice with the broader assembly
+        metadata shape and provider-surface questions that `infoassembly`
+        would introduce
+    - The non-selected bounded continuation candidate remains documented but
+      inactive:
+      - `infoassembly`

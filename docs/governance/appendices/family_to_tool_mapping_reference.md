@@ -3422,6 +3422,33 @@ The active viable bounded continuation pool remains:
 - `seqretsplit`
 - `infoassembly`
 
+#### Bounded retrieval continuation lead-method selection after `seqretsetall`
+
+After keeping retrieval active through the post-`seqretsetall` viability gate
+and closing the untriggered protein-property branch, the repository should
+choose exactly one next bounded retrieval continuation candidate from the
+narrowed viable pool.
+
+The selected bounded continuation candidate should be:
+
+- `seqretsplit`
+
+That choice is the narrowest and most defensible continuation because:
+
+- it stays closest to the already-shipped governed retrieval slice by
+  extending normalized sequence-return behavior with deterministic split-output
+  partitioning
+- it appears easier to keep deterministic under mocked-provider or
+  managed-asset validation than `infoassembly`
+- it avoids starting the next retrieval slice with the broader assembly
+  metadata shape and provider-surface questions that `infoassembly` would
+  introduce
+
+The non-selected bounded continuation candidate should remain documented but
+inactive:
+
+- `infoassembly`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
