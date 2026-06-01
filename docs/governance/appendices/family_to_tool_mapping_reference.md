@@ -2447,6 +2447,52 @@ checkpoint, with the prepared retrieval fallback still documented and ready
 but inactive unless a later bounded candidate trips the explicit stop
 conditions.
 
+#### Post-`isochore` plotting-family remainder inventory
+
+Because `isochore` has now closed as another shipped bounded continuation
+slice, any further plotting continuation should start from an explicit rebased
+remainder set rather than from the older post-`wobble` shortlist.
+
+The governed plotting seam and bounded shipped continuation set now excludes:
+
+- governed seam precedents:
+  - `charge`
+  - `pepwindow`
+- bounded shipped plotting-family continuations:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+  - `density`
+  - `wobble`
+  - `isochore`
+
+So the explicit post-`isochore` plotting-family remainder pool is now the
+remaining `20` plotting-family methods:
+
+- `abiview`
+- `banana`
+- `chaos`
+- `cirdna`
+- `cpgplot`
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `findkm`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `pepwindowall`
+- `plotcon`
+- `polydot`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+- `syco`
+
+This inventory remains governance-only. It does not yet reclassify seam
+pressure or choose the next bounded continuation candidate.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

@@ -2757,10 +2757,41 @@ implementation-program cycle. The near-term priorities are:
         continuation is mapped
 
 182. Inventory the post-`isochore` plotting-family remainder against the current active bounded seam.
-    - Rebase the plotting-family remainder onto the actual post-`isochore`
+    - Rebased the plotting-family remainder onto the actual post-`isochore`
       state rather than any earlier pre-`isochore` shortlist.
-    - Make explicit which plotting-family methods remain outside the shipped
-      bounded seam precedents and continuations.
+    - Recorded the seam exclusions explicitly:
+      - governed seam precedents:
+        - `charge`
+        - `pepwindow`
+      - bounded shipped plotting-family continuations:
+        - `hmoment`
+        - `octanol`
+        - `pepinfo`
+        - `density`
+        - `wobble`
+        - `isochore`
+    - Recorded the actual post-`isochore` plotting-family remainder pool as
+      the remaining `20` methods:
+      - `abiview`
+      - `banana`
+      - `chaos`
+      - `cirdna`
+      - `cpgplot`
+      - `dotmatcher`
+      - `dotpath`
+      - `dottup`
+      - `findkm`
+      - `lindna`
+      - `pepnet`
+      - `pepwheel`
+      - `pepwindowall`
+      - `plotcon`
+      - `polydot`
+      - `prettyplot`
+      - `showfeat`
+      - `showpep`
+      - `showseq`
+      - `syco`
 
 183. Reclassify the post-`isochore` plotting remainder by seam pressure.
     - Separate the remaining methods into:
