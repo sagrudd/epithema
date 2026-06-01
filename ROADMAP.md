@@ -2723,3 +2723,116 @@ implementation-program cycle. The near-term priorities are:
       - bounded plotting still remains credible after `isochore`
       - the prepared retrieval fallback remains documented and ready, but
         inactive at this checkpoint
+
+181. Complete. Extend the roadmap from the actual post-`isochore` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `102`
+      - compared evidence: `102`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `102`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the actual post-`isochore` planning consequence:
+      - bounded plotting still remains credible
+      - the prepared retrieval fallback remains ready but inactive
+      - the narrowed active plotting continuation pool is now:
+        - `banana`
+        - `syco`
+    - Added the next mapped tier as Tasks `182` through `195`, centered on:
+      - inventorying and reclassifying the post-`isochore` plotting remainder
+      - deciding whether another bounded plotting continuation candidate still
+        exists
+      - either activating the prepared retrieval fallback if the narrowed pool
+        fails honest seam review, or choosing exactly one next candidate from:
+        - `banana`
+        - `syco`
+      - capturing acceptance criteria, exact start conditions, and explicit
+        stop conditions for the chosen method
+      - mapping and shipping one full bounded method slice
+      - rerunning release truth and reassessing the seam before any further
+        continuation is mapped
+
+182. Inventory the post-`isochore` plotting-family remainder against the current active bounded seam.
+    - Rebase the plotting-family remainder onto the actual post-`isochore`
+      state rather than any earlier pre-`isochore` shortlist.
+    - Make explicit which plotting-family methods remain outside the shipped
+      bounded seam precedents and continuations.
+
+183. Reclassify the post-`isochore` plotting remainder by seam pressure.
+    - Separate the remaining methods into:
+      - strongest seam-compatible continuation candidates
+      - region- or segmentation-conditional candidates
+      - broader contract-taxonomy candidates
+      - presentation-heavy or layout-heavy candidates
+      - specialized-trace or kinetic candidates
+
+184. Decide whether another bounded plotting continuation candidate still exists after `isochore`.
+    - Close the pass/fail gate honestly:
+      - if a bounded continuation candidate still exists, stay on the plotting
+        path
+      - if not, activate the prepared retrieval fallback planning path
+
+185. If the post-`isochore` plotting pool fails honest seam review, activate the prepared retrieval fallback branch explicitly.
+    - Record the fallback activation honestly only if the continuation gate
+      truly fails.
+
+186. If the post-`isochore` plotting pool remains viable, choose exactly one next bounded continuation candidate.
+    - Restrict the active selection to the narrowed viable pool:
+      - `banana`
+      - `syco`
+    - Keep any non-selected viable method documented but inactive.
+
+187. Close the untriggered branch explicitly after the post-`isochore` candidate decision.
+    - If plotting remains active, close the retrieval-activation branch as
+      untriggered.
+    - If fallback activates, close the plotting-continuation branch as
+      untriggered.
+
+188. Capture explicit method-level acceptance criteria for the selected next bounded continuation candidate.
+    - Make the next method concrete before code starts:
+      - bounded analytical surface
+      - table-first output expectations
+      - typed contract expectations
+      - fixture and compared-evidence obligations
+      - explicit method-local non-goals and reassessment pressure
+
+189. Capture the exact start conditions for the first implementation patch of the selected next bounded continuation candidate.
+    - Record:
+      - current shortlist and active-branch requirements
+      - post-`isochore` continuation viability with the selected candidate
+      - zero-burden release-truth requirements
+      - patch-scope and full-governed-slice constraints before code starts
+
+190. Map the full bounded implementation tier for the selected next bounded continuation candidate.
+    - Record the full method-associated slice:
+      1. analytical core
+      2. typed plot-contract emission path
+      3. governed shipped-surface exposure
+      4. canonical fixtures and compared evidence
+      5. post-ship release-truth rerun
+      6. post-ship reassessment
+
+191. Capture the explicit seam-pressure stop conditions for the selected next bounded continuation candidate.
+    - Record the pre-code pause-and-reassess triggers needed to prevent
+      informal widening beyond the bounded plotting seam.
+
+192. Implement the bounded analytical core for the selected next bounded continuation candidate.
+    - Keep the implementation table-first, method-associated, and renderer-
+      agnostic.
+
+193. Add the typed plot-contract emission path for the selected next bounded continuation candidate.
+    - Keep the emitted contract method-associated, deterministic, and bounded
+      to the smallest surface the analytical model honestly requires.
+
+194. Expose the selected next bounded continuation candidate through the governed shipped surface.
+    - Add registry, service, CLI, governed autodoc, and generated
+      docs/validation support while keeping the temporary evidence state
+      explicit until compared evidence closes.
+
+195. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next bounded continuation candidate.
+    - Restore the shipped cohort from the temporary executable-only shipment
+      state back to full compared/full-harvest truth.
