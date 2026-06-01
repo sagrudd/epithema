@@ -2886,6 +2886,26 @@ view, but it does not yet decide whether `syco` still passes an honest seam
 review strongly enough to remain active instead of activating the prepared
 retrieval fallback.
 
+#### Pass/fail gate for the final narrowed plotting continuation candidate
+
+After the post-`banana` seam-pressure reclassification, the repository should
+close the pass/fail gate on whether the last narrowed plotting candidate still
+passes an honest seam review strongly enough to remain active.
+
+The decision at this checkpoint is affirmative.
+
+- a final bounded plotting continuation candidate still remains credible after
+  `banana`
+- the current viable final continuation candidate is:
+  - `syco`
+- the no-candidate branch is therefore not taken here
+- the prepared retrieval fallback remains documented, ready, and inactive
+
+So the repository should stay on the plotting continuation branch for the next
+bounded planning step, which is now simply whether to activate `syco` as the
+final active candidate or to trigger the fallback only if that final
+continuation later fails its own bounded seam review.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

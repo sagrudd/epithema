@@ -3119,8 +3119,20 @@ implementation-program cycle. The near-term priorities are:
         - `showpep`
         - `showseq`
       - specialized laboratory-trace or kinetic plotting:
-        - `abiview`
-        - `findkm`
+      - `abiview`
+      - `findkm`
     - This remains governance-only reclassification. It narrows the final
       continuation candidate pool, but it does not yet decide whether `syco`
       still passes an honest seam review strongly enough to remain active.
+
+201. Decide whether the last narrowed plotting candidate still passes an honest seam review.
+    - Closed the post-`banana` pass/fail gate explicitly.
+    - The decision is affirmative: a final bounded plotting continuation
+      candidate still remains credible after `banana`.
+    - The current viable final continuation candidate is:
+      - `syco`
+    - So the no-candidate branch is not taken here.
+    - The prepared retrieval fallback remains documented, ready, and inactive.
+    - The repository therefore stays on the plotting continuation branch for
+      the next bounded selection step, which is now simply whether to activate
+      `syco` as the final active candidate.
