@@ -3202,3 +3202,9 @@ implementation-program cycle. The near-term priorities are:
       4. canonical fixtures and compared evidence
       5. post-ship release-truth rerun
       6. post-ship reassessment
+
+207. Capture the explicit seam-pressure stop conditions for the final bounded plotting continuation candidate.
+    - Captured the explicit `syco` seam-pressure stop conditions in the
+      governance appendix and roadmap.
+    - Recorded the pause-and-reassess triggers before code starts so the final
+      bounded plotting seam is not stretched informally.

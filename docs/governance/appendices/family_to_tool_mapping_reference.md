@@ -3058,6 +3058,24 @@ the final continuation candidate:
   reassessment
 - no implicit continuation beyond the final bounded `syco` slice
 
+#### Explicit seam-pressure stop conditions for `syco`
+
+Before code begins for the final bounded continuation method, the repository
+should pause and reopen planning if any of the following becomes true:
+
+1. `syco` cannot remain table-first with a typed contract derived from the
+   same computation path
+2. `syco` requires Rust-side rendering, layout, styling, or other
+   presentation-policy logic
+3. `syco` cannot remain method-associated and instead demands a generalized
+   plotting framework before one bounded shipped slice closes
+4. `syco` forces codon-usage panelization, coding-region segmentation,
+   threshold-call behavior, or broader plot-contract taxonomy pressure that is
+   not clearly local to the method
+
+Those stop conditions should be treated as planning boundaries, not as
+implementation details to absorb informally into the first `syco` patch.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
