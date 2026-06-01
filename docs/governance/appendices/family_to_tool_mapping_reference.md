@@ -3383,6 +3383,28 @@ This checkpoint is inventory only:
 - it does not promote protein-property rework
 - it does not widen retrieval scope beyond the already-governed bounded pool
 
+#### Post-`seqretsetall` viability decision for bounded retrieval continuation
+
+After rebasing the bounded retrieval continuation pool onto the actual
+post-`seqretsetall` state, the repository should decide explicitly whether a
+further bounded retrieval continuation candidate still exists or whether the
+retrieval branch should stop and hand off to protein-property rework.
+
+The decision is affirmative:
+
+- another bounded retrieval continuation candidate still exists after
+  `seqretsetall`
+- the no-candidate branch is not taken here
+- retrieval therefore remains the active planning program
+
+The current viable bounded continuation pool remains:
+
+- `seqretsplit`
+- `infoassembly`
+
+Protein-property rework therefore remains the reserve third program and should
+not be promoted at this checkpoint.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
