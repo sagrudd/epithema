@@ -16,6 +16,7 @@ pub use chips::{ChipsOutcome, ChipsParams, chips_help, run_chips};
 pub use codcmp::{CodcmpOutcome, CodcmpParams, codcmp_help, run_codcmp};
 pub use codcopy::{CodcopyOutcome, CodcopyParams, codcopy_help, run_codcopy};
 pub use cusp::{CuspOutcome, CuspParams, cusp_help, run_cusp};
+pub(crate) use shared::load_profile_source;
 pub use shared::render_profile_rows;
 
 /// `cai` descriptor.

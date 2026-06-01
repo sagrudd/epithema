@@ -3216,3 +3216,11 @@ implementation-program cycle. The near-term priorities are:
       using a bounded reference-profile synonymous preference score.
     - Kept the implementation table-first, coding-sequence-specific, and
       renderer-agnostic.
+
+209. Add the typed plot-contract emission path for the final bounded plotting continuation candidate.
+    - Added the staged typed `syco` plot-contract path in `emboss-tools`,
+      wired it through the nucleotide plotting module, and added a focused
+      coding-sequence fixture.
+    - Landed a deterministic single-series `syco_score` line contract derived
+      from the same analytical computation path without widening into a generic
+      plotting framework.

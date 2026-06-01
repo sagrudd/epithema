@@ -3,6 +3,7 @@
 mod banana;
 mod density;
 mod isochore;
+mod syco;
 mod wobble;
 
 use crate::ToolDescriptor;
@@ -12,6 +13,7 @@ const FAMILY: &str = "nucleotide_plots";
 pub use banana::{BananaOutcome, BananaParams, banana_help, run_banana};
 pub use density::{DensityOutcome, DensityParams, density_help, run_density};
 pub use isochore::{IsochoreOutcome, IsochoreParams, isochore_help, run_isochore};
+pub use syco::{SycoOutcome, SycoParams, run_syco, syco_help};
 pub use wobble::{WobbleOutcome, WobbleParams, run_wobble, wobble_help};
 
 /// `banana` descriptor.
