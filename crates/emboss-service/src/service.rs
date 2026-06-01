@@ -72,6 +72,7 @@ use emboss_tools::restriction_tools::{
 use emboss_tools::retrieval_tools::{
     RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
     refseqget_help, run_refseqget, run_seqret, run_seqretsetall, seqret_help,
+    seqretsetall_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -1598,6 +1599,61 @@ impl EmbossService {
         .with_artifact(
             ArtifactReference::new("stdout", ArtifactKind::Sequence)
                 .with_label("normalized FASTA")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_seqretsetall_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, seqretsetall_help()));
+        }
+
+        if request.arguments.len() < 2 {
+            return Err(tool_usage_error("seqretsetall", seqretsetall_help()));
+        }
+
+        let (outcome, provenance, diagnostics) =
+            self.resolve_seqretsetall_inputs_with_client(&request.arguments, client)?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("partitioned normalized FASTA output");
+        let mut report_provenance = provenance;
+        report_provenance.push(output_provenance.clone());
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "normalized {} input set(s) into {} total sequence record(s)",
+                outcome.record_sets.len(),
+                outcome.total_records
+            ),
+            diagnostics,
+            report_provenance,
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequencePartitions(outcome.record_sets),
+            ResultSummary::new("Sequence retrieval set normalization completed")
+                .with_line(format!("Input sets: {}", outcome.inputs.len()))
+                .with_line(format!("Total records: {}", outcome.total_records))
+                .with_line("Partition policy: preserve one ordered record set per resolved input")
+                .with_line("Output format: FASTA partitions"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("sequence-partitions", ArtifactKind::Sequence)
+                .with_label("Partitioned normalized FASTA")
                 .with_provenance(output_provenance),
         );
 
@@ -12672,6 +12728,77 @@ mod tests {
         assert_eq!(diagnostics.len(), 2);
         assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
         assert_eq!(diagnostics[1].code(), Some("service.input.provider_qualified"));
+    }
+
+    #[test]
+    fn invokes_seqretsetall_with_local_fixtures_into_partitioned_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsetall").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            second_sequence_fixture().display().to_string(),
+        ]);
+
+        let response = service
+            .invoke_seqretsetall_with_client(
+                request,
+                emboss_tools::retrieval_tools::SEQRETSETALL_DESCRIPTOR,
+                None::<&MockHttpClient>,
+            )
+            .expect("seqretsetall surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 2);
+                assert_eq!(partitions[0].len(), 3);
+                assert_eq!(partitions[1].len(), 2);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.title,
+            "Sequence retrieval set normalization completed"
+        );
+        assert_eq!(response.result.artifacts.len(), 1);
+    }
+
+    #[test]
+    fn invokes_seqretsetall_with_mixed_inputs_into_partitioned_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsetall").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            "ena:AB000263".to_owned(),
+        ]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/browser/api/fasta/AB000263",
+            HttpResponse::new(200, ">AB000263 example\nACGT\n"),
+        );
+
+        let response = service
+            .invoke_seqretsetall_with_client(
+                request,
+                emboss_tools::retrieval_tools::SEQRETSETALL_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("seqretsetall surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 2);
+                assert_eq!(partitions[0].len(), 3);
+                assert_eq!(partitions[1].len(), 1);
+                assert_eq!(partitions[1][0].identifier().accession(), "AB000263");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.report.provenance().len(), 4);
     }
 
     #[test]

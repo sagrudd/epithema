@@ -3521,3 +3521,23 @@ implementation-program cycle. The near-term priorities are:
       - no registry or CLI exposure yet
       - no docs/autodoc/generated validation yet
       - no canonical fixtures or compared evidence yet
+
+224. Expose the governed output surface for deterministic many-set retrieval/write behavior.
+    - Complete.
+    - Added the front-end-neutral `seqretsetall` result surface in
+      `crates/emboss-service/src/service.rs` and the bounded descriptor entry
+      in `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+    - What landed in the governed surface:
+      - a bounded `invoke_seqretsetall_with_client(...)` service path
+      - `MethodResult`/`InvocationResponse` emission through
+        `ResultPayload::SequencePartitions`
+      - deterministic summary lines and output artifact metadata for
+        partitioned normalized FASTA output
+      - focused service tests for:
+        - local ordered partitioned payloads
+        - mixed local and mocked-provider partitioned payloads
+    - This task intentionally stopped short of shipment:
+      - no registry exposure yet
+      - no CLI routing yet
+      - no generated docs or validation stubs yet
+      - no canonical fixtures or compared evidence yet

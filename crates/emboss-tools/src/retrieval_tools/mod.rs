@@ -21,6 +21,12 @@ pub const SEQRET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "normalize local sequence inputs or retrieve one accession-backed sequence",
 )
 .with_family(FAMILY);
+/// `seqretsetall` descriptor.
+pub const SEQRETSETALL_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "seqretsetall",
+    "normalize multiple local or provider-backed sequence inputs into ordered output record sets",
+)
+.with_family(FAMILY);
 /// `refseqget` descriptor.
 pub const REFSEQGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "refseqget",
