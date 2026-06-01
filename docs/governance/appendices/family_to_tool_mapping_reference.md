@@ -3150,6 +3150,40 @@ closure point:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Activation of the remote-retrieval fallback as the next active planning program
+
+Once the bounded plotting continuation branch is closed explicitly, the
+prepared remote-retrieval fallback should become the active next planning
+program rather than remaining a merely documented contingency.
+
+That activation should be treated as a formal branch-resolution step, not as a
+family-order rewrite:
+
+- plotting completed its bounded continuation path and no longer remains an
+  active continuation branch
+- remote retrieval now becomes the next active planning program because it is
+  the already-prepared bounded fallback with explicit method candidates,
+  provider constraints, and evidence expectations
+- protein-property rework remains third and is not promoted by this step
+
+The active bounded retrieval planning subset remains:
+
+- `seqretsetall`
+- `seqretsplit`
+- `infoassembly`
+
+The activation does not widen retrieval scope beyond the already-governed
+fallback posture:
+
+- no broad provider-parity claims
+- no implicit live-network validation
+- no automatic promotion of broader historical retrieval members such as
+  `assemblyget`, `whichdb`, or `entret`
+
+So after the shipped `syco` closeout, the repository should treat
+remote-retrieval planning as active and bounded, with protein-property
+rework still held in reserve behind it.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

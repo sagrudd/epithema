@@ -3355,3 +3355,23 @@ implementation-program cycle. The near-term priorities are:
         - `harvest_coverage_complete: true`
         - `retained_backlog_closed: true`
         - `release_truth_current: true`
+
+216. Activate the prepared remote-retrieval fallback as the next active planning program.
+    - Complete.
+    - Recorded the explicit activation in the governance appendix and roadmap.
+    - The result is:
+      - plotting is no longer treated as an active continuation branch
+      - remote retrieval now becomes the next active planning program by
+        explicit branch resolution
+      - protein-property rework remains third and is not promoted by this
+        step
+    - The active bounded retrieval planning subset remains:
+      - `seqretsetall`
+      - `seqretsplit`
+      - `infoassembly`
+    - This activation does not widen retrieval scope beyond the already
+      governed fallback posture:
+      - no broad provider-parity claims
+      - no implicit live-network validation
+      - no automatic promotion of broader historical retrieval members such
+        as `assemblyget`, `whichdb`, or `entret`
