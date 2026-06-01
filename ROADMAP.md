@@ -3398,3 +3398,24 @@ implementation-program cycle. The near-term priorities are:
       - protein-property rework still has a credible scientific substrate,
         but it still lacks the same immediate bounded lead-method activation
         detail now attached to the active retrieval branch
+
+218. Choose exactly one bounded retrieval lead method from `seqretsetall`, `seqretsplit`, and `infoassembly`.
+    - Complete.
+    - Recorded the retrieval lead-method decision explicitly in the
+      governance appendix and roadmap.
+    - The selected lead method is:
+      - `seqretsetall`
+    - Selection basis:
+      - it is the narrowest extension of the already-shipped governed
+        retrieval slice because it stays closest to the existing normalized
+        sequence-return path in `seqret`
+      - it appears easier to keep deterministic under mocked-provider or
+        managed-asset validation than a split-output filesystem-oriented lead
+        path
+      - it avoids starting retrieval Phase 1 with the broader assembly
+        metadata shape and provider-surface questions that would come with
+        `infoassembly`
+    - The non-selected bounded retrieval candidates remain documented but
+      inactive:
+      - `seqretsplit`
+      - `infoassembly`

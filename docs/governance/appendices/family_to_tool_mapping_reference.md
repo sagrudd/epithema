@@ -3215,6 +3215,35 @@ So the shortlist should remain:
 This remains a planning checkpoint only. It does not promote protein-property
 work or weaken the explicit retrieval activation decision.
 
+#### Bounded retrieval lead-method selection after retrieval activation
+
+After activating remote retrieval as the next planning program and
+reconfirming that protein-property remains third, the repository should choose
+exactly one bounded retrieval lead method from the already-governed subset:
+
+- `seqretsetall`
+- `seqretsplit`
+- `infoassembly`
+
+The selected lead method should be:
+
+- `seqretsetall`
+
+That choice is the narrowest and most defensible bounded continuation because:
+
+- it stays closest to the already-shipped governed retrieval slice by
+  extending the normalized sequence-return path already proven by `seqret`
+- it appears easier to keep deterministic under mocked-provider or
+  managed-asset validation than a split-output filesystem-oriented lead path
+- it avoids starting retrieval Phase 1 with the broader assembly metadata
+  shape and provider-surface questions that would come with `infoassembly`
+
+The non-selected bounded retrieval candidates should remain documented but
+inactive:
+
+- `seqretsplit`
+- `infoassembly`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
