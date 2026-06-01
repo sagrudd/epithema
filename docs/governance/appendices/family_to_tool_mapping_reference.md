@@ -2619,6 +2619,22 @@ candidate selection. Retrieval fallback remains documented, prepared, and
 inactive while the active bounded `banana` continuation branch remains
 credible.
 
+#### Untriggered branch closeout after post-`isochore` candidate selection
+
+Because `banana` has now been selected as the single active bounded
+continuation candidate, the repository should close the opposite branch
+explicitly rather than leaving it implied.
+
+At this checkpoint:
+
+- the plotting-continuation branch remains active
+- the prepared retrieval fallback remains documented, prepared, and inactive
+- the non-selected viable method `syco` remains documented but inactive
+
+So no retrieval implementation tier or retrieval lead-method choice should be
+mapped here. The next bounded planning step remains `banana`-specific method
+acceptance criteria and patch start conditions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

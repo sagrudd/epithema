@@ -2869,10 +2869,16 @@ implementation-program cycle. The near-term priorities are:
       - `syco`
 
 187. Close the untriggered branch explicitly after the post-`isochore` candidate decision.
-    - If plotting remains active, close the retrieval-activation branch as
-      untriggered.
-    - If fallback activates, close the plotting-continuation branch as
-      untriggered.
+    - Closed the opposite branch explicitly after selecting `banana`.
+    - Recorded:
+      - the plotting-continuation branch remains active
+      - retrieval fallback remains documented, prepared, and inactive
+      - the non-selected viable method `syco` remains documented but inactive
+    - Conclusion:
+      - no retrieval implementation tier or retrieval lead-method choice is
+        mapped at this checkpoint
+      - the next bounded planning step remains `banana`-specific method
+        acceptance criteria and patch start conditions
 
 188. Capture explicit method-level acceptance criteria for the selected next bounded continuation candidate.
     - Make the next method concrete before code starts:
