@@ -2639,10 +2639,14 @@ implementation-program cycle. The near-term priorities are:
     - The repository does not promote retrieval by inertia while the active
       bounded plotting continuation branch remains credible.
 
-171. Capture explicit method-level acceptance criteria for the selected next plotting candidate.
-    - Record the bounded analytical surface, typed contract expectations,
-      compared-evidence obligations, and method-local non-goals before code
-      starts.
+171. Complete. Capture explicit method-level acceptance criteria for the selected next plotting candidate.
+    - Captured explicit `isochore` method-level acceptance criteria in the
+      governance appendix before code starts.
+    - Recorded:
+      - bounded nucleotide analytical surface
+      - single-series-unless-forced typed contract expectations
+      - canonical fixture and compared-evidence obligations
+      - explicit method-local non-goals and reassessment pressure
 
 172. Capture the exact start conditions for the first implementation patch of the selected next plotting candidate.
     - Require the current zero-burden release-truth state and keep the patch

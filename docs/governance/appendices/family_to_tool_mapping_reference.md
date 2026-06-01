@@ -2251,6 +2251,66 @@ after candidate selection. Retrieval fallback remains documented, prepared, and
 inactive while the active bounded `isochore` continuation branch remains
 credible.
 
+#### `isochore` method-level acceptance criteria
+
+Before code changes begin for the selected bounded continuation method,
+`isochore` should have explicit method-level acceptance criteria recorded as
+follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded nucleotide-sequence input only
+- Rust should compute the analytical `isochore` profile directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be described honestly as a bounded
+  region-oriented nucleotide-composition profile, not as a generic plotting
+  framework extension
+- the primary output should remain a stable analytical table with one row per
+  emitted window, span, or bucket and explicit columns sufficient to
+  reconstruct the plotted continuation line
+- the analytical output should stay inside the same table-first contract style
+  already used by the governed plotting seam
+
+##### Typed contract expectations
+
+- the same run should emit a deterministic typed plot contract derived from the
+  analytical table output
+- the contract should remain single-series unless the analytical needs of
+  `isochore` itself make broader structure unavoidable
+- any contract emitted should stay renderer-agnostic and avoid styling or
+  layout policy in Rust
+- Rust should own only:
+  - numerical series construction
+  - domain metadata needed for faithful rendering
+  - stable contract serialization
+- `emboss-r` should remain responsible for presentation choices and final
+  figure rendering
+
+##### Fixture and evidence expectations
+
+- the method must gain governed autodoc before it is treated as shipped
+- the method must gain generated docs and generated validation metadata in the
+  same governed path as the shipped cohort
+- canonical checked-in analytical and plot-contract fixtures must be committed
+- compared evidence must validate both:
+  - the analytical table output
+  - the canonical plot-contract JSON
+- the method should not be considered complete on executable-only evidence
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no silent widening into a generic plotting framework
+- no dotplot, matrix, circular-map, or pretty-display behavior
+- no inference that other remaining plotting-family members are already in
+  scope merely because `isochore` ships
+- no broader plot-contract taxonomy unless the analytical needs of `isochore`
+  make that pressure concrete enough to stop and reassess
+
+If `isochore` cannot satisfy these criteria while remaining a bounded
+method-associated plotting method, the repository should pause and reassess
+before starting the next code-bearing continuation patch.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
