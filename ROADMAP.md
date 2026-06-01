@@ -4203,3 +4203,114 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+259. Complete. Extend the roadmap from the actual post-`infoassembly` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods `107`
+      - compared evidence `107`
+      - executable evidence `0`
+      - harvested legacy provenance present `107`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the bounded retrieval continuation program has now closed through its
+        final selected candidate
+      - no comparably bounded retrieval continuation candidate remains active
+      - protein-property rework now becomes the next active planning program
+        by explicit branch resolution rather than by inertia
+      - restriction-analysis rework remains the reserve next program and
+        should not be promoted unless the bounded protein-property branch fails
+        honest seam review
+    - The next mapped tier is now Tasks `260` through `273`, centered on:
+      - confirming retrieval continuation is exhausted as an active bounded
+        branch
+      - activating the protein-property rework program explicitly
+      - confirming the reserve next-program ordering behind it
+      - activating the single remaining bounded protein-property candidate:
+        - `psiphi`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit coordinate/seam stop conditions
+      - mapping and shipping one full bounded `psiphi` slice
+      - rerunning release truth and reassessing the shipped `psiphi` slice
+        before any further continuation is mapped
+
+260. Confirm that the bounded retrieval continuation program has now closed through its final selected candidate.
+    - Record explicitly that the bounded retrieval continuation program closed
+      cleanly through `seqretsetall`, `seqretsplit`, and `infoassembly`.
+    - Record explicitly that no comparably bounded retrieval continuation
+      candidate remains active after the shipped `infoassembly` reassessment.
+
+261. Activate protein-property rework as the next active planning program by explicit branch resolution.
+    - Record explicitly that plotting and bounded retrieval continuation are no
+      longer the active next-planning branches.
+    - Promote the protein-property rework program from reserve status to the
+      active next planning program.
+
+262. Reconfirm which reserve program now sits behind active protein-property rework.
+    - Record explicitly whether restriction-analysis rework remains the next
+      reserve program after protein-property activation.
+    - Do not promote that reserve program by inertia.
+
+263. Activate the single bounded protein-property lead candidate explicitly.
+    - Record explicitly that `psiphi` is now the single bounded lead candidate
+      for the active protein-property rework program.
+    - Record explicitly why the family narrows to that candidate after `iep`
+      and `pepdigest` are already shipped.
+
+264. Capture explicit `psiphi` method-level acceptance criteria.
+    - Define the bounded scientific and output scope for `psiphi`.
+    - Keep the method table-first, typed, and honest about any input-model
+      limitations.
+
+265. Capture the exact start conditions for the first `psiphi` implementation patch.
+    - Record the governed preconditions that must still hold before the first
+      code-bearing `psiphi` patch begins.
+    - Keep the patch scoped to `psiphi` and only the smallest necessary local
+      support.
+
+266. Map the full bounded `psiphi` implementation tier.
+    - Break the `psiphi` program into the same bounded governed sequence used
+      for prior families:
+      - core implementation
+      - result-surface exposure
+      - governed shipped-surface exposure
+      - compared-evidence closure
+      - release-truth rerun
+      - post-ship reassessment
+
+267. Capture explicit coordinate/seam stop conditions for `psiphi`.
+    - Record the conditions that should pause the branch before code if
+      `psiphi` forces broader structural-biology or coordinate-orchestration
+      claims than the bounded slice can honestly support.
+
+268. Implement the bounded `psiphi` analytical core.
+    - Add the method-associated `psiphi` computation path in the narrowest
+      governed form that satisfies the accepted criteria.
+
+269. Expose the bounded `psiphi` result surface.
+    - Add the deterministic governed result surface for the bounded `psiphi`
+      output without widening into broader coordinate-workflow orchestration.
+
+270. Expose `psiphi` through the governed shipped surface.
+    - Wire `psiphi` through the governed registry, service, CLI, autodoc, and
+      generated shipped/docs surface in the honest interim executable-only
+      state if compared evidence is not yet closed in the same task.
+
+271. Close the `psiphi` compared-evidence and harvested-provenance slice.
+    - Add canonical bounded fixtures, harvested provenance, and compared
+      evidence for the shipped `psiphi` slice.
+    - Restore the generated/report surface to the fully green state.
+
+272. Re-run the full release-truth surface after shipping `psiphi`.
+    - Re-run the governed release-truth surface after the bounded `psiphi`
+      evidence closure and record the observed result.
+
+273. Reassess the shipped `psiphi` slice before any further continuation is mapped.
+    - Record explicitly whether the shipped `psiphi` slice stayed bounded,
+      method-associated, and scientifically honest.
+    - Use that reassessment rather than inertia to decide what family, if any,
+      should be mapped after the protein-property checkpoint.
