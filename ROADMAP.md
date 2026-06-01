@@ -4239,10 +4239,25 @@ implementation-program cycle. The near-term priorities are:
         before any further continuation is mapped
 
 260. Confirm that the bounded retrieval continuation program has now closed through its final selected candidate.
-    - Record explicitly that the bounded retrieval continuation program closed
-      cleanly through `seqretsetall`, `seqretsplit`, and `infoassembly`.
-    - Record explicitly that no comparably bounded retrieval continuation
-      candidate remains active after the shipped `infoassembly` reassessment.
+    - Recorded explicitly that the bounded retrieval continuation program
+      closed cleanly through:
+      - `seqretsetall`
+      - `seqretsplit`
+      - `infoassembly`
+    - Recorded explicitly that no comparably bounded retrieval continuation
+      candidate remains active after the shipped `infoassembly`
+      reassessment.
+    - Recorded explicitly that retrieval continuation should no longer be
+      treated as the default next planning branch.
+    - The governed release-truth surface remained fully green:
+      - shipped methods `107`
+      - compared evidence `107`
+      - executable evidence `0`
+      - harvested legacy provenance present `107`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
 
 261. Activate protein-property rework as the next active planning program by explicit branch resolution.
     - Record explicitly that plotting and bounded retrieval continuation are no

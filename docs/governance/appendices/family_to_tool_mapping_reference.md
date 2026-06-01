@@ -3789,6 +3789,43 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit closeout of the bounded retrieval continuation branch
+
+After the final bounded retrieval continuation candidate closed cleanly
+through `infoassembly`, the repository should make the branch-resolution
+consequence explicit rather than leaving retrieval continuation implicitly
+active.
+
+That closeout is justified by the bounded continuation record now being
+complete:
+
+- shipped bounded retrieval continuation slices:
+  - `seqretsetall`
+  - `seqretsplit`
+  - `infoassembly`
+- each bounded retrieval continuation slice passed:
+  - compared-evidence closure
+  - harvested legacy provenance closure
+  - release-truth rerun
+  - post-ship reassessment
+- no comparably bounded retrieval continuation candidate remains active after
+  the shipped `infoassembly` reassessment
+
+So the repository should record the bounded retrieval continuation program as
+closed and should no longer treat retrieval continuation as the default next
+planning branch.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `107`
+- compared evidence: `107`
+- executable evidence: `0`
+- harvested legacy provenance present: `107`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
