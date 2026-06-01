@@ -2635,6 +2635,50 @@ So no retrieval implementation tier or retrieval lead-method choice should be
 mapped here. The next bounded planning step remains `banana`-specific method
 acceptance criteria and patch start conditions.
 
+#### `banana` method-level acceptance criteria
+
+Before code changes begin for the selected bounded continuation method,
+`banana` should have explicit method-level acceptance criteria recorded as
+follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded nucleotide-sequence input only
+- Rust should compute the analytical `banana` profile directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be described honestly as a bounded
+  bendability-or-curvature-oriented continuation profile, not as a generic
+  plotting framework extension
+- the analytical surface should remain table-first and stable, with enough
+  explicit columns to reconstruct the plotted continuation line from the same
+  computation path
+
+##### Typed contract expectations
+
+- the emitted plot contract should remain typed, deterministic, and derived
+  from the same governed analytical computation path
+- the first shipped slice should remain single-series unless the analytical
+  model proves that a broader contract is method-locally unavoidable
+- Rust should not own figure rendering, layout policy, styling, legend policy,
+  or presentation defaults
+
+##### Fixture and evidence expectations
+
+- the method should ship with governed autodoc and generated validation
+  metadata
+- the method should have canonical checked-in analytical fixtures
+- the method should have a canonical checked-in plot-contract fixture
+- the method should close with compared evidence for both table and contract
+  outputs
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no silent widening into a generic plotting framework
+- no implicit promotion into a broader plot-contract taxonomy unless the
+  analytical needs of `banana` itself make that pressure unavoidable
+- no family-wide continuation claims merely because `banana` ships
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

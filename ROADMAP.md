@@ -2881,12 +2881,17 @@ implementation-program cycle. The near-term priorities are:
         acceptance criteria and patch start conditions
 
 188. Capture explicit method-level acceptance criteria for the selected next bounded continuation candidate.
-    - Make the next method concrete before code starts:
-      - bounded analytical surface
-      - table-first output expectations
-      - typed contract expectations
-      - fixture and compared-evidence obligations
-      - explicit method-local non-goals and reassessment pressure
+    - Captured explicit `banana` method-level acceptance criteria in the
+      governance appendix.
+    - Recorded:
+      - bounded nucleotide analytical surface
+      - table-first output expectations with enough explicit columns to
+        reconstruct the plotted continuation line
+      - typed contract expectations, staying single-series unless the method
+        itself proves otherwise
+      - canonical fixture and compared-evidence obligations
+      - explicit method-local non-goals preserving renderer ownership in
+        `emboss-r` and blocking generic plotting-framework widening
 
 189. Capture the exact start conditions for the first implementation patch of the selected next bounded continuation candidate.
     - Record:
