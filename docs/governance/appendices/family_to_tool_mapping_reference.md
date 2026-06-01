@@ -2740,6 +2740,24 @@ already enforced for the earlier plotting continuation slices:
 So the next code-bearing work is not an abstract “continue plotting” step. It
 should begin only as this explicit bounded `banana` tier.
 
+#### Explicit seam-pressure stop conditions for `banana`
+
+Before code changes begin for `banana`, the repository should treat the
+following as explicit pause-and-reassess conditions.
+
+1. `banana` cannot remain table-first with a typed contract derived from the
+   same governed computation path
+2. `banana` requires Rust-side rendering, layout, styling, or other
+   presentation policy to make the shipped slice coherent
+3. `banana` cannot remain method-associated and instead demands a generalized
+   plotting framework before one bounded shipped slice closes
+4. `banana` forces curvature-track, region-call, threshold-call, or broader
+   plot-contract taxonomy pressure that is not clearly local to the method
+
+If any of those conditions becomes true before code starts, the repository
+should stop the `banana` continuation path and reopen planning rather than
+continuing under an implicitly widened plotting seam.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

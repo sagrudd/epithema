@@ -2915,8 +2915,14 @@ implementation-program cycle. The near-term priorities are:
       6. post-ship reassessment
 
 191. Capture the explicit seam-pressure stop conditions for the selected next bounded continuation candidate.
-    - Record the pre-code pause-and-reassess triggers needed to prevent
-      informal widening beyond the bounded plotting seam.
+    - Captured the explicit seam-pressure stop conditions for `banana` in the
+      governance appendix.
+    - Recorded the pre-code pause-and-reassess triggers:
+      1. failure to remain table-first and same-path contract-derived
+      2. Rust-side rendering or presentation-policy pressure
+      3. generalized plotting-framework pressure
+      4. curvature-track, region-call, threshold-call, or broader
+         plot-contract taxonomy pressure not clearly local to the method
 
 192. Implement the bounded analytical core for the selected next bounded continuation candidate.
     - Keep the implementation table-first, method-associated, and renderer-
