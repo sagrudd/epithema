@@ -3047,3 +3047,45 @@ implementation-program cycle. The near-term priorities are:
         evidence closure
       - rerunning release truth and reassessing the seam again before any
         further continuation is mapped
+
+199. Rebase the plotting-family remainder onto the actual post-`banana` state.
+    - Rebased the plotting-family remainder inventory onto the actual
+      post-`banana` shipped state rather than the older post-`isochore`
+      shortlist.
+    - The plotting-family remainder now excludes the governed seam precedents
+      plus every bounded shipped plotting continuation:
+      - seam precedents:
+        - `charge`
+        - `pepwindow`
+      - bounded shipped plotting-family continuations:
+        - `hmoment`
+        - `octanol`
+        - `pepinfo`
+        - `density`
+        - `wobble`
+        - `isochore`
+        - `banana`
+    - The remaining continuation pool is therefore the remaining `19`
+      plotting-family methods:
+      - `abiview`
+      - `chaos`
+      - `cirdna`
+      - `cpgplot`
+      - `dotmatcher`
+      - `dotpath`
+      - `dottup`
+      - `findkm`
+      - `lindna`
+      - `pepnet`
+      - `pepwheel`
+      - `pepwindowall`
+      - `plotcon`
+      - `polydot`
+      - `prettyplot`
+      - `showfeat`
+      - `showpep`
+      - `showseq`
+      - `syco`
+    - This task is inventory only. It does not yet reclassify seam pressure or
+      decide whether the final narrowed continuation candidate still passes an
+      honest seam review.

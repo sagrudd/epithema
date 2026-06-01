@@ -2791,6 +2791,53 @@ So `banana` should be treated as having passed its shipped-slice
 reassessment, and any further plotting continuation should be planned from
 that observed bounded state rather than from pre-implementation assumptions.
 
+#### Post-`banana` plotting-family remainder inventory
+
+After the bounded `banana` slice shipped and passed reassessment, the plotting
+continuation pool should be rebased again onto the actual shipped state rather
+than left on the older post-`isochore` shortlist.
+
+The plotting-family remainder now excludes:
+
+- the two preexisting governed seam precedents:
+  - `charge`
+  - `pepwindow`
+- the bounded shipped plotting-family continuations:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+  - `density`
+  - `wobble`
+  - `isochore`
+  - `banana`
+
+So the explicit post-`banana` plotting-family continuation pool is now the
+remaining `19` plotting-family methods:
+
+- `abiview`
+- `chaos`
+- `cirdna`
+- `cpgplot`
+- `dotmatcher`
+- `dotpath`
+- `dottup`
+- `findkm`
+- `lindna`
+- `pepnet`
+- `pepwheel`
+- `pepwindowall`
+- `plotcon`
+- `polydot`
+- `prettyplot`
+- `showfeat`
+- `showpep`
+- `showseq`
+- `syco`
+
+This checkpoint is inventory only. It does not yet reclassify the remainder by
+seam pressure, and it does not yet decide whether the final narrowed plotting
+continuation candidate still passes an honest seam review.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
