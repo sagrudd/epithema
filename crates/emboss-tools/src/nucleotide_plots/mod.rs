@@ -1,5 +1,6 @@
 //! Nucleotide plot-producing tools under staged rollout.
 
+mod banana;
 mod density;
 mod isochore;
 mod wobble;
@@ -8,9 +9,17 @@ use crate::ToolDescriptor;
 
 const FAMILY: &str = "nucleotide_plots";
 
+pub use banana::{BananaOutcome, BananaParams, banana_help, run_banana};
 pub use density::{DensityOutcome, DensityParams, density_help, run_density};
 pub use isochore::{IsochoreOutcome, IsochoreParams, isochore_help, run_isochore};
 pub use wobble::{WobbleOutcome, WobbleParams, run_wobble, wobble_help};
+
+/// `banana` descriptor.
+pub const BANANA_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "banana",
+    "report a bounded B-DNA bendability profile and emit a line-plot contract",
+)
+.with_family(FAMILY);
 
 /// `density` descriptor.
 pub const DENSITY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

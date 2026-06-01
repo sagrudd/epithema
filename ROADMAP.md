@@ -2937,8 +2937,16 @@ implementation-program cycle. The near-term priorities are:
       agnostic.
 
 193. Add the typed plot-contract emission path for the selected next bounded continuation candidate.
-    - Keep the emitted contract method-associated, deterministic, and bounded
-      to the smallest surface the analytical model honestly requires.
+    - Added the staged typed `banana` plot-contract path in
+      `crates/emboss-tools/src/nucleotide_plots`.
+    - Kept the emitted contract method-associated and deterministic:
+      - tool: `banana`
+      - method: `nucleotide_banana_profile`
+      - source artifact: `table:banana-profile`
+    - Kept the staged surface bounded to the smallest honest plotting shape:
+      - the analytical table retains both local bend and curvature columns
+      - the emitted plot contract is a single curvature continuation line
+        over positions where curvature is defined
 
 194. Expose the selected next bounded continuation candidate through the governed shipped surface.
     - Add registry, service, CLI, governed autodoc, and generated
