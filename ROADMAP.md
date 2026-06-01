@@ -3790,3 +3790,25 @@ implementation-program cycle. The near-term priorities are:
       - no registry or CLI exposure yet
       - no docs/autodoc/generated validation yet
       - no canonical fixtures or compared evidence yet
+
+239. Complete. Expose the governed output surface for deterministic
+    split-output retrieval behavior.
+    - Added the bounded `seqretsplit` descriptor entry in
+      `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+    - Added a bounded `invoke_seqretsplit_with_client(...)` service path in
+      `crates/emboss-service/src/service.rs`.
+    - The governed result surface now emits:
+      - `ResultPayload::SequencePartitions` with one normalized record per
+        deterministic split-output partition
+      - explicit summary lines describing input source, split count, partition
+        policy, and deterministic file naming
+      - artifact metadata for the partitioned output plus each deterministic
+        output file name
+    - Focused validation covers:
+      - local split-output partition payloads
+      - provider-backed split-output partition payloads through a mocked client
+    - This task intentionally stops short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no generated docs or validation stubs yet
+      - no canonical fixtures or compared evidence yet

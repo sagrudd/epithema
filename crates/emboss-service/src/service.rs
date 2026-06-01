@@ -72,7 +72,7 @@ use emboss_tools::restriction_tools::{
 use emboss_tools::retrieval_tools::{
     RefseqgetParams, SeqretParams, SeqretSource, SeqretsplitParams, SeqretsetallInputSet,
     SeqretsetallParams, refseqget_help, run_refseqget, run_seqret, run_seqretsplit,
-    run_seqretsetall, seqret_help, seqretsetall_help,
+    run_seqretsetall, seqret_help, seqretsplit_help, seqretsetall_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -1657,6 +1657,86 @@ impl EmbossService {
                 .with_label("Partitioned normalized FASTA")
                 .with_provenance(output_provenance),
         );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_seqretsplit_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, seqretsplit_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("seqretsplit", seqretsplit_help()))?;
+
+        let (outcome, provenance, diagnostics) =
+            self.resolve_seqretsplit_input_with_client(&input, client)?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("split-output normalized FASTA partitions");
+        let mut report_provenance = provenance;
+        report_provenance.push(output_provenance.clone());
+        let partitions = outcome
+            .outputs
+            .iter()
+            .map(|output| vec![output.record.clone()])
+            .collect::<Vec<_>>();
+        let file_names = outcome
+            .outputs
+            .iter()
+            .map(|output| output.file_name.clone())
+            .collect::<Vec<_>>();
+        let input_label = match &outcome.source {
+            SeqretSource::LocalPath(path) => path.display().to_string(),
+            SeqretSource::Retrieved {
+                provider,
+                accession,
+            } => format!("{provider}:{accession}"),
+        };
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "normalized one input into {} split-output sequence file(s)",
+                outcome.total_records
+            ),
+            diagnostics,
+            report_provenance,
+        );
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::SequencePartitions(partitions),
+            ResultSummary::new("Sequence retrieval split normalization completed")
+                .with_line(format!("Input source: {input_label}"))
+                .with_line(format!("Split files: {}", outcome.total_records))
+                .with_line("Partition policy: emit one normalized FASTA file per resolved record")
+                .with_line(format!("File naming: {}", file_names.join(", "))),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("sequence-partitions", ArtifactKind::Sequence)
+                .with_label("Split-output normalized FASTA partitions")
+                .with_provenance(output_provenance),
+        );
+
+        for file_name in file_names {
+            result = result.with_artifact(
+                ArtifactReference::new(file_name.clone(), ArtifactKind::Sequence)
+                    .with_label(file_name),
+            );
+        }
 
         Ok(InvocationResponse::completed(
             request.context,
@@ -12803,6 +12883,78 @@ mod tests {
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 1);
         assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+    }
+
+    #[test]
+    fn invokes_seqretsplit_with_local_fixture_into_partitioned_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsplit").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service
+            .invoke_seqretsplit_with_client(
+                request,
+                emboss_tools::retrieval_tools::SEQRETSPLIT_DESCRIPTOR,
+                None::<&MockHttpClient>,
+            )
+            .expect("seqretsplit surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 3);
+                assert_eq!(partitions[0].len(), 1);
+                assert_eq!(partitions[0][0].identifier().accession(), "alpha");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.title,
+            "Sequence retrieval split normalization completed"
+        );
+        assert_eq!(response.result.artifacts.len(), 4);
+        assert_eq!(
+            response.result.artifacts[1].label.as_deref(),
+            Some("three_records__alpha.fasta")
+        );
+    }
+
+    #[test]
+    fn invokes_seqretsplit_with_provider_input_into_partitioned_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsplit").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:AB000263".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/browser/api/fasta/AB000263",
+            HttpResponse::new(200, ">AB000263 example\nACGT\n"),
+        );
+
+        let response = service
+            .invoke_seqretsplit_with_client(
+                request,
+                emboss_tools::retrieval_tools::SEQRETSPLIT_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("seqretsplit surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 1);
+                assert_eq!(partitions[0][0].identifier().accession(), "AB000263");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.artifacts.len(), 2);
+        assert_eq!(
+            response.result.artifacts[1].label.as_deref(),
+            Some("ena_AB000263.fasta")
+        );
+        assert_eq!(response.report.provenance().len(), 3);
     }
 
     #[test]
