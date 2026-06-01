@@ -2668,9 +2668,11 @@ implementation-program cycle. The near-term priorities are:
       5. post-ship release-truth rerun
       6. post-ship reassessment
 
-174. Capture the explicit seam-pressure stop conditions for the selected next plotting candidate.
-    - Make the pause-and-reassess triggers explicit before implementation starts
-      so the bounded seam is not stretched informally.
+174. Complete. Capture the explicit seam-pressure stop conditions for the selected next plotting candidate.
+    - Captured the explicit `isochore` seam-pressure stop conditions in the
+      governance appendix.
+    - Recorded the pre-code pause-and-reassess triggers needed to prevent
+      informal widening beyond the bounded plotting seam.
 
 175. Implement the bounded analytical core for the selected next plotting candidate.
     - Keep the implementation table-first, method-associated, and renderer-

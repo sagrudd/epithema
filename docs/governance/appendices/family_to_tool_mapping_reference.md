@@ -2388,6 +2388,28 @@ constraints already enforced for the earlier plotting continuation slices:
 So the next code-bearing work is not an abstract "continue plotting" step. It
 should begin only as this explicit bounded `isochore` tier.
 
+#### Pre-code seam-pressure stop conditions for `isochore`
+
+Before the first `isochore` code patch starts, the repository should make the
+pause-and-reconsider conditions explicit rather than treating them as implied.
+
+The repository should pause and reopen planning if any of the following
+becomes true during the pre-code review:
+
+1. `isochore` cannot remain table-first with a typed contract derived from the
+   same computation path
+2. `isochore` requires Rust-side rendering behavior, layout policy, styling,
+   or other presentation logic
+3. `isochore` cannot remain method-associated and instead demands a
+   generalized plotting framework before one bounded shipped slice closes
+4. `isochore` forces region-track, threshold-call, segmentation-call, or
+   broader plot-contract taxonomy pressure that is not clearly local to the
+   method
+
+If one of these conditions becomes true, the repository should not force-fit
+`isochore` through the bounded seam. It should stop and reassess whether the
+active plotting branch still remains the right next implementation path.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
