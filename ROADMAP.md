@@ -3570,3 +3570,14 @@ implementation-program cycle. The near-term priorities are:
     executable evidence `0`, harvested legacy provenance present `105`,
     full-compared cohort `true`, harvest coverage complete `true`, and
     release-truth current `true`.
+
+227. Complete. Re-run the full release-truth surface after shipping
+    `seqretsetall`.
+    The broad post-ship gate stayed clean after the `seqretsetall` evidence
+    closure. `make release-generated-check` passed, `python3
+    scripts/release_metadata.py truth-check` passed, the docs build passed,
+    and `git diff --check` passed. The governed release-truth surface remained
+    fully green: shipped methods `105`, compared evidence `105`, executable
+    evidence `0`, harvested legacy provenance present `105`,
+    full-compared cohort `true`, harvest coverage complete `true`,
+    retained backlog closed `true`, and release-truth current `true`.
