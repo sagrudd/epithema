@@ -3148,3 +3148,18 @@ implementation-program cycle. The near-term priorities are:
         bounded active continuation candidate
     - So no retrieval implementation tier or retrieval lead-method choice is
       mapped at this checkpoint.
+
+203. Activate the final bounded plotting continuation candidate.
+    - Activated `syco` as the single final bounded plotting continuation
+      candidate.
+    - Recorded the basis explicitly:
+      - `syco` is now the only remaining seam-compatible continuation
+        candidate in the narrowed post-`banana` pool
+      - the prepared retrieval fallback remains documented, ready, and
+        inactive because the no-candidate branch was not taken
+      - no other plotting-family method remains comparably bounded without
+        heavier contract, presentation, or comparative-matrix pressure
+    - The next bounded planning step is therefore `syco`-specific:
+      - method-level acceptance criteria
+      - exact patch start conditions
+      - explicit seam stop conditions

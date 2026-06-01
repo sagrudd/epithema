@@ -2922,6 +2922,31 @@ So no retrieval implementation tier or retrieval lead-method choice should be
 mapped here. The next bounded planning step remains the explicit activation of
 `syco` as the final active continuation candidate.
 
+#### Activation of the final bounded plotting continuation candidate
+
+Because the final-candidate viability gate remained affirmative and the
+fallback branch stayed untriggered, the repository should now explicitly
+activate `syco` as the single final bounded plotting continuation candidate.
+
+That activation is justified because:
+
+- `syco` is now the only remaining seam-compatible continuation candidate in
+  the narrowed post-`banana` pool
+- the prepared retrieval fallback remains documented, ready, and inactive
+  because the no-candidate branch was not taken
+- no other plotting-family method remains comparably bounded without heavier
+  contract, presentation, or comparative-matrix pressure
+
+So the next bounded planning step should now become `syco`-specific rather
+than generic:
+
+- capture method-level acceptance criteria
+- capture exact patch start conditions
+- capture explicit seam-pressure stop conditions
+
+Only after those are made explicit should the repository map and ship the
+final bounded `syco` slice.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
