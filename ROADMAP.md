@@ -3941,3 +3941,17 @@ implementation-program cycle. The near-term priorities are:
     - It does not yet decide whether the final remaining method still passes
       honest seam review strongly enough to remain an active continuation
       candidate.
+
+246. Complete. Decide whether another bounded retrieval continuation
+    candidate still exists after the second shipped slice.
+    - Recorded the post-`seqretsplit` retrieval viability decision explicitly
+      in the governance appendix and roadmap.
+    - The decision is affirmative:
+      - another bounded retrieval continuation candidate still exists after
+        `seqretsplit`
+      - the no-candidate branch is not taken here
+      - retrieval therefore remains the active planning program
+    - The current viable bounded continuation pool remains:
+      - `infoassembly`
+    - Protein-property rework remains the reserve third program and should
+      not be promoted at this checkpoint.
