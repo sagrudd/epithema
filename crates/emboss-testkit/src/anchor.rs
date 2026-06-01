@@ -843,6 +843,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "banana -sequence banana_nucleotide.fasta -graph data",
     },
     AcceptanceAnchorSpec {
+        tool_name: "syco",
+        autodoc_contract: "docs/autodoc/tools/syco.json",
+        example_id: "syco_profile_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/syco_syco_profile_example.tsv",
+        legacy_source: "EMBOSS syco application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/syco.acd",
+        legacy_invocation: "syco -seqall syco_coding_nucleotide.fasta -cfile codon_reference.fasta -graph data",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -1928,6 +1937,20 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "syco" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/syco_coding_nucleotide.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/codon_reference.fasta")
+                .display()
+                .to_string(),
+            "--codon-window".to_owned(),
+            "2".to_owned(),
+            "--codon-step".to_owned(),
+            "1".to_owned(),
+        ],
         "descseq" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
@@ -2121,6 +2144,7 @@ fn expected_plot_output(tool_name: &str) -> Option<&'static str> {
         "wobble" => Some("crates/emboss-tools/tests/fixtures/wobble_plot_contract.json"),
         "isochore" => Some("crates/emboss-tools/tests/fixtures/isochore_plot_contract.json"),
         "banana" => Some("crates/emboss-tools/tests/fixtures/banana_plot_contract.json"),
+        "syco" => Some("crates/emboss-tools/tests/fixtures/syco_plot_contract.json"),
         "wordcount" => Some("crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"),
         _ => None,
     }

@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs syco`. At this task boundary the governed surface ships with executable validation and a generated validation stub, but canonical checked-in compared evidence for the analytical table and line-plot contract has not landed yet."
+      "content": "This method is implemented and exposed through `emboss-rs syco`. The governed surface now includes canonical checked-in compared evidence for both the analytical table and the typed line-plot contract, alongside the generated validation stub and harvested legacy provenance."
     },
     {
       "id": "caveats",

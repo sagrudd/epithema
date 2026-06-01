@@ -64,13 +64,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `103` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `104` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `104` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
-- weakest evidence family: `Modernize — Rework — Plotting and visualization tools`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -88,9 +88,9 @@ change the release gate state above.
 - `density` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
-- `syco` now ships through the governed surface with executable validation and
-  a governed typed plot-contract handoff, but its canonical checked-in
-  compared evidence is still pending at this task boundary.
+- `syco` now ships through the governed surface with canonical checked-in
+  analytical and plot-contract fixtures plus compared acceptance evidence for
+  both surfaces.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.

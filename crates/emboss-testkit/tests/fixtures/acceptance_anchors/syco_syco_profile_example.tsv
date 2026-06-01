@@ -1,0 +1,4 @@
+sequence_id	window_start	window_end	window_length	codon_window_length	sense_codon_count	syco_score
+syco_example	1	6	6	2	2	0.200000
+syco_example	4	9	6	2	2	0.447214
+syco_example	7	12	6	2	2	0.447214

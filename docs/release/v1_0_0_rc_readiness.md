@@ -114,10 +114,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `104`
-- Compared-evidence methods: `103`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `104`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `104`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -301,11 +301,9 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `103` methods with compared evidence and `1`
-  shipped method at executable evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is intentionally red at this task boundary while `syco` remains
-  executable-only pending canonical checked-in compared evidence.
+- The cohort report now records `104` methods with compared evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green again after the bounded `syco` evidence closure.
 
 ### Plotting limitations
 
@@ -332,8 +330,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `104`
-- Compared-evidence methods: `103`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `104`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `104`
 - Retained backlog still unshipped: `0`
 

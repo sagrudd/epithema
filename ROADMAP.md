@@ -3236,3 +3236,15 @@ implementation-program cycle. The near-term priorities are:
       - harvested legacy provenance present: `104`
       - `full_compared_cohort: false`
       - `release_truth_current: true`
+
+211. Add canonical analytical and plot-contract fixtures plus compared evidence for the final bounded plotting continuation candidate.
+    - Added the canonical analytical fixture and canonical plot-contract
+      fixture for `syco`.
+    - Wired `syco` into the acceptance-anchor cohort and regenerated the
+      governed report surface back to the full-compared release-truth state:
+      - shipped methods: `104`
+      - compared evidence: `104`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `104`
+      - `full_compared_cohort: true`
+      - `release_truth_current: true`

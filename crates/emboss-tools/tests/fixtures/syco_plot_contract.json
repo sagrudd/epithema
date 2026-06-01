@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "syco_syco_example",
+    "title": "Syco preference profile for syco_example",
+    "subtitle": "Codon window 2 step 1 (single-series bounded synonymous codon preference line)",
+    "provenance": {
+      "tool": "syco",
+      "method": "nucleotide_syco_profile",
+      "source_artifact_ids": [
+        "table:syco-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Syco score",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "syco_score",
+      "label": "Syco score",
+      "legend_label": "Syco score",
+      "semantic_group": "syco_score",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          4.0,
+          7.0
+        ]
+      },
+      "y": [
+        0.2,
+        0.447213595499958,
+        0.447213595499958
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

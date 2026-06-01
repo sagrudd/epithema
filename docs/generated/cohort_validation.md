@@ -12,9 +12,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `104`
-- Methods with executable validation: `1`
-- Methods with compared evidence: `103`
-- Methods with blocking cohort gaps: `1`
+- Methods with executable validation: `0`
+- Methods with compared evidence: `104`
+- Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
 
@@ -95,7 +95,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `density` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `wobble` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `isochore` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
-| `syco` | `nucleotide_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `syco` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `charge` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `hmoment` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `octanol` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
@@ -140,7 +140,6 @@ Visible gaps may include non-blocking notes that do not lower the tool's current
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
 - `isochore`: `missing_explicit_legacy_reference`
-- `syco`: `missing_compared_evidence`
 - `charge`: `missing_explicit_legacy_reference`
 - `hmoment`: `missing_explicit_legacy_reference`
 - `octanol`: `missing_explicit_legacy_reference`
