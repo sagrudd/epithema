@@ -3982,6 +3982,25 @@ The bounded tier preserves the same architectural rules:
 - no structural-analysis family widening unless `psiphi` itself forces a
   real reassessment
 
+#### Explicit coordinate/seam stop conditions for `psiphi`
+
+After mapping the full bounded `psiphi` implementation tier, the repository
+should make the pre-code pause-and-reassess triggers explicit before
+implementation begins.
+
+The repository should now pause and reassess before implementation if:
+
+1. `psiphi` cannot remain table-first with a deterministic typed result
+   surface derived from the same coordinate-processing path
+2. `psiphi` requires Ramachandran plotting, renderer-coupled figure logic, or
+   other presentation-policy behavior
+3. `psiphi` cannot remain method-associated and instead demands a generalized
+   coordinate-processing or structural-analysis framework before one shipped
+   slice closes
+4. `psiphi` forces broad chain-model normalization, missing-atom imputation,
+   alternate-conformer policy, or comparative structure-analysis claims that
+   are not clearly local to the method
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

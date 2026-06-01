@@ -4359,10 +4359,20 @@ implementation-program cycle. The near-term priorities are:
       - no structural-analysis family widening unless `psiphi` itself forces
         a real reassessment
 
-267. Capture explicit coordinate/seam stop conditions for `psiphi`.
-    - Record the conditions that should pause the branch before code if
-      `psiphi` forces broader structural-biology or coordinate-orchestration
-      claims than the bounded slice can honestly support.
+267. Complete. Capture explicit coordinate/seam stop conditions for `psiphi`.
+    - Captured the explicit coordinate/seam stop conditions for `psiphi` in
+      the roadmap and governance appendix.
+    - The repository should now pause and reassess before implementation if:
+      1. `psiphi` cannot remain table-first with a deterministic typed result
+         surface derived from the same coordinate-processing path
+      2. `psiphi` requires Ramachandran plotting, renderer-coupled figure
+         logic, or other presentation-policy behavior
+      3. `psiphi` cannot remain method-associated and instead demands a
+         generalized coordinate-processing or structural-analysis framework
+         before one shipped slice closes
+      4. `psiphi` forces broad chain-model normalization, missing-atom
+         imputation, alternate-conformer policy, or comparative
+         structure-analysis claims that are not clearly local to the method
 
 268. Implement the bounded `psiphi` analytical core.
     - Add the method-associated `psiphi` computation path in the narrowest
