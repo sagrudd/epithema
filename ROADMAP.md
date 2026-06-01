@@ -4293,9 +4293,23 @@ implementation-program cycle. The near-term priorities are:
       and `pepdigest` are already shipped.
 
 264. Capture explicit `psiphi` method-level acceptance criteria.
-    - Define the bounded scientific and output scope for `psiphi`.
-    - Keep the method table-first, typed, and honest about any input-model
-      limitations.
+    - Captured explicit governed `psiphi` acceptance criteria in the roadmap
+      and governance appendix.
+    - The criteria now make `psiphi` concrete before code starts:
+      - bounded protein-coordinate analytical surface only
+      - stable table-first output with enough explicit columns to reconstruct
+        per-residue phi/psi reporting from the same computation path
+      - deterministic typed result surface derived directly from the same
+        coordinate-processing path
+      - canonical analytical fixtures and compared evidence on normalized
+        torsion-angle rows
+      - explicit honesty about residue eligibility, chain continuity, and
+        coordinate-model limitations
+    - The same non-goals remain explicit:
+      - no Ramachandran plotting or renderer-coupled figure logic
+      - no broad structural-analysis family activation
+      - no implicit widening into general structure parsing or modeling
+      - no family-wide continuation claim merely because `psiphi` ships
 
 265. Capture the exact start conditions for the first `psiphi` implementation patch.
     - Record the governed preconditions that must still hold before the first

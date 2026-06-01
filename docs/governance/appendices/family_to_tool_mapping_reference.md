@@ -3876,6 +3876,32 @@ This remains an ordering checkpoint only:
 - it does not widen the reserve restriction-analysis family beyond the already
   governed retained subset
 
+#### Method-level acceptance criteria for `psiphi`
+
+After activating `psiphi` as the bounded lead candidate inside the active
+protein-property rework program, the repository should make the method-level
+acceptance criteria explicit before code starts.
+
+The bounded governed criteria for `psiphi` are:
+
+- bounded protein-coordinate analytical surface only
+- stable table-first output with enough explicit columns to reconstruct
+  per-residue phi/psi reporting from the same computation path
+- deterministic typed result-surface output derived directly from the same
+  coordinate-processing path
+- canonical analytical fixtures and compared evidence on normalized
+  torsion-angle rows
+- explicit honesty about residue eligibility, chain continuity, missing-atom
+  handling, and coordinate-model limitations
+
+The non-goals remain explicit:
+
+- no Ramachandran plotting or renderer-coupled figure logic
+- no broad structural-analysis family activation
+- no implicit widening into general structure parsing, modeling, or
+  comparative coordinate analytics
+- no family-wide continuation claim merely because `psiphi` ships
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
