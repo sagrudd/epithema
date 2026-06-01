@@ -3853,6 +3853,29 @@ This activation should remain bounded:
 - it preserves the existing expectation that any shipped protein-property
   continuation must remain table-first, typed, and scientifically narrow
 
+#### Reconfirmation of the reserve next program behind active protein-property rework
+
+After activating protein-property rework as the next active planning program,
+the repository should make the reserve next-program ordering explicit rather
+than leaving it implicit.
+
+That reserve ordering remains:
+
+- active planning program:
+  - protein-property rework
+- reserve next program:
+  - restriction-analysis rework
+- reserve bounded restriction-analysis subset:
+  - `recoder`
+  - `silent`
+
+This remains an ordering checkpoint only:
+
+- it does not activate a restriction-analysis implementation tier
+- it does not displace the active bounded `psiphi` planning branch
+- it does not widen the reserve restriction-analysis family beyond the already
+  governed retained subset
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

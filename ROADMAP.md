@@ -4275,9 +4275,16 @@ implementation-program cycle. The near-term priorities are:
       - no early revival of omitted molecular-weight utilities
 
 262. Reconfirm which reserve program now sits behind active protein-property rework.
-    - Record explicitly whether restriction-analysis rework remains the next
+    - Recorded explicitly that restriction-analysis rework remains the next
       reserve program after protein-property activation.
-    - Do not promote that reserve program by inertia.
+    - Recorded explicitly that the reserve restriction-analysis subset remains:
+      - `recoder`
+      - `silent`
+    - Do not promote that reserve program by inertia while the bounded
+      protein-property branch is still active.
+    - This remains an ordering checkpoint only:
+      - no `psiphi` code work starts here
+      - no restriction-analysis implementation tier is activated here
 
 263. Activate the single bounded protein-property lead candidate explicitly.
     - Record explicitly that `psiphi` is now the single bounded lead candidate
