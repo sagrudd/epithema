@@ -114,10 +114,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `102`
-- Compared-evidence methods: `101`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `102`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `102`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -154,8 +154,9 @@ Current generated release-truth markers:
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`,
-  governed `wordcount`, `hmoment`, `octanol`, `pepinfo`, `density`, and now
-  governed `wobble` as the current stable Rust-side plot-contract producers.
+  governed `wordcount`, `hmoment`, `octanol`, `pepinfo`, `density`,
+  governed `wobble`, and now governed `isochore` as the current stable
+  Rust-side plot-contract producers.
 - The visible plotting notes for `charge` and `pepwindow` are now categorized
   as non-blocking missing explicit legacy-reference artefacts rather than as
   generic validation-report gaps.
@@ -222,12 +223,12 @@ Current generated release-truth markers:
 
 ### Full compared cohort gate
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `101/102` shipped methods at compared evidence with `1`
-  method below compared evidence.
+  and now records `102/102` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -328,8 +329,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `102`
-- Compared-evidence methods: `101`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `102`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `102`
 - Retained backlog still unshipped: `0`
 

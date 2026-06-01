@@ -1,0 +1,4 @@
+sequence_id	window_start	window_end	window_length	canonical_symbols	ambiguous_symbols	ignored_gap_symbols	at_fraction	gc_fraction	gc_percent	isochore_band
+isochore_example	1	4	4	4	0	0	1.000000	0.000000	0.000000	L1
+isochore_example	5	8	4	4	0	0	1.000000	0.000000	0.000000	L1
+isochore_example	9	12	4	4	0	0	0.000000	1.000000	100.000000	H3

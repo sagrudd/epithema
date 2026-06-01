@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "isochore_isochore_example",
+    "title": "Isochore profile for isochore_example",
+    "subtitle": "Window 4 step 4 (single-series bounded v1 GC-percent line)",
+    "provenance": {
+      "tool": "isochore",
+      "method": "nucleotide_isochore_profile",
+      "source_artifact_ids": [
+        "table:isochore-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Window start",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "GC percent",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "isochore_gc_percent",
+      "label": "GC percent",
+      "legend_label": "GC percent",
+      "semantic_group": "gc_percent",
+      "x": {
+        "type": "numeric",
+        "values": [
+          1.0,
+          5.0,
+          9.0
+        ]
+      },
+      "y": [
+        0.0,
+        0.0,
+        100.0
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

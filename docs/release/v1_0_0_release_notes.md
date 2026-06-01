@@ -63,10 +63,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `101` shipped methods carry compared evidence
-- `1` shipped method carries executable evidence
+- `102` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `102` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -90,12 +90,15 @@ change the release gate state above.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
+- `isochore` now ships through the governed surface with canonical checked-in
+  analytical and plot-contract fixtures plus compared acceptance evidence for
+  both surfaces.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
 remains complete, and the shipped governed cohort is back in the zero-burden
-release-truth state after the bounded `wobble` evidence closure landed.
+release-truth state after the bounded `isochore` evidence closure landed.
 
 ### First-class R story
 

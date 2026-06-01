@@ -2694,7 +2694,9 @@ implementation-program cycle. The near-term priorities are:
       until compared evidence closes.
 
 178. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
-    - Restore the shipped cohort from the temporary executable-only shipment
+    - Added canonical analytical and plot-contract fixtures plus compared
+      evidence for `isochore`.
+    - Restored the shipped cohort from the temporary executable-only shipment
       state back to full compared/full-harvest truth.
 
 179. Re-run the full release-truth surface after shipping the selected next plotting candidate.

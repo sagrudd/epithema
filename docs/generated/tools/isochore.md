@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `isochore` is the g
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs isochore`. At this task boundary it ships with executable validation and harvested legacy provenance, but compared acceptance evidence for canonical analytical and plot-contract fixtures is not yet closed.
+This method is implemented and exposed through `emboss-rs isochore`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-percent line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,13 +54,21 @@ v1 supports only the single-record bounded isochore profile and does not add Rus
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/isochore_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic isochore validation.
 
+### Canonical isochore line-plot contract fixture
+
+- Artifact ID: `isochore_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/isochore_plot_contract.json`
+- Notes: Repository-managed canonical GC-percent line-plot contract fixture emitted by the governed isochore implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic bounded isochore profile
 
 - Example ID: `isochore_profile_example`
 - Description: Reports deterministic sliding-window isochore rows from the committed nucleotide fixture and emits a governed single-series GC-percent line-plot contract from the same analytical run.
-- Referenced artifacts: `isochore_fixture`
+- Referenced artifacts: `isochore_fixture`, `isochore_plot_contract`
 - Parameters:
   - `window` = `4`
   - `step` = `4`

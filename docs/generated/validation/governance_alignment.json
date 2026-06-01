@@ -16,7 +16,7 @@
     "shipped_curated_autodoc_count": 102,
     "shipped_executable_or_better_count": 102,
     "shipped_harvested_legacy_presence_count": 102,
-    "shipped_compared_count": 101,
+    "shipped_compared_count": 102,
     "shipped_documented_only_count": 0
   },
   "shipped_methods": [
@@ -612,7 +612,7 @@
       "governance_family": "Modernize — Rework — Plotting and visualization tools",
       "governance_decision": "rework",
       "curated_autodoc_present": true,
-      "evidence_level": "executable_evidence"
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "charge",
@@ -1112,7 +1112,7 @@
       "retained_backlog": 0,
       "shipped_curated_autodoc": 8,
       "shipped_executable_or_better": 8,
-      "shipped_compared": 7,
+      "shipped_compared": 8,
       "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },
