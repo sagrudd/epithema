@@ -61,6 +61,7 @@ tools/infoalign
 tools/infobase
 tools/inforesidue
 tools/infoseq
+tools/isochore
 tools/listor
 tools/makenucseq
 tools/makeprotseq

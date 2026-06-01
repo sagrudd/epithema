@@ -1,0 +1,117 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "isochore-v1",
+  "tool": {
+    "name": "isochore",
+    "family": "nucleotide_plots",
+    "summary": "Report a bounded isochore profile and emit a line-plot contract",
+    "legacy_names": [
+      "isochore"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`isochore` is the next bounded plotting continuation after the shipped `wobble` slice. The EMBOSS-RS v1 surface computes one deterministic sliding-window bounded isochore profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one nucleotide sequence record. v1 supports DNA and RNA inputs that pass nucleotide validation, treats `--window` and `--step` as positive residue counts, defaults to `--window 11` and `--step 1`, and rejects non-nucleotide inputs."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable analytical table with `sequence_id`, `window_start`, `window_end`, `window_length`, `canonical_symbols`, `ambiguous_symbols`, `ignored_gap_symbols`, `at_fraction`, `gc_fraction`, `gc_percent`, and `isochore_band`. The staged v1 line-plot contract remains single-series and plots the analytically derived `gc_percent` values from the same governed computation path."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `isochore` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `isochore` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes richer bounded nucleotide-composition detail."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs isochore`. At this task boundary it ships with executable validation and harvested legacy provenance, but compared acceptance evidence for canonical analytical and plot-contract fixtures is not yet closed."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record bounded isochore profile and does not add Rust-side rendering, multi-series plotting, segmentation tracks, or a generalized plotting framework. Additional continuation should remain bounded by the explicit fallback-activation stop conditions already recorded in governance."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "isochore_fixture",
+      "label": "Nucleotide fixture for governed isochore validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/isochore_nucleotide.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture used for deterministic isochore validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "isochore_profile_example",
+      "title": "Compute a deterministic bounded isochore profile",
+      "description": "Reports deterministic sliding-window isochore rows from the committed nucleotide fixture and emits a governed single-series GC-percent line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "isochore_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "window",
+          "value": "4"
+        },
+        {
+          "name": "step",
+          "value": "4"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "isochore_table",
+          "label": "Isochore analytical table",
+          "description": "Stable sliding-window bounded isochore rows with explicit GC, AT, and band columns."
+        },
+        {
+          "id": "isochore_plot",
+          "label": "GC-percent line-plot contract",
+          "description": "The governed single-series GC-percent line-plot contract JSON emitted from the same deterministic analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS isochore application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/isochore.acd",
+        "invocation": "isochore -sequence isochore_nucleotide.fasta -window 4 -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "isochore_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

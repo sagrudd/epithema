@@ -247,6 +247,14 @@ mod tests {
     }
 
     #[test]
+    fn routes_isochore_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "isochore", "example.fna"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("isochore"));
+    }
+
+    #[test]
     fn routes_hmoment_to_tool_path() {
         let cli = Cli::try_parse_from(["emboss-rs", "hmoment", "example.faa"])
             .expect("tool should parse");

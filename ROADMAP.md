@@ -2688,8 +2688,10 @@ implementation-program cycle. The near-term priorities are:
       plotting framework.
 
 177. Expose the selected next plotting candidate through the governed shipped surface.
-    - Wire the method through the registry, service, CLI, governed autodoc, and
-      generated docs/validation stub.
+    - Wired `isochore` through the governed shipped surface.
+    - Added registry, service, CLI, governed autodoc, and generated
+      docs/validation support while keeping the state explicitly executable-only
+      until compared evidence closes.
 
 178. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next plotting candidate.
     - Restore the shipped cohort from the temporary executable-only shipment

@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `101` methods, including:
+of `102` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -38,8 +38,8 @@ of `101` methods, including:
 - alignment utility, global alignment, local alignment, similarity,
   distance-matrix, and consensus tools
 - the retained exception tool `complex`
-- the first governed plot-producing analytical tools `charge`, `pepwindow`,
-  `hmoment`, `octanol`, and `pepinfo`
+- the governed plot-producing analytical tools `charge`, `pepwindow`,
+  `hmoment`, `octanol`, `pepinfo`, `density`, `wobble`, and `isochore`
 
 ### Governed retrieval
 
@@ -64,9 +64,9 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `101` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `101` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped method carries executable evidence
+- `102` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`

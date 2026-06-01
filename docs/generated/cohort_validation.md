@@ -5,16 +5,16 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `101`
-- Documentation-complete methods: `101`
-- Methods with validation stubs: `101`
+- Methods in cohort: `102`
+- Documentation-complete methods: `102`
+- Methods with validation stubs: `102`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `101`
-- Methods with executable validation: `0`
+- Methods with harvested legacy provenance recorded: `102`
+- Methods with executable validation: `1`
 - Methods with compared evidence: `101`
-- Methods with blocking cohort gaps: `0`
+- Methods with blocking cohort gaps: `1`
 
 ## Evidence Level Definitions
 
@@ -93,6 +93,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `wordfinder` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `density` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `wobble` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
+| `isochore` | `nucleotide_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
 | `charge` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `hmoment` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `octanol` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
@@ -136,6 +137,7 @@ Visible gaps may include non-blocking notes that do not lower the tool's current
 
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
+- `isochore`: `missing_compared_evidence`, `missing_explicit_legacy_reference`
 - `charge`: `missing_explicit_legacy_reference`
 - `hmoment`: `missing_explicit_legacy_reference`
 - `octanol`: `missing_explicit_legacy_reference`
