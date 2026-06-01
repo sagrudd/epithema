@@ -3286,3 +3286,39 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+214. Extend the roadmap from the actual post-`syco` branch outcome rather than from the earlier plotting-first assumptions.
+    - Complete.
+    - The roadmap now records the current governed truth explicitly:
+      - shipped methods: `104`
+      - compared evidence: `104`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `104`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - The extension also makes the planning consequence explicit:
+      - the bounded plotting continuation program has now closed through its
+        final selected candidate
+      - no comparably bounded plotting continuation candidate remains active
+      - the prepared remote-retrieval fallback becomes the next planning
+        program by explicit branch resolution rather than by inertia
+    - The next mapped tier is now Tasks `215` through `228`, centered on:
+      - confirming that the plotting continuation family is now exhausted as a
+        bounded active branch
+      - activating the prepared remote-retrieval fallback as the next active
+        planning program
+      - reconfirming that protein-property rework still remains the third
+        candidate after the bounded plotting program closes
+      - choosing exactly one bounded retrieval lead method from:
+        - `seqretsetall`
+        - `seqretsplit`
+        - `infoassembly`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit provider/seam stop conditions for the chosen retrieval method
+      - mapping and shipping one full bounded retrieval slice
+      - rerunning release truth and reassessing the shipped retrieval slice
+        before any further continuation is mapped
