@@ -28,7 +28,8 @@ use emboss_tools::alignment_tools::{
     run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use emboss_tools::archive_tools::{
-    RungetParams, RuninfoParams, run_runget, run_runinfo, runget_help, runinfo_help,
+    InfoassemblyParams, RungetParams, RuninfoParams, run_infoassembly, run_runget, run_runinfo,
+    runget_help, runinfo_help,
 };
 use emboss_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
@@ -8619,6 +8620,45 @@ impl EmbossService {
         }
     }
 
+    fn resolve_infoassembly_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            emboss_tools::archive_tools::InfoassemblyOutcome,
+            Vec<ArtifactProvenance>,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let (route_provenance, metadata, diagnostics) =
+            self.resolve_archive_metadata_with_client(raw, client)?;
+        let outcome = run_infoassembly(InfoassemblyParams {
+            provider: metadata.provider.as_str().to_owned(),
+            accession: metadata.requested_accession.clone(),
+            object_class: metadata.object_class.as_str().to_owned(),
+            assembly_accession: metadata.study_accession.clone(),
+            run_accession: metadata.run_accession.clone(),
+            experiment_accession: metadata.experiment_accession.clone(),
+            sample_accession: metadata.sample_accession.clone(),
+            platform: metadata.platform.clone(),
+            instrument_model: metadata.instrument_model.clone(),
+            library_layout: metadata.library_layout.clone(),
+            library_strategy: metadata.library_strategy.clone(),
+            library_source: metadata.library_source.clone(),
+            file_count: metadata.files.len(),
+            total_size_bytes: metadata.total_size_bytes(),
+            route_endpoint: metadata.route.endpoint.clone(),
+        })?;
+
+        Ok((
+            outcome,
+            vec![route_provenance, metadata.provenance.clone()],
+            diagnostics,
+        ))
+    }
+
     fn retrieve_archive_metadata_request_with_client<C: ProviderHttpClient>(
         &self,
         request: &AcquisitionRequest,
@@ -12892,6 +12932,52 @@ mod tests {
             "AB000263"
         );
         assert_eq!(outcome.outputs[0].record.metadata().source.as_deref(), Some("ena"));
+        assert_eq!(provenance.len(), 2);
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+    }
+
+    #[test]
+    fn resolves_infoassembly_against_mocked_ena_archive_metadata() {
+        let service = implemented_service();
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_infoassembly_with_client("ena:ERR123456", Some(&client))
+            .expect("infoassembly core should resolve ENA metadata");
+
+        assert_eq!(outcome.provider, "ena");
+        assert_eq!(outcome.accession, "ERR123456");
+        assert_eq!(outcome.assembly_accession, "ERP000001");
+        assert_eq!(outcome.file_count, 2);
+        assert_eq!(outcome.total_size_bytes, Some(22));
+        assert_eq!(outcome.route_endpoint, "ena.portal.filereport");
+        assert_eq!(provenance.len(), 2);
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+    }
+
+    #[test]
+    fn resolves_infoassembly_against_mocked_sra_archive_metadata() {
+        let service = implemented_service();
+        let client = MockHttpClient::default().with_response(
+            "https://trace.ncbi.nlm.nih.gov/Traces/sra-db-be/runinfo?acc=SRR123456",
+            HttpResponse::new(200, "Run,ReleaseDate,LoadDate,spots,bases,spots_with_mates,avgLength,size_MB,AssemblyName,download_path,Experiment,LibraryName,LibraryStrategy,LibrarySelection,LibrarySource,LibraryLayout,InsertSize,InsertDev,Platform,Model,SRAStudy,BioProject,Study_Pubmed_id,ProjectID,Sample,BioSample,SampleType,TaxID,ScientificName,SampleName,CenterName,Submission,dbgap_study_accession,Consent,RunHash,ReadHash\nSRR123456,2024-01-01,2024-01-02,1,100,1,100,1,,https://example.invalid/SRR123456,SRX123456,,WGS,,GENOMIC,PAIRED,,,ILLUMINA,NextSeq 2000,SRP000001,PRJNA1,,1,SRS123456,SAMN1,,9606,Homo sapiens,,NCBI,SRA000001,,,runhash,readhash\n"),
+        );
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_infoassembly_with_client("sra:SRR123456", Some(&client))
+            .expect("infoassembly core should resolve SRA metadata");
+
+        assert_eq!(outcome.provider, "sra");
+        assert_eq!(outcome.accession, "SRR123456");
+        assert_eq!(outcome.assembly_accession, "SRP000001");
+        assert_eq!(outcome.file_count, 0);
+        assert_eq!(outcome.total_size_bytes, None);
+        assert_eq!(outcome.route_endpoint, "sra.runinfo");
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 1);
         assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));

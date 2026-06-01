@@ -1,8 +1,12 @@
 //! Modernized user-facing archive metadata and public-run acquisition tools.
 
+mod infoassembly;
 mod runget;
 mod runinfo;
 
+pub use infoassembly::{
+    InfoassemblyOutcome, InfoassemblyParams, infoassembly_help, run_infoassembly,
+};
 pub use runget::{RungetOutcome, RungetParams, run_runget, runget_help};
 pub use runinfo::{RuninfoOutcome, RuninfoParams, run_runinfo, runinfo_help};
 

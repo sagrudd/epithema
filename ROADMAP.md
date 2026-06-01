@@ -4070,3 +4070,28 @@ implementation-program cycle. The near-term priorities are:
       4. `infoassembly` forces broad assembly-schema, provider-parity, or
          archive-scale acquisition claims that are not clearly local to the
          method
+
+253. Complete. Implement the bounded `infoassembly` core.
+    - Added the bounded `infoassembly` analytical core in
+      `crates/emboss-tools/src/archive_tools/infoassembly.rs` and exported it
+      through `crates/emboss-tools/src/archive_tools/mod.rs`.
+    - Added the private `infoassembly` service seam in
+      `crates/emboss-service/src/service.rs`.
+    - What landed in the bounded core:
+      - a method-associated `run_infoassembly(...)` path
+      - deterministic assembly-first projection over normalized archive
+        metadata
+      - derived `assembly_accession` selection from linked study/project
+        identifiers
+      - explicit file-count and total-size summary fields from the same
+        provider-backed metadata path
+      - bounded validation for missing provider labels, missing accessions,
+        missing object-class labels, missing route labels, and missing linked
+        study/project identifiers
+      - focused private service-seam tests for mocked ENA and SRA archive
+        metadata
+    - This task intentionally stopped at the bounded core:
+      - no governed result-surface exposure yet
+      - no registry or CLI exposure yet
+      - no docs/autodoc/generated validation yet
+      - no canonical fixtures or compared evidence yet
