@@ -3405,6 +3405,23 @@ The current viable bounded continuation pool remains:
 Protein-property rework therefore remains the reserve third program and should
 not be promoted at this checkpoint.
 
+#### Explicit closeout of the untriggered protein-property promotion branch
+
+Because the post-`seqretsetall` retrieval viability gate stayed affirmative,
+the opposite branch should now be closed explicitly rather than left implicit.
+
+The resulting branch consequence is:
+
+- retrieval continuation remains the active planning program
+- protein-property rework remains documented as the reserve third program
+- protein-property is not promoted by inertia while bounded retrieval
+  continuation still has viable candidates
+
+The active viable bounded continuation pool remains:
+
+- `seqretsplit`
+- `infoassembly`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
