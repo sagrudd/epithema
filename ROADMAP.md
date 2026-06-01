@@ -2852,10 +2852,21 @@ implementation-program cycle. The near-term priorities are:
         branch stays on bounded plotting continuation
 
 186. If the post-`isochore` plotting pool remains viable, choose exactly one next bounded continuation candidate.
-    - Restrict the active selection to the narrowed viable pool:
+    - Restricted the active selection to the narrowed viable pool:
       - `banana`
       - `syco`
-    - Keep any non-selected viable method documented but inactive.
+    - Selected:
+      - `banana`
+    - Selection basis:
+      - `banana` looks like the closest remaining extension of the proven
+        bounded nucleotide plotting seam as an analytical, table-first profile
+        with a likely single derived continuation line
+      - it appears less likely than `syco` to force codon-usage-specific
+        structure or coding-sequence-only seam pressure
+      - it still appears compatible with the established renderer-agnostic
+        typed contract seam
+    - Kept the non-selected viable method documented but inactive:
+      - `syco`
 
 187. Close the untriggered branch explicitly after the post-`isochore` candidate decision.
     - If plotting remains active, close the retrieval-activation branch as

@@ -2586,6 +2586,39 @@ retrieval lead-method decision here. The active planning branch remains the
 bounded plotting continuation path until a later candidate-selection or
 shipment gate trips the explicit fallback-activation stop conditions.
 
+#### Post-`isochore` bounded-candidate selection
+
+Because the post-`isochore` viability gate still leaves a non-empty narrowed
+continuation pool, the repository should choose exactly one next bounded
+plotting continuation candidate before any further implementation planning
+starts.
+
+The selected candidate is:
+
+- `banana`
+
+The selection basis is:
+
+- `banana` looks like the closest remaining extension of the proven bounded
+  nucleotide plotting seam as an analytical, table-first profile with a likely
+  single derived continuation line
+- it appears less likely than `syco` to force codon-usage-specific structure,
+  coding-sequence-only assumptions, or heavier translation-adjacent coupling
+- it still looks compatible with the established renderer-agnostic typed
+  contract seam rather than immediately pushing toward a broader taxonomy
+
+The non-selected viable method remains documented but inactive:
+
+- `syco`
+
+So the next bounded planning step should be to capture `banana`-specific
+acceptance criteria and exact patch start conditions before any code starts.
+
+That also keeps the retrieval-activation branch closed as untriggered after
+candidate selection. Retrieval fallback remains documented, prepared, and
+inactive while the active bounded `banana` continuation branch remains
+credible.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
