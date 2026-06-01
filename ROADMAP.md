@@ -2894,9 +2894,12 @@ implementation-program cycle. The near-term priorities are:
         `emboss-r` and blocking generic plotting-framework widening
 
 189. Capture the exact start conditions for the first implementation patch of the selected next bounded continuation candidate.
-    - Record:
-      - current shortlist and active-branch requirements
-      - post-`isochore` continuation viability with the selected candidate
+    - Captured the explicit `banana` patch-start gate in the governance
+      appendix.
+    - Recorded:
+      - the current shortlist and active plotting-branch requirements
+      - post-`isochore` continuation viability with `banana` as the selected
+        candidate
       - zero-burden release-truth requirements
       - patch-scope and full-governed-slice constraints before code starts
 

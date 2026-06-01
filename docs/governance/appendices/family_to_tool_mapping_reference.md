@@ -2679,6 +2679,37 @@ follows.
   analytical needs of `banana` itself make that pressure unavoidable
 - no family-wide continuation claims merely because `banana` ships
 
+#### Exact start conditions for the first `banana` implementation patch
+
+The first code-bearing `banana` patch should not begin until all of the
+following remain true:
+
+- the current shortlist still remains:
+  1. plotting
+  2. remote retrieval
+  3. protein-property rework
+- bounded plotting Phase 1 still remains passed:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- the post-`isochore` continuation gate has already passed:
+  - `banana` is the single selected next bounded continuation candidate
+- the zero-burden release-truth surface still remains intact
+- the patch scope remains limited to `banana` and the smallest shared support
+  needed for:
+  - deterministic analytical computation
+  - typed contract emission
+  - governed docs and validation plumbing
+- the patch lands as a full governed slice rather than a half-start
+
+That means the first `banana` patch should not widen immediately into:
+
+- `syco`
+- retrieval fallback work
+- generalized plotting-framework seams
+- broader plot-contract taxonomies unless `banana` itself makes that pressure
+  concrete enough to stop and reassess
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
