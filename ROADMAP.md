@@ -3713,3 +3713,29 @@ implementation-program cycle. The near-term priorities are:
       - no implicit promotion of `infoassembly`
       - no generic retrieval-family widening merely because `seqretsplit`
         ships
+
+235. Complete. Capture the exact start conditions for the first
+    `seqretsplit` implementation patch.
+    - Recorded the exact patch start conditions explicitly in the governance
+      appendix and roadmap.
+    - The start gate now requires:
+      - the current shortlist to remain intact:
+        1. completed bounded plotting continuation program
+        2. active remote-retrieval planning program
+        3. protein-property rework
+      - the bounded retrieval continuation pool to remain limited to:
+        - `seqretsplit`
+        - `infoassembly`
+      - `seqretsplit` to remain the single selected bounded retrieval
+        continuation lead method
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `seqretsplit` plus the smallest
+        support needed for deterministic provider-aware split-output
+        orchestration, normalized sequence-return output, and governed
+        docs/validation plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no hidden live-network dependencies
+      - no broad provider-parity claims
+      - no implicit widening into `infoassembly`
+      - no retrieval-family widening beyond the selected lead-method slice
