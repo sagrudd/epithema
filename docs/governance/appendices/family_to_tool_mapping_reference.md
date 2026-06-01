@@ -3630,6 +3630,26 @@ The active viable bounded continuation pool remains:
 
 - `infoassembly`
 
+#### Bounded retrieval continuation lead-method selection after `seqretsplit`
+
+After keeping retrieval active through the post-`seqretsplit` viability gate
+and closing the untriggered protein-property branch, the repository should
+activate the single final bounded retrieval continuation candidate explicitly.
+
+The selected bounded continuation candidate should be:
+
+- `infoassembly`
+
+That activation is the honest next step because:
+
+- `infoassembly` is now the only remaining bounded continuation candidate in
+  the narrowed post-`seqretsplit` pool
+- the prepared protein-property reserve branch remains documented but
+  inactive because the no-candidate branch was not taken
+- no other retrieval-family method remains comparably bounded without
+  widening provider-surface, orchestration, or scope claims beyond the
+  already-governed continuation plan
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

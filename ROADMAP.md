@@ -3968,3 +3968,18 @@ implementation-program cycle. The near-term priorities are:
         continuation still has a viable candidate
     - The active viable bounded continuation pool remains:
       - `infoassembly`
+
+248. Complete. Choose the single final bounded retrieval continuation
+    candidate.
+    - Recorded the retrieval lead-candidate activation explicitly in the
+      governance appendix and roadmap.
+    - The selected bounded continuation candidate is:
+      - `infoassembly`
+    - Recorded basis:
+      - `infoassembly` is now the only remaining bounded continuation
+        candidate in the narrowed post-`seqretsplit` pool
+      - the prepared protein-property reserve branch remains documented but
+        inactive because the no-candidate branch was not taken
+      - no other retrieval-family method remains comparably bounded without
+        widening provider-surface, orchestration, or scope claims beyond the
+        already-governed continuation plan
