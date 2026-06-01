@@ -3752,6 +3752,43 @@ The repository should pause and reassess before implementation if:
 4. `infoassembly` forces broad assembly-schema, provider-parity, or archive-
    scale acquisition claims that are not clearly local to the method
 
+#### Reassessment after the shipped `infoassembly` slice
+
+After the bounded `infoassembly` tier closed as a shipped governed slice, the
+repository should record explicitly whether that slice stayed inside the
+intended provider-aware retrieval seam before any further continuation is
+mapped.
+
+That conclusion is explicit rather than inferred because the shipped slice
+stayed narrow in each important dimension:
+
+- the analytical/result surface remained metadata-first and method-local
+- the governed shipped surface remained a bounded retrieval member:
+  - exactly one additional shipped method: `infoassembly`
+- the provider seam remained bounded and deterministic:
+  - mocked-provider evidence was sufficient for the governed slice
+  - no hidden live-network dependency was required
+  - no implicit provider fallback chain or broad provider-parity claim was
+    introduced
+- the evidence path closed completely for the shipped method:
+  - canonical compared evidence exists
+  - harvested legacy provenance is recorded
+  - the method is no longer executable-only
+
+So the repository should record the shipped `infoassembly` slice as having
+passed its post-ship reassessment.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `107`
+- compared evidence: `107`
+- executable evidence: `0`
+- harvested legacy provenance present: `107`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

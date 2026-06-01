@@ -4183,3 +4183,23 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+258. Complete. Reassess the shipped `infoassembly` slice before any further retrieval continuation is mapped.
+    - Recorded the post-ship `infoassembly` reassessment in the governance
+      appendix and roadmap.
+    - The result is affirmative:
+      - the shipped `infoassembly` slice stayed bounded, provider-aware, and
+        metadata-first
+      - it remained a local extension of the governed retrieval program rather
+        than forcing broader retrieval-family orchestration
+      - it did not require hidden live-network behavior, implicit provider
+        fallback chains, or non-local provider-parity or assembly-schema claims
+    - The governed release-truth surface remained fully green:
+      - shipped methods `107`
+      - compared evidence `107`
+      - executable evidence `0`
+      - harvested legacy provenance present `107`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
