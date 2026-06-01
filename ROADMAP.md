@@ -3496,3 +3496,28 @@ implementation-program cycle. The near-term priorities are:
          orchestration before one shipped slice closes
       4. `seqretsetall` forces broad filesystem-policy, batching-policy, or
          provider-parity claims that are not clearly local to the method
+
+223. Implement the bounded provider-aware orchestration and normalized many-set return core for `seqretsetall`.
+    - Complete.
+    - Added the bounded `seqretsetall` execution core in
+      `crates/emboss-tools/src/retrieval_tools/seqretsetall.rs` and exported
+      it through `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+    - Added the private multi-input service seam in
+      `crates/emboss-service/src/service.rs` so the bounded retrieval lead can
+      resolve ordered local and provider-backed inputs through the same
+      governed substrate already used by `seqret`.
+    - What landed in the core:
+      - ordered resolved input-set handling over `SeqretSource`
+      - deterministic partition-preserving normalized record sets
+      - total-record accounting across all input sets
+      - bounded validation for:
+        - too few input sets
+        - empty resolved input sets
+      - focused service-seam tests for:
+        - two ordered local inputs
+        - mixed local plus provider-qualified input through a mocked client
+    - This task intentionally stopped at the bounded core:
+      - no governed result-surface exposure yet
+      - no registry or CLI exposure yet
+      - no docs/autodoc/generated validation yet
+      - no canonical fixtures or compared evidence yet

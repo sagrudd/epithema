@@ -70,8 +70,8 @@ use emboss_tools::restriction_tools::{
     RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
 };
 use emboss_tools::retrieval_tools::{
-    RefseqgetParams, SeqretParams, SeqretSource, refseqget_help, run_refseqget, run_seqret,
-    seqret_help,
+    RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
+    refseqget_help, run_refseqget, run_seqret, run_seqretsetall, seqret_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -8241,6 +8241,34 @@ impl EmbossService {
         }
     }
 
+    fn resolve_seqretsetall_inputs_with_client<C: ProviderHttpClient>(
+        &self,
+        raw_inputs: &[String],
+        client: Option<&C>,
+    ) -> Result<
+        (
+            emboss_tools::retrieval_tools::SeqretsetallOutcome,
+            Vec<ArtifactProvenance>,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let mut input_sets = Vec::with_capacity(raw_inputs.len());
+        let mut provenance = Vec::new();
+        let mut diagnostics = Vec::new();
+
+        for raw in raw_inputs {
+            let (source, records, set_provenance, set_diagnostics) =
+                self.resolve_seqret_records_with_client(raw, client)?;
+            input_sets.push(SeqretsetallInputSet { source, records });
+            provenance.extend(set_provenance);
+            diagnostics.extend(set_diagnostics);
+        }
+
+        let outcome = run_seqretsetall(SeqretsetallParams { inputs: input_sets })?;
+        Ok((outcome, provenance, diagnostics))
+    }
+
     fn resolve_refseqget_record_with_client<C: ProviderHttpClient>(
         &self,
         raw: &str,
@@ -12584,6 +12612,66 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn resolves_seqretsetall_against_two_local_fixtures_in_stable_order() {
+        let service = implemented_service();
+        let raw_inputs = vec![
+            sequence_fixture().display().to_string(),
+            second_sequence_fixture().display().to_string(),
+        ];
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_seqretsetall_inputs_with_client::<MockHttpClient>(&raw_inputs, None)
+            .expect("seqretsetall core should resolve local fixtures");
+
+        assert_eq!(outcome.record_sets.len(), 2);
+        assert_eq!(outcome.record_sets[0].len(), 3);
+        assert_eq!(outcome.record_sets[1].len(), 2);
+        assert_eq!(outcome.total_records, 5);
+        assert_eq!(
+            outcome.record_sets[0][0].identifier().accession(),
+            "alpha"
+        );
+        assert_eq!(
+            outcome.record_sets[1][0].identifier().accession(),
+            "delta"
+        );
+        assert_eq!(provenance.len(), 2);
+        assert_eq!(diagnostics.len(), 2);
+        assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
+        assert_eq!(diagnostics[1].code(), Some("service.input.local.resolved"));
+    }
+
+    #[test]
+    fn resolves_seqretsetall_against_mixed_local_and_provider_inputs() {
+        let service = implemented_service();
+        let raw_inputs = vec![
+            sequence_fixture().display().to_string(),
+            "ena:AB000263".to_owned(),
+        ];
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/browser/api/fasta/AB000263",
+            HttpResponse::new(200, ">AB000263 example\nACGT\n"),
+        );
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_seqretsetall_inputs_with_client(&raw_inputs, Some(&client))
+            .expect("seqretsetall core should resolve mixed inputs");
+
+        assert_eq!(outcome.record_sets.len(), 2);
+        assert_eq!(outcome.record_sets[0].len(), 3);
+        assert_eq!(outcome.record_sets[1].len(), 1);
+        assert_eq!(
+            outcome.record_sets[1][0].identifier().accession(),
+            "AB000263"
+        );
+        assert_eq!(outcome.record_sets[1][0].metadata().source.as_deref(), Some("ena"));
+        assert_eq!(provenance.len(), 3);
+        assert_eq!(diagnostics.len(), 2);
+        assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
+        assert_eq!(diagnostics[1].code(), Some("service.input.provider_qualified"));
     }
 
     #[test]

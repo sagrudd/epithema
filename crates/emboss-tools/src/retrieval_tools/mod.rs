@@ -2,9 +2,14 @@
 
 mod refseqget;
 mod seqret;
+mod seqretsetall;
 
 pub use refseqget::{RefseqgetOutcome, RefseqgetParams, refseqget_help, run_refseqget};
 pub use seqret::{SeqretOutcome, SeqretParams, SeqretSource, run_seqret, seqret_help};
+pub use seqretsetall::{
+    SeqretsetallInputSet, SeqretsetallOutcome, SeqretsetallParams, run_seqretsetall,
+    seqretsetall_help,
+};
 
 use crate::ToolDescriptor;
 
