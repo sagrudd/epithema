@@ -4031,3 +4031,26 @@ implementation-program cycle. The near-term priorities are:
       - no implicit widening into broader retrieval-family members such as
         `assemblyget`, `whichdb`, or `entret`
       - no retrieval-family widening beyond the selected lead-method slice
+
+251. Complete. Map the full bounded `infoassembly` implementation tier.
+    - Recorded the full bounded implementation tier explicitly in the
+      governance appendix and roadmap before code starts.
+    - The bounded `infoassembly` tier is now explicit:
+      1. implement the bounded provider-aware assembly metadata retrieval and
+         normalized metadata return core
+      2. expose the governed output surface for deterministic assembly
+         metadata retrieval behavior
+      3. expose `infoassembly` through the governed shipped surface
+      4. add canonical managed-asset or mocked-provider fixtures plus
+         compared evidence
+      5. re-run the full release-truth surface after shipping `infoassembly`
+      6. reassess the shipped `infoassembly` slice before any further
+         retrieval continuation is mapped
+    - The bounded tier preserves the same architectural rules:
+      - provider-aware but deterministic execution
+      - metadata-first normalized output
+      - method-local scope only
+      - no hidden live-network validation
+      - no broad provider-parity claims
+      - no retrieval-family widening unless `infoassembly` itself forces a
+        real reassessment
