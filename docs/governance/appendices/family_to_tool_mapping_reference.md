@@ -2906,6 +2906,22 @@ bounded planning step, which is now simply whether to activate `syco` as the
 final active candidate or to trigger the fallback only if that final
 continuation later fails its own bounded seam review.
 
+#### Untriggered fallback-activation branch after final-candidate viability
+
+Because the final-candidate viability gate remained affirmative, the prepared
+retrieval fallback should not be promoted at this checkpoint.
+
+The recorded outcome is therefore:
+
+- the plotting-continuation branch remains active
+- the prepared retrieval fallback remains documented, ready, and inactive
+- retrieval is not promoted by inertia while `syco` remains the final bounded
+  active continuation candidate
+
+So no retrieval implementation tier or retrieval lead-method choice should be
+mapped here. The next bounded planning step remains the explicit activation of
+`syco` as the final active continuation candidate.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

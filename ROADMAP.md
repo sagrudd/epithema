@@ -3136,3 +3136,15 @@ implementation-program cycle. The near-term priorities are:
     - The repository therefore stays on the plotting continuation branch for
       the next bounded selection step, which is now simply whether to activate
       `syco` as the final active candidate.
+
+202. Close the untriggered fallback branch after the final-candidate viability decision.
+    - Closed the opposite branch explicitly after the affirmative final-
+      candidate viability decision.
+    - The recorded outcome is:
+      - the plotting-continuation branch remains active
+      - the prepared retrieval fallback remains documented, ready, and
+        inactive
+      - retrieval is not promoted by inertia while `syco` remains the final
+        bounded active continuation candidate
+    - So no retrieval implementation tier or retrieval lead-method choice is
+      mapped at this checkpoint.
