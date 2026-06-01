@@ -3983,3 +3983,25 @@ implementation-program cycle. The near-term priorities are:
       - no other retrieval-family method remains comparably bounded without
         widening provider-surface, orchestration, or scope claims beyond the
         already-governed continuation plan
+
+249. Complete. Capture explicit method-level acceptance criteria for
+    `infoassembly`.
+    - Recorded the governed method-level acceptance criteria explicitly in the
+      governance appendix and roadmap.
+    - The criteria now make `infoassembly` concrete before code starts:
+      - bounded provider-aware assembly metadata retrieval workflow only
+      - deterministic normalized assembly metadata output built from the same
+        governed provider-resolution and execution path
+      - stable metadata-first output surface with explicit identifiers,
+        provider source, and assembly fields defined by the same computation
+        path
+      - canonical managed-asset or mocked-provider fixtures
+      - compared evidence required on normalized returned assembly metadata,
+        not just orchestration intent
+    - The non-goals remain explicit:
+      - no hidden live-network validation
+      - no broad provider-parity claims
+      - no implicit widening into broader retrieval-family members such as
+        `assemblyget`, `whichdb`, or `entret`
+      - no generic retrieval-family widening merely because `infoassembly`
+        ships
