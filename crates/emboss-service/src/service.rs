@@ -70,9 +70,9 @@ use emboss_tools::restriction_tools::{
     RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
 };
 use emboss_tools::retrieval_tools::{
-    RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
-    refseqget_help, run_refseqget, run_seqret, run_seqretsetall, seqret_help,
-    seqretsetall_help,
+    RefseqgetParams, SeqretParams, SeqretSource, SeqretsplitParams, SeqretsetallInputSet,
+    SeqretsetallParams, refseqget_help, run_refseqget, run_seqret, run_seqretsplit,
+    run_seqretsetall, seqret_help, seqretsetall_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -8336,6 +8336,24 @@ impl EmbossService {
         Ok((outcome, provenance, diagnostics))
     }
 
+    fn resolve_seqretsplit_input_with_client<C: ProviderHttpClient>(
+        &self,
+        raw_input: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            emboss_tools::retrieval_tools::SeqretsplitOutcome,
+            Vec<ArtifactProvenance>,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let (source, records, provenance, diagnostics) =
+            self.resolve_seqret_records_with_client(raw_input, client)?;
+        let outcome = run_seqretsplit(SeqretsplitParams { source, records })?;
+        Ok((outcome, provenance, diagnostics))
+    }
+
     fn resolve_refseqget_record_with_client<C: ProviderHttpClient>(
         &self,
         raw: &str,
@@ -12740,6 +12758,51 @@ mod tests {
         assert_eq!(diagnostics.len(), 2);
         assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
         assert_eq!(diagnostics[1].code(), Some("service.input.provider_qualified"));
+    }
+
+    #[test]
+    fn resolves_seqretsplit_against_local_fixture_into_deterministic_output_files() {
+        let service = implemented_service();
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_seqretsplit_input_with_client::<MockHttpClient>(
+                &sequence_fixture().display().to_string(),
+                None,
+            )
+            .expect("seqretsplit core should resolve local fixture");
+
+        assert_eq!(outcome.outputs.len(), 3);
+        assert_eq!(outcome.total_records, 3);
+        assert_eq!(outcome.outputs[0].file_name, "three_records__alpha.fasta");
+        assert_eq!(outcome.outputs[1].file_name, "three_records__beta.fasta");
+        assert_eq!(outcome.outputs[2].file_name, "three_records__gamma.fasta");
+        assert_eq!(provenance.len(), 1);
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
+    }
+
+    #[test]
+    fn resolves_seqretsplit_against_provider_input_with_mocked_client() {
+        let service = implemented_service();
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/browser/api/fasta/AB000263",
+            HttpResponse::new(200, ">AB000263 example\nACGT\n"),
+        );
+
+        let (outcome, provenance, diagnostics) = service
+            .resolve_seqretsplit_input_with_client("ena:AB000263", Some(&client))
+            .expect("seqretsplit core should resolve provider input");
+
+        assert_eq!(outcome.outputs.len(), 1);
+        assert_eq!(outcome.outputs[0].file_name, "ena_AB000263.fasta");
+        assert_eq!(
+            outcome.outputs[0].record.identifier().accession(),
+            "AB000263"
+        );
+        assert_eq!(outcome.outputs[0].record.metadata().source.as_deref(), Some("ena"));
+        assert_eq!(provenance.len(), 2);
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
     }
 
     #[test]

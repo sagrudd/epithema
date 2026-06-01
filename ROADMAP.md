@@ -3770,3 +3770,23 @@ implementation-program cycle. The near-term priorities are:
       4. `seqretsplit` forces broad filename-policy, directory-policy,
          batching-policy, or provider-parity claims that are not clearly local
          to the method
+
+238. Complete. Implement the bounded provider-aware split-output orchestration
+    and normalized return core for `seqretsplit`.
+    - Added a method-associated `seqretsplit` core in
+      `crates/emboss-tools/src/retrieval_tools/seqretsplit.rs`.
+    - The landed bounded core now provides:
+      - deterministic per-record split-output projections over one resolved
+        `SeqretSource`
+      - explicit file-name derivation from the same normalized computation path
+      - bounded validation for empty resolved record sets
+    - Added the private service seam that resolves one local or provider-backed
+      input into the bounded `seqretsplit` core.
+    - Focused validation covers:
+      - local split-output naming over a real fixture
+      - provider-backed split-output naming through a mocked client
+    - This task intentionally stops at the bounded core:
+      - no governed output-surface exposure yet
+      - no registry or CLI exposure yet
+      - no docs/autodoc/generated validation yet
+      - no canonical fixtures or compared evidence yet
