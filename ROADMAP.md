@@ -3419,3 +3419,22 @@ implementation-program cycle. The near-term priorities are:
       inactive:
       - `seqretsplit`
       - `infoassembly`
+
+219. Capture explicit method-level acceptance criteria for `seqretsetall`.
+    - Complete.
+    - Recorded the governed method-level acceptance criteria explicitly in the
+      governance appendix and roadmap.
+    - The criteria now make `seqretsetall` concrete before code starts:
+      - bounded provider-aware many-set retrieval/write workflow only
+      - deterministic normalized sequence-return output built on the same
+        governed retrieval substrate as `seqret`
+      - stable output surface with explicit source and grouping behavior
+        defined by the same computation path
+      - canonical managed-asset or mocked-provider fixtures
+      - compared evidence required on normalized returned sequence sets, not
+        just orchestration intent
+    - The non-goals remain explicit:
+      - no hidden live-network validation
+      - no broad provider-parity claims
+      - no generic retrieval-family widening merely because `seqretsetall`
+        ships

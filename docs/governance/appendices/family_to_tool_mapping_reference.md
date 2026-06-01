@@ -3244,6 +3244,28 @@ inactive:
 - `seqretsplit`
 - `infoassembly`
 
+#### Method-level acceptance criteria for `seqretsetall`
+
+After selecting `seqretsetall` as the bounded retrieval lead method, the
+repository should make its acceptance criteria explicit before code starts.
+
+The governed criteria should be:
+
+- bounded provider-aware many-set retrieval/write workflow only
+- deterministic normalized sequence-return output built on the same governed
+  retrieval substrate already proven by `seqret`
+- stable output surface with explicit source and grouping behavior defined by
+  the same computation path rather than by ad hoc filesystem side effects
+- canonical managed-asset or mocked-provider fixtures
+- compared evidence on normalized returned sequence sets rather than on
+  orchestration intent alone
+
+The non-goals should remain explicit:
+
+- no hidden live-network validation
+- no broad provider-parity claims
+- no generic retrieval-family widening merely because `seqretsetall` ships
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
