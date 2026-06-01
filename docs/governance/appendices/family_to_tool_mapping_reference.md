@@ -3295,6 +3295,25 @@ The same guardrails should remain explicit:
 - no broad provider-parity claims
 - no retrieval-family widening beyond the selected lead-method slice
 
+#### Bounded implementation tier for `seqretsetall`
+
+After making `seqretsetall` the active bounded retrieval lead method and
+capturing its exact patch start conditions, the repository should map the full
+bounded implementation tier explicitly before code starts.
+
+The bounded `seqretsetall` tier should be:
+
+1. implement the bounded provider-aware orchestration and normalized many-set
+   return core
+2. expose the governed output surface for deterministic many-set
+   retrieval/write behavior
+3. expose `seqretsetall` through the governed shipped surface
+4. add canonical managed-asset or mocked-provider fixtures plus compared
+   evidence
+5. re-run the full release-truth surface after shipping `seqretsetall`
+6. reassess the shipped `seqretsetall` slice before any further retrieval
+   continuation is mapped
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

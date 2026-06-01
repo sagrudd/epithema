@@ -3464,3 +3464,19 @@ implementation-program cycle. The near-term priorities are:
       - no hidden live-network dependencies
       - no broad provider-parity claims
       - no retrieval-family widening beyond the selected lead-method slice
+
+221. Map the full bounded `seqretsetall` implementation tier.
+    - Complete.
+    - Recorded the full bounded implementation tier explicitly in the
+      governance appendix and roadmap.
+    - The bounded `seqretsetall` tier is now explicit:
+      1. implement the bounded provider-aware orchestration and normalized
+         many-set return core
+      2. expose the governed output surface for deterministic many-set
+         retrieval/write behavior
+      3. expose `seqretsetall` through the governed shipped surface
+      4. add canonical managed-asset or mocked-provider fixtures plus compared
+         evidence
+      5. re-run the full release-truth surface after shipping `seqretsetall`
+      6. reassess the shipped `seqretsetall` slice before any further
+         retrieval continuation is mapped
