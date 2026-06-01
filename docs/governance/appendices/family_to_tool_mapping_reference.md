@@ -3503,6 +3503,25 @@ The same guardrails should remain explicit:
 - no implicit widening into `infoassembly`
 - no retrieval-family widening beyond the selected lead-method slice
 
+#### Bounded implementation tier for `seqretsplit`
+
+After selecting `seqretsplit` as the bounded retrieval continuation lead
+method and capturing its exact patch start conditions, the repository should
+map the full bounded implementation tier explicitly before code starts.
+
+The bounded `seqretsplit` tier should be:
+
+1. implement the bounded provider-aware split-output orchestration and
+   normalized return core
+2. expose the governed output surface for deterministic split-output retrieval
+   behavior
+3. expose `seqretsplit` through the governed shipped surface
+4. add canonical managed-asset or mocked-provider fixtures plus compared
+   evidence
+5. re-run the full release-truth surface after shipping `seqretsplit`
+6. reassess the shipped `seqretsplit` slice before any further retrieval
+   continuation is mapped
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

@@ -3739,3 +3739,18 @@ implementation-program cycle. The near-term priorities are:
       - no broad provider-parity claims
       - no implicit widening into `infoassembly`
       - no retrieval-family widening beyond the selected lead-method slice
+
+236. Complete. Map the full bounded `seqretsplit` implementation tier.
+    - Recorded the full bounded implementation tier explicitly in the
+      governance appendix and roadmap.
+    - The bounded `seqretsplit` tier is now explicit:
+      1. implement the bounded provider-aware split-output orchestration and
+         normalized return core
+      2. expose the governed output surface for deterministic split-output
+         retrieval behavior
+      3. expose `seqretsplit` through the governed shipped surface
+      4. add canonical managed-asset or mocked-provider fixtures plus compared
+         evidence
+      5. re-run the full release-truth surface after shipping `seqretsplit`
+      6. reassess the shipped `seqretsplit` slice before any further retrieval
+         continuation is mapped
