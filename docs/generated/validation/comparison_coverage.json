@@ -6,18 +6,11 @@
   "summary": {
     "total_method_count": 105,
     "family_count": 10,
-    "compared_count": 104,
-    "executable_only_count": 1,
-    "harvested_but_not_compared_count": 1
+    "compared_count": 105,
+    "executable_only_count": 0,
+    "harvested_but_not_compared_count": 0
   },
   "families": [
-    {
-      "family": "Modernize — Rework — Remote retrieval and archive acquisition",
-      "shipped_method_count": 5,
-      "compared_count": 4,
-      "executable_only_count": 1,
-      "harvested_but_not_compared_count": 1
-    },
     {
       "family": "Core Retain — Alignment read-write and post-processing",
       "shipped_method_count": 13,
@@ -71,6 +64,13 @@
       "family": "Modernize — Rework — Protein property and structural-summary utilities",
       "shipped_method_count": 2,
       "compared_count": 2,
+      "executable_only_count": 0,
+      "harvested_but_not_compared_count": 0
+    },
+    {
+      "family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "shipped_method_count": 5,
+      "compared_count": 5,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

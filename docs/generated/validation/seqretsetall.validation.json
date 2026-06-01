@@ -9,8 +9,8 @@
     "harvested_case_count": 1,
     "runnable_case_count": 0,
     "executed_case_count": 1,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -22,10 +22,11 @@
       "evidence_source": "executed_run",
       "declaration_status": "harvested",
       "execution_status": "executed",
-      "comparison_status": "pending",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
-        "seqretsetall_mocked_mixed_case"
+        "three_record_fasta",
+        "two_record_fasta"
       ],
       "expected_output_ids": [
         "partitioned_sequence_collection"

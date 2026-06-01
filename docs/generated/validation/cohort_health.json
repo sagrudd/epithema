@@ -3,29 +3,15 @@
   "report_id": "cohort-health-reprioritization-gate",
   "summary": {
     "total_method_count": 105,
-    "compared_evidence_count": 104,
+    "compared_evidence_count": 105,
     "harvested_legacy_presence_count": 105,
     "retained_backlog_count": 0,
     "largest_retained_backlog_family": null,
     "largest_retained_backlog_size": 0,
-    "weakest_evidence_family": "Modernize — Rework — Remote retrieval and archive acquisition",
-    "weak_evidence_method_count": 1,
+    "weakest_evidence_family": null,
+    "weak_evidence_method_count": 0,
     "release_truth_current": true
   },
-  "signals": [
-    {
-      "code": "weak_evidence_burden",
-      "severity": "notice",
-      "summary": "'Modernize — Rework — Remote retrieval and archive acquisition' carries the largest weak-evidence burden",
-      "detail": "'Modernize — Rework — Remote retrieval and archive acquisition' has 1 shipped methods below compared evidence and 4 already compared."
-    }
-  ],
-  "recommendations": [
-    {
-      "priority": 1,
-      "target": "Modernize — Rework — Remote retrieval and archive acquisition",
-      "rationale": "This family has 1 shipped methods still below compared evidence, so it is the strongest candidate for the next acceptance/harvest deepening sweep.",
-      "source_signal": "weak_evidence_burden"
-    }
-  ]
+  "signals": [],
+  "recommendations": []
 }

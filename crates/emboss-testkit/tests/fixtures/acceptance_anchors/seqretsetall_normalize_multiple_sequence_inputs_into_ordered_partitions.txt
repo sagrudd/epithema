@@ -1,0 +1,13 @@
+# Partition 1
+>alpha first example
+ACGT
+>beta second example
+TTTT
+>gamma third example
+GGCC
+
+# Partition 2
+>delta fourth example
+AACCGG
+>epsilon fifth example
+TTAACC

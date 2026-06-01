@@ -3561,3 +3561,12 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
     - This is the expected executable-only state before Task `226` adds
       canonical fixtures and compared evidence for `seqretsetall`.
+
+226. Complete. Add canonical fixtures and compared evidence for `seqretsetall`.
+    The `seqretsetall` slice now carries a checked-in partitioned-output
+    acceptance fixture and acceptance-anchor coverage for the bounded local
+    many-set retrieval path. The governed report surface is back to the
+    zero-burden state: shipped methods `105`, compared evidence `105`,
+    executable evidence `0`, harvested legacy provenance present `105`,
+    full-compared cohort `true`, harvest coverage complete `true`, and
+    release-truth current `true`.

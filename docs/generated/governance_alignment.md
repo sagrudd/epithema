@@ -14,7 +14,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Shipped tools with curated autodoc: `105`
 - Shipped tools with executable or compared evidence: `105`
 - Shipped tools with harvested legacy provenance: `105`
-- Shipped tools with compared evidence: `104`
+- Shipped tools with compared evidence: `105`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
@@ -46,7 +46,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 10 | 10 | 10 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 5 | 5 | 4 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 5 | 5 | 5 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — Modern archive-scale raw data ingestion | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -83,7 +83,7 @@ All shipped methods are mapped in the governance appendix.
 | `needleall` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `water` | `pairwise_alignment` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `seqret` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
-| `seqretsetall` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `executable_evidence` |
+| `seqretsetall` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `refseqget` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `newseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `makenucseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |

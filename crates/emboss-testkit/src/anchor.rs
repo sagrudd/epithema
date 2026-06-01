@@ -69,6 +69,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "seqret -sequence three_records.fasta -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "seqretsetall",
+        autodoc_contract: "docs/autodoc/tools/seqretsetall.json",
+        example_id: "normalize_multiple_sequence_inputs_into_ordered_partitions",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/seqretsetall_normalize_multiple_sequence_inputs_into_ordered_partitions.txt",
+        legacy_source: "EMBOSS seqretsetall application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd",
+        legacy_invocation: "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "refseqget",
         autodoc_contract: "docs/autodoc/tools/refseqget.json",
         example_id: "retrieve_provider_qualified_reference_sequence",
@@ -1312,6 +1321,16 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
         "seqret" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+        ],
+        "seqretsetall" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/three_records.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/two_records.fasta")
                 .display()
                 .to_string(),
         ],

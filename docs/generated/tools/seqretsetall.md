@@ -32,15 +32,35 @@ The current interface accepts at least two governed input references. Local sequ
 
 The result is a partitioned normalized sequence collection rendered through the governed sequence-partition surface. Each resolved input contributes one ordered output record set, preserving both input ordering and per-input record ordering.
 
+## Legacy Context
+
+This acceptance anchor keeps one bounded historical-style `seqretsetall` normalization example in view and compares the EMBOSS-RS partitioned output against a committed expected payload. The comparison is deliberately narrow and local-fixture based; it does not claim broad provider or filesystem-policy parity.
+
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqretsetall`. Rust service coverage exercises the local many-set path through the shipped service dispatch and also covers a mixed local plus mocked-provider path through the explicit provider seam. That proves the bounded retrieval surface without claiming harvested live-provider acceptance evidence yet.
+This method is implemented and exposed through `emboss-rs seqretsetall`. The bounded local many-set path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises a mixed local plus mocked-provider path through the explicit provider seam. That proves the governed retrieval surface without claiming harvested live-provider acceptance evidence yet.
 
 ## Caveats
 
 The first release is intentionally narrow. `seqretsetall` is not yet a generic batching or filesystem-policy framework, does not accept inline sequence literals, and does not claim broad provider-parity beyond the governed explicit-provider seam already exercised in Rust tests.
 
 ## Declared Artifacts
+
+### Three-record FASTA fixture
+
+- Artifact ID: `three_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Notes: Repository-managed multi-record FASTA fixture used as the first ordered input set in the bounded local many-set retrieval example.
+
+### Two-record FASTA fixture
+
+- Artifact ID: `two_record_fasta`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/two_records.fasta`
+- Notes: Repository-managed two-record FASTA fixture used as the second ordered input set in the bounded local many-set retrieval example.
 
 ### Mocked mixed many-set retrieval case
 
@@ -55,8 +75,8 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 ### Normalize multiple sequence inputs into ordered output partitions
 
 - Example ID: `normalize_multiple_sequence_inputs_into_ordered_partitions`
-- Description: Resolves two governed sequence inputs through the shared retrieval substrate and returns one ordered normalized output record set per input.
-- Referenced artifacts: `seqretsetall_mocked_mixed_case`
+- Description: Resolves two committed local FASTA inputs through the shared retrieval substrate and returns one ordered normalized output record set per input.
+- Referenced artifacts: `three_record_fasta`, `two_record_fasta`
 - Expected outputs:
   - `partitioned_sequence_collection`: Partitioned normalized sequence collection (A sequence-partition payload that preserves input-set ordering and per-input record ordering across local and explicitly provider-qualified sources.)
 - Legacy reference: EMBOSS seqretsetall application
@@ -74,5 +94,5 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `normalize_multiple_sequence_inputs_into_ordered_partitions`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes
