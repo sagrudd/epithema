@@ -2824,10 +2824,19 @@ implementation-program cycle. The near-term priorities are:
         - `findkm`
 
 184. Decide whether another bounded plotting continuation candidate still exists after `isochore`.
-    - Close the pass/fail gate honestly:
-      - if a bounded continuation candidate still exists, stay on the plotting
-        path
-      - if not, activate the prepared retrieval fallback planning path
+    - Closed the pass/fail gate explicitly after the post-`isochore`
+      seam-pressure reclassification.
+    - Decision:
+      - yes, another bounded plotting continuation candidate still exists
+        after `isochore`
+    - Recorded the current viable post-`isochore` continuation pool:
+      - `banana`
+      - `syco`
+    - Conclusion:
+      - the no-candidate branch is not taken
+      - the repository remains on the plotting continuation path
+      - the prepared retrieval fallback remains documented, ready, and
+        inactive at this checkpoint
 
 185. If the post-`isochore` plotting pool fails honest seam review, activate the prepared retrieval fallback branch explicitly.
     - Record the fallback activation honestly only if the continuation gate
