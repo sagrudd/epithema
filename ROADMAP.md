@@ -4317,10 +4317,25 @@ implementation-program cycle. The near-term priorities are:
       - no family-wide continuation claim merely because `psiphi` ships
 
 265. Capture the exact start conditions for the first `psiphi` implementation patch.
-    - Record the governed preconditions that must still hold before the first
-      code-bearing `psiphi` patch begins.
-    - Keep the patch scoped to `psiphi` and only the smallest necessary local
-      support.
+    - Captured the exact governed patch start conditions for `psiphi` in the
+      roadmap and governance appendix.
+    - The start gate now requires:
+      - the current active-program ordering to remain intact:
+        1. protein-property rework
+        2. restriction-analysis rework
+      - `psiphi` to remain the single bounded lead candidate for the active
+        protein-property branch
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `psiphi` plus the smallest support
+        needed for deterministic coordinate-derived computation, typed
+        result-surface emission, and governed docs/validation plumbing
+      - the patch to land as a full bounded slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no Ramachandran plotting
+      - no broad structural-analysis family activation
+      - no generalized coordinate-processing framework
+      - no promotion of reserve restriction-analysis work while the bounded
+        `psiphi` branch remains active
 
 266. Map the full bounded `psiphi` implementation tier.
     - Break the `psiphi` program into the same bounded governed sequence used

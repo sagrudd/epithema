@@ -3924,6 +3924,36 @@ The non-goals remain explicit:
   comparative coordinate analytics
 - no family-wide continuation claim merely because `psiphi` ships
 
+#### Exact start conditions for the first `psiphi` implementation patch
+
+After capturing the method-level acceptance criteria for `psiphi`, the
+repository should make the exact patch start conditions explicit before code
+begins.
+
+The following are treated as explicit start conditions:
+
+- the current active-program ordering remains intact:
+  1. protein-property rework
+  2. restriction-analysis rework
+- `psiphi` remains the single bounded lead candidate for the active
+  protein-property branch
+- the zero-burden release-truth surface remains intact
+- the first patch stays limited to `psiphi` plus the smallest support needed
+  for deterministic coordinate-derived computation, typed result-surface
+  emission, and governed docs/validation plumbing
+- the patch lands as a full bounded slice rather than a half-start
+
+The same guardrails remain explicit:
+
+- no Ramachandran plotting
+- no broad structural-analysis family activation
+- no generalized coordinate-processing framework
+- no promotion of reserve restriction-analysis work while the bounded
+  `psiphi` branch remains active
+
+Only when those start conditions still hold should code work begin for the
+bounded `psiphi` slice.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
