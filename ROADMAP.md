@@ -3191,3 +3191,14 @@ implementation-program cycle. The near-term priorities are:
         active candidate
       - the zero-burden release-truth surface requirement
       - patch-scope and full-governed-slice constraints before code starts
+
+206. Map the full bounded implementation tier for the final bounded plotting continuation candidate.
+    - Mapped the full bounded `syco` implementation tier in the governance
+      appendix and roadmap.
+    - Recorded the complete method-associated slice before code starts:
+      1. analytical core
+      2. typed plot-contract emission path
+      3. governed shipped-surface exposure
+      4. canonical fixtures and compared evidence
+      5. post-ship release-truth rerun
+      6. post-ship reassessment

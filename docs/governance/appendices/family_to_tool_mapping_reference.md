@@ -3033,6 +3033,31 @@ That means the first `syco` patch should not widen immediately into:
 Only when those start conditions still hold should code work begin for the
 final bounded plotting continuation candidate.
 
+#### Full bounded `syco` implementation tier
+
+Before code work begins for the final bounded plotting continuation candidate,
+the complete bounded `syco` implementation tier should be recorded explicitly
+as follows:
+
+1. implement the bounded analytical core
+2. add the typed plot-contract emission path
+3. expose `syco` through the governed shipped surface
+4. add canonical analytical and plot-contract fixtures plus compared evidence
+5. re-run the full release-truth surface after shipping `syco`
+6. reassess the shipped `syco` slice before any further continuation is mapped
+
+That tier should remain bounded by the same constraints already established for
+the final continuation candidate:
+
+- method-associated implementation only
+- table-first analytical output
+- typed contract output derived from the same computation path
+- no Rust-side rendering
+- no silent widening into a generic plotting framework
+- no broader plot-contract taxonomy unless `syco` itself forces a real local
+  reassessment
+- no implicit continuation beyond the final bounded `syco` slice
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
