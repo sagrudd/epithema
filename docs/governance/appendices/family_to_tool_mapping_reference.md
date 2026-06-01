@@ -2410,6 +2410,43 @@ If one of these conditions becomes true, the repository should not force-fit
 `isochore` through the bounded seam. It should stop and reassess whether the
 active plotting branch still remains the right next implementation path.
 
+#### Reassessment after the shipped `isochore` slice
+
+After the bounded `isochore` tier closed as a shipped governed slice, the
+repository should explicitly record whether the bounded plotting seam still
+remains credible before mapping any further continuation.
+
+The observed answer after the shipped `isochore` slice is still yes.
+
+That conclusion is grounded in the actual shipped seam behavior:
+
+- `isochore` stayed method-associated
+- the analytical surface remained table-first and kept the richer GC, AT, and
+  bounded isochore-band rows explicit rather than collapsing the method into a
+  plot-only surface
+- the emitted contract stayed bounded to a single derived GC-percent series
+- no Rust-side rendering, presentation policy, or layout logic entered the
+  Rust surface
+- no generalized plotting-framework pressure emerged
+- no retrieval-fallback activation stop condition tripped
+
+The current generated release-truth surface also remained fully green after
+the shipped `isochore` slice closed:
+
+- shipped methods: `102`
+- compared evidence: `102`
+- executable evidence: `0`
+- harvested legacy provenance present: `102`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
+So the repository should remain on the plotting continuation branch at this
+checkpoint, with the prepared retrieval fallback still documented and ready
+but inactive unless a later bounded candidate trips the explicit stop
+conditions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
