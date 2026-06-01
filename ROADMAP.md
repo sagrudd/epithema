@@ -2700,8 +2700,14 @@ implementation-program cycle. The near-term priorities are:
       state back to full compared/full-harvest truth.
 
 179. Re-run the full release-truth surface after shipping the selected next plotting candidate.
-    - Reconfirm `make release-generated-check`, `truth-check`, generated docs,
-      and zero-burden summary semantics after the new slice closes.
+    - Reconfirmed `make release-generated-check`, `truth-check`, generated
+      docs, and zero-burden summary semantics after the `isochore` slice
+      closed.
+    - Observed result:
+      - `release-generated-check`: passed
+      - `truth-check`: passed
+      - docs build: passed
+      - `git diff --check`: passed
 
 180. Reassess the shipped selected next plotting slice before any further continuation is mapped.
     - Decide whether the bounded plotting seam still remains credible after the
