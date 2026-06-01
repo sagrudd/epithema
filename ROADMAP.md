@@ -2839,8 +2839,17 @@ implementation-program cycle. The near-term priorities are:
         inactive at this checkpoint
 
 185. If the post-`isochore` plotting pool fails honest seam review, activate the prepared retrieval fallback branch explicitly.
-    - Record the fallback activation honestly only if the continuation gate
-      truly fails.
+    - Closed this conditional branch honestly as untriggered.
+    - Basis:
+      - the post-`isochore` viability gate remained affirmative
+      - the narrowed plotting continuation pool is still:
+        - `banana`
+        - `syco`
+    - Conclusion:
+      - the repository does not activate the prepared retrieval fallback at
+        this checkpoint
+      - retrieval remains documented, ready, and inactive while the active
+        branch stays on bounded plotting continuation
 
 186. If the post-`isochore` plotting pool remains viable, choose exactly one next bounded continuation candidate.
     - Restrict the active selection to the narrowed viable pool:

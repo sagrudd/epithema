@@ -2575,6 +2575,17 @@ as untriggered at this checkpoint. The repository should not promote the
 fallback by inertia when the narrowed plotting continuation pool remains
 credible.
 
+#### Untriggered retrieval-activation branch after post-`isochore` viability
+
+Because the post-`isochore` viability gate remained affirmative, the prepared
+retrieval fallback should remain documented and ready but inactive at this
+checkpoint.
+
+The repository should therefore not map a retrieval implementation start or a
+retrieval lead-method decision here. The active planning branch remains the
+bounded plotting continuation path until a later candidate-selection or
+shipment gate trips the explicit fallback-activation stop conditions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
