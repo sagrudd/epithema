@@ -2681,8 +2681,11 @@ implementation-program cycle. The near-term priorities are:
       classification.
 
 176. Add the typed plot-contract emission path for the selected next plotting candidate.
-    - Emit a deterministic method-associated contract from the same analytical
-      computation path without widening into a generic plotting framework.
+    - Added the staged typed `isochore` contract path over the bounded
+      analytical core.
+    - Kept the emitted contract method-associated, deterministic, and bounded
+      to a single derived GC-percent line without widening into a generic
+      plotting framework.
 
 177. Expose the selected next plotting candidate through the governed shipped surface.
     - Wire the method through the registry, service, CLI, governed autodoc, and
