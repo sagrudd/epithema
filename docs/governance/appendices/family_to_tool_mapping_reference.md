@@ -3876,6 +3876,28 @@ This remains an ordering checkpoint only:
 - it does not widen the reserve restriction-analysis family beyond the already
   governed retained subset
 
+#### Bounded lead-candidate activation inside active protein-property rework
+
+After protein-property rework becomes the active planning program, the
+repository should activate the single bounded lead candidate explicitly rather
+than implying a broader active pool.
+
+That bounded lead-candidate selection is:
+
+- active bounded protein-property lead candidate:
+  - `psiphi`
+
+The basis is narrow and explicit:
+
+- `iep` is already shipped and fully evidenced
+- `pepdigest` is already shipped and fully evidenced
+- `psiphi` is the only remaining governed protein-property rework member that
+  is neither already shipped nor explicitly omitted
+
+So the repository should record that no broader protein-property candidate pool
+remains active at this checkpoint; `psiphi` is the single bounded lead
+candidate for the active program.
+
 #### Method-level acceptance criteria for `psiphi`
 
 After activating `psiphi` as the bounded lead candidate inside the active

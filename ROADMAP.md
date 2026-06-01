@@ -4287,10 +4287,15 @@ implementation-program cycle. The near-term priorities are:
       - no restriction-analysis implementation tier is activated here
 
 263. Activate the single bounded protein-property lead candidate explicitly.
-    - Record explicitly that `psiphi` is now the single bounded lead candidate
-      for the active protein-property rework program.
-    - Record explicitly why the family narrows to that candidate after `iep`
-      and `pepdigest` are already shipped.
+    - Recorded explicitly that `psiphi` is now the single bounded lead
+      candidate for the active protein-property rework program.
+    - Recorded explicitly why the family narrows to that candidate:
+      - `iep` is already shipped and fully evidenced
+      - `pepdigest` is already shipped and fully evidenced
+      - `psiphi` is the only remaining governed protein-property rework
+        member that is neither already shipped nor explicitly omitted
+    - Recorded explicitly that no broader protein-property candidate pool
+      remains active at this checkpoint.
 
 264. Capture explicit `psiphi` method-level acceptance criteria.
     - Captured explicit governed `psiphi` acceptance criteria in the roadmap
