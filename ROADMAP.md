@@ -3322,3 +3322,36 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded retrieval slice
       - rerunning release truth and reassessing the shipped retrieval slice
         before any further continuation is mapped
+
+215. Confirm explicitly that the bounded plotting continuation family is now exhausted as an active branch.
+    - Complete.
+    - Recorded the branch-resolution outcome explicitly in the governance
+      appendix and roadmap.
+    - The conclusion is:
+      - the bounded plotting continuation program has now closed through its
+        final selected candidate
+      - no comparably bounded plotting continuation candidate remains active
+      - continued plotting should no longer be treated as the default next
+        planning branch
+      - the prepared remote-retrieval fallback should now become the active
+        next planning program by explicit branch resolution
+    - Basis:
+      - bounded plotting Phase 1 closed and passed reassessment:
+        - `hmoment`
+        - `octanol`
+        - `pepinfo`
+      - bounded continuation slices also closed and passed reassessment:
+        - `density`
+        - `wobble`
+        - `isochore`
+        - `banana`
+        - `syco`
+      - the governed release-truth surface remained fully green:
+        - shipped methods: `104`
+        - compared evidence: `104`
+        - executable evidence: `0`
+        - harvested legacy provenance present: `104`
+        - `full_compared_cohort: true`
+        - `harvest_coverage_complete: true`
+        - `retained_backlog_closed: true`
+        - `release_truth_current: true`

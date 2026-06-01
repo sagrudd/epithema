@@ -3108,6 +3108,48 @@ So `syco` should be treated as having passed its shipped-slice reassessment
 gate, and any next roadmap extension should be derived from that observed
 post-closure state rather than from the earlier executable-only interim.
 
+#### Closure of the bounded plotting continuation branch
+
+After the shipped `syco` slice closed cleanly, the repository should make the
+branch-resolution outcome explicit: the bounded plotting continuation program
+is now exhausted as an active branch.
+
+That conclusion follows from the full observed bounded plotting path:
+
+- bounded Phase 1 closed and passed reassessment:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- bounded continuation slices also closed and passed reassessment:
+  - `density`
+  - `wobble`
+  - `isochore`
+  - `banana`
+  - `syco`
+
+The resulting planning consequence is explicit:
+
+- no comparably bounded plotting continuation candidate remains active after
+  the final selected `syco` slice
+- continued plotting should no longer be treated as the default next planning
+  branch
+- the prepared remote-retrieval fallback should now become the active next
+  planning program by explicit branch resolution
+- protein-property rework remains documented but stays third until the
+  retrieval branch is reassessed
+
+The governed release-truth surface still remains fully green at this branch
+closure point:
+
+- shipped methods: `104`
+- compared evidence: `104`
+- executable evidence: `0`
+- harvested legacy provenance present: `104`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
