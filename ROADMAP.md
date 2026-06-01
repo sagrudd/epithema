@@ -3693,3 +3693,23 @@ implementation-program cycle. The near-term priorities are:
     - The non-selected bounded continuation candidate remains documented but
       inactive:
       - `infoassembly`
+
+234. Complete. Capture explicit method-level acceptance criteria for
+    `seqretsplit`.
+    - Recorded the governed method-level acceptance criteria explicitly in the
+      governance appendix and roadmap.
+    - The criteria now make `seqretsplit` concrete before code starts:
+      - bounded provider-aware split-output retrieval workflow only
+      - deterministic normalized sequence-return output built on the same
+        governed retrieval substrate as `seqret` and `seqretsetall`
+      - stable partitioned output surface with explicit file-naming and
+        grouping behavior defined by the same computation path
+      - canonical managed-asset or mocked-provider fixtures
+      - compared evidence required on normalized split-output sequence sets,
+        not just orchestration intent
+    - The non-goals remain explicit:
+      - no hidden live-network validation
+      - no broad provider-parity claims
+      - no implicit promotion of `infoassembly`
+      - no generic retrieval-family widening merely because `seqretsplit`
+        ships
