@@ -5,12 +5,14 @@ This page is generated from the shipped cohort validation report. It exists to m
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Shipped methods: `102`
+- Shipped methods: `103`
 - Compared-evidence methods: `102`
-- Executable-evidence methods: `0`
-- Methods below compared evidence: `0`
-- Full compared cohort: `yes`
+- Executable-evidence methods: `1`
+- Methods below compared evidence: `1`
+- Full compared cohort: `no`
 
 ## Below-Compared Exceptions
 
-No shipped methods remain below compared evidence. The shipped cohort currently satisfies the full-compared release gate.
+| Tool | Family | Evidence level | Harvested legacy | Executable validation | Compared validation |
+|---|---|---|---|---|---|
+| `banana` | `nucleotide_plots` | `executable_evidence` | `yes` | `yes` | `no` |

@@ -945,7 +945,7 @@ mod tests {
     fn shipped_cohort_report_surfaces_visible_gaps() {
         let report = derive_shipped_cohort_validation_report(repo_root())
             .expect("cohort report should derive");
-        assert_eq!(report.summary.gapped_method_count, 0);
+        assert_eq!(report.summary.gapped_method_count, 1);
         let gap_map = report
             .methods
             .iter()
@@ -962,6 +962,15 @@ mod tests {
         );
         assert!(charge.unresolved_gaps.iter().any(|gap| {
             gap.code == crate::report::CohortGapCode::MissingExplicitLegacyReference
+        }));
+
+        let banana = gap_map.get("banana").expect("banana should be present");
+        assert_eq!(banana.evidence_level, CohortEvidenceLevel::ExecutableEvidence);
+        assert!(banana.harvested_legacy_evidence_present);
+        assert!(banana.executable_validation_present);
+        assert!(!banana.compared_validation_present);
+        assert!(banana.unresolved_gaps.iter().any(|gap| {
+            gap.code == crate::report::CohortGapCode::MissingComparedEvidence
         }));
 
         let pepwindow = gap_map

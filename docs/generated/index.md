@@ -20,6 +20,7 @@ tools/aligncopy
 tools/aligncopypair
 tools/backtranambig
 tools/backtranseq
+tools/banana
 tools/biosed
 tools/cai
 tools/charge

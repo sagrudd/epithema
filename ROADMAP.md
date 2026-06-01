@@ -2949,9 +2949,17 @@ implementation-program cycle. The near-term priorities are:
         over positions where curvature is defined
 
 194. Expose the selected next bounded continuation candidate through the governed shipped surface.
-    - Add registry, service, CLI, governed autodoc, and generated
+    - Completed the governed shipped-surface exposure for `banana`.
+    - Added registry, service, CLI, governed autodoc, and generated
       docs/validation support while keeping the temporary evidence state
       explicit until compared evidence closes.
+    - The current interim state is now:
+      - shipped methods: `103`
+      - compared evidence: `102`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `103`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: true`
 
 195. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next bounded continuation candidate.
     - Restore the shipped cohort from the temporary executable-only shipment

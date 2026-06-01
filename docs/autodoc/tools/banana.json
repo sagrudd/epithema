@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "banana-v1",
+  "tool": {
+    "name": "banana",
+    "family": "nucleotide_plots",
+    "summary": "Report a bounded B-DNA bendability profile and emit a line-plot contract",
+    "legacy_names": [
+      "banana"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`banana` is the next bounded plotting continuation after the shipped `isochore` slice. The EMBOSS-RS v1 surface computes one deterministic per-base B-DNA bendability and curvature profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This tool accepts exactly one nucleotide sequence record. v1 supports canonical DNA-like inputs, treats `U` as `T`, rejects ambiguous residues, and does not yet expose alternate legacy angle tables through the governed shipped surface."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a stable analytical table with `sequence_id`, `position`, `residue`, `local_bend`, and `curvature`. Edge positions where the bounded historical model does not define bend or curvature remain blank in the table. The staged v1 line-plot contract remains single-series and plots only the analytically derived `curvature` values at positions where curvature is defined."
+    },
+    {
+      "id": "plotting",
+      "kind": "notes",
+      "title": "Plotting Integration",
+      "content": "Rust does not render figures. The formal contract emitted by `banana` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `banana` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes both local bend and curvature signals."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs banana`. Validation currently covers stable analytical rows plus executable validation for the curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package. Compared acceptance evidence is still pending the canonical fixture closure task."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "v1 supports only the single-record bounded default-angle banana profile and does not add Rust-side rendering, multi-series plotting, alternate angle-file selection, or a generalized plotting framework. Additional continuation should remain bounded by the explicit fallback-activation stop conditions already recorded in governance."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "banana_fixture",
+      "label": "Nucleotide fixture for governed banana validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/banana_nucleotide.fasta"
+      },
+      "description": "Repository-managed nucleotide fixture used for deterministic banana validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "banana_profile_example",
+      "title": "Compute a deterministic bounded banana profile",
+      "description": "Reports deterministic per-base bendability and curvature rows from the committed nucleotide fixture and emits a governed single-series curvature line-plot contract from the same analytical run.",
+      "artifact_ids": [
+        "banana_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "banana_table",
+          "label": "Banana analytical table",
+          "description": "Stable per-base banana rows with explicit local-bend and curvature columns."
+        },
+        {
+          "id": "banana_plot",
+          "label": "Curvature line-plot contract",
+          "description": "The governed single-series curvature line-plot contract JSON emitted from the same deterministic analytical run."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS banana application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/banana.acd",
+        "invocation": "banana -sequence banana_nucleotide.fasta -graph data"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "banana_profile_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

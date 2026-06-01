@@ -3,16 +3,16 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 102,
-    "documentation_complete_count": 102,
-    "validation_stub_count": 102,
+    "total_method_count": 103,
+    "documentation_complete_count": 103,
+    "validation_stub_count": 103,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "harvested_legacy_presence_count": 102,
-    "executable_evidence_count": 0,
+    "harvested_legacy_presence_count": 103,
+    "executable_evidence_count": 1,
     "compared_evidence_count": 102,
-    "gapped_method_count": 0
+    "gapped_method_count": 1
   },
   "methods": [
     {
@@ -1148,6 +1148,33 @@
       "executable_validation_present": true,
       "compared_validation_present": true,
       "unresolved_gaps": []
+    },
+    {
+      "tool_name": "banana",
+      "family": "nucleotide_plots",
+      "summary": "report a bounded B-DNA bendability profile and emit a line-plot contract",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "executable_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'banana' has no compared validation evidence yet"
+        },
+        {
+          "code": "missing_explicit_legacy_reference",
+          "message": "example 'banana_profile_example' needs a legacy reference before comparison can run"
+        }
+      ]
     },
     {
       "tool_name": "density",

@@ -239,6 +239,14 @@ mod tests {
     }
 
     #[test]
+    fn routes_banana_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "banana", "example.fna"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("banana"));
+    }
+
+    #[test]
     fn routes_wobble_to_tool_path() {
         let cli =
             Cli::try_parse_from(["emboss-rs", "wobble", "example.fna"]).expect("tool should parse");

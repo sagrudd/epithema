@@ -45,8 +45,8 @@ use emboss_tools::feature_tools::{
     run_splitsource, run_twofeat, splitsource_help, twofeat_help,
 };
 use emboss_tools::nucleotide_plots::{
-    DensityParams, IsochoreParams, WobbleParams, density_help, isochore_help, run_density,
-    run_isochore, run_wobble, wobble_help,
+    BananaParams, DensityParams, IsochoreParams, WobbleParams, banana_help, density_help,
+    isochore_help, run_banana, run_density, run_isochore, run_wobble, wobble_help,
 };
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
@@ -336,6 +336,7 @@ impl EmbossService {
             "seqmatchall" => self.invoke_seqmatchall(request, descriptor),
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
+            "banana" => self.invoke_banana(request, descriptor),
             "density" => self.invoke_density(request, descriptor),
             "wobble" => self.invoke_wobble(request, descriptor),
             "isochore" => self.invoke_isochore(request, descriptor),
@@ -5215,6 +5216,125 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_banana(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, banana_help()));
+        }
+
+        let (params, plot_contract_out) = parse_banana_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_banana(BananaParams { input })?;
+        let status_message = format!(
+            "computed bounded banana profile across {} positions",
+            outcome.profile.points.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "position".to_owned(),
+                    "residue".to_owned(),
+                    "local_bend".to_owned(),
+                    "curvature".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .points
+                    .iter()
+                    .map(|point| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            point.position.to_string(),
+                            point.residue.to_string(),
+                            point
+                                .local_bend
+                                .map(|value| format!("{value:.6}"))
+                                .unwrap_or_default(),
+                            point
+                                .curvature
+                                .map(|value| format!("{value:.6}"))
+                                .unwrap_or_default(),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("Banana profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line("X axis: 1-based position")
+                .with_line("Y axis: curvature")
+                .with_line(
+                    "Analytical table also reports local bend values and leaves edge positions blank where the bounded model does not define bend or curvature",
+                )
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize banana plot contract: {error}"),
+                )
+                .with_code("service.banana.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write banana plot contract to {}", path.display()),
+                )
+                .with_code("service.banana.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("banana plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("banana-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Banana plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_wobble(
         &self,
         request: InvocationRequest,
@@ -9334,6 +9454,48 @@ fn parse_hmoment_params(
     ))
 }
 
+fn parse_banana_params(
+    arguments: &[String],
+) -> Result<(BananaParams, Option<PathBuf>), ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("banana", banana_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let mut plot_contract_out = None;
+    let mut index = 1usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.banana.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown banana argument '{argument}'"),
+        )
+        .with_code("service.tool.banana.argument_unknown")
+        .with_detail(banana_help()));
+    }
+
+    Ok((BananaParams { input }, plot_contract_out))
+}
+
 fn parse_density_params(
     arguments: &[String],
 ) -> Result<(DensityParams, Option<PathBuf>), ServiceError> {
@@ -11578,6 +11740,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
+        "banana" => banana_help(),
         "density" => density_help(),
         "wobble" => wobble_help(),
         "isochore" => isochore_help(),
@@ -11824,6 +11987,11 @@ mod tests {
     fn density_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/density_nucleotide.fasta")
+    }
+
+    fn banana_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/banana_nucleotide.fasta")
     }
 
     fn wobble_fixture() -> std::path::PathBuf {
@@ -15904,6 +16072,87 @@ mod tests {
             .invoke(request)
             .expect_err("invalid window should fail");
         assert_eq!(error.code(), Some("service.tool.density.--window_invalid"));
+    }
+
+    #[test]
+    fn executes_banana_against_nucleotide_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("banana").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![banana_fixture().display().to_string()]);
+
+        let response = service.invoke(request).expect("banana should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 45);
+                assert_eq!(table.rows[0][0], "banana_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "A");
+                assert_eq!(table.rows[0][3], "");
+                assert_eq!(table.rows[0][4], "");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("banana should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+        assert_eq!(plot.series.len(), 1);
+    }
+
+    #[test]
+    fn banana_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-banana-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("banana").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            banana_fixture().display().to_string(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("banana should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"banana\""));
+        assert!(emitted.contains("\"method\": \"nucleotide_banana_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "banana-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn banana_rejects_unknown_argument() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("banana").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            banana_fixture().display().to_string(),
+            "--window".to_owned(),
+            "4".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("unknown argument should fail");
+        assert_eq!(error.code(), Some("service.tool.banana.argument_unknown"));
     }
 
     #[test]
