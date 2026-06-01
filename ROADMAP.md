@@ -4165,3 +4165,21 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
     - This closes the bounded `infoassembly` retrieval slice at compared
       evidence and harvested legacy provenance.
+
+257. Complete. Re-run the full release-truth surface after shipping `infoassembly`.
+    - Re-ran the broad release-truth checkpoint after the bounded
+      `infoassembly` evidence closure.
+    - Observed result:
+      - `PYTHON=.venv-docs/bin/python make release-generated-check`: passed
+      - `python3 scripts/release_metadata.py truth-check`: passed
+      - `PYTHON=.venv-docs/bin/python make docs`: passed
+      - `git diff --check`: passed
+    - Governed release-truth state remained fully green:
+      - shipped methods `107`
+      - compared evidence `107`
+      - executable evidence `0`
+      - harvested legacy provenance present `107`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
