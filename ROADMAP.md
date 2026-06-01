@@ -2904,7 +2904,9 @@ implementation-program cycle. The near-term priorities are:
       - patch-scope and full-governed-slice constraints before code starts
 
 190. Map the full bounded implementation tier for the selected next bounded continuation candidate.
-    - Record the full method-associated slice:
+    - Mapped the explicit bounded `banana` implementation tier in the
+      governance appendix.
+    - Recorded the full method-associated slice:
       1. analytical core
       2. typed plot-contract emission path
       3. governed shipped-surface exposure

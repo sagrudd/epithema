@@ -2710,6 +2710,36 @@ That means the first `banana` patch should not widen immediately into:
 - broader plot-contract taxonomies unless `banana` itself makes that pressure
   concrete enough to stop and reassess
 
+#### Bounded `banana` implementation tier
+
+Because `banana` is now the single selected next bounded continuation
+candidate, the repository should map its full method-associated implementation
+tier explicitly before code starts.
+
+The bounded `banana` tier should be:
+
+1. implement the bounded analytical core for `banana`
+2. add the typed `banana` plot-contract emission path
+3. expose `banana` through the governed shipped surface
+4. add canonical analytical and plot-contract fixtures plus compared evidence
+5. re-run the full release-truth surface after shipping `banana`
+6. reassess the shipped `banana` slice before any further continuation is
+   mapped
+
+The bounded `banana` tier should preserve the same architectural constraints
+already enforced for the earlier plotting continuation slices:
+
+- method-associated implementation only
+- table-first analytical output
+- typed contract output from the same computation path
+- no Rust-side rendering
+- no generic plotting-framework widening
+- no broader plot-contract taxonomy unless `banana` itself makes that pressure
+  concrete enough to stop and reassess
+
+So the next code-bearing work is not an abstract “continue plotting” step. It
+should begin only as this explicit bounded `banana` tier.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
