@@ -242,12 +242,13 @@ mod tests {
         let report = derive_full_compared_cohort_report(repo_root())
             .expect("full-compared-cohort report should derive");
 
-        assert_eq!(report.summary.total_method_count, 107);
+        assert_eq!(report.summary.total_method_count, 108);
         assert_eq!(report.summary.compared_evidence_count, 107);
-        assert_eq!(report.summary.executable_evidence_count, 0);
-        assert_eq!(report.summary.below_compared_method_count, 0);
-        assert!(report.summary.full_compared_cohort);
-        assert!(report.below_compared_methods.is_empty());
+        assert_eq!(report.summary.executable_evidence_count, 1);
+        assert_eq!(report.summary.below_compared_method_count, 1);
+        assert!(!report.summary.full_compared_cohort);
+        assert_eq!(report.below_compared_methods.len(), 1);
+        assert_eq!(report.below_compared_methods[0].tool_name, "psiphi");
     }
 
     #[test]
@@ -258,9 +259,7 @@ mod tests {
 
         assert!(markdown.contains("# Full Compared Cohort Gate"));
         assert!(markdown.contains("## Summary"));
-        assert!(markdown.contains("Full compared cohort: `yes`"));
-        assert!(markdown.contains(
-            "No shipped methods remain below compared evidence."
-        ));
+        assert!(markdown.contains("Full compared cohort: `no`"));
+        assert!(markdown.contains("`psiphi`"));
     }
 }

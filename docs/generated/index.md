@@ -92,6 +92,7 @@ tools/pepstats
 tools/pepwindow
 tools/preg
 tools/prettyseq
+tools/psiphi
 tools/recoder
 tools/refseqget
 tools/revseq

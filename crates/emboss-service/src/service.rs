@@ -357,6 +357,7 @@ impl EmbossService {
             "octanol" => self.invoke_octanol(request, descriptor),
             "pepinfo" => self.invoke_pepinfo(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
+            "psiphi" => self.invoke_psiphi(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
             "silent" => self.invoke_silent(request, descriptor),
             "aaindexextract" => self.invoke_aaindexextract(request, descriptor),
@@ -12503,6 +12504,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "octanol" => octanol_help(),
         "pepinfo" => pepinfo_help(),
         "pepwindow" => pepwindow_help(),
+        "psiphi" => psiphi_help(),
         "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
         "compseq" => compseq_help(),
@@ -18108,6 +18110,29 @@ mod tests {
             )
             .expect_err("backbone-free fixture should fail");
         assert!(error.to_string().contains("requires PDB ATOM input"));
+    }
+
+    #[test]
+    fn dispatches_psiphi_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("psiphi").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![psiphi_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("psiphi should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "psiphi");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[1][2], "ALA");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

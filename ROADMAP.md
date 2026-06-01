@@ -4430,10 +4430,21 @@ implementation-program cycle. The near-term priorities are:
       - no autodoc or generated validation surface yet
       - no canonical fixtures or compared evidence yet
 
-270. Expose `psiphi` through the governed shipped surface.
-    - Wire `psiphi` through the governed registry, service, CLI, autodoc, and
-      generated shipped/docs surface in the honest interim executable-only
-      state if compared evidence is not yet closed in the same task.
+270. Complete. Expose `psiphi` through the governed shipped surface.
+    - Wired `psiphi` through the governed registry, service, CLI, curated
+      autodoc, and generated shipped/docs surface in the honest interim
+      executable-only state.
+    - Current governed interim state after this task:
+      - shipped methods: `108`
+      - compared evidence: `107`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `107`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: false`
+      - `release_truth_current: true` in cohort health
+    - The expected `truth-check` gate remains red at this boundary because
+      `psiphi` is still below compared evidence and harvested legacy
+      provenance capture until Task 271 closes that slice.
 
 271. Close the `psiphi` compared-evidence and harvested-provenance slice.
     - Add canonical bounded fixtures, harvested provenance, and compared

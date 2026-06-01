@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `107` methods, including:
+of `108` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -41,6 +41,7 @@ of `107` methods, including:
 - the governed plot-producing analytical tools `charge`, `pepwindow`,
   `hmoment`, `octanol`, `pepinfo`, `density`, `wobble`, `isochore`, and
   `banana`
+- the bounded protein-coordinate torsion-reporting method `psiphi`
 
 ### Governed retrieval
 
@@ -66,12 +67,12 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `107` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
+- `1` shipped methods carry executable evidence
 - `107` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `0`
-- weakest evidence family: `none`
+- blocking cohort gaps: `1`
+- weakest evidence family: `Modernize — Rework — Protein property and structural-summary utilities`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -101,9 +102,10 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the shipped governed cohort is back to a fully compared
-state after the bounded `infoassembly` evidence closure.
+This means the shipped retained cohort remains fully closed, but the shipped
+governed cohort is temporarily below the fully green release gate while the
+bounded `psiphi` slice remains at executable evidence without harvested legacy
+provenance in this interim task boundary.
 
 ### First-class R story
 

@@ -6,15 +6,15 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 107,
-    "shipped_with_governance_mapping_count": 107,
+    "shipped_tool_count": 108,
+    "shipped_with_governance_mapping_count": 108,
     "shipped_retain_count": 90,
-    "shipped_rework_count": 17,
+    "shipped_rework_count": 18,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
     "retained_backlog_count": 0,
-    "shipped_curated_autodoc_count": 107,
-    "shipped_executable_or_better_count": 107,
+    "shipped_curated_autodoc_count": 108,
+    "shipped_executable_or_better_count": 108,
     "shipped_harvested_legacy_presence_count": 107,
     "shipped_compared_count": 107,
     "shipped_documented_only_count": 0
@@ -705,6 +705,15 @@
       "evidence_level": "compared_evidence"
     },
     {
+      "tool_name": "psiphi",
+      "shipped_family": "protein_coordinates",
+      "shipped_summary": "report deterministic per-residue phi/psi torsion angles from bounded protein backbone coordinates",
+      "governance_family": "Modernize — Rework — Protein property and structural-summary utilities",
+      "governance_decision": "rework",
+      "curated_autodoc_present": true,
+      "evidence_level": "executable_evidence"
+    },
+    {
       "tool_name": "recoder",
       "shipped_family": "restriction_tools",
       "shipped_summary": "report synonymous single-codon edits that remove exact forward-strand restriction sites",
@@ -1177,8 +1186,8 @@
       "retained_total": 2,
       "retained_shipped": 2,
       "retained_backlog": 0,
-      "shipped_curated_autodoc": 2,
-      "shipped_executable_or_better": 2,
+      "shipped_curated_autodoc": 3,
+      "shipped_executable_or_better": 3,
       "shipped_compared": 2,
       "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []

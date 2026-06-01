@@ -277,9 +277,9 @@ mod tests {
         let report = derive_comparison_coverage_report(repo_root())
             .expect("comparison coverage report should derive");
 
-        assert_eq!(report.summary.total_method_count, 107);
+        assert_eq!(report.summary.total_method_count, 108);
         assert_eq!(report.summary.compared_count, 107);
-        assert_eq!(report.summary.executable_only_count, 0);
+        assert_eq!(report.summary.executable_only_count, 1);
         assert_eq!(report.summary.harvested_but_not_compared_count, 0);
 
         let family = report

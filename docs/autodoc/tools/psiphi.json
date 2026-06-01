@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "psiphi-v1",
+  "tool": {
+    "name": "psiphi",
+    "family": "protein_coordinates",
+    "summary": "Report deterministic per-residue phi and psi torsion angles from bounded protein backbone coordinates",
+    "legacy_names": [
+      "psiphi"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`psiphi` is the bounded protein-coordinate member of the active protein-property rework program. The EMBOSS-RS v1 surface computes deterministic per-residue phi and psi torsion-angle rows from one local PDB-like coordinate input and returns them as a stable table-first report."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one local coordinate file. The bounded v1 seam retains only PDB `ATOM` backbone records for `N`, `CA`, and `C`, accepts only blank or `A` alternate locations, and rejects provider-backed acquisition, inline literals, and coordinate inputs that do not retain any eligible backbone atoms."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable per-residue table with chain identifier, residue identity, insertion code, backbone-atom presence flags, previous/next continuity flags, and bounded `phi_degrees` and `psi_degrees` values. Torsions remain absent rather than inferred when required backbone atoms or same-chain sequential continuity are missing."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs psiphi`. The shipped interim surface is executable-only at this checkpoint: Rust coverage exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same governed computation path, but compared acceptance evidence and harvested legacy provenance are not yet closed in this task."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `psiphi` seam is intentionally narrow. It does not render Ramachandran plots, does not generalize into a broader structural-analysis framework, and does not impute missing atoms, normalize alternate conformers beyond the bounded `A` policy, or claim comparative coordinate-analysis behavior."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "psiphi_fixture",
+      "label": "Backbone coordinate fixture for governed psiphi validation",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/psiphi_backbone.txt"
+      },
+      "description": "Repository-managed backbone coordinate fixture used for deterministic bounded psiphi validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "psiphi_profile_example",
+      "title": "Compute a deterministic bounded torsion-angle profile",
+      "description": "Reports stable per-residue phi and psi rows from the committed local backbone coordinate fixture through the governed protein-coordinate seam.",
+      "artifact_ids": [
+        "psiphi_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "psiphi_table",
+          "label": "Bounded psiphi analytical table",
+          "description": "Stable per-residue torsion-angle rows with explicit continuity and backbone-presence fields."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "psiphi_profile_example"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": false
+  }
+}

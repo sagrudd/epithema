@@ -945,12 +945,24 @@ mod tests {
     fn shipped_cohort_report_surfaces_visible_gaps() {
         let report = derive_shipped_cohort_validation_report(repo_root())
             .expect("cohort report should derive");
-        assert_eq!(report.summary.gapped_method_count, 0);
+        assert_eq!(report.summary.gapped_method_count, 1);
         let gap_map = report
             .methods
             .iter()
             .map(|method| (method.tool_name.as_str(), method))
             .collect::<std::collections::BTreeMap<_, _>>();
+
+        let psiphi = gap_map.get("psiphi").expect("psiphi should be present");
+        assert_eq!(psiphi.evidence_level, CohortEvidenceLevel::ExecutableEvidence);
+        assert!(!psiphi.harvested_legacy_evidence_present);
+        assert!(psiphi.executable_validation_present);
+        assert!(!psiphi.compared_validation_present);
+        assert!(psiphi.unresolved_gaps.iter().any(|gap| {
+            gap.code == crate::report::CohortGapCode::MissingHarvestedLegacyEvidence
+        }));
+        assert!(psiphi.unresolved_gaps.iter().any(|gap| {
+            gap.code == crate::report::CohortGapCode::MissingComparedEvidence
+        }));
 
         let charge = gap_map.get("charge").expect("charge should be present");
         assert_eq!(charge.evidence_level, CohortEvidenceLevel::ComparedEvidence);
