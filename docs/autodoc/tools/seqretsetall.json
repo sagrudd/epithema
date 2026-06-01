@@ -1,0 +1,102 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "seqretsetall-v1",
+  "tool": {
+    "name": "seqretsetall",
+    "family": "retrieval_tools",
+    "summary": "Normalize multiple local or provider-backed sequence inputs into ordered output record sets",
+    "legacy_names": [
+      "seqretsetall"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`seqretsetall` is the current bounded many-set retrieval companion to `seqret`. In v1 it resolves two or more governed sequence inputs through the same local/provider-aware substrate as `seqret` and returns deterministic ordered partitions of normalized sequence records."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts at least two governed input references. Local sequence files are supported. Provider-backed accessions are supported when they are explicitly qualified, for example `ena:AB000263`. Empty resolved input sets are rejected conservatively, and inline literal sequence text is not supported in the `seqretsetall` service path."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a partitioned normalized sequence collection rendered through the governed sequence-partition surface. Each resolved input contributes one ordered output record set, preserving both input ordering and per-input record ordering."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs seqretsetall`. Rust service coverage exercises the local many-set path through the shipped service dispatch and also covers a mixed local plus mocked-provider path through the explicit provider seam. That proves the bounded retrieval surface without claiming harvested live-provider acceptance evidence yet."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first release is intentionally narrow. `seqretsetall` is not yet a generic batching or filesystem-policy framework, does not accept inline sequence literals, and does not claim broad provider-parity beyond the governed explicit-provider seam already exercised in Rust tests."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "seqretsetall_mocked_mixed_case",
+      "label": "Mocked mixed many-set retrieval case",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/seqretsetall_mixed_case.md"
+      },
+      "description": "Repository-managed case note for the bounded mixed local plus provider-qualified many-set retrieval path used in Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "normalize_multiple_sequence_inputs_into_ordered_partitions",
+      "title": "Normalize multiple sequence inputs into ordered output partitions",
+      "description": "Resolves two governed sequence inputs through the shared retrieval substrate and returns one ordered normalized output record set per input.",
+      "artifact_ids": [
+        "seqretsetall_mocked_mixed_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "partitioned_sequence_collection",
+          "label": "Partitioned normalized sequence collection",
+          "description": "A sequence-partition payload that preserves input-set ordering and per-input record ordering across local and explicitly provider-qualified sources."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS seqretsetall application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd",
+        "invocation": "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS seqretsetall application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd",
+        "invocation": "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "normalize_multiple_sequence_inputs_into_ordered_partitions"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

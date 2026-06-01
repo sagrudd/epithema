@@ -3541,3 +3541,23 @@ implementation-program cycle. The near-term priorities are:
       - no CLI routing yet
       - no generated docs or validation stubs yet
       - no canonical fixtures or compared evidence yet
+
+225. Expose `seqretsetall` through the governed shipped surface.
+    - Complete.
+    - `seqretsetall` is now exposed through the governed registry, service,
+      CLI, and autodoc surface.
+    - What landed:
+      - registry exposure through the governed tool-descriptor list
+      - shipped service dispatch through `Service::invoke(...)`
+      - CLI routing coverage for `emboss-rs seqretsetall`
+      - governed autodoc, generated docs, and generated validation stub for
+        the bounded many-set retrieval surface
+    - Current governed state at this task boundary is intentionally interim:
+      - shipped methods: `105`
+      - compared evidence: `104`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `105`
+      - `full_compared_cohort: false`
+      - `release_truth_current: true`
+    - This is the expected executable-only state before Task `226` adds
+      canonical fixtures and compared evidence for `seqretsetall`.

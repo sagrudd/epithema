@@ -1,0 +1,52 @@
+{
+  "tool_name": "seqretsetall",
+  "document_id": "seqretsetall-v1",
+  "source_mode": "curated",
+  "evidence_source": "executed_run",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "normalize_multiple_sequence_inputs_into_ordered_partitions",
+      "title": "Normalize multiple sequence inputs into ordered output partitions",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "seqretsetall_mocked_mixed_case"
+      ],
+      "expected_output_ids": [
+        "partitioned_sequence_collection"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS seqretsetall application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd",
+          "invocation": "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS seqretsetall application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd",
+      "invocation": "seqretsetall -sequence three_records.fasta two_records.fasta -outseq stdout"
+    }
+  ]
+}

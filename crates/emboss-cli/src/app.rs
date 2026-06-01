@@ -199,6 +199,14 @@ mod tests {
     }
 
     #[test]
+    fn routes_seqretsetall_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "seqretsetall", "a.fasta", "b.fasta"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("seqretsetall"));
+    }
+
+    #[test]
     fn routes_refseqget_to_tool_path() {
         let cli = Cli::try_parse_from(["emboss-rs", "refseqget", "ncbi:protein:NP_000537.3"])
             .expect("tool should parse");

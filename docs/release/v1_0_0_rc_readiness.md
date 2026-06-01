@@ -35,6 +35,7 @@ shipped cohort is:
 - `needleall`
 - `water`
 - `seqret`
+- `seqretsetall`
 - `refseqget`
 - `newseq`
 - `seqcount`
@@ -113,11 +114,11 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `104`
+- Shipped methods audited: `105`
 - Compared-evidence methods: `104`
-- Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `104`
-- Full compared cohort: `yes`
+- Executable-evidence methods: `1`
+- Methods with harvested legacy provenance recorded: `105`
+- Full compared cohort: `no`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -126,9 +127,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `104` shipped methods are documented and present in the generated docs
+- All `105` shipped methods are documented and present in the generated docs
   index.
-- All `104` shipped methods have a checked-in validation stub.
+- All `105` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -149,7 +150,8 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- The shipped cohort is fully harvested and fully compared on this branch.
+- The shipped cohort is fully harvested on this branch, but not yet fully
+  compared because `seqretsetall` is currently executable-only.
 - The retained governance backlog is `0`, so the dominant remaining work is
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.

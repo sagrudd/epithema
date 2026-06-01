@@ -291,6 +291,7 @@ impl EmbossService {
             "needleall" => self.invoke_needleall(request, descriptor),
             "water" => self.invoke_water(request, descriptor),
             "seqret" => self.invoke_seqret(request, descriptor),
+            "seqretsetall" => self.invoke_seqretsetall(request, descriptor),
             "refseqget" => self.invoke_refseqget(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
@@ -1664,6 +1665,16 @@ impl EmbossService {
             report,
             result,
         ))
+    }
+
+    fn invoke_seqretsetall(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_seqretsetall_with_client::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
     }
 
     fn invoke_refseqget(
@@ -11983,6 +11994,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "needleall" => needleall_help(),
         "water" => water_help(),
         "seqret" => seqret_help(),
+        "seqretsetall" => seqretsetall_help(),
         "refseqget" => refseqget_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
@@ -12763,6 +12775,33 @@ mod tests {
             "Sequence retrieval set normalization completed"
         );
         assert_eq!(response.result.artifacts.len(), 1);
+    }
+
+    #[test]
+    fn dispatches_seqretsetall_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsetall").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            sequence_fixture().display().to_string(),
+            second_sequence_fixture().display().to_string(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("seqretsetall should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "seqretsetall");
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 2);
+                assert_eq!(partitions[0].len(), 3);
+                assert_eq!(partitions[1].len(), 2);
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

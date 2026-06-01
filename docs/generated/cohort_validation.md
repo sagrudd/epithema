@@ -5,16 +5,16 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `104`
-- Documentation-complete methods: `104`
-- Methods with validation stubs: `104`
+- Methods in cohort: `105`
+- Documentation-complete methods: `105`
+- Methods with validation stubs: `105`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `104`
-- Methods with executable validation: `0`
+- Methods with harvested legacy provenance recorded: `105`
+- Methods with executable validation: `1`
 - Methods with compared evidence: `104`
-- Methods with blocking cohort gaps: `0`
+- Methods with blocking cohort gaps: `1`
 
 ## Evidence Level Definitions
 
@@ -45,6 +45,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `needleall` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `water` | `pairwise_alignment` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqret` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `seqretsetall` | `retrieval_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
 | `refseqget` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `makenucseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -137,6 +138,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.
 
+- `seqretsetall`: `missing_compared_evidence`
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
 - `isochore`: `missing_explicit_legacy_reference`
