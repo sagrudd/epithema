@@ -4260,10 +4260,19 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 261. Activate protein-property rework as the next active planning program by explicit branch resolution.
-    - Record explicitly that plotting and bounded retrieval continuation are no
-      longer the active next-planning branches.
-    - Promote the protein-property rework program from reserve status to the
-      active next planning program.
+    - Recorded explicitly that plotting and bounded retrieval continuation are
+      no longer the active next-planning branches.
+    - Promoted protein-property rework from reserve status to the active next
+      planning program by explicit branch resolution.
+    - Recorded explicitly that restriction-analysis rework remains behind the
+      active protein-property branch and is not promoted by this step.
+    - The active bounded protein-property planning subset is now narrowed to:
+      - `psiphi`
+    - This activation does not widen protein-property scope beyond the already
+      governed bounded branch posture:
+      - no broad structural-biology family activation
+      - no implicit promotion of already-shipped `iep` or `pepdigest`
+      - no early revival of omitted molecular-weight utilities
 
 262. Reconfirm which reserve program now sits behind active protein-property rework.
     - Record explicitly whether restriction-analysis rework remains the next

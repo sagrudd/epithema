@@ -3826,6 +3826,33 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Activation of protein-property rework as the next active planning program
+
+After the bounded retrieval continuation branch closes explicitly, the
+repository should promote the next reserve program by branch resolution rather
+than by inertia.
+
+The resulting next-program activation is:
+
+- plotting is no longer the active continuation branch
+- bounded retrieval continuation is no longer the active continuation branch
+- protein-property rework now becomes the next active planning program
+- restriction-analysis rework remains the reserve next program and is not
+  promoted by this step
+
+The active bounded protein-property planning subset is now narrowed to:
+
+- `psiphi`
+
+This activation should remain bounded:
+
+- it does not imply broad structural-biology family activation
+- it does not reopen already-shipped `iep` or `pepdigest` as active planning
+  candidates
+- it does not revive omitted molecular-weight utilities by inertia
+- it preserves the existing expectation that any shipped protein-property
+  continuation must remain table-first, typed, and scientifically narrow
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
