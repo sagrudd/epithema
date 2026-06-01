@@ -2675,8 +2675,10 @@ implementation-program cycle. The near-term priorities are:
       informal widening beyond the bounded plotting seam.
 
 175. Implement the bounded analytical core for the selected next plotting candidate.
-    - Keep the implementation table-first, method-associated, and renderer-
-      agnostic.
+    - Added the bounded `isochore` analytical core in `emboss-core`.
+    - Kept the implementation table-first, method-associated, and renderer-
+      agnostic with explicit GC/AT window rows and bounded isochore-band
+      classification.
 
 176. Add the typed plot-contract emission path for the selected next plotting candidate.
     - Emit a deterministic method-associated contract from the same analytical
