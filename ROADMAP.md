@@ -2993,3 +2993,23 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+197. Reassess the shipped slice for the selected next bounded continuation candidate before any further continuation is mapped.
+    - Recorded the post-ship `banana` reassessment explicitly in the
+      governance appendix and roadmap.
+    - The result is affirmative:
+      - the shipped `banana` slice stayed bounded
+      - the slice remained method-associated and table-first
+      - the richer bendability surface remained in the analytical table
+      - the emitted contract stayed bounded to a single derived curvature
+        continuation line
+      - no fallback-activation stop condition tripped
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `103`
+      - compared evidence: `103`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `103`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

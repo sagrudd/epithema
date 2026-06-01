@@ -2758,6 +2758,39 @@ If any of those conditions becomes true before code starts, the repository
 should stop the `banana` continuation path and reopen planning rather than
 continuing under an implicitly widened plotting seam.
 
+#### Post-ship reassessment of the bounded `banana` slice
+
+After the bounded `banana` slice shipped and the compared-evidence closure
+completed, the repository should record whether the method still fits the
+proven plotting seam before any further continuation is mapped.
+
+The result for `banana` is affirmative.
+
+- the shipped `banana` slice stayed bounded and method-associated
+- the analytical surface remained table-first and retained the richer local
+  bend and curvature columns in the governed table output
+- the emitted contract stayed bounded to a single derived curvature
+  continuation line over the analytically defined positions
+- no Rust-side rendering, generalized plotting-framework pressure, or broader
+  non-local plot-contract taxonomy pressure emerged
+- no retrieval-fallback activation condition tripped
+
+The governed release-truth surface also remained fully green at this
+checkpoint:
+
+- shipped methods: `103`
+- compared evidence: `103`
+- executable evidence: `0`
+- harvested legacy provenance present: `103`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
+So `banana` should be treated as having passed its shipped-slice
+reassessment, and any further plotting continuation should be planned from
+that observed bounded state rather than from pre-implementation assumptions.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
