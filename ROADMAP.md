@@ -3438,3 +3438,29 @@ implementation-program cycle. The near-term priorities are:
       - no broad provider-parity claims
       - no generic retrieval-family widening merely because `seqretsetall`
         ships
+
+220. Capture the exact start conditions for the first `seqretsetall` implementation patch.
+    - Complete.
+    - Recorded the exact patch start conditions explicitly in the governance
+      appendix and roadmap.
+    - The start gate now requires:
+      - the current shortlist to remain intact:
+        1. completed bounded plotting continuation program
+        2. active remote-retrieval planning program
+        3. protein-property rework
+      - the bounded retrieval planning subset to remain limited to:
+        - `seqretsetall`
+        - `seqretsplit`
+        - `infoassembly`
+      - `seqretsetall` to remain the single selected bounded retrieval lead
+        method
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `seqretsetall` plus the smallest
+        support needed for deterministic provider-aware orchestration,
+        normalized sequence-return output, and governed docs/validation
+        plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no hidden live-network dependencies
+      - no broad provider-parity claims
+      - no retrieval-family widening beyond the selected lead-method slice

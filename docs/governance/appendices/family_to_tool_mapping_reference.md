@@ -3266,6 +3266,35 @@ The non-goals should remain explicit:
 - no broad provider-parity claims
 - no generic retrieval-family widening merely because `seqretsetall` ships
 
+#### Exact patch start conditions for `seqretsetall`
+
+After making `seqretsetall` the active bounded retrieval lead method and
+capturing its method-level acceptance criteria, the repository should make the
+first implementation-patch start conditions explicit.
+
+The start gate should require:
+
+- the current shortlist to remain intact:
+  1. completed bounded plotting continuation program
+  2. active remote-retrieval planning program
+  3. protein-property rework
+- the bounded retrieval planning subset to remain limited to:
+  - `seqretsetall`
+  - `seqretsplit`
+  - `infoassembly`
+- `seqretsetall` to remain the single selected bounded retrieval lead method
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `seqretsetall` plus the smallest support
+  needed for deterministic provider-aware orchestration, normalized
+  sequence-return output, and governed docs/validation plumbing
+- the patch to land as a full governed slice rather than a half-start
+
+The same guardrails should remain explicit:
+
+- no hidden live-network dependencies
+- no broad provider-parity claims
+- no retrieval-family widening beyond the selected lead-method slice
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
