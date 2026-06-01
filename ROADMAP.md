@@ -4095,3 +4095,21 @@ implementation-program cycle. The near-term priorities are:
       - no registry or CLI exposure yet
       - no docs/autodoc/generated validation yet
       - no canonical fixtures or compared evidence yet
+
+254. Complete. Expose the bounded `infoassembly` result surface.
+    - Added the bounded `infoassembly` descriptor entry in
+      `crates/emboss-tools/src/archive_tools/mod.rs`.
+    - Added the bounded `invoke_infoassembly_with_client(...)` service path in
+      `crates/emboss-service/src/service.rs`.
+    - What landed in the governed surface:
+      - deterministic `ResultPayload::TableReport` emission for bounded
+        assembly-first metadata rows
+      - explicit summary lines for provider, accession, object class,
+        assembly identifier, file count, total bytes, and route
+      - focused service tests for mocked ENA and SRA assembly-first metadata
+        payloads
+    - This task intentionally stopped short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no generated docs or validation stubs yet
+      - no canonical fixtures or compared evidence yet

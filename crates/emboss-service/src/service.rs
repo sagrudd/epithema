@@ -28,8 +28,8 @@ use emboss_tools::alignment_tools::{
     run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use emboss_tools::archive_tools::{
-    InfoassemblyParams, RungetParams, RuninfoParams, run_infoassembly, run_runget, run_runinfo,
-    runget_help, runinfo_help,
+    InfoassemblyParams, RungetParams, RuninfoParams, infoassembly_help, run_infoassembly,
+    run_runget, run_runinfo, runget_help, runinfo_help,
 };
 use emboss_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
@@ -1113,6 +1113,77 @@ impl EmbossService {
                 ))
                 .with_line(format!("Files: {}", metadata.files.len()))
                 .with_line(format!("Route: {}", metadata.route.endpoint)),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    /// Invokes `infoassembly` using an explicit provider HTTP client.
+    pub fn invoke_infoassembly_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, infoassembly_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("infoassembly", infoassembly_help()))?;
+        let (outcome, provenance, diagnostics) =
+            self.resolve_infoassembly_with_client(&input, client)?;
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "retrieved assembly-first archive metadata for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            diagnostics,
+            provenance,
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec!["field".to_owned(), "value".to_owned()],
+                infoassembly_rows(&outcome),
+            )),
+            ResultSummary::new("Assembly metadata normalized")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Accession: {}", outcome.accession))
+                .with_line(format!("Object class: {}", outcome.object_class))
+                .with_line(format!("Assembly: {}", outcome.assembly_accession))
+                .with_line(format!(
+                    "Run: {}",
+                    outcome.run_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Experiment: {}",
+                    outcome.experiment_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!(
+                    "Sample: {}",
+                    outcome.sample_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!("Files: {}", outcome.file_count))
+                .with_line(format!(
+                    "Total bytes: {}",
+                    outcome
+                        .total_size_bytes
+                        .map_or_else(|| "-".to_owned(), |value| value.to_string())
+                ))
+                .with_line(format!("Route: {}", outcome.route_endpoint)),
             report.clone(),
         );
 
@@ -10859,6 +10930,75 @@ fn archive_file_rows(files: &[emboss_providers::ArchiveFile]) -> Vec<Vec<String>
         .collect()
 }
 
+fn infoassembly_rows(
+    outcome: &emboss_tools::archive_tools::InfoassemblyOutcome,
+) -> Vec<Vec<String>> {
+    vec![
+        vec!["provider".to_owned(), outcome.provider.clone()],
+        vec!["accession".to_owned(), outcome.accession.clone()],
+        vec!["object_class".to_owned(), outcome.object_class.clone()],
+        vec!["assembly_accession".to_owned(), outcome.assembly_accession.clone()],
+        vec![
+            "run_accession".to_owned(),
+            outcome.run_accession.clone().unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "experiment_accession".to_owned(),
+            outcome
+                .experiment_accession
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "sample_accession".to_owned(),
+            outcome
+                .sample_accession
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "platform".to_owned(),
+            outcome.platform.clone().unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "instrument_model".to_owned(),
+            outcome
+                .instrument_model
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "library_layout".to_owned(),
+            outcome
+                .library_layout
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "library_strategy".to_owned(),
+            outcome
+                .library_strategy
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec![
+            "library_source".to_owned(),
+            outcome
+                .library_source
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+        ],
+        vec!["file_count".to_owned(), outcome.file_count.to_string()],
+        vec![
+            "total_size_bytes".to_owned(),
+            outcome
+                .total_size_bytes
+                .map_or_else(|| "-".to_owned(), |value| value.to_string()),
+        ],
+        vec!["route_endpoint".to_owned(), outcome.route_endpoint.clone()],
+    ]
+}
+
 fn parse_positive_count(tool: &str, value: &str, flag: &str) -> Result<usize, ServiceError> {
     let parsed = value.parse::<usize>().map_err(|_| {
         PlatformError::new(
@@ -13320,6 +13460,77 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn invokes_infoassembly_with_mocked_ena_metadata_into_table_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infoassembly").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:ERR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let response = service
+            .invoke_infoassembly_with_client(
+                request,
+                emboss_tools::archive_tools::INFOASSEMBLY_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("infoassembly surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.columns, vec!["field", "value"]);
+                assert!(table.rows.iter().any(|row| {
+                    row == &vec!["assembly_accession".to_owned(), "ERP000001".to_owned()]
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row == &vec!["file_count".to_owned(), "2".to_owned()]
+                }));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.report.provenance().len(), 2);
+    }
+
+    #[test]
+    fn invokes_infoassembly_with_mocked_sra_metadata_into_table_payload() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infoassembly").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["sra:SRR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://trace.ncbi.nlm.nih.gov/Traces/sra-db-be/runinfo?acc=SRR123456",
+            HttpResponse::new(200, "Run,ReleaseDate,LoadDate,spots,bases,spots_with_mates,avgLength,size_MB,AssemblyName,download_path,Experiment,LibraryName,LibraryStrategy,LibrarySelection,LibrarySource,LibraryLayout,InsertSize,InsertDev,Platform,Model,SRAStudy,BioProject,Study_Pubmed_id,ProjectID,Sample,BioSample,SampleType,TaxID,ScientificName,SampleName,CenterName,Submission,dbgap_study_accession,Consent,RunHash,ReadHash\nSRR123456,2024-01-01,2024-01-02,1,100,1,100,1,,https://example.invalid/SRR123456,SRX123456,,WGS,,GENOMIC,PAIRED,,,ILLUMINA,NextSeq 2000,SRP000001,PRJNA1,,1,SRS123456,SAMN1,,9606,Homo sapiens,,NCBI,SRA000001,,,runhash,readhash\n"),
+        );
+
+        let response = service
+            .invoke_infoassembly_with_client(
+                request,
+                emboss_tools::archive_tools::INFOASSEMBLY_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("infoassembly surface should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert!(table.rows.iter().any(|row| {
+                    row == &vec!["assembly_accession".to_owned(), "SRP000001".to_owned()]
+                }));
+                assert!(table.rows.iter().any(|row| {
+                    row == &vec!["route_endpoint".to_owned(), "sra.runinfo".to_owned()]
+                }));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.report.provenance().len(), 2);
     }
 
     #[test]

@@ -14,6 +14,13 @@ use crate::ToolDescriptor;
 
 const FAMILY: &str = "archive_tools";
 
+/// `infoassembly` descriptor.
+pub const INFOASSEMBLY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "infoassembly",
+    "normalize provider-backed archive metadata into a bounded assembly-first report",
+)
+.with_family(FAMILY);
+
 /// `runinfo` descriptor.
 pub const RUNINFO_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "runinfo",
