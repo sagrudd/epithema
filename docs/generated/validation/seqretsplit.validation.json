@@ -1,0 +1,52 @@
+{
+  "tool_name": "seqretsplit",
+  "document_id": "seqretsplit-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "normalize_one_sequence_input_into_deterministic_split_partitions",
+      "title": "Normalize one sequence input into deterministic split partitions",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "three_record_fasta"
+      ],
+      "expected_output_ids": [
+        "split_partitioned_sequence_collection"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS seqretsplit application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsplit.acd",
+          "invocation": "seqretsplit -sequence three_records.fasta -outseq stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS seqretsplit application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsplit.acd",
+      "invocation": "seqretsplit -sequence three_records.fasta -outseq stdout"
+    }
+  ]
+}

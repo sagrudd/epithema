@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `105` methods, including:
+of `106` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -48,7 +48,7 @@ The release includes the first real governed retrieval layers and user-facing
 tools for:
 
 - single-sequence retrieval via ENA and NCBI-backed acquisition seams
-- modernized `seqret`, `seqretsetall`, and `refseqget`
+- modernized `seqret`, `seqretsetall`, `seqretsplit`, and `refseqget`
 - archive metadata and manifest-oriented `runinfo` and `runget`
 
 ### Documentation and validation
@@ -65,12 +65,12 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `105` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `105` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped methods carry executable evidence
+- `106` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
-- weakest evidence family: `none`
+- weakest evidence family: `Modernize — Rework — Remote retrieval and archive acquisition`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -102,7 +102,7 @@ change the release gate state above.
 
 This means the shipped retained cohort remains fully closed and harvest
 coverage remains complete, but the shipped governed cohort is temporarily not
-fully compared because `seqretsetall` is currently executable-only pending its
+fully compared because `seqretsplit` is currently executable-only pending its
 canonical compared-evidence closure.
 
 ### First-class R story

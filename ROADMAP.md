@@ -3812,3 +3812,20 @@ implementation-program cycle. The near-term priorities are:
       - no CLI routing yet
       - no generated docs or validation stubs yet
       - no canonical fixtures or compared evidence yet
+
+240. Complete. Expose `seqretsplit` through the governed shipped surface.
+    - Wired the bounded `seqretsplit` retrieval path through the governed
+      registry, service dispatch, CLI, autodoc, generated tool page, and
+      validation stub.
+    - Refreshed the generated cohort and release-report surface to the
+      intended interim state for this boundary:
+      - shipped methods `106`
+      - compared evidence `105`
+      - executable evidence `1`
+      - harvested legacy provenance present `106`
+      - full-compared cohort temporarily `false`
+      - harvest coverage complete remains `true`
+    - This task intentionally stops at shipped plus executable evidence:
+      - canonical fixtures and compared evidence still belong to Task `241`
+      - the full release-truth gate is expected to fail until that closure
+        lands

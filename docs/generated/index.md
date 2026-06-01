@@ -100,6 +100,7 @@ tools/seqcount
 tools/seqmatchall
 tools/seqret
 tools/seqretsetall
+tools/seqretsplit
 tools/shuffleseq
 tools/silent
 tools/sizeseq

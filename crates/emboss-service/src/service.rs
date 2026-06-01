@@ -292,6 +292,7 @@ impl EmbossService {
             "water" => self.invoke_water(request, descriptor),
             "seqret" => self.invoke_seqret(request, descriptor),
             "seqretsetall" => self.invoke_seqretsetall(request, descriptor),
+            "seqretsplit" => self.invoke_seqretsplit(request, descriptor),
             "refseqget" => self.invoke_refseqget(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
@@ -1753,6 +1754,16 @@ impl EmbossService {
         descriptor: ToolDescriptor,
     ) -> Result<InvocationResponse, ServiceError> {
         self.invoke_seqretsetall_with_client::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
+    }
+
+    fn invoke_seqretsplit(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_seqretsplit_with_client::<emboss_providers::ReqwestHttpClient>(
             request, descriptor, None,
         )
     }
@@ -12093,6 +12104,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "water" => water_help(),
         "seqret" => seqret_help(),
         "seqretsetall" => seqretsetall_help(),
+        "seqretsplit" => seqretsplit_help(),
         "refseqget" => refseqget_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
@@ -12955,6 +12967,30 @@ mod tests {
             Some("ena_AB000263.fasta")
         );
         assert_eq!(response.report.provenance().len(), 3);
+    }
+
+    #[test]
+    fn dispatches_seqretsplit_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seqretsplit").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("seqretsplit should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "seqretsplit");
+        match &response.result.payload {
+            ResultPayload::SequencePartitions(partitions) => {
+                assert_eq!(partitions.len(), 3);
+                assert_eq!(partitions[0].len(), 1);
+                assert_eq!(partitions[0][0].identifier().accession(), "alpha");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]
