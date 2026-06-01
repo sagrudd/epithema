@@ -4337,15 +4337,27 @@ implementation-program cycle. The near-term priorities are:
       - no promotion of reserve restriction-analysis work while the bounded
         `psiphi` branch remains active
 
-266. Map the full bounded `psiphi` implementation tier.
-    - Break the `psiphi` program into the same bounded governed sequence used
-      for prior families:
-      - core implementation
-      - result-surface exposure
-      - governed shipped-surface exposure
-      - compared-evidence closure
-      - release-truth rerun
-      - post-ship reassessment
+266. Complete. Map the full bounded `psiphi` implementation tier.
+    - Mapped the full bounded `psiphi` implementation tier explicitly in the
+      roadmap and governance appendix before code starts.
+    - The bounded `psiphi` tier is now explicit:
+      1. implement the bounded protein-coordinate analytical core
+      2. expose the deterministic typed result surface for normalized
+         per-residue torsion-angle reporting
+      3. expose `psiphi` through the governed shipped surface
+      4. add canonical analytical fixtures plus compared evidence on
+         normalized torsion-angle rows
+      5. re-run the full release-truth surface after shipping `psiphi`
+      6. reassess the shipped `psiphi` slice before any further continuation
+         is mapped
+    - The bounded tier preserves the same architectural rules:
+      - protein-coordinate, table-first scope only
+      - deterministic typed result output from the same computation path
+      - method-local implementation only
+      - no Ramachandran plotting
+      - no generalized coordinate-processing framework
+      - no structural-analysis family widening unless `psiphi` itself forces
+        a real reassessment
 
 267. Capture explicit coordinate/seam stop conditions for `psiphi`.
     - Record the conditions that should pause the branch before code if

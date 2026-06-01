@@ -3954,6 +3954,34 @@ The same guardrails remain explicit:
 Only when those start conditions still hold should code work begin for the
 bounded `psiphi` slice.
 
+#### Full bounded `psiphi` implementation tier
+
+After capturing the exact start conditions for the first `psiphi`
+implementation patch, the repository should map the full bounded
+implementation tier explicitly before code starts.
+
+The bounded `psiphi` tier is:
+
+1. implement the bounded protein-coordinate analytical core
+2. expose the deterministic typed result surface for normalized per-residue
+   torsion-angle reporting
+3. expose `psiphi` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   torsion-angle rows
+5. re-run the full release-truth surface after shipping `psiphi`
+6. reassess the shipped `psiphi` slice before any further continuation is
+   mapped
+
+The bounded tier preserves the same architectural rules:
+
+- protein-coordinate, table-first scope only
+- deterministic typed result output from the same computation path
+- method-local implementation only
+- no Ramachandran plotting
+- no generalized coordinate-processing framework
+- no structural-analysis family widening unless `psiphi` itself forces a
+  real reassessment
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
