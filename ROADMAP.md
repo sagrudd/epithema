@@ -2648,10 +2648,14 @@ implementation-program cycle. The near-term priorities are:
       - canonical fixture and compared-evidence obligations
       - explicit method-local non-goals and reassessment pressure
 
-172. Capture the exact start conditions for the first implementation patch of the selected next plotting candidate.
-    - Require the current zero-burden release-truth state and keep the patch
-      limited to the method plus the smallest support needed to ship a full
-      governed slice.
+172. Complete. Capture the exact start conditions for the first implementation patch of the selected next plotting candidate.
+    - Captured the explicit `isochore` start gate in the governance appendix.
+    - Recorded:
+      - current shortlist and active plotting-branch requirements
+      - post-`wobble` continuation viability with `isochore` as the selected
+        candidate
+      - zero-burden release-truth requirements
+      - patch-scope and full-governed-slice constraints before code starts
 
 173. Map the full bounded implementation tier for the selected next plotting candidate.
     - Record the complete method-associated slice before code starts:
