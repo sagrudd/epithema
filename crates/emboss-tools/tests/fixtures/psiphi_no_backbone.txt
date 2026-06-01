@@ -1,0 +1,2 @@
+HEADER    PSIPHI NO BACKBONE
+HETATM    1  O   HOH A   1       0.000   0.000   0.000

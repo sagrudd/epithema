@@ -4406,9 +4406,29 @@ implementation-program cycle. The near-term priorities are:
       - no autodoc or generated validation surface yet
       - no canonical fixtures or compared evidence yet
 
-269. Expose the bounded `psiphi` result surface.
-    - Add the deterministic governed result surface for the bounded `psiphi`
-      output without widening into broader coordinate-workflow orchestration.
+269. Complete. Expose the bounded `psiphi` result surface.
+    - Added the bounded `psiphi` result surface in the method-local tools and
+      service seams without exposing the method through the shipped registry
+      yet.
+    - What landed in the governed surface:
+      - a method-local `protein_coordinates::psiphi` tool path over the Task
+        `268` analytical core
+      - a bounded local coordinate-input wrapper and deterministic coordinate
+        file loader
+      - a public service `invoke_psiphi(...)` seam that emits
+        `ResultPayload::TableReport`
+      - stable per-residue torsion rows with chain, residue identity,
+        continuity flags, backbone presence flags, and bounded
+        `phi_degrees`/`psi_degrees` values
+      - focused result-surface tests for:
+        - local coordinate execution
+        - provider-backed input rejection
+        - backbone-free input rejection
+    - This task intentionally stopped short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no autodoc or generated validation surface yet
+      - no canonical fixtures or compared evidence yet
 
 270. Expose `psiphi` through the governed shipped surface.
     - Wire `psiphi` through the governed registry, service, CLI, autodoc, and
