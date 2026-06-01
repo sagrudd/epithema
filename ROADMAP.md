@@ -2657,8 +2657,10 @@ implementation-program cycle. The near-term priorities are:
       - zero-burden release-truth requirements
       - patch-scope and full-governed-slice constraints before code starts
 
-173. Map the full bounded implementation tier for the selected next plotting candidate.
-    - Record the complete method-associated slice before code starts:
+173. Complete. Map the full bounded implementation tier for the selected next plotting candidate.
+    - Mapped the explicit bounded `isochore` implementation tier in the
+      governance appendix.
+    - Recorded the full method-associated slice:
       1. analytical core
       2. typed plot-contract emission path
       3. governed shipped-surface exposure

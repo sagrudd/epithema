@@ -2358,6 +2358,36 @@ If any of these start conditions cease to hold before code changes begin, the
 repository should re-open planning rather than starting the continuation patch
 under a looser scope.
 
+#### Bounded `isochore` implementation tier
+
+Because `isochore` is now the single selected next bounded continuation
+candidate, the repository should map its full method-associated implementation
+tier explicitly before code starts.
+
+The bounded `isochore` tier should be:
+
+1. implement the bounded analytical core for `isochore`
+2. add the typed `isochore` plot-contract emission path
+3. expose `isochore` through the governed shipped surface
+4. add canonical analytical and plot-contract fixtures plus compared evidence
+5. re-run the full release-truth surface after shipping `isochore`
+6. reassess the shipped `isochore` slice before any further continuation is
+   mapped
+
+The bounded `isochore` tier should preserve the same architectural
+constraints already enforced for the earlier plotting continuation slices:
+
+- method-associated implementation only
+- table-first analytical output
+- typed contract output from the same computation path
+- no Rust-side rendering
+- no generic plotting-framework widening
+- no broader plot-contract taxonomy unless `isochore` itself makes that
+  pressure concrete enough to stop and reassess
+
+So the next code-bearing work is not an abstract "continue plotting" step. It
+should begin only as this explicit bounded `isochore` tier.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
