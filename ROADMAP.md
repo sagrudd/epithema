@@ -4374,9 +4374,37 @@ implementation-program cycle. The near-term priorities are:
          imputation, alternate-conformer policy, or comparative
          structure-analysis claims that are not clearly local to the method
 
-268. Implement the bounded `psiphi` analytical core.
-    - Add the method-associated `psiphi` computation path in the narrowest
-      governed form that satisfies the accepted criteria.
+268. Complete. Implement the bounded `psiphi` analytical core.
+    - Added the bounded method-associated `psiphi` analytical core in
+      `emboss-core` and exported it through the core library surface.
+    - What landed in the bounded core:
+      - a deterministic `protein_psiphi_profile(...)` computation path over
+        PDB `ATOM` coordinate text
+      - stable per-residue analytical rows with:
+        - chain identifier
+        - residue name
+        - residue number
+        - insertion code
+        - backbone `N`/`CA`/`C` presence flags
+        - previous/next continuity flags
+        - bounded `phi_degrees`
+        - bounded `psi_degrees`
+      - explicit bounded v1 behavior:
+        - only backbone `ATOM` records are retained
+        - only blank or `A` alternate locations are considered eligible
+        - continuity is limited to same-chain, sequential,
+          insertion-code-free residues
+        - torsions remain absent rather than inferred when continuity or
+          required backbone atoms are missing
+      - focused bounded validation for:
+        - no retained backbone atoms
+        - invalid residue-number parsing
+        - invalid coordinate-field parsing
+    - This task intentionally stops at the analytical core:
+      - no governed result-surface exposure yet
+      - no registry or CLI exposure yet
+      - no autodoc or generated validation surface yet
+      - no canonical fixtures or compared evidence yet
 
 269. Expose the bounded `psiphi` result surface.
     - Add the deterministic governed result surface for the bounded `psiphi`

@@ -40,6 +40,7 @@ pub mod protein_hydrophobic_moment;
 pub mod protein_isoelectric;
 pub mod protein_octanol;
 pub mod protein_pepinfo;
+pub mod protein_psiphi;
 pub mod residue_properties;
 pub mod revseq;
 pub mod sequence;
@@ -123,6 +124,9 @@ pub use protein_octanol::{
 };
 pub use protein_pepinfo::{
     PepinfoWindow, ProteinPepinfoError, ProteinPepinfoProfile, protein_pepinfo_profile,
+};
+pub use protein_psiphi::{
+    ProteinPsiphiError, ProteinPsiphiProfile, PsiPhiResidue, protein_psiphi_profile,
 };
 pub use residue_properties::{
     NucleotideBaseInfo, ProteinResidueProperty, nucleotide_base_info, nucleotide_base_infos,
