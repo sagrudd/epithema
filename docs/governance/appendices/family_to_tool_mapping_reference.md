@@ -3184,6 +3184,37 @@ So after the shipped `syco` closeout, the repository should treat
 remote-retrieval planning as active and bounded, with protein-property
 rework still held in reserve behind it.
 
+#### Reconfirmation that protein-property rework still remains the third candidate after retrieval activation
+
+After the repository explicitly closes the bounded plotting continuation
+branch and activates the prepared remote-retrieval fallback as the next active
+planning program, protein-property rework should still remain the third
+candidate in the shortlist.
+
+That conclusion remains explicit because:
+
+- retrieval now has the strongest active bounded plan after plotting closure:
+  - `seqretsetall`
+  - `seqretsplit`
+  - `infoassembly`
+- retrieval also preserves a clearer operational seam than protein-property at
+  this checkpoint:
+  - explicit provider-aware orchestration
+  - deterministic mocked-provider or managed-asset validation
+  - compared evidence on normalized returned sequence or metadata outputs
+- protein-property rework still has a credible scientific substrate, but it
+  still lacks the same immediate bounded lead-method activation detail now
+  attached to the active retrieval branch
+
+So the shortlist should remain:
+
+1. completed bounded plotting continuation program
+2. active remote-retrieval planning program
+3. protein-property rework
+
+This remains a planning checkpoint only. It does not promote protein-property
+work or weaken the explicit retrieval activation decision.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

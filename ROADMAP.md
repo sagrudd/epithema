@@ -3375,3 +3375,26 @@ implementation-program cycle. The near-term priorities are:
       - no implicit live-network validation
       - no automatic promotion of broader historical retrieval members such
         as `assemblyget`, `whichdb`, or `entret`
+
+217. Reconfirm that protein-property rework still remains the third candidate after retrieval activation.
+    - Complete.
+    - Recorded the shortlist reassessment explicitly in the governance
+      appendix and roadmap.
+    - The conclusion remains:
+      1. completed bounded plotting continuation program
+      2. active remote-retrieval planning program
+      3. protein-property rework
+    - Basis:
+      - retrieval now has the strongest active bounded plan after plotting
+        closure:
+        - `seqretsetall`
+        - `seqretsplit`
+        - `infoassembly`
+      - retrieval preserves a clearer operational seam at this checkpoint:
+        - explicit provider-aware orchestration
+        - deterministic mocked-provider or managed-asset validation
+        - compared evidence on normalized returned sequence or metadata
+          outputs
+      - protein-property rework still has a credible scientific substrate,
+        but it still lacks the same immediate bounded lead-method activation
+        detail now attached to the active retrieval branch
