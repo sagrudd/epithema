@@ -3593,3 +3593,41 @@ implementation-program cycle. The near-term priorities are:
     provenance present `105`, full-compared cohort `true`, harvest coverage
     complete `true`, retained backlog closed `true`, and release-truth current
     `true`.
+
+229. Complete. Extend the roadmap from the actual post-`seqretsetall` branch
+    outcome.
+    The roadmap now records the current governed truth explicitly:
+      - shipped methods: `105`
+      - compared evidence: `105`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `105`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - The extension also makes the branch consequence explicit:
+      - the first bounded retrieval continuation slice closed cleanly through
+        `seqretsetall`
+      - retrieval remains the active planning program, but it now has to be
+        re-based onto the remaining bounded candidate pool instead of assuming
+        automatic continuation
+      - protein-property rework remains the reserve third program and should
+        not be promoted unless the narrowed retrieval continuation branch fails
+        honest seam review
+    - The next mapped tier is now Tasks `230` through `243`, centered on:
+      - rebasing the remaining bounded retrieval continuation pool onto the
+        actual post-`seqretsetall` state
+      - deciding whether another bounded retrieval continuation candidate still
+        exists after the first shipped slice
+      - either promoting protein-property rework if the narrowed retrieval
+        continuation branch fails honest seam review, or selecting exactly one
+        next bounded retrieval candidate from:
+        - `seqretsplit`
+        - `infoassembly`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit provider/seam stop conditions for the chosen retrieval method
+      - mapping and shipping one full bounded retrieval slice
+      - rerunning release truth and reassessing the shipped retrieval slice
+        before any further continuation is mapped
