@@ -4054,3 +4054,19 @@ implementation-program cycle. The near-term priorities are:
       - no broad provider-parity claims
       - no retrieval-family widening unless `infoassembly` itself forces a
         real reassessment
+
+252. Complete. Capture the explicit provider/seam stop conditions for
+    `infoassembly`.
+    - Recorded the explicit provider/seam stop conditions in the governance
+      appendix and roadmap before code starts.
+    - The repository should pause and reassess before implementation if:
+      1. `infoassembly` cannot remain deterministic under mocked-provider or
+         managed-asset validation
+      2. `infoassembly` requires hidden live-network dependencies, implicit
+         provider fallback chains, or unclear provider precedence
+      3. `infoassembly` cannot remain a bounded provider-aware metadata-first
+         slice and instead demands broader retrieval-family orchestration
+         before one shipped slice closes
+      4. `infoassembly` forces broad assembly-schema, provider-parity, or
+         archive-scale acquisition claims that are not clearly local to the
+         method

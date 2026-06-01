@@ -3734,6 +3734,24 @@ This bounded tier should preserve the same architectural rules:
 - no retrieval-family widening unless `infoassembly` itself forces a real
   reassessment
 
+#### Explicit provider/seam stop conditions for `infoassembly`
+
+After mapping the full bounded implementation tier for `infoassembly`, the
+repository should make the provider/seam stop conditions explicit before code
+starts.
+
+The repository should pause and reassess before implementation if:
+
+1. `infoassembly` cannot remain deterministic under mocked-provider or
+   managed-asset validation
+2. `infoassembly` requires hidden live-network dependencies, implicit provider
+   fallback chains, or unclear provider precedence
+3. `infoassembly` cannot remain a bounded provider-aware metadata-first slice
+   and instead demands broader retrieval-family orchestration before one
+   shipped slice closes
+4. `infoassembly` forces broad assembly-schema, provider-parity, or archive-
+   scale acquisition claims that are not clearly local to the method
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
