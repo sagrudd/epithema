@@ -2838,6 +2838,54 @@ This checkpoint is inventory only. It does not yet reclassify the remainder by
 seam pressure, and it does not yet decide whether the final narrowed plotting
 continuation candidate still passes an honest seam review.
 
+#### Reclassification of the post-`banana` remainder by seam pressure
+
+Now that the repository has shipped and reassessed `banana`, the post-`banana`
+remainder can be reclassified against a still tighter proven plotting seam
+than the earlier post-`isochore` view.
+
+The strongest remaining seam-compatible continuation candidate is now:
+
+- `syco`
+
+`cpgplot` remains the only plausibly arguable adjacent case, but only as a
+more conditional region-oriented candidate rather than as part of the current
+narrowed active continuation pool.
+
+The explicit post-`banana` remainder buckets are therefore:
+
+- strongest remaining seam-compatible continuation candidate:
+  - `syco`
+- conditional region-oriented adjacent case:
+  - `cpgplot`
+- broader contract-taxonomy pressure:
+  - `chaos`
+  - `pepwindowall`
+  - `plotcon`
+- dotplot or comparative-matrix heavy:
+  - `dotmatcher`
+  - `dotpath`
+  - `dottup`
+  - `polydot`
+- diagram, layout, or presentation-heavy:
+  - `cirdna`
+  - `lindna`
+  - `pepnet`
+  - `pepwheel`
+  - `prettyplot`
+  - `showfeat`
+  - `showpep`
+  - `showseq`
+- specialized laboratory-trace or kinetic plotting:
+  - `abiview`
+  - `findkm`
+
+This checkpoint still does not choose the next continuation action by itself.
+It narrows the final candidate pool more sharply than the post-`isochore`
+view, but it does not yet decide whether `syco` still passes an honest seam
+review strongly enough to remain active instead of activating the prepared
+retrieval fallback.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

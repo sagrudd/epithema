@@ -3089,3 +3089,38 @@ implementation-program cycle. The near-term priorities are:
     - This task is inventory only. It does not yet reclassify seam pressure or
       decide whether the final narrowed continuation candidate still passes an
       honest seam review.
+
+200. Reclassify the post-`banana` plotting remainder by seam pressure.
+    - Reclassified the post-`banana` plotting remainder by seam pressure in
+      light of the actual shipped plotting seam rather than the earlier
+      post-`isochore` shortlist.
+    - The strongest remaining seam-compatible continuation candidate is now:
+      - `syco`
+    - `cpgplot` remains the only plausibly arguable adjacent case, but only as
+      a more conditional region-oriented candidate rather than as part of the
+      current narrowed active continuation pool.
+    - The heavier buckets remain outside the currently proven bounded seam:
+      - broader contract taxonomy:
+        - `chaos`
+        - `pepwindowall`
+        - `plotcon`
+      - dotplot or comparative-matrix heavy:
+        - `dotmatcher`
+        - `dotpath`
+        - `dottup`
+        - `polydot`
+      - diagram, layout, or presentation-heavy:
+        - `cirdna`
+        - `lindna`
+        - `pepnet`
+        - `pepwheel`
+        - `prettyplot`
+        - `showfeat`
+        - `showpep`
+        - `showseq`
+      - specialized laboratory-trace or kinetic plotting:
+        - `abiview`
+        - `findkm`
+    - This remains governance-only reclassification. It narrows the final
+      continuation candidate pool, but it does not yet decide whether `syco`
+      still passes an honest seam review strongly enough to remain active.
