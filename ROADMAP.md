@@ -3955,3 +3955,16 @@ implementation-program cycle. The near-term priorities are:
       - `infoassembly`
     - Protein-property rework remains the reserve third program and should
       not be promoted at this checkpoint.
+
+247. Complete. Close the untriggered protein-property promotion branch after
+    the affirmative retrieval viability decision.
+    - Recorded the explicit branch closeout in the governance appendix and
+      roadmap.
+    - The resulting branch consequence is:
+      - retrieval continuation remains the active planning program
+      - protein-property rework remains documented as the reserve third
+        program
+      - protein-property is not promoted by inertia while bounded retrieval
+        continuation still has a viable candidate
+    - The active viable bounded continuation pool remains:
+      - `infoassembly`
