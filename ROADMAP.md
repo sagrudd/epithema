@@ -4005,3 +4005,29 @@ implementation-program cycle. The near-term priorities are:
         `assemblyget`, `whichdb`, or `entret`
       - no generic retrieval-family widening merely because `infoassembly`
         ships
+
+250. Complete. Capture the exact start conditions for the first
+    `infoassembly` implementation patch.
+    - Recorded the exact patch start conditions explicitly in the governance
+      appendix and roadmap.
+    - The start gate now requires:
+      - the current shortlist to remain intact:
+        1. completed bounded plotting continuation program
+        2. active remote-retrieval planning program
+        3. protein-property rework
+      - the bounded retrieval continuation pool to remain limited to:
+        - `infoassembly`
+      - `infoassembly` to remain the single selected bounded retrieval
+        continuation candidate
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `infoassembly` plus the smallest
+        support needed for deterministic provider-aware metadata retrieval,
+        normalized assembly metadata output, and governed docs/validation
+        plumbing
+      - the patch to land as a full governed slice rather than a half-start
+    - The same guardrails remain explicit:
+      - no hidden live-network dependencies
+      - no broad provider-parity claims
+      - no implicit widening into broader retrieval-family members such as
+        `assemblyget`, `whichdb`, or `entret`
+      - no retrieval-family widening beyond the selected lead-method slice

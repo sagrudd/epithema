@@ -3675,6 +3675,36 @@ The non-goals should remain explicit:
   `assemblyget`, `whichdb`, or `entret`
 - no generic retrieval-family widening merely because `infoassembly` ships
 
+#### Exact patch start conditions for `infoassembly`
+
+After activating `infoassembly` as the single final bounded retrieval
+continuation candidate and capturing its method-level acceptance criteria, the
+repository should make the exact start conditions explicit before code begins.
+
+The start gate should require:
+
+- the current shortlist to remain intact:
+  1. completed bounded plotting continuation program
+  2. active remote-retrieval planning program
+  3. protein-property rework
+- the bounded retrieval continuation pool to remain limited to:
+  - `infoassembly`
+- `infoassembly` to remain the single selected bounded retrieval continuation
+  candidate
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `infoassembly` plus the smallest support
+  needed for deterministic provider-aware metadata retrieval, normalized
+  assembly metadata output, and governed docs/validation plumbing
+- the patch to land as a full governed slice rather than a half-start
+
+The same guardrails should remain explicit:
+
+- no hidden live-network dependencies
+- no broad provider-parity claims
+- no implicit widening into broader retrieval-family members such as
+  `assemblyget`, `whichdb`, or `entret`
+- no retrieval-family widening beyond the selected lead-method slice
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
