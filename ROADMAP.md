@@ -3248,3 +3248,20 @@ implementation-program cycle. The near-term priorities are:
       - harvested legacy provenance present: `104`
       - `full_compared_cohort: true`
       - `release_truth_current: true`
+
+212. Re-run the full release-truth surface after shipping the final bounded plotting continuation candidate.
+    - Re-ran the post-`syco` release-truth surface and recorded the observed
+      result.
+    - The broad release gate stayed clean after the `syco` evidence closure:
+      - `truth-check`: passed
+      - docs build: passed
+      - `git diff --check`: passed
+    - The governed state remained fully green:
+      - shipped methods: `104`
+      - compared evidence: `104`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `104`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
