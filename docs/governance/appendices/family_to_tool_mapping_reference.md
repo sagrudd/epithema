@@ -3570,6 +3570,29 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Rebasing the bounded retrieval continuation pool after `seqretsplit`
+
+After the second bounded retrieval continuation slice closes cleanly through
+`seqretsplit`, the repository should rebase the active continuation pool onto
+the actual post-ship state before making any further viability or lead-method
+decision.
+
+The resulting bounded retrieval continuation inventory is:
+
+- shipped bounded retrieval slices:
+  - `seqretsetall`
+  - `seqretsplit`
+- remaining bounded retrieval continuation pool:
+  - `infoassembly`
+
+This checkpoint is inventory only:
+
+- it does not yet decide whether the final remaining method still passes
+  honest seam review strongly enough to remain an active continuation
+  candidate
+- it does not promote protein-property rework
+- it does not widen retrieval scope beyond the already-governed bounded pool
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

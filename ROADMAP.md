@@ -3925,3 +3925,19 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded retrieval slice
       - rerunning release truth and reassessing the shipped retrieval slice
         before any further continuation is mapped
+
+245. Complete. Rebase the bounded retrieval continuation pool onto the actual
+    post-`seqretsplit` state.
+    - Recorded the narrowed retrieval continuation pool explicitly in the
+      governance appendix and roadmap.
+    - The second bounded retrieval continuation slice is now treated as
+      closed:
+      - shipped bounded retrieval slices:
+        - `seqretsetall`
+        - `seqretsplit`
+    - The remaining bounded retrieval continuation pool is now:
+      - `infoassembly`
+    - This checkpoint is inventory only.
+    - It does not yet decide whether the final remaining method still passes
+      honest seam review strongly enough to remain an active continuation
+      candidate.
