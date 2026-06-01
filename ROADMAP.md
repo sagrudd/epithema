@@ -3845,3 +3845,21 @@ implementation-program cycle. The near-term priorities are:
     - This closes the bounded `seqretsplit` retrieval slice at compared
       evidence without widening retrieval-family scope beyond the selected
       method.
+
+242. Complete. Re-run the full release-truth surface after shipping
+    `seqretsplit`.
+    - The broad post-ship gate stayed clean after the `seqretsplit` evidence
+      closure.
+    - `make release-generated-check` passed.
+    - `python3 scripts/release_metadata.py truth-check` passed.
+    - The docs build passed.
+    - `git diff --check` passed.
+    - The governed release-truth surface remained fully green:
+      - shipped methods `106`
+      - compared evidence `106`
+      - executable evidence `0`
+      - harvested legacy provenance present `106`
+      - full-compared cohort `true`
+      - harvest coverage complete `true`
+      - retained backlog closed `true`
+      - release-truth current `true`
