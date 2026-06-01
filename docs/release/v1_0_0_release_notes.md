@@ -65,10 +65,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `106` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
-- `106` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- `107` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
+- `107` shipped methods record harvested legacy provenance
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -101,10 +101,9 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed, while the shipped
-governed cohort is in an honest interim executable-only and not-yet-harvested
-state after the bounded `infoassembly` shipment step and before its
-compared-evidence and harvested-provenance closure.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the shipped governed cohort is back to a fully compared
+state after the bounded `infoassembly` evidence closure.
 
 ### First-class R story
 

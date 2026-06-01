@@ -32,9 +32,13 @@ The current interface accepts exactly one provider-qualified archive accession s
 
 The result is a stable `field`/`value` table report plus provider-summary lines. The bounded v1 surface reports the selected assembly identifier, linked archive identifiers, library metadata when present, file counts, total known bytes, and the normalized provider route label.
 
+## Legacy Context
+
+This bounded release keeps one historical `infoassembly` user need in scope while modernizing around deterministic normalized assembly-first metadata instead of broad archive-schema or acquisition behavior. The committed compared example stays narrow and provider-aware: one mocked ENA accession is resolved through the governed archive seam and compared against a checked-in expected table payload.
+
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs infoassembly`. Rust service coverage currently proves mocked ENA and mocked SRA assembly-first metadata paths. That is executable evidence only at this shipment boundary; compared acceptance evidence is still pending.
+This method is implemented and exposed through `emboss-rs infoassembly`. The bounded mocked ENA assembly-first path is compared against a committed expected table fixture through the acceptance-anchor harness, and Rust service coverage also exercises mocked ENA and mocked SRA metadata paths through the same governed archive-provider seam. That proves the shipped retrieval surface without claiming broad provider parity or hidden live-network validation.
 
 ## Caveats
 
@@ -59,16 +63,20 @@ The v1 surface is intentionally conservative. `infoassembly` does not accept loc
 - Referenced artifacts: `infoassembly_mocked_ena_case`
 - Expected outputs:
   - `ena_infoassembly_table`: Normalized ENA assembly-first metadata table (A stable `field`/`value` report that includes the selected assembly accession, linked archive identifiers, file counts, total known bytes, and the provider route label.)
+- Legacy reference: EMBOSS infoassembly application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoassembly.acd`
+  - Invocation: `infoassembly -sequence ena:ERR123456 -stdout yes`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS infoassembly application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoassembly.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `normalize_ena_assembly_metadata`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes

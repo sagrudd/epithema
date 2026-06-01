@@ -1,0 +1,16 @@
+field	value
+provider	ena
+accession	ERR123456
+object_class	run
+assembly_accession	ERP000001
+run_accession	ERR123456
+experiment_accession	ERX000001
+sample_accession	ERS000001
+platform	ILLUMINA
+instrument_model	NovaSeq 6000
+library_layout	PAIRED
+library_strategy	WGS
+library_source	GENOMIC
+file_count	2
+total_size_bytes	22
+route_endpoint	ena.portal.filereport

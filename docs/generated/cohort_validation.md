@@ -11,10 +11,10 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `106`
-- Methods with executable validation: `1`
-- Methods with compared evidence: `106`
-- Methods with blocking cohort gaps: `1`
+- Methods with harvested legacy provenance recorded: `107`
+- Methods with executable validation: `0`
+- Methods with compared evidence: `107`
+- Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
 
@@ -35,7 +35,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `infoalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `extractalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `nthseqset` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `infoassembly` | `archive_tools` | `executable_evidence` | `yes` | `yes` | `no` | `yes` | `no` | `2` |
+| `infoassembly` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `runinfo` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `runget` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `matcher` | `alignment_analysis` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -140,7 +140,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.
 
-- `infoassembly`: `missing_harvested_legacy_evidence`, `missing_compared_evidence`
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
 - `isochore`: `missing_explicit_legacy_reference`

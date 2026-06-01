@@ -4144,3 +4144,24 @@ implementation-program cycle. The near-term priorities are:
       - `python3 scripts/release_metadata.py truth-check` is expected to fail
         at this boundary because the shipped cohort is no longer fully
         compared or fully harvested
+
+256. Complete. Close the `infoassembly` compared-evidence and harvested-provenance slice.
+    - Added the bounded `infoassembly` acceptance-anchor fixture in
+      `crates/emboss-testkit/tests/fixtures/acceptance_anchors/infoassembly_normalize_ena_assembly_metadata.tsv`.
+    - Wired `infoassembly` into the acceptance-anchor harness through the
+      mocked-provider execution path in `crates/emboss-testkit/src/anchor.rs`.
+    - Updated the governed autodoc contract in
+      `docs/autodoc/tools/infoassembly.json` to record the bounded
+      compared-and-harvested example honestly.
+    - Refreshed the generated docs and validation/report surface back to the
+      fully green state.
+    - Current governed state after this task:
+      - shipped methods `107`
+      - compared evidence `107`
+      - executable evidence `0`
+      - harvested legacy provenance present `107`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`
+    - This closes the bounded `infoassembly` retrieval slice at compared
+      evidence and harvested legacy provenance.

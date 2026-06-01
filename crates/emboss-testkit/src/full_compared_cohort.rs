@@ -242,8 +242,8 @@ mod tests {
         let report = derive_full_compared_cohort_report(repo_root())
             .expect("full-compared-cohort report should derive");
 
-        assert_eq!(report.summary.total_method_count, 106);
-        assert_eq!(report.summary.compared_evidence_count, 106);
+        assert_eq!(report.summary.total_method_count, 107);
+        assert_eq!(report.summary.compared_evidence_count, 107);
         assert_eq!(report.summary.executable_evidence_count, 0);
         assert_eq!(report.summary.below_compared_method_count, 0);
         assert!(report.summary.full_compared_cohort);
