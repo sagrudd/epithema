@@ -43,3 +43,10 @@ pub const ISOCHORE_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "report a bounded isochore profile and emit a line-plot contract",
 )
 .with_family(FAMILY);
+
+/// `syco` descriptor.
+pub const SYCO_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "syco",
+    "report a bounded synonymous codon preference profile and emit a line-plot contract",
+)
+.with_family(FAMILY);

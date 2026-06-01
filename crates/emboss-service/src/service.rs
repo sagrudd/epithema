@@ -45,8 +45,9 @@ use emboss_tools::feature_tools::{
     run_splitsource, run_twofeat, splitsource_help, twofeat_help,
 };
 use emboss_tools::nucleotide_plots::{
-    BananaParams, DensityParams, IsochoreParams, WobbleParams, banana_help, density_help,
-    isochore_help, run_banana, run_density, run_isochore, run_wobble, wobble_help,
+    BananaParams, DensityParams, IsochoreParams, SycoParams, WobbleParams, banana_help,
+    density_help, isochore_help, run_banana, run_density, run_isochore, run_syco, run_wobble,
+    syco_help, wobble_help,
 };
 use emboss_tools::pairwise_alignment::{
     NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
@@ -340,6 +341,7 @@ impl EmbossService {
             "density" => self.invoke_density(request, descriptor),
             "wobble" => self.invoke_wobble(request, descriptor),
             "isochore" => self.invoke_isochore(request, descriptor),
+            "syco" => self.invoke_syco(request, descriptor),
             "charge" => self.invoke_charge(request, descriptor),
             "hmoment" => self.invoke_hmoment(request, descriptor),
             "octanol" => self.invoke_octanol(request, descriptor),
@@ -5599,6 +5601,131 @@ impl EmbossService {
         ))
     }
 
+    fn invoke_syco(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, syco_help()));
+        }
+
+        let (params, plot_contract_out) = parse_syco_params(request.arguments())?;
+        let (input, input_provenance, input_diagnostics) =
+            self.resolve_local_sequence_input(&params.input.path.display().to_string())?;
+        let outcome = run_syco(SycoParams {
+            input,
+            reference: params.reference,
+            codon_window: params.codon_window,
+            codon_step: params.codon_step,
+        })?;
+        let status_message = format!(
+            "computed bounded syco preference profile across {} windows",
+            outcome.profile.windows.len()
+        );
+
+        let mut provenance = vec![input_provenance];
+        let mut result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "sequence_id".to_owned(),
+                    "window_start".to_owned(),
+                    "window_end".to_owned(),
+                    "window_length".to_owned(),
+                    "codon_window_length".to_owned(),
+                    "sense_codon_count".to_owned(),
+                    "syco_score".to_owned(),
+                ],
+                outcome
+                    .profile
+                    .windows
+                    .iter()
+                    .map(|window| {
+                        vec![
+                            outcome.profile.identifier.clone(),
+                            window.window_start.to_string(),
+                            window.window_end.to_string(),
+                            window.window_length.to_string(),
+                            window.codon_window_length.to_string(),
+                            window.sense_codon_count.to_string(),
+                            format!("{:.6}", window.syco_score),
+                        ]
+                    })
+                    .collect(),
+            )),
+            ResultSummary::new("Syco preference profile computed")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!("Reference: {}", outcome.reference.display()))
+                .with_line(format!("Sequence: {}", outcome.profile.identifier))
+                .with_line(format!("Codon window: {}", outcome.profile.codon_window))
+                .with_line(format!("Codon step: {}", outcome.profile.codon_step))
+                .with_line("X axis: 1-based window start")
+                .with_line("Y axis: syco score")
+                .with_line(
+                    "Analytical table reports the bounded synonymous codon preference score derived from the same coding-window computation path",
+                )
+                .with_line(format!(
+                    "Plot contract: {}",
+                    plot_contract_out
+                        .as_ref()
+                        .map(|path| path.display().to_string())
+                        .unwrap_or_else(|| "attached in method result only".to_owned())
+                )),
+            self.success_report(
+                &request.context,
+                status_message.clone(),
+                input_diagnostics.clone(),
+                Vec::new(),
+            ),
+        )
+        .with_plot(outcome.plot.clone());
+
+        if let Some(path) = &plot_contract_out {
+            let json = outcome.plot.to_json_pretty().map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("failed to serialize syco plot contract: {error}"),
+                )
+                .with_code("service.syco.plot.serialize_failed")
+            })?;
+            std::fs::write(path, json).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Configuration,
+                    format!("failed to write syco plot contract to {}", path.display()),
+                )
+                .with_code("service.syco.plot.write_failed")
+                .with_detail(error.to_string())
+            })?;
+
+            let plot_provenance = ArtifactProvenance::generated_output(path.display().to_string())
+                .with_description("syco plot contract");
+            provenance.push(plot_provenance.clone());
+            result = result.with_artifact(
+                ArtifactReference::new("syco-plot-contract", ArtifactKind::Auxiliary)
+                    .with_label("Syco plot contract")
+                    .with_local_path(path)
+                    .with_provenance(plot_provenance),
+            );
+        }
+
+        let report = self.success_report(
+            &request.context,
+            status_message,
+            input_diagnostics,
+            provenance,
+        );
+        result.report = report.clone();
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
     fn invoke_octanol(
         &self,
         request: InvocationRequest,
@@ -9736,6 +9863,88 @@ fn parse_isochore_params(
     ))
 }
 
+fn parse_syco_params(arguments: &[String]) -> Result<(SycoParams, Option<PathBuf>), ServiceError> {
+    if arguments.len() < 2 {
+        return Err(tool_usage_error("syco", syco_help()));
+    }
+
+    let input = SequenceInput::new(arguments[0].clone());
+    let reference = PathBuf::from(&arguments[1]);
+    let mut codon_window = 11usize;
+    let mut codon_step = 1usize;
+    let mut plot_contract_out = None;
+    let mut index = 2usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--codon-window=") {
+            codon_window = parse_positive_count("syco", value, "--codon-window")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--codon-window" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --codon-window",
+                )
+                .with_code("service.tool.syco.codon_window_missing")
+            })?;
+            codon_window = parse_positive_count("syco", value, "--codon-window")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--codon-step=") {
+            codon_step = parse_positive_count("syco", value, "--codon-step")?;
+            index += 1;
+            continue;
+        }
+        if argument == "--codon-step" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --codon-step")
+                    .with_code("service.tool.syco.codon_step_missing")
+            })?;
+            codon_step = parse_positive_count("syco", value, "--codon-step")?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--plot-contract-out=") {
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--plot-contract-out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --plot-contract-out",
+                )
+                .with_code("service.tool.syco.plot_contract_out_missing")
+            })?;
+            plot_contract_out = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("unknown syco argument '{argument}'"),
+        )
+        .with_code("service.tool.syco.argument_unknown")
+        .with_detail(syco_help()));
+    }
+
+    Ok((
+        SycoParams {
+            input,
+            reference,
+            codon_window,
+            codon_step,
+        },
+        plot_contract_out,
+    ))
+}
+
 fn parse_octanol_params(
     arguments: &[String],
 ) -> Result<(OctanolParams, Option<PathBuf>), ServiceError> {
@@ -11744,6 +11953,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "density" => density_help(),
         "wobble" => wobble_help(),
         "isochore" => isochore_help(),
+        "syco" => syco_help(),
         "charge" => charge_help(),
         "hmoment" => hmoment_help(),
         "octanol" => octanol_help(),
@@ -12002,6 +12212,11 @@ mod tests {
     fn isochore_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/isochore_nucleotide.fasta")
+    }
+
+    fn syco_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/syco_coding_nucleotide.fasta")
     }
 
     fn octanol_fixture() -> std::path::PathBuf {
@@ -16333,6 +16548,95 @@ mod tests {
             .invoke(request)
             .expect_err("invalid window should fail");
         assert_eq!(error.code(), Some("service.tool.isochore.--window_invalid"));
+    }
+
+    #[test]
+    fn executes_syco_against_coding_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("syco").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            syco_fixture().display().to_string(),
+            codon_reference_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "2".to_owned(),
+        ]);
+
+        let response = service.invoke(request).expect("syco should execute");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 3);
+                assert_eq!(table.rows[0][0], "syco_example");
+                assert_eq!(table.rows[0][1], "1");
+                assert_eq!(table.rows[0][2], "6");
+                assert_eq!(table.rows[0][6], "0.200000");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let plot = response
+            .result
+            .plot
+            .as_ref()
+            .expect("syco should attach a plot payload");
+        assert_eq!(plot.kind.as_str(), "line");
+        assert_eq!(plot.series.len(), 1);
+    }
+
+    #[test]
+    fn syco_writes_plot_contract_output() {
+        let service = implemented_service();
+        let output_path = std::env::temp_dir().join(format!(
+            "emboss-syco-plot-{}.json",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time should advance")
+                .as_nanos()
+        ));
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("syco").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            syco_fixture().display().to_string(),
+            codon_reference_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "2".to_owned(),
+            "--plot-contract-out".to_owned(),
+            output_path.display().to_string(),
+        ]);
+
+        let response = service.invoke(request).expect("syco should execute");
+        let emitted =
+            std::fs::read_to_string(&output_path).expect("plot contract file should exist");
+        assert!(emitted.contains("\"tool\": \"syco\""));
+        assert!(emitted.contains("\"method\": \"nucleotide_syco_profile\""));
+        assert!(response.result.artifacts.iter().any(|artifact| {
+            artifact.id == "syco-plot-contract"
+                && artifact.local_path.as_ref() == Some(&output_path)
+        }));
+        let _ = std::fs::remove_file(output_path);
+    }
+
+    #[test]
+    fn syco_rejects_invalid_codon_window() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("syco").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            syco_fixture().display().to_string(),
+            codon_reference_fixture().display().to_string(),
+            "--codon-window".to_owned(),
+            "0".to_owned(),
+        ]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("invalid codon window should fail");
+        assert_eq!(error.code(), Some("service.tool.syco.--codon-window_invalid"));
     }
 
     #[test]

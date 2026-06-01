@@ -3224,3 +3224,15 @@ implementation-program cycle. The near-term priorities are:
     - Landed a deterministic single-series `syco_score` line contract derived
       from the same analytical computation path without widening into a generic
       plotting framework.
+
+210. Expose the final bounded plotting continuation candidate through the governed shipped surface.
+    - Wired `syco` through the registry, service, CLI, governed autodoc, and
+      generated docs/validation stub.
+    - Refreshed the governed cohort/report surfaces to the honest interim
+      state:
+      - shipped methods: `104`
+      - compared evidence: `103`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `104`
+      - `full_compared_cohort: false`
+      - `release_truth_current: true`

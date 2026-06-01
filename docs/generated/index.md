@@ -106,6 +106,7 @@ tools/skipredundant
 tools/skipseq
 tools/splitsource
 tools/splitter
+tools/syco
 tools/tranalign
 tools/transeq
 tools/trimest

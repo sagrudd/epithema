@@ -148,6 +148,7 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         nucleotide_plots::DENSITY_DESCRIPTOR,
         nucleotide_plots::WOBBLE_DESCRIPTOR,
         nucleotide_plots::ISOCHORE_DESCRIPTOR,
+        nucleotide_plots::SYCO_DESCRIPTOR,
         protein_plots::CHARGE_DESCRIPTOR,
         protein_plots::HMOMENT_DESCRIPTOR,
         protein_plots::OCTANOL_DESCRIPTOR,

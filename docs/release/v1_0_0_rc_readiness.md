@@ -113,11 +113,11 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `103`
+- Shipped methods audited: `104`
 - Compared-evidence methods: `103`
-- Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `103`
-- Full compared cohort: `yes`
+- Executable-evidence methods: `1`
+- Methods with harvested legacy provenance recorded: `104`
+- Full compared cohort: `no`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -126,9 +126,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `103` shipped methods are documented and present in the generated docs
+- All `104` shipped methods are documented and present in the generated docs
   index.
-- All `103` shipped methods have a checked-in validation stub.
+- All `104` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -295,14 +295,17 @@ Current generated release-truth markers:
 
 ### Legacy harvesting remains partial
 
-- The cohort report now records `100` methods with harvested legacy provenance.
+- The cohort report now records `104` methods with harvested legacy
+  provenance.
 - Harvest coverage is complete across the shipped cohort.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `100` methods with compared evidence.
-- The comparison framework remains real and reusable, and the full compared
-  cohort gate is green again after the bounded `wobble` evidence closure.
+- The cohort report now records `103` methods with compared evidence and `1`
+  shipped method at executable evidence.
+- The comparison framework remains real and reusable, but the full compared
+  cohort gate is intentionally red at this task boundary while `syco` remains
+  executable-only pending canonical checked-in compared evidence.
 
 ### Plotting limitations
 
@@ -328,10 +331,10 @@ Current generated release-truth markers:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `103`
+- Shipped methods audited: `104`
 - Compared-evidence methods: `103`
-- Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `103`
+- Executable-evidence methods: `1`
+- Methods with harvested legacy provenance recorded: `104`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

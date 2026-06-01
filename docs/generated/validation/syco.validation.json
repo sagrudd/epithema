@@ -1,0 +1,54 @@
+{
+  "tool_name": "syco",
+  "document_id": "syco-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "syco_profile_example",
+      "title": "Compute a deterministic bounded syco profile",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "syco_fixture",
+        "syco_reference_fixture"
+      ],
+      "expected_output_ids": [
+        "syco_table",
+        "syco_plot"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS syco application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/syco.acd",
+          "invocation": "syco -seqall syco_coding_nucleotide.fasta -cfile codon_reference.fasta -graph data"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS syco application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/syco.acd",
+      "invocation": "syco -seqall syco_coding_nucleotide.fasta -cfile codon_reference.fasta -graph data"
+    }
+  ]
+}
