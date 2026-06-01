@@ -4113,3 +4113,34 @@ implementation-program cycle. The near-term priorities are:
       - no CLI routing yet
       - no generated docs or validation stubs yet
       - no canonical fixtures or compared evidence yet
+
+255. Complete. Expose `infoassembly` through the governed shipped surface.
+    - `infoassembly` is now exposed through the governed registry, service,
+      and CLI.
+    - Added the governed autodoc contract in
+      `docs/autodoc/tools/infoassembly.json`.
+    - Added a managed-asset mocked-provider autodoc case for the bounded
+      shipment example in
+      `crates/emboss-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md`.
+    - Refreshed the generated docs and validation/report surface to the honest
+      interim executable-only state.
+    - What landed in this shipment step:
+      - governed registry exposure for `infoassembly`
+      - governed service dispatch exposure for `emboss-rs infoassembly`
+      - CLI routing coverage for `emboss-rs infoassembly`
+      - generated tool page and validation stub for `infoassembly`
+    - Interim governed state after this task:
+      - shipped methods `107`
+      - compared evidence `106`
+      - executable evidence `1`
+      - harvested legacy provenance present `106`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: false`
+      - `release_truth_current: false`
+    - This task intentionally stops at shipped plus executable evidence:
+      - compared evidence for `infoassembly` still belongs to Task `256`
+      - harvested legacy provenance for `infoassembly` still belongs to Task
+        `256`
+      - `python3 scripts/release_metadata.py truth-check` is expected to fail
+        at this boundary because the shipped cohort is no longer fully
+        compared or fully harvested

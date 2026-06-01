@@ -38,6 +38,7 @@ shipped cohort is:
 - `seqretsetall`
 - `seqretsplit`
 - `refseqget`
+- `infoassembly`
 - `newseq`
 - `seqcount`
 - `notseq`
@@ -115,11 +116,11 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `106`
+- Shipped methods audited: `107`
 - Compared-evidence methods: `106`
-- Executable-evidence methods: `0`
+- Executable-evidence methods: `1`
 - Methods with harvested legacy provenance recorded: `106`
-- Full compared cohort: `yes`
+- Full compared cohort: `no`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -128,9 +129,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `106` shipped methods are documented and present in the generated docs
+- All `107` shipped methods are documented and present in the generated docs
   index.
-- All `106` shipped methods have a checked-in validation stub.
+- All `107` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -151,7 +152,9 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- The shipped cohort is fully harvested and fully compared on this branch.
+- The shipped cohort is not fully harvested or fully compared at this shipment
+  boundary, with one bounded executable-only retrieval slice still awaiting
+  compared evidence and harvested legacy provenance.
 - The retained governance backlog is `0`, so the dominant remaining work is
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
@@ -185,9 +188,10 @@ Current generated release-truth markers:
 ### Validation and evidence presence
 
 - Status: `complete`
-- Basis: every shipped method has a validation stub, appears in the cohort
-  report, records harvested legacy provenance, and now reaches compared
-  evidence.
+- Basis: every shipped method has a validation stub and appears in the cohort
+  report; `infoassembly` is intentionally executable-only at this shipment
+  boundary and therefore has not yet reached compared evidence or harvested
+  legacy provenance.
 
 ### Cohort-level acceptance reporting
 
@@ -220,26 +224,26 @@ Current generated release-truth markers:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now records no executable-only shipped methods across the current
-  governed cohort.
+  and now records one executable-only shipped method across the current
+  governed cohort pending the bounded `infoassembly` compared-evidence step.
 
 ### Full compared cohort gate
 
-- Status: `complete`
+- Status: `ready with known limitations`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `106/106` shipped methods at compared evidence with `0`
-  methods below compared evidence.
+  and now records `106/107` shipped methods at compared evidence with `1`
+  method below compared evidence.
 
 ### Harvest coverage reporting
 
-- Status: `complete`
+- Status: `ready with known limitations`
 - Basis: the harvest-coverage exceptions report is generated at:
   - `docs/generated/validation/harvest_coverage.json`
   - `docs/generated/harvest_coverage.md`
-  and currently records `106/106` shipped methods with harvested legacy
-  provenance and `0` harvest exceptions.
+  and currently records `106/107` shipped methods with harvested legacy
+  provenance and `1` harvest exception.
 
 ### Retained backlog closure tracking
 
@@ -299,13 +303,15 @@ Current generated release-truth markers:
 
 - The cohort report now records `106` methods with harvested legacy
   provenance.
-- Harvest coverage is complete across the shipped cohort.
+- Harvest coverage is intentionally not complete at this shipment boundary
+  because `infoassembly` has not yet reached the harvested-provenance step.
 
 ### Comparison-based acceptance remains partial
 
-- The cohort report now records `105` methods with compared evidence.
-- The comparison framework remains real and reusable, and the full compared
-  cohort gate is green again after the bounded `seqretsplit` evidence closure.
+- The cohort report now records `106` methods with compared evidence.
+- The comparison framework remains real and reusable, but the full compared
+  cohort gate is intentionally open at this shipment boundary until the
+  bounded `infoassembly` evidence closure lands.
 
 ### Plotting limitations
 
@@ -331,9 +337,9 @@ Current generated release-truth markers:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `106`
+- Shipped methods audited: `107`
 - Compared-evidence methods: `106`
-- Executable-evidence methods: `0`
+- Executable-evidence methods: `1`
 - Methods with harvested legacy provenance recorded: `106`
 - Retained backlog still unshipped: `0`
 

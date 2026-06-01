@@ -1,0 +1,92 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "infoassembly-v1",
+  "tool": {
+    "name": "infoassembly",
+    "family": "archive_tools",
+    "summary": "Normalize provider-backed archive metadata into a bounded assembly-first report",
+    "legacy_names": [
+      "infoassembly"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`infoassembly` is the assembly-first archive metadata companion to `runinfo`. In v1 it resolves one provider-qualified archive accession through the governed archive-provider seam and projects normalized archive metadata into a bounded assembly-first report."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one provider-qualified archive accession such as `ena:ERR123456` or `sra:SRR123456`. Local file inputs and inline literals are rejected deliberately because `infoassembly` is a provider-backed metadata lookup tool."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable `field`/`value` table report plus provider-summary lines. The bounded v1 surface reports the selected assembly identifier, linked archive identifiers, library metadata when present, file counts, total known bytes, and the normalized provider route label."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs infoassembly`. Rust service coverage currently proves mocked ENA and mocked SRA assembly-first metadata paths. That is executable evidence only at this shipment boundary; compared acceptance evidence is still pending."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 surface is intentionally conservative. `infoassembly` does not accept local files, free-text metadata blobs, or hidden live-network fallback behavior. It projects assembly-first metadata from the current normalized archive seam and does not yet claim broad provider-parity or full assembly-schema completeness."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "infoassembly_mocked_ena_case",
+      "label": "Mocked ENA infoassembly case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md"
+      },
+      "description": "Repository-managed case note for the mocked ENA assembly-first metadata path used in Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "normalize_ena_assembly_metadata",
+      "title": "Normalize ENA archive metadata into a bounded assembly-first report",
+      "description": "Resolves a provider-qualified ENA archive accession and returns the current governed assembly-first metadata table and provider summary.",
+      "artifact_ids": [
+        "infoassembly_mocked_ena_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "ena_infoassembly_table",
+          "label": "Normalized ENA assembly-first metadata table",
+          "description": "A stable `field`/`value` report that includes the selected assembly accession, linked archive identifiers, file counts, total known bytes, and the provider route label."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "normalize_ena_assembly_metadata"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

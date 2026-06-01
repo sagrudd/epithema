@@ -71,9 +71,9 @@ use emboss_tools::restriction_tools::{
     RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
 };
 use emboss_tools::retrieval_tools::{
-    RefseqgetParams, SeqretParams, SeqretSource, SeqretsplitParams, SeqretsetallInputSet,
-    SeqretsetallParams, refseqget_help, run_refseqget, run_seqret, run_seqretsplit,
-    run_seqretsetall, seqret_help, seqretsplit_help, seqretsetall_help,
+    RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
+    SeqretsplitParams, refseqget_help, run_refseqget, run_seqret, run_seqretsetall,
+    run_seqretsplit, seqret_help, seqretsetall_help, seqretsplit_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -282,6 +282,10 @@ impl EmbossService {
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
             "nthseqset" => self.invoke_nthseqset(request, descriptor),
+            "infoassembly" => self
+                .invoke_infoassembly_with_client::<emboss_providers::ReqwestHttpClient>(
+                    request, descriptor, None,
+                ),
             "runinfo" => self.invoke_runinfo(request, descriptor),
             "runget" => self.invoke_runget(request, descriptor),
             "matcher" => self.invoke_matcher(request, descriptor),
@@ -5797,7 +5801,10 @@ impl EmbossService {
             std::fs::write(path, json).map_err(|error| {
                 PlatformError::new(
                     ErrorCategory::Configuration,
-                    format!("failed to write isochore plot contract to {}", path.display()),
+                    format!(
+                        "failed to write isochore plot contract to {}",
+                        path.display()
+                    ),
                 )
                 .with_code("service.isochore.plot.write_failed")
                 .with_detail(error.to_string())
@@ -10937,10 +10944,16 @@ fn infoassembly_rows(
         vec!["provider".to_owned(), outcome.provider.clone()],
         vec!["accession".to_owned(), outcome.accession.clone()],
         vec!["object_class".to_owned(), outcome.object_class.clone()],
-        vec!["assembly_accession".to_owned(), outcome.assembly_accession.clone()],
+        vec![
+            "assembly_accession".to_owned(),
+            outcome.assembly_accession.clone(),
+        ],
         vec![
             "run_accession".to_owned(),
-            outcome.run_accession.clone().unwrap_or_else(|| "-".to_owned()),
+            outcome
+                .run_accession
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
         ],
         vec![
             "experiment_accession".to_owned(),
@@ -12286,6 +12299,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqretsetall" => seqretsetall_help(),
         "seqretsplit" => seqretsplit_help(),
         "refseqget" => refseqget_help(),
+        "infoassembly" => infoassembly_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
         "seqcount" => seqcount_help(),
@@ -12988,14 +13002,8 @@ mod tests {
         assert_eq!(outcome.record_sets[0].len(), 3);
         assert_eq!(outcome.record_sets[1].len(), 2);
         assert_eq!(outcome.total_records, 5);
-        assert_eq!(
-            outcome.record_sets[0][0].identifier().accession(),
-            "alpha"
-        );
-        assert_eq!(
-            outcome.record_sets[1][0].identifier().accession(),
-            "delta"
-        );
+        assert_eq!(outcome.record_sets[0][0].identifier().accession(), "alpha");
+        assert_eq!(outcome.record_sets[1][0].identifier().accession(), "delta");
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 2);
         assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
@@ -13025,11 +13033,17 @@ mod tests {
             outcome.record_sets[1][0].identifier().accession(),
             "AB000263"
         );
-        assert_eq!(outcome.record_sets[1][0].metadata().source.as_deref(), Some("ena"));
+        assert_eq!(
+            outcome.record_sets[1][0].metadata().source.as_deref(),
+            Some("ena")
+        );
         assert_eq!(provenance.len(), 3);
         assert_eq!(diagnostics.len(), 2);
         assert_eq!(diagnostics[0].code(), Some("service.input.local.resolved"));
-        assert_eq!(diagnostics[1].code(), Some("service.input.provider_qualified"));
+        assert_eq!(
+            diagnostics[1].code(),
+            Some("service.input.provider_qualified")
+        );
     }
 
     #[test]
@@ -13071,10 +13085,16 @@ mod tests {
             outcome.outputs[0].record.identifier().accession(),
             "AB000263"
         );
-        assert_eq!(outcome.outputs[0].record.metadata().source.as_deref(), Some("ena"));
+        assert_eq!(
+            outcome.outputs[0].record.metadata().source.as_deref(),
+            Some("ena")
+        );
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 1);
-        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+        assert_eq!(
+            diagnostics[0].code(),
+            Some("service.input.provider_qualified")
+        );
     }
 
     #[test]
@@ -13097,7 +13117,10 @@ mod tests {
         assert_eq!(outcome.route_endpoint, "ena.portal.filereport");
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 1);
-        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+        assert_eq!(
+            diagnostics[0].code(),
+            Some("service.input.provider_qualified")
+        );
     }
 
     #[test]
@@ -13120,7 +13143,10 @@ mod tests {
         assert_eq!(outcome.route_endpoint, "sra.runinfo");
         assert_eq!(provenance.len(), 2);
         assert_eq!(diagnostics.len(), 1);
-        assert_eq!(diagnostics[0].code(), Some("service.input.provider_qualified"));
+        assert_eq!(
+            diagnostics[0].code(),
+            Some("service.input.provider_qualified")
+        );
     }
 
     #[test]
@@ -13489,9 +13515,12 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row == &vec!["assembly_accession".to_owned(), "ERP000001".to_owned()]
                 }));
-                assert!(table.rows.iter().any(|row| {
-                    row == &vec!["file_count".to_owned(), "2".to_owned()]
-                }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row == &vec!["file_count".to_owned(), "2".to_owned()] })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -13531,6 +13560,30 @@ mod tests {
             payload => panic!("unexpected payload: {payload:?}"),
         }
         assert_eq!(response.report.provenance().len(), 2);
+    }
+
+    #[test]
+    fn dispatches_infoassembly_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("infoassembly").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:ERR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let response = service
+            .invoke_infoassembly_with_client(
+                request,
+                emboss_tools::archive_tools::INFOASSEMBLY_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("infoassembly should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "infoassembly");
     }
 
     #[test]
@@ -17438,7 +17491,10 @@ mod tests {
         let error = service
             .invoke(request)
             .expect_err("invalid codon window should fail");
-        assert_eq!(error.code(), Some("service.tool.syco.--codon-window_invalid"));
+        assert_eq!(
+            error.code(),
+            Some("service.tool.syco.--codon-window_invalid")
+        );
     }
 
     #[test]

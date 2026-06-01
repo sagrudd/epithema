@@ -4,13 +4,20 @@
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
   "summary": {
-    "total_method_count": 106,
+    "total_method_count": 107,
     "family_count": 10,
     "compared_count": 106,
-    "executable_only_count": 0,
+    "executable_only_count": 1,
     "harvested_but_not_compared_count": 0
   },
   "families": [
+    {
+      "family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "shipped_method_count": 7,
+      "compared_count": 6,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 0
+    },
     {
       "family": "Core Retain — Alignment read-write and post-processing",
       "shipped_method_count": 13,
@@ -64,13 +71,6 @@
       "family": "Modernize — Rework — Protein property and structural-summary utilities",
       "shipped_method_count": 2,
       "compared_count": 2,
-      "executable_only_count": 0,
-      "harvested_but_not_compared_count": 0
-    },
-    {
-      "family": "Modernize — Rework — Remote retrieval and archive acquisition",
-      "shipped_method_count": 6,
-      "compared_count": 6,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

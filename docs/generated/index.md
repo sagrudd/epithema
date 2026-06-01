@@ -59,6 +59,7 @@ tools/getorf
 tools/hmoment
 tools/iep
 tools/infoalign
+tools/infoassembly
 tools/infobase
 tools/inforesidue
 tools/infoseq

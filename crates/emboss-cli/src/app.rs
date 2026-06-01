@@ -231,6 +231,14 @@ mod tests {
     }
 
     #[test]
+    fn routes_infoassembly_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "infoassembly", "ena:ERR123456"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("infoassembly"));
+    }
+
+    #[test]
     fn routes_runget_to_tool_path() {
         let cli = Cli::try_parse_from(["emboss-rs", "runget", "ena:ERR123456"])
             .expect("tool should parse");
@@ -256,8 +264,8 @@ mod tests {
 
     #[test]
     fn routes_banana_to_tool_path() {
-        let cli = Cli::try_parse_from(["emboss-rs", "banana", "example.fna"])
-            .expect("tool should parse");
+        let cli =
+            Cli::try_parse_from(["emboss-rs", "banana", "example.fna"]).expect("tool should parse");
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("banana"));
     }

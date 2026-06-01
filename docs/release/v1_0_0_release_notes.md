@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `106` methods, including:
+of `107` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -49,7 +49,8 @@ tools for:
 
 - single-sequence retrieval via ENA and NCBI-backed acquisition seams
 - modernized `seqret`, `seqretsetall`, `seqretsplit`, and `refseqget`
-- archive metadata and manifest-oriented `runinfo` and `runget`
+- archive metadata and manifest-oriented `runinfo`, `runget`, and
+  `infoassembly`
 
 ### Documentation and validation
 
@@ -65,9 +66,9 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `106` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
+- `1` shipped methods carry executable evidence
 - `106` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`
@@ -100,9 +101,10 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the shipped governed cohort is back to a fully compared
-state after the bounded `seqretsplit` compared-evidence closure.
+This means the shipped retained cohort remains fully closed, while the shipped
+governed cohort is in an honest interim executable-only and not-yet-harvested
+state after the bounded `infoassembly` shipment step and before its
+compared-evidence and harvested-provenance closure.
 
 ### First-class R story
 
