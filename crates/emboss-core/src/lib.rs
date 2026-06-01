@@ -27,6 +27,7 @@ pub mod local_alignment;
 pub mod metadata;
 pub mod molecule;
 pub mod nucleotide_density;
+pub mod nucleotide_banana;
 pub mod nucleotide_isochore;
 pub mod nucleotide_wobble;
 pub mod pattern;
@@ -82,6 +83,9 @@ pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
 pub use nucleotide_density::{
     DensityWindow, NucleotideDensityError, NucleotideDensityProfile, nucleotide_density_profile,
+};
+pub use nucleotide_banana::{
+    BananaPoint, NucleotideBananaError, NucleotideBananaProfile, nucleotide_banana_profile,
 };
 pub use nucleotide_isochore::{
     IsochoreBand, IsochoreWindow, NucleotideIsochoreError, NucleotideIsochoreProfile,

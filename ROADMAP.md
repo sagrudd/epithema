@@ -2925,7 +2925,15 @@ implementation-program cycle. The near-term priorities are:
          plot-contract taxonomy pressure not clearly local to the method
 
 192. Implement the bounded analytical core for the selected next bounded continuation candidate.
-    - Keep the implementation table-first, method-associated, and renderer-
+    - Implemented the bounded analytical core for `banana` in
+      `crates/emboss-core`.
+    - Recorded the bounded core shape:
+      - per-base analytical rows
+      - local bend and curvature columns
+      - edge-aware undefined positions where the historical model does not
+        yield a defined value
+      - canonical DNA-like residue validation with `U` treated as `T`
+    - Kept the implementation method-associated, table-first, and renderer-
       agnostic.
 
 193. Add the typed plot-contract emission path for the selected next bounded continuation candidate.
