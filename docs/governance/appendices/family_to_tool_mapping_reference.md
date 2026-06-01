@@ -3076,6 +3076,38 @@ should pause and reopen planning if any of the following becomes true:
 Those stop conditions should be treated as planning boundaries, not as
 implementation details to absorb informally into the first `syco` patch.
 
+#### Reassessment after the shipped `syco` slice
+
+After the bounded `syco` slice shipped, closed its compared-evidence gap, and
+passed the release-truth rerun, the repository should make the post-ship seam
+assessment explicit before mapping any further continuation.
+
+The reassessment result is affirmative.
+
+- the shipped `syco` slice stayed bounded and method-associated
+- the analytical surface stayed coding-sequence-specific and table-first
+- the richer codon-window scoring surface remained in the analytical table
+- the emitted contract stayed bounded to a single derived `syco_score` series
+- no Rust-side rendering pressure emerged
+- no generalized plotting-framework pressure emerged
+- no fallback-activation stop condition tripped
+
+The governed release-truth surface remained fully green after the shipped
+`syco` slice closed:
+
+- shipped methods: `104`
+- compared evidence: `104`
+- executable evidence: `0`
+- harvested legacy provenance present: `104`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
+So `syco` should be treated as having passed its shipped-slice reassessment
+gate, and any next roadmap extension should be derived from that observed
+post-closure state rather than from the earlier executable-only interim.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

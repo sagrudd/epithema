@@ -3265,3 +3265,24 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+213. Reassess the shipped final bounded plotting continuation candidate before any further continuation is mapped.
+    - Recorded the post-ship `syco` reassessment explicitly in the governance
+      appendix and roadmap.
+    - The result is affirmative:
+      - the shipped `syco` slice stayed bounded and method-associated
+      - the analytical surface stayed coding-sequence-specific and table-first
+      - the richer codon-window scoring surface remained in the analytical
+        table
+      - the emitted contract stayed bounded to a single derived
+        `syco_score` series
+      - no fallback-activation stop condition tripped
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `104`
+      - compared evidence: `104`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `104`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
