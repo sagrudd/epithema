@@ -3754,3 +3754,19 @@ implementation-program cycle. The near-term priorities are:
       5. re-run the full release-truth surface after shipping `seqretsplit`
       6. reassess the shipped `seqretsplit` slice before any further retrieval
          continuation is mapped
+
+237. Complete. Capture the explicit provider/seam stop conditions for
+    `seqretsplit`.
+    - Recorded the explicit provider/seam stop conditions in the governance
+      appendix and roadmap.
+    - The recorded pause-and-reassess triggers are:
+      1. `seqretsplit` cannot remain deterministic under mocked-provider or
+         managed-asset validation
+      2. `seqretsplit` requires hidden live-network dependencies, implicit
+         provider fallback chains, or unclear provider precedence
+      3. `seqretsplit` cannot remain a bounded extension of normalized
+         sequence-return behavior and instead demands broader filesystem-policy
+         orchestration before one shipped slice closes
+      4. `seqretsplit` forces broad filename-policy, directory-policy,
+         batching-policy, or provider-parity claims that are not clearly local
+         to the method

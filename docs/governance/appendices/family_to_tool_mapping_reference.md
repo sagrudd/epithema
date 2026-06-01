@@ -3522,6 +3522,25 @@ The bounded `seqretsplit` tier should be:
 6. reassess the shipped `seqretsplit` slice before any further retrieval
    continuation is mapped
 
+#### Provider and seam stop conditions for `seqretsplit`
+
+After selecting `seqretsplit` as the bounded retrieval continuation lead
+method and mapping its implementation tier, the repository should make the
+pre-code stop conditions explicit.
+
+Planning should pause and reopen before code starts if:
+
+1. `seqretsplit` cannot remain deterministic under mocked-provider or
+   managed-asset validation
+2. `seqretsplit` requires hidden live-network dependencies, implicit provider
+   fallback chains, or unclear provider precedence
+3. `seqretsplit` cannot remain a bounded extension of normalized
+   sequence-return behavior and instead demands broader filesystem-policy
+   orchestration before one shipped slice closes
+4. `seqretsplit` forces broad filename-policy, directory-policy,
+   batching-policy, or provider-parity claims that are not clearly local to
+   the method
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
