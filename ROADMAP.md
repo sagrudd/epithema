@@ -3163,3 +3163,21 @@ implementation-program cycle. The near-term priorities are:
       - method-level acceptance criteria
       - exact patch start conditions
       - explicit seam stop conditions
+
+204. Capture explicit method-level acceptance criteria for the final bounded plotting continuation candidate.
+    - Captured explicit `syco` method-level acceptance criteria in the
+      governance appendix and roadmap.
+    - The recorded governed criteria make `syco` concrete before code starts:
+      - bounded coding nucleotide analytical surface
+      - stable table-first output with enough explicit columns to reconstruct
+        the plotted continuation line from the same computation path
+      - typed contract expectations that remain single-series unless the
+        analytical needs of `syco` itself prove a broader local structure is
+        unavoidable
+      - canonical analytical and plot-contract fixtures
+      - compared evidence for both table and contract outputs
+    - The same non-goals remain explicit:
+      - no Rust-side figure rendering
+      - no silent widening into a generic plotting framework
+      - no broader contract taxonomy unless `syco` itself forces a real local
+        reassessment

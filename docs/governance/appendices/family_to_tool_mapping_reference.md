@@ -2947,6 +2947,53 @@ than generic:
 Only after those are made explicit should the repository map and ship the
 final bounded `syco` slice.
 
+#### `syco` method-level acceptance criteria
+
+Before code changes begin for the final bounded continuation method, `syco`
+should have explicit method-level acceptance criteria recorded as follows.
+
+##### Analytical output expectations
+
+- the method should accept bounded coding nucleotide-sequence input only
+- Rust should compute the analytical `syco` surface directly rather than
+  delegating analytical work to the renderer
+- the analytical model should be described honestly as a bounded synonymous
+  codon-usage continuation profile rather than as a generic plotting-framework
+  extension
+- the analytical surface should remain table-first and stable, with enough
+  explicit columns to reconstruct the plotted continuation line from the same
+  computation path
+
+##### Typed contract expectations
+
+- the emitted plot contract should remain typed, deterministic, and derived
+  from the same governed analytical computation path
+- the first shipped slice should remain single-series unless the analytical
+  needs of `syco` itself prove a broader local structure is unavoidable
+- even if a broader local structure becomes necessary, it should still remain
+  method-associated, table-derived, and renderer-agnostic rather than widening
+  into a generic plotting framework
+- Rust should not own figure rendering, layout policy, styling, legend
+  policy, or presentation defaults
+
+##### Fixture and evidence expectations
+
+- the method should ship with governed autodoc and generated validation
+  metadata
+- the method should have canonical checked-in analytical fixtures
+- the method should have a canonical checked-in plot-contract fixture
+- the method should close with compared evidence for both table and contract
+  outputs
+
+##### Explicit non-goals
+
+- no Rust-side figure rendering
+- no silent widening into a generic plotting framework
+- no broader plot-contract taxonomy unless the analytical needs of `syco`
+  itself make that pressure unavoidable enough to force a real local
+  reassessment
+- no family-wide continuation claims merely because `syco` ships
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
