@@ -3181,3 +3181,13 @@ implementation-program cycle. The near-term priorities are:
       - no silent widening into a generic plotting framework
       - no broader contract taxonomy unless `syco` itself forces a real local
         reassessment
+
+205. Capture the exact start conditions for the first implementation patch of the final bounded plotting continuation candidate.
+    - Captured the explicit `syco` patch-start gate in the governance appendix
+      and roadmap.
+    - Recorded:
+      - the current shortlist and active plotting-branch requirements
+      - post-`banana` continuation viability with `syco` as the selected final
+        active candidate
+      - the zero-burden release-truth surface requirement
+      - patch-scope and full-governed-slice constraints before code starts

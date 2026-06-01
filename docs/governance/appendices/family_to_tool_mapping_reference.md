@@ -2994,6 +2994,45 @@ should have explicit method-level acceptance criteria recorded as follows.
   reassessment
 - no family-wide continuation claims merely because `syco` ships
 
+#### Exact start conditions for the first `syco` implementation patch
+
+The first code-bearing `syco` patch should not begin until all of the
+following remain true:
+
+- the current shortlist still remains:
+  1. plotting
+  2. remote retrieval
+  3. protein-property rework
+- bounded plotting Phase 1 still remains passed:
+  - `hmoment`
+  - `octanol`
+  - `pepinfo`
+- the bounded Phase 2 and later continuation gates still remain passed:
+  - `density`
+  - `wobble`
+  - `isochore`
+  - `banana`
+- the post-`banana` final-candidate viability gate has already passed:
+  - `syco` is the single selected final bounded continuation candidate
+- the zero-burden release-truth surface still remains intact
+- the patch scope remains limited to `syco` and the smallest shared support
+  needed for:
+  - deterministic analytical computation
+  - typed contract emission
+  - governed docs and validation plumbing
+- the patch lands as a full governed slice rather than a half-start
+
+That means the first `syco` patch should not widen immediately into:
+
+- retrieval fallback work
+- generalized plotting-framework seams
+- broader plot-contract taxonomies unless `syco` itself makes that pressure
+  concrete enough to stop and reassess
+- any implicit continuation beyond the final bounded `syco` slice
+
+Only when those start conditions still hold should code work begin for the
+final bounded plotting continuation candidate.
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
