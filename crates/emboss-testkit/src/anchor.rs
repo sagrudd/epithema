@@ -834,6 +834,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "isochore -sequence isochore_nucleotide.fasta -window 4 -graph data",
     },
     AcceptanceAnchorSpec {
+        tool_name: "banana",
+        autodoc_contract: "docs/autodoc/tools/banana.json",
+        example_id: "banana_profile_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/banana_banana_profile_example.tsv",
+        legacy_source: "EMBOSS banana application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/banana.acd",
+        legacy_invocation: "banana -sequence banana_nucleotide.fasta -graph data",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "compseq",
         autodoc_contract: "docs/autodoc/tools/compseq.json",
         example_id: "per_record_and_aggregate_composition",
@@ -1913,6 +1922,12 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
             "--step".to_owned(),
             "4".to_owned(),
         ],
+        "banana" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/banana_nucleotide.fasta")
+                .display()
+                .to_string(),
+        ],
         "descseq" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/annotated_feature.gbk")
@@ -2105,6 +2120,7 @@ fn expected_plot_output(tool_name: &str) -> Option<&'static str> {
         "density" => Some("crates/emboss-tools/tests/fixtures/density_plot_contract.json"),
         "wobble" => Some("crates/emboss-tools/tests/fixtures/wobble_plot_contract.json"),
         "isochore" => Some("crates/emboss-tools/tests/fixtures/isochore_plot_contract.json"),
+        "banana" => Some("crates/emboss-tools/tests/fixtures/banana_plot_contract.json"),
         "wordcount" => Some("crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"),
         _ => None,
     }

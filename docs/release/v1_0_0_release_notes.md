@@ -64,10 +64,10 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `102` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `103` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `103` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
 - weakest evidence family: `none`

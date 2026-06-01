@@ -2,15 +2,15 @@
   "tool_name": "banana",
   "document_id": "banana-v1",
   "source_mode": "curated",
-  "evidence_source": "curated_autodoc",
+  "evidence_source": "executed_run",
   "summary": {
     "total_case_count": 1,
-    "declared_case_count": 1,
-    "harvested_case_count": 0,
-    "runnable_case_count": 1,
-    "executed_case_count": 0,
-    "compared_case_count": 0,
-    "passed_case_count": 0,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
     "failed_case_count": 0,
     "partial_case_count": 0,
     "unsupported_case_count": 0
@@ -19,13 +19,14 @@
     {
       "id": "banana_profile_example",
       "title": "Compute a deterministic bounded banana profile",
-      "evidence_source": "curated_autodoc",
-      "declaration_status": "declared",
-      "execution_status": "runnable",
-      "comparison_status": "pending",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
       "required": true,
       "artifact_ids": [
-        "banana_fixture"
+        "banana_fixture",
+        "banana_plot_contract"
       ],
       "expected_output_ids": [
         "banana_table",
@@ -38,27 +39,11 @@
           "invocation": "banana -sequence banana_nucleotide.fasta -graph data"
         }
       ],
-      "diagnostics": [
-        {
-          "severity": "warning",
-          "code": "testkit.case.missing_legacy_reference",
-          "message": "legacy comparison is requested but this example has no explicit legacy reference",
-          "context": "banana_profile_example"
-        }
-      ]
+      "diagnostics": []
     }
   ],
-  "unresolved_gaps": [
-    "example 'banana_profile_example' needs a legacy reference before comparison can run"
-  ],
-  "diagnostics": [
-    {
-      "severity": "warning",
-      "code": "testkit.case.missing_legacy_reference",
-      "message": "legacy comparison is requested but this example has no explicit legacy reference",
-      "context": "banana_profile_example"
-    }
-  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
   "provenance": [
     {
       "source": "EMBOSS banana application",

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "kind": "line",
+  "metadata": {
+    "id": "banana_banana_example",
+    "title": "Banana profile for banana_example",
+    "subtitle": "Bounded v1 curvature continuation line derived from the analytical table",
+    "provenance": {
+      "tool": "banana",
+      "method": "nucleotide_banana_profile",
+      "source_artifact_ids": [
+        "table:banana-profile"
+      ]
+    }
+  },
+  "x_axis": {
+    "label": "Position",
+    "scale_hint": "linear"
+  },
+  "y_axis": {
+    "label": "Curvature",
+    "scale_hint": "linear"
+  },
+  "series": [
+    {
+      "id": "banana_curvature",
+      "label": "Curvature",
+      "legend_label": "Curvature",
+      "semantic_group": "curvature",
+      "x": {
+        "type": "numeric",
+        "values": [
+          21.0,
+          22.0,
+          23.0,
+          24.0,
+          25.0
+        ]
+      },
+      "y": [
+        10.483104920609547,
+        9.884477160905089,
+        9.157375573489889,
+        8.36563190802451,
+        7.401577738112461
+      ],
+      "style": {
+        "geometry_hint": "line",
+        "color_role": "primary"
+      }
+    }
+  ]
+}

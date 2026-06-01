@@ -1,0 +1,46 @@
+sequence_id	position	residue	local_bend	curvature
+banana_example	1	A		
+banana_example	2	A	0.000000	
+banana_example	3	A	0.000000	
+banana_example	4	A	8.820000	
+banana_example	5	A	17.257426	
+banana_example	6	G	18.664187	
+banana_example	7	G	19.664932	
+banana_example	8	G	19.664932	
+banana_example	9	G	26.161287	
+banana_example	10	G	32.507336	
+banana_example	11	C	26.161287	
+banana_example	12	C	19.664932	
+banana_example	13	C	19.664932	
+banana_example	14	C	18.664187	
+banana_example	15	C	17.257426	
+banana_example	16	T	8.820000	
+banana_example	17	T	0.000000	
+banana_example	18	T	0.000000	
+banana_example	19	T	3.360000	
+banana_example	20	T	6.421202	
+banana_example	21	A	3.360000	10.483105
+banana_example	22	A	0.000000	9.884477
+banana_example	23	A	0.000000	9.157376
+banana_example	24	A	8.820000	8.365632
+banana_example	25	A	17.257426	7.401578
+banana_example	26	G	18.664187	
+banana_example	27	G	19.664932	
+banana_example	28	G	19.664932	
+banana_example	29	G	26.161287	
+banana_example	30	G	32.507336	
+banana_example	31	C	26.161287	
+banana_example	32	C	19.664932	
+banana_example	33	C	19.664932	
+banana_example	34	C	18.664187	
+banana_example	35	C	17.257426	
+banana_example	36	T	8.820000	
+banana_example	37	T	0.000000	
+banana_example	38	T	0.000000	
+banana_example	39	T	3.360000	
+banana_example	40	T	6.421202	
+banana_example	41	A	3.360000	
+banana_example	42	A	0.000000	
+banana_example	43	A	0.000000	
+banana_example	44	A		
+banana_example	45	A		

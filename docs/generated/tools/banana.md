@@ -38,7 +38,7 @@ Rust does not render figures. The formal contract emitted by `banana` is the gov
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs banana`. Validation currently covers stable analytical rows plus executable validation for the curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package. Compared acceptance evidence is still pending the canonical fixture closure task.
+This method is implemented and exposed through `emboss-rs banana`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
 
 ## Caveats
 
@@ -54,16 +54,27 @@ v1 supports only the single-record bounded default-angle banana profile and does
 - Reference: managed asset `crates/emboss-tools/tests/fixtures/banana_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic banana validation.
 
+### Canonical banana line-plot contract fixture
+
+- Artifact ID: `banana_plot_contract`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-tools/tests/fixtures/banana_plot_contract.json`
+- Notes: Repository-managed canonical curvature line-plot contract fixture emitted by the governed banana implementation.
+
 ## Declared Examples
 
 ### Compute a deterministic bounded banana profile
 
 - Example ID: `banana_profile_example`
 - Description: Reports deterministic per-base bendability and curvature rows from the committed nucleotide fixture and emits a governed single-series curvature line-plot contract from the same analytical run.
-- Referenced artifacts: `banana_fixture`
+- Referenced artifacts: `banana_fixture`, `banana_plot_contract`
 - Expected outputs:
   - `banana_table`: Banana analytical table (Stable per-base banana rows with explicit local-bend and curvature columns.)
   - `banana_plot`: Curvature line-plot contract (The governed single-series curvature line-plot contract JSON emitted from the same deterministic analytical run.)
+- Legacy reference: EMBOSS banana application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/banana.acd`
+  - Invocation: `banana -sequence banana_nucleotide.fasta -graph data`
 
 ## Provenance
 

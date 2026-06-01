@@ -12,9 +12,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `103`
-- Methods with executable validation: `1`
-- Methods with compared evidence: `102`
-- Methods with blocking cohort gaps: `1`
+- Methods with executable validation: `0`
+- Methods with compared evidence: `103`
+- Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
 
@@ -91,7 +91,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqmatchall` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordmatch` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordfinder` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `banana` | `nucleotide_plots` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `2` |
+| `banana` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `density` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `wobble` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `isochore` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
@@ -136,7 +136,6 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.
 
-- `banana`: `missing_compared_evidence`, `missing_explicit_legacy_reference`
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
 - `isochore`: `missing_explicit_legacy_reference`

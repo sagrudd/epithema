@@ -2962,5 +2962,16 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
 
 195. Add canonical analytical and plot-contract fixtures plus compared evidence for the selected next bounded continuation candidate.
-    - Restore the shipped cohort from the temporary executable-only shipment
+    - Closed the `banana` evidence slice by adding the canonical analytical
+      fixture and canonical plot-contract fixture.
+    - Wired `banana` into the acceptance-anchor harness and regenerated the
+      governed validation/report surface from the temporary executable-only
       state back to full compared/full-harvest truth.
+    - The current post-closure state is now:
+      - shipped methods: `103`
+      - compared evidence: `103`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `103`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`

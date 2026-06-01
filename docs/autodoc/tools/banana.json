@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs banana`. Validation currently covers stable analytical rows plus executable validation for the curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package. Compared acceptance evidence is still pending the canonical fixture closure task."
+      "content": "This method is implemented and exposed through `emboss-rs banana`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package."
     },
     {
       "id": "caveats",
@@ -62,6 +62,21 @@
         "asset_id": "crates/emboss-tools/tests/fixtures/banana_nucleotide.fasta"
       },
       "description": "Repository-managed nucleotide fixture used for deterministic banana validation."
+    },
+    {
+      "id": "banana_plot_contract",
+      "label": "Canonical banana line-plot contract fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/banana_plot_contract.json"
+      },
+      "description": "Repository-managed canonical curvature line-plot contract fixture emitted by the governed banana implementation."
     }
   ],
   "examples": [
@@ -70,7 +85,8 @@
       "title": "Compute a deterministic bounded banana profile",
       "description": "Reports deterministic per-base bendability and curvature rows from the committed nucleotide fixture and emits a governed single-series curvature line-plot contract from the same analytical run.",
       "artifact_ids": [
-        "banana_fixture"
+        "banana_fixture",
+        "banana_plot_contract"
       ],
       "parameters": [],
       "expected_outputs": [
@@ -84,7 +100,12 @@
           "label": "Curvature line-plot contract",
           "description": "The governed single-series curvature line-plot contract JSON emitted from the same deterministic analytical run."
         }
-      ]
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS banana application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/banana.acd",
+        "invocation": "banana -sequence banana_nucleotide.fasta -graph data"
+      }
     }
   ],
   "provenance": {

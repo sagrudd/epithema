@@ -114,10 +114,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `103`
-- Compared-evidence methods: `102`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `103`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `103`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -227,8 +227,8 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `102/103` shipped methods at compared evidence with `1`
-  method below compared evidence.
+  and now records `103/103` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -329,8 +329,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `103`
-- Compared-evidence methods: `102`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `103`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `103`
 - Retained backlog still unshipped: `0`
 
