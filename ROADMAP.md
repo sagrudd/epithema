@@ -5022,3 +5022,27 @@ implementation-program cycle. The near-term priorities are:
       - empty primer-pair sets
       - empty primer-pair names
       - invalid primer-pattern symbols
+
+293. Expose the deterministic typed result surface for normalized `primersearch` hit reporting.
+    - Added the bounded `primersearch` result surface in `emboss-tools` and
+      a direct public `EmbossService::invoke_primersearch(...)` seam in
+      `emboss-service`.
+    - Landed a method-local local-input wrapper for:
+      - one nucleotide target input
+      - one tab-delimited primer-pair file
+    - Kept the surface bounded and not yet shipped:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no generated docs or validation stubs yet
+      - no canonical fixtures or compared evidence yet
+    - Landed deterministic normalized table rows with:
+      - target record identifier
+      - primer-pair name
+      - strand/orientation
+      - left-primer coordinates
+      - right-primer coordinates
+      - amplicon coordinates and length
+      - matched left and right primer slices
+    - Added focused bounded validation for:
+      - provider-backed sequence inputs not supported by this local seam
+      - invalid primer-pair file rows

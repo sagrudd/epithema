@@ -1,6 +1,6 @@
 //! Governed EMBOSS-RS tool descriptors and shared tool-family implementations.
 
-use emboss_core::{PlatformIdentity, PLATFORM_IDENTITY};
+use emboss_core::{PLATFORM_IDENTITY, PlatformIdentity};
 
 pub mod alignment_analysis;
 pub mod alignment_tools;
@@ -10,6 +10,7 @@ pub mod feature_tools;
 pub mod nucleotide_plots;
 pub mod pairwise_alignment;
 pub mod pattern_tools;
+pub mod primer_tools;
 pub mod protein_coordinates;
 pub mod protein_plots;
 pub mod restriction_tools;
@@ -195,7 +196,7 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
 
 #[cfg(test)]
 mod tests {
-    use super::{governed_tool_descriptors, ToolRegistry};
+    use super::{ToolRegistry, governed_tool_descriptors};
 
     #[test]
     fn binds_to_platform_identity() {
