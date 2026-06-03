@@ -4892,3 +4892,30 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+288. Capture explicit `primersearch` method-level acceptance criteria before code starts.
+    - Recorded explicitly that the governed criteria now make
+      `primersearch` concrete before implementation:
+      - bounded primer-pair sequence-search workflow only
+      - deterministic table-first output derived from the same matching path
+      - explicit reporting of primer-pair identity, strand/orientation, and
+        matched interval coordinates from the same computation path
+      - canonical analytical fixtures and compared evidence on normalized
+        primer-hit rows
+      - honest handling of mismatch policy, orientation rules, ambiguity
+        handling, and pair-completion rules
+    - Recorded explicitly that the non-goals remain:
+      - no primer-design optimization
+      - no broad assay-scoring or thermodynamic ranking framework
+      - no widening into `eprimer3` or `sirna`
+      - no family-wide continuation claim merely because `primersearch`
+        ships
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

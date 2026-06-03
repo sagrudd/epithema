@@ -4403,6 +4403,40 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit `primersearch` method-level acceptance criteria
+
+With `primersearch` selected as the bounded lead method, the repository should
+make the method-specific acceptance criteria explicit before implementation.
+
+The governed criteria now make `primersearch` concrete before code starts:
+
+- bounded primer-pair sequence-search workflow only
+- deterministic table-first output derived from the same matching path
+- explicit reporting of primer-pair identity, strand/orientation, and matched
+  interval coordinates from the same computation path
+- canonical analytical fixtures and compared evidence on normalized
+  primer-hit rows
+- honest handling of mismatch policy, orientation rules, ambiguity handling,
+  and pair-completion rules
+
+The non-goals remain:
+
+- no primer-design optimization
+- no broad assay-scoring or thermodynamic ranking framework
+- no widening into `eprimer3` or `sirna`
+- no family-wide continuation claim merely because `primersearch` ships
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
