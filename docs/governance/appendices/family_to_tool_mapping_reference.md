@@ -4031,6 +4031,38 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit closeout of the bounded protein-property rework branch
+
+After the shipped `psiphi` slice closed its compared-evidence and harvested-
+provenance work, reran release truth, and passed post-ship reassessment, the
+repository should make the protein-property branch-resolution consequence
+explicit rather than leaving the program implicitly active.
+
+That closeout is now honest because the governed protein-property rework set
+has no remaining bounded active candidate:
+
+- `iep` is already shipped and fully evidenced
+- `pepdigest` is already shipped and fully evidenced
+- `psiphi` has now shipped, closed compared evidence and harvested
+  provenance, rerun release truth, and passed post-ship reassessment
+- no comparably bounded protein-property rework candidate remains active
+  after the shipped `psiphi` reassessment
+
+So the repository should record the bounded protein-property rework program as
+closed and should no longer treat protein-property rework as the default next
+planning branch.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

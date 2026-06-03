@@ -4538,3 +4538,26 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded restriction-analysis slice
       - rerunning release truth and reassessing the shipped
         restriction-analysis slice before any further continuation is mapped
+
+275. Confirm that the bounded protein-property rework program has now closed through its single selected candidate.
+    - Recorded explicitly that the bounded protein-property rework program
+      closed cleanly through:
+      - `psiphi`
+    - Recorded explicitly why that closeout is now honest:
+      - `iep` is already shipped and fully evidenced
+      - `pepdigest` is already shipped and fully evidenced
+      - `psiphi` has now shipped, closed compared evidence and harvested
+        provenance, rerun release truth, and passed post-ship reassessment
+    - Recorded explicitly that no comparably bounded protein-property rework
+      candidate remains active after the shipped `psiphi` reassessment.
+    - Recorded explicitly that protein-property rework should no longer be
+      treated as the default next planning branch.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
