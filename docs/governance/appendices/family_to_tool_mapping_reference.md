@@ -4475,6 +4475,45 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Full bounded `primersearch` implementation tier
+
+With the acceptance criteria and start gate in place, the repository should
+map the full bounded `primersearch` implementation tier before any code
+starts.
+
+The bounded `primersearch` tier is now:
+
+1. implement the bounded primer-pair matching analytical core
+2. expose the deterministic typed result surface for normalized primer-hit
+   reporting
+3. expose `primersearch` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   primer-hit rows
+5. re-run the full release-truth surface after shipping `primersearch`
+6. reassess the shipped `primersearch` slice before any further
+   primer-family continuation is mapped
+
+The same bounded rules remain:
+
+- primer-pair search scope only
+- deterministic table-first reporting from the same matching path
+- method-local implementation only
+- no primer-design optimization
+- no assay-ranking or thermodynamic scoring framework
+- no primer-family widening unless `primersearch` itself forces a real
+  reassessment
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
