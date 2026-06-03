@@ -4723,3 +4723,31 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+282. Confirm that the broader restriction-analysis family remains inactive unless a new bounded local slice is justified explicitly.
+    - Recorded explicitly that closing the bounded restriction-analysis
+      continuation branch does not activate the broader family by inertia.
+    - Recorded explicitly that the broader family remains inactive at this
+      checkpoint:
+      - `rebaseextract`
+      - `redata`
+      - `remap`
+      - `restrict`
+      - `restover`
+    - Recorded explicitly why those methods remain inactive:
+      - database-extraction and provider-surface pressure remains unbounded
+      - reporting and visualization surfaces remain broader than the closed
+        local recoding seam
+      - broader enzyme-scan workflows remain outside the already-shipped
+        bounded edit-design primitives
+    - Recorded explicitly that any future activation would require a new
+      bounded local justification rather than inherited family momentum.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

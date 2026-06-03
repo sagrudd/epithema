@@ -4172,6 +4172,43 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Continued inactivity of the broader restriction-analysis family
+
+Closing the bounded restriction-analysis continuation branch should not be
+misread as activation of the broader family by inertia.
+
+The broader restriction-analysis family therefore remains inactive at this
+checkpoint:
+
+- `rebaseextract`
+- `redata`
+- `remap`
+- `restrict`
+- `restover`
+
+Those methods remain inactive because their seams remain broader than the
+already-shipped local recoding primitives:
+
+- database-extraction and provider-surface pressure remains unbounded
+- reporting and visualization surfaces remain broader than the closed local
+  recoding seam
+- broader enzyme-scan workflows remain outside the already-shipped bounded
+  edit-design primitives
+
+So any future activation of those methods would need a fresh bounded local
+justification rather than inherited family momentum.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
