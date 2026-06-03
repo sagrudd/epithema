@@ -26,13 +26,14 @@ pub mod interval;
 pub mod local_alignment;
 pub mod metadata;
 pub mod molecule;
-pub mod nucleotide_density;
 pub mod nucleotide_banana;
+pub mod nucleotide_density;
 pub mod nucleotide_isochore;
 pub mod nucleotide_syco;
 pub mod nucleotide_wobble;
 pub mod pattern;
 pub mod platform;
+pub mod primersearch;
 pub mod protein_charge;
 pub mod protein_digest;
 pub mod protein_hydropathy;
@@ -83,11 +84,11 @@ pub use local_alignment::{
 };
 pub use metadata::{SequenceMetadata, SequenceTopology};
 pub use molecule::MoleculeKind;
-pub use nucleotide_density::{
-    DensityWindow, NucleotideDensityError, NucleotideDensityProfile, nucleotide_density_profile,
-};
 pub use nucleotide_banana::{
     BananaPoint, NucleotideBananaError, NucleotideBananaProfile, nucleotide_banana_profile,
+};
+pub use nucleotide_density::{
+    DensityWindow, NucleotideDensityError, NucleotideDensityProfile, nucleotide_density_profile,
 };
 pub use nucleotide_isochore::{
     IsochoreBand, IsochoreWindow, NucleotideIsochoreError, NucleotideIsochoreProfile,
@@ -101,6 +102,9 @@ pub use nucleotide_wobble::{
 };
 pub use pattern::{NucleotidePattern, PatternError, PatternMatch, ProteinPattern};
 pub use platform::{PLATFORM_IDENTITY, PlatformIdentity};
+pub use primersearch::{
+    PrimerPair, PrimersearchError, PrimersearchHit, PrimersearchProfile, primersearch_profile,
+};
 pub use protein_charge::{
     ChargeWindow, ProteinChargeError, ProteinChargeProfile, protein_charge_profile,
 };

@@ -5002,3 +5002,23 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+292. Implement the bounded primer-pair matching analytical core for `primersearch`.
+    - Added the bounded `primersearch` analytical core in `emboss-core` and
+      exported it through the crate root.
+    - Landed a method-associated deterministic profile over one nucleotide
+      target record plus a stable ordered primer-pair set.
+    - Kept the analytical surface table-first and bounded to complete pair
+      hits only.
+    - Landed explicit bounded v1 behavior:
+      - exact or IUPAC-ambiguous primer-pattern matching only
+      - deterministic forward and reverse orientation detection on the same
+        input strand
+      - one-based inclusive left-primer, right-primer, and amplicon
+        coordinates from the same matching path
+      - no primer-design optimization, assay-ranking, or mismatch scoring
+    - Added focused bounded validation for:
+      - non-nucleotide input
+      - empty primer-pair sets
+      - empty primer-pair names
+      - invalid primer-pattern symbols
