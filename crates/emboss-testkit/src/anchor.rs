@@ -132,6 +132,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "psiphi -infile psiphi_backbone.txt -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "primersearch",
+        autodoc_contract: "docs/autodoc/tools/primersearch.json",
+        example_id: "primersearch_hits_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/primersearch_search_one_local_nucleotide_input_for_deterministic_complete_primer_pair_hits.tsv",
+        legacy_source: "EMBOSS primersearch application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd",
+        legacy_invocation: "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "newseq",
         autodoc_contract: "docs/autodoc/tools/newseq.json",
         example_id: "create_dna_record",
@@ -1376,6 +1385,16 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
         "psiphi" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/psiphi_backbone.txt")
+                .display()
+                .to_string(),
+        ],
+        "primersearch" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/primersearch_targets.fasta")
+                .display()
+                .to_string(),
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv")
                 .display()
                 .to_string(),
         ],

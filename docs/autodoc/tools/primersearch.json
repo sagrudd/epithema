@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This bounded release keeps one historical `primersearch` user need in scope while modernizing around deterministic primer-hit table reporting rather than primer-design optimization or broader assay-ranking behavior. The committed validation seam is currently executable-only: the governed local search path is shipped, and the canonical compared fixture will be closed in the next evidence step."
+      "content": "This bounded release keeps one historical `primersearch` user need in scope while modernizing around deterministic primer-hit table reporting rather than primer-design optimization or broader assay-ranking behavior. The governed validation seam now includes a canonical compared fixture for the bounded local target-plus-primer-file path."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs primersearch`. The governed surface currently ships with a checked-in validation stub, curated legacy provenance, and Rust coverage that exercises the bounded local target-plus-primer-file path, while the canonical compared analytical fixture remains pending."
+      "content": "This method is implemented and exposed through `emboss-rs primersearch`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local target-plus-primer-file path, and a canonical compared analytical fixture covering stable normalized primer-hit rows."
     },
     {
       "id": "caveats",

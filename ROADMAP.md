@@ -5070,3 +5070,25 @@ implementation-program cycle. The near-term priorities are:
       - the release-readiness truth surface was refreshed to the new
         `109`-method interim state so the generated cohort and release docs
         agree even though the compared-evidence gate remains amber
+
+295. Close the `primersearch` compared-evidence slice and restore the fully green release gate.
+    - Added the canonical compared analytical fixture for `primersearch` and
+      wired it into the acceptance-anchor harness.
+    - Updated the governed autodoc prose so the shipped state now describes
+      canonical compared evidence rather than the interim executable-only
+      checkpoint.
+    - Refreshed the generated validation/report surface back to the fully
+      green state:
+      - shipped methods: `109`
+      - compared evidence: `109`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `109`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
+    - Restored the release-facing documentation to the actual current state:
+      - no shipped methods remain below compared evidence
+      - no weak-evidence family remains active in the generated cohort
+      - the bounded `primersearch` slice is now fully evidenced rather than
+        executable-only

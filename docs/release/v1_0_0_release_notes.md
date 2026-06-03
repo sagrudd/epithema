@@ -67,13 +67,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `108` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `109` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `109` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -95,9 +95,8 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `primersearch` now ships through the governed surface with a checked-in
-  executable validation stub and curated legacy provenance, while the
-  canonical compared primer-hit fixture remains the next evidence-closing
-  step.
+  executable validation stub, curated legacy provenance, and canonical
+  compared primer-hit fixture.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
@@ -107,12 +106,10 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `1` shipped methods remain below compared evidence
 
-This means the shipped retained cohort remains fully closed, but the shipped
-governed cohort is at an honest interim executable-only checkpoint rather than
-the fully green release gate. The bounded `primersearch` slice is now shipped
-with curated provenance and a runnable governed validation seam, and it returns
-to the fully green gate only once its canonical compared primer-hit fixture
-lands.
+This means the shipped retained cohort remains fully closed and the shipped
+governed cohort is back at the fully green release gate. The bounded
+`primersearch` slice now ships with curated provenance, a runnable governed
+validation seam, and canonical compared primer-hit evidence.
 
 ### First-class R story
 

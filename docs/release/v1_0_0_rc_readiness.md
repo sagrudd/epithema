@@ -117,13 +117,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `109`
-- Compared-evidence methods: `108`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `109`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `109`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `1`
-- Weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -153,8 +153,8 @@ Current generated release-truth markers:
 ### Ready With Known Limitations
 
 - The retained governance backlog is `0`, so the dominant remaining work is
-  closing the shipped `primersearch` evidence gap plus keeping the
-  release-truth surface synchronized with the generated cohort state.
+  keeping the release-truth surface synchronized with the generated cohort
+  state while choosing the next bounded program honestly.
 - Plotting remains intentionally narrow, with `charge`, `pepwindow`,
   governed `wordcount`, `hmoment`, `octanol`, `pepinfo`, `density`,
   governed `wobble`, and now governed `isochore` as the current stable
@@ -170,9 +170,7 @@ Current generated release-truth markers:
 
 ### Not Ready / Blocked
 
-- One shipped-cohort evidence blocker is currently open: the newly shipped
-  bounded `primersearch` surface is still at executable evidence while its
-  canonical compared primer-hit fixture remains pending.
+- No shipped-cohort evidence blockers are currently open.
 
 ## Governance And Release Obligation Audit
 
@@ -184,11 +182,10 @@ Current generated release-truth markers:
 
 ### Validation and evidence presence
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: every shipped method has a validation stub, appears in the cohort
-  report, and records harvested legacy provenance, but `primersearch` is
-  intentionally still below compared evidence at this interim shipment
-  boundary.
+  report, records harvested legacy provenance, and now reaches compared
+  evidence in the generated cohort state.
 
 ### Cohort-level acceptance reporting
 
@@ -212,7 +209,7 @@ Current generated release-truth markers:
 - Basis: the standing reprioritization gate is generated at:
   - `docs/generated/validation/cohort_health.json`
   - `docs/generated/cohort_health.md`
-  and now honestly reports one weak-evidence signal in the primer family.
+  and now honestly reports no weak-evidence signal in the shipped cohort.
 
 ### Family comparison coverage
 
@@ -220,17 +217,17 @@ Current generated release-truth markers:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now records `1` executable-only shipped method across the current
-  governed cohort: `primersearch`.
+  and now records `0` executable-only shipped methods across the current
+  governed cohort.
 
 ### Full compared cohort gate
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `108/109` shipped methods at compared evidence with `1`
-  method below compared evidence: `primersearch`.
+  and now records `109/109` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -290,10 +287,9 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-- `1` shipped methods still have blocking evidence debt.
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
-- The dominant immediate evidence work is closing the canonical compared
-  `primersearch` fixture before widening scope further.
+- There is no remaining evidence-closing blocker at this checkpoint.
 
 ### Legacy harvesting is complete
 
@@ -303,11 +299,10 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance is complete
 
-- The cohort report now records `108` methods with compared evidence and `1`
+- The cohort report now records `109` methods with compared evidence and `0`
   shipped methods at executable evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is intentionally amber at this checkpoint until `primersearch`
-  closes compared evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green at this checkpoint.
 
 ### Plotting limitations
 
@@ -334,8 +329,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `109`
-- Compared-evidence methods: `108`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `109`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `109`
 - Retained backlog still unshipped: `0`
 
