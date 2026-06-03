@@ -4844,3 +4844,28 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+286. Decide whether the narrowed primer and assay-oriented search branch still passes honest seam review strongly enough to remain active.
+    - Recorded explicitly that the decision is affirmative.
+    - Recorded explicitly that a bounded continuation candidate still exists
+      inside the active primer family.
+    - Recorded explicitly that the viable bounded continuation pool remains:
+      - `eprimer3`
+      - `primersearch`
+      - `sirna`
+    - Recorded explicitly that the omitted family members do not re-enter the
+      active branch:
+      - `eprimer32`
+      - `stssearch`
+    - Recorded explicitly that the family therefore remains active for the
+      next bounded lead-method selection step rather than forcing an immediate
+      return to reserve-program ordering.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

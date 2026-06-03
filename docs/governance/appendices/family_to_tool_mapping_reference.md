@@ -4333,6 +4333,42 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Honest seam review of the narrowed primer and assay-oriented search branch
+
+After primer and assay-oriented search becomes the active planning program,
+the repository should close the pass/fail gate on whether the narrowed bounded
+family branch remains honest enough to continue before choosing any single
+lead method.
+
+The decision is affirmative.
+
+A bounded continuation candidate still exists inside the active primer family.
+
+The viable bounded continuation pool remains:
+
+- `eprimer3`
+- `primersearch`
+- `sirna`
+
+The omitted family members do not re-enter the active branch:
+
+- `eprimer32`
+- `stssearch`
+
+So the family remains active for the next bounded lead-method selection step
+rather than forcing an immediate return to reserve-program ordering.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
