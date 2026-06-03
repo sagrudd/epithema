@@ -4979,3 +4979,26 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+291. Capture the explicit seam-pressure stop conditions for `primersearch`.
+    - Recorded explicitly that the repository should pause and reassess
+      before implementation if:
+      1. `primersearch` cannot remain table-first with a deterministic typed
+         result surface derived from the same primer-matching path
+      2. `primersearch` requires primer-design optimization, assay-ranking,
+         thermodynamic scoring policy, or other non-local biological-design
+         behavior
+      3. `primersearch` cannot remain method-associated and instead demands a
+         generalized primer-analysis framework before one shipped slice closes
+      4. `primersearch` forces broad ambiguity-resolution policy, mismatch
+         search taxonomy, or pair-completion semantics that are not clearly
+         local to the method
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
