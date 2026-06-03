@@ -4461,8 +4461,20 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 272. Re-run the full release-truth surface after shipping `psiphi`.
-    - Re-run the governed release-truth surface after the bounded `psiphi`
-      evidence closure and record the observed result.
+    - Complete. Re-ran the governed release-truth surface after the bounded
+      `psiphi` evidence closure and recorded the observed clean state.
+    - `python3 scripts/release_metadata.py truth-check` passed.
+    - `make docs` passed.
+    - `git diff --check` passed.
+    - The observed governed state remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
 
 273. Reassess the shipped `psiphi` slice before any further continuation is mapped.
     - Record explicitly whether the shipped `psiphi` slice stayed bounded,
