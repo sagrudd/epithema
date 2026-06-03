@@ -53,13 +53,19 @@ pub fn run_dreg(params: DregParams) -> Result<DregOutcome, ToolExecutionError> {
 
     for record in load_sequence_records(&params.input)? {
         validate_nucleotide_record("dreg", &record)?;
-        hits.extend(params.pattern.scan(record.residues()).into_iter().map(|hit| DregHit {
-            record_id: record.identifier().accession().to_owned(),
-            pattern: pattern_text.clone(),
-            start: hit.start(),
-            end: hit.end(),
-            matched: hit.matched().to_owned(),
-        }));
+        hits.extend(
+            params
+                .pattern
+                .scan(record.residues())
+                .into_iter()
+                .map(|hit| DregHit {
+                    record_id: record.identifier().accession().to_owned(),
+                    pattern: pattern_text.clone(),
+                    start: hit.start(),
+                    end: hit.end(),
+                    matched: hit.matched().to_owned(),
+                }),
+        );
     }
 
     Ok(DregOutcome {
@@ -122,8 +128,11 @@ mod tests {
 
     #[test]
     fn rejects_zero_width_regex() {
-        let error =
-            CompiledNucleotideRegex::parse("A*").expect_err("zero-width regex should fail");
-        assert!(error.to_string().contains("must consume at least one residue"));
+        let error = CompiledNucleotideRegex::parse("A*").expect_err("zero-width regex should fail");
+        assert!(
+            error
+                .to_string()
+                .contains("must consume at least one residue")
+        );
     }
 }

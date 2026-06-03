@@ -346,7 +346,7 @@ fn unique_target_identifier(
 
 #[cfg(test)]
 mod tests {
-    use super::{AlignmentMode, GlobalAlignmentScoring, global_align, infer_alignment_mode};
+    use super::{global_align, infer_alignment_mode, AlignmentMode, GlobalAlignmentScoring};
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
     #[test]

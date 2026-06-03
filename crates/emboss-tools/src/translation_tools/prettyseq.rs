@@ -112,10 +112,7 @@ fn render_record_block(
         let amino_end = if end <= frame_offset {
             amino_start
         } else {
-            usize::min(
-                amino_chars.len(),
-                (end - frame_offset) / 3,
-            )
+            usize::min(amino_chars.len(), (end - frame_offset) / 3)
         };
         let amino_chunk: String = amino_chars[amino_start..amino_end].iter().collect();
 

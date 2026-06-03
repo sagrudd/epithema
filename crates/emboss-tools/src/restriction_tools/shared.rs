@@ -38,28 +38,24 @@ pub fn validate_coding_dna_record(
     record: &SequenceRecord,
 ) -> Result<String, ToolExecutionError> {
     if record.molecule() == MoleculeKind::Protein {
-        return Err(
-            PlatformError::new(
-                ErrorCategory::Validation,
-                format!(
-                    "{tool} expects coding DNA input but '{}' was classified as protein",
-                    record.identifier().accession()
-                ),
-            )
-            .with_code(format!("tools.{tool}.input.not_coding_dna")),
-        );
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!(
+                "{tool} expects coding DNA input but '{}' was classified as protein",
+                record.identifier().accession()
+            ),
+        )
+        .with_code(format!("tools.{tool}.input.not_coding_dna")));
     }
     if record.molecule() == MoleculeKind::Rna || record.residues().contains('U') {
-        return Err(
-            PlatformError::new(
-                ErrorCategory::Validation,
-                format!(
-                    "{tool} expects coding DNA input but '{}' contains RNA residues",
-                    record.identifier().accession()
-                ),
-            )
-            .with_code(format!("tools.{tool}.input.not_coding_dna")),
-        );
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!(
+                "{tool} expects coding DNA input but '{}' contains RNA residues",
+                record.identifier().accession()
+            ),
+        )
+        .with_code(format!("tools.{tool}.input.not_coding_dna")));
     }
 
     let sequence = record.residues().to_ascii_uppercase();
@@ -80,25 +76,21 @@ pub fn validate_coding_dna_record(
 pub fn normalize_site(site: &str, tool: &str) -> Result<String, ToolExecutionError> {
     let normalized = site.trim().to_ascii_uppercase();
     if normalized.len() < 4 {
-        return Err(
-            PlatformError::new(
-                ErrorCategory::Validation,
-                format!("{tool} requires a canonical DNA site of length at least four"),
-            )
-            .with_code(format!("tools.{tool}.site.too_short")),
-        );
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} requires a canonical DNA site of length at least four"),
+        )
+        .with_code(format!("tools.{tool}.site.too_short")));
     }
     if normalized
         .chars()
         .any(|symbol| !matches!(symbol, 'A' | 'C' | 'G' | 'T'))
     {
-        return Err(
-            PlatformError::new(
-                ErrorCategory::Validation,
-                format!("{tool} supports only canonical DNA restriction sites in v1"),
-            )
-            .with_code(format!("tools.{tool}.site.invalid")),
-        );
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("{tool} supports only canonical DNA restriction sites in v1"),
+        )
+        .with_code(format!("tools.{tool}.site.invalid")));
     }
     Ok(normalized)
 }
@@ -193,7 +185,10 @@ pub fn silent_candidates(
     Ok(candidates)
 }
 
-fn codon_indexes_overlapping(site_start: usize, site_len: usize) -> std::ops::RangeInclusive<usize> {
+fn codon_indexes_overlapping(
+    site_start: usize,
+    site_len: usize,
+) -> std::ops::RangeInclusive<usize> {
     let first = site_start / 3;
     let last = (site_start + site_len - 1) / 3;
     first..=last
@@ -275,6 +270,10 @@ mod tests {
     #[test]
     fn rejects_noncanonical_site() {
         let error = normalize_site("GANNTC", "recoder").expect_err("site should fail");
-        assert!(error.to_string().contains("canonical DNA restriction sites"));
+        assert!(
+            error
+                .to_string()
+                .contains("canonical DNA restriction sites")
+        );
     }
 }

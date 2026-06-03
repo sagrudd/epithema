@@ -56,7 +56,8 @@ mod tests {
     use std::path::PathBuf;
 
     fn fixture(name: &str) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
     }
 
     #[test]

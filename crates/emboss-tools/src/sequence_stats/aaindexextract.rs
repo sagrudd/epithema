@@ -203,6 +203,10 @@ mod tests {
     #[test]
     fn rejects_unknown_indices() {
         let error = parse_aaindexextract_index("mystery").expect_err("unknown index should fail");
-        assert!(error.to_string().contains("unsupported aaindexextract index"));
+        assert!(
+            error
+                .to_string()
+                .contains("unsupported aaindexextract index")
+        );
     }
 }

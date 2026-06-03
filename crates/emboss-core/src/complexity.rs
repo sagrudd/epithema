@@ -262,7 +262,7 @@ mod tests {
     use crate::{SequenceIdentifier, SequenceRecord};
 
     use super::{
-        ComplexityError, ComplexityParameters, sequence_complexity, sliding_window_complexity,
+        sequence_complexity, sliding_window_complexity, ComplexityError, ComplexityParameters,
     };
 
     fn dna(id: &str, residues: &str) -> SequenceRecord {

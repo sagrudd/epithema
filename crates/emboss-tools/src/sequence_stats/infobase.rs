@@ -30,11 +30,13 @@ pub fn infobase_help() -> &'static str {
 /// Executes `infobase`.
 pub fn run_infobase(params: InfobaseParams) -> Result<InfobaseOutcome, ToolExecutionError> {
     let info = nucleotide_base_info(params.symbol).ok_or_else(|| {
-        ToolExecutionError::from(PlatformError::new(
-            ErrorCategory::Validation,
-            format!("unsupported nucleotide symbol '{}'", params.symbol),
+        ToolExecutionError::from(
+            PlatformError::new(
+                ErrorCategory::Validation,
+                format!("unsupported nucleotide symbol '{}'", params.symbol),
+            )
+            .with_code("tools.infobase.symbol.unsupported"),
         )
-        .with_code("tools.infobase.symbol.unsupported"))
     })?;
 
     Ok(InfobaseOutcome {
@@ -49,8 +51,8 @@ mod tests {
 
     #[test]
     fn reports_ambiguity_symbol_info() {
-        let outcome = run_infobase(InfobaseParams { symbol: 'n' })
-            .expect("infobase should execute");
+        let outcome =
+            run_infobase(InfobaseParams { symbol: 'n' }).expect("infobase should execute");
         assert_eq!(outcome.info.symbol, 'N');
         assert_eq!(outcome.info.canonical_expansion, "ACGTU");
         assert_eq!(outcome.info.dna_complement, "N");
@@ -58,8 +60,8 @@ mod tests {
 
     #[test]
     fn rejects_unknown_symbols() {
-        let error = run_infobase(InfobaseParams { symbol: 'Z' })
-            .expect_err("unknown base should fail");
+        let error =
+            run_infobase(InfobaseParams { symbol: 'Z' }).expect_err("unknown base should fail");
         assert!(error.to_string().contains("unsupported nucleotide symbol"));
     }
 }

@@ -184,8 +184,8 @@ mod tests {
     };
 
     use super::{
-        RevseqError, RevseqMode, reverse_complement_residues, reverse_residues,
-        transform_sequence_record,
+        reverse_complement_residues, reverse_residues, transform_sequence_record, RevseqError,
+        RevseqMode,
     };
 
     fn record(id: &str, molecule: MoleculeKind, residues: &str) -> crate::SequenceRecord {

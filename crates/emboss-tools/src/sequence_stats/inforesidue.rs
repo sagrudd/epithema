@@ -32,11 +32,13 @@ pub fn run_inforesidue(
     params: InforesidueParams,
 ) -> Result<InforesidueOutcome, ToolExecutionError> {
     let property = protein_residue_property(params.residue).ok_or_else(|| {
-        ToolExecutionError::from(PlatformError::new(
-            ErrorCategory::Validation,
-            format!("unsupported amino-acid residue '{}'", params.residue),
+        ToolExecutionError::from(
+            PlatformError::new(
+                ErrorCategory::Validation,
+                format!("unsupported amino-acid residue '{}'", params.residue),
+            )
+            .with_code("tools.inforesidue.residue.unsupported"),
         )
-        .with_code("tools.inforesidue.residue.unsupported"))
     })?;
 
     Ok(InforesidueOutcome {

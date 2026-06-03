@@ -5,10 +5,10 @@ mod complex;
 mod compseq;
 mod dan;
 mod geecee;
-mod infobase;
-mod infoseq;
-mod inforesidue;
 mod iep;
+mod infobase;
+mod inforesidue;
+mod infoseq;
 mod oddcomp;
 mod pepdigest;
 mod pepstats;
@@ -27,10 +27,10 @@ pub use complex::{ComplexOutcome, ComplexParams, complex_help, run_complex};
 pub use compseq::{CompseqOutcome, CompseqParams, compseq_help, run_compseq};
 pub use dan::{DanOutcome, DanParams, dan_help, run_dan};
 pub use geecee::{GeeceeOutcome, GeeceeParams, geecee_help, run_geecee};
-pub use infobase::{InfobaseOutcome, InfobaseParams, infobase_help, run_infobase};
-pub use infoseq::{InfoseqOutcome, InfoseqParams, infoseq_help, run_infoseq};
-pub use inforesidue::{InforesidueOutcome, InforesidueParams, inforesidue_help, run_inforesidue};
 pub use iep::{IepOutcome, IepParams, iep_help, run_iep};
+pub use infobase::{InfobaseOutcome, InfobaseParams, infobase_help, run_infobase};
+pub use inforesidue::{InforesidueOutcome, InforesidueParams, inforesidue_help, run_inforesidue};
+pub use infoseq::{InfoseqOutcome, InfoseqParams, infoseq_help, run_infoseq};
 pub use oddcomp::{OddcompOutcome, OddcompParams, oddcomp_help, run_oddcomp};
 pub use pepdigest::{
     PepdigestOutcome, PepdigestParams, PepdigestPeptide, PepdigestProtease, pepdigest_help,

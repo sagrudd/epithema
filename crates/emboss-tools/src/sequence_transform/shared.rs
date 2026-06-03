@@ -164,8 +164,14 @@ mod tests {
 
     #[test]
     fn shuffling_is_deterministic_for_a_seed() {
-        assert_eq!(shuffled_residues("ACGTAC", 7), shuffled_residues("ACGTAC", 7));
-        assert_ne!(shuffled_residues("ACGTAC", 7), shuffled_residues("ACGTAC", 8));
+        assert_eq!(
+            shuffled_residues("ACGTAC", 7),
+            shuffled_residues("ACGTAC", 7)
+        );
+        assert_ne!(
+            shuffled_residues("ACGTAC", 7),
+            shuffled_residues("ACGTAC", 8)
+        );
     }
 
     #[test]

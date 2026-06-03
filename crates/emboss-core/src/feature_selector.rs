@@ -73,19 +73,15 @@ mod tests {
         .with_qualifier("product", "enzyme");
 
         assert!(FeatureSelector::Kind(FeatureKind::Gene).matches(&feature));
-        assert!(
-            FeatureSelector::Qualifier {
-                key: "product".to_owned(),
-                value: Some("enzyme".to_owned()),
-            }
-            .matches(&feature)
-        );
-        assert!(
-            !FeatureSelector::Qualifier {
-                key: "product".to_owned(),
-                value: Some("other".to_owned()),
-            }
-            .matches(&feature)
-        );
+        assert!(FeatureSelector::Qualifier {
+            key: "product".to_owned(),
+            value: Some("enzyme".to_owned()),
+        }
+        .matches(&feature));
+        assert!(!FeatureSelector::Qualifier {
+            key: "product".to_owned(),
+            value: Some("other".to_owned()),
+        }
+        .matches(&feature));
     }
 }

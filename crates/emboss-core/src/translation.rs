@@ -218,8 +218,8 @@ fn amino_acid_for_codon(codon: &str) -> Result<char, TranslationError> {
 #[cfg(test)]
 mod tests {
     use super::{
-        TranslationError, backtranslate_ambiguous, backtranslate_representative,
-        translate_dna_frame, translate_dna_strict,
+        backtranslate_ambiguous, backtranslate_representative, translate_dna_frame,
+        translate_dna_strict, TranslationError,
     };
 
     #[test]

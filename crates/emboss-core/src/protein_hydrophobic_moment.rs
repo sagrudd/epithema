@@ -1,7 +1,7 @@
 //! Sliding-window protein hydrophobic-moment profiles for plot-producing analytical tools.
 
-use crate::Alphabet;
 use crate::sequence::SequenceRecord;
+use crate::Alphabet;
 
 /// Default per-residue turn angle used for the bounded v1 hydrophobic-moment model.
 pub const DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES: f64 = 100.0;
@@ -207,8 +207,8 @@ mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
     use super::{
-        DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES, ProteinHydrophobicMomentError,
-        protein_hydrophobic_moment_profile,
+        protein_hydrophobic_moment_profile, ProteinHydrophobicMomentError,
+        DEFAULT_HYDROPHOBIC_MOMENT_ANGLE_DEGREES,
     };
 
     #[test]

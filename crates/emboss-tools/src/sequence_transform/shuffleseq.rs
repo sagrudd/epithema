@@ -66,7 +66,8 @@ mod tests {
     use std::path::PathBuf;
 
     fn fixture(name: &str) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../crates/emboss-tools/tests/fixtures/{name}"))
     }
 
     fn composition(residues: &str) -> BTreeMap<char, usize> {
@@ -102,7 +103,13 @@ mod tests {
         })
         .expect("shuffleseq should succeed");
 
-        assert_eq!(composition(outcome.records[0].residues()), composition("ACGT"));
-        assert_eq!(composition(outcome.records[1].residues()), composition("TTTT"));
+        assert_eq!(
+            composition(outcome.records[0].residues()),
+            composition("ACGT")
+        );
+        assert_eq!(
+            composition(outcome.records[1].residues()),
+            composition("TTTT")
+        );
     }
 }

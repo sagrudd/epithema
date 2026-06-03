@@ -1,6 +1,9 @@
 //! `coderet` implementation.
 
-use emboss_core::{FeatureSelector, MoleculeKind, SequenceIdentifier, SequenceRecord, extract_selected_regions, translate_dna_strict};
+use emboss_core::{
+    FeatureSelector, MoleculeKind, SequenceIdentifier, SequenceRecord, extract_selected_regions,
+    translate_dna_strict,
+};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 use crate::feature_tools::shared::map_feature_error;
@@ -75,11 +78,14 @@ pub fn run_coderet(params: CoderetParams) -> Result<CoderetOutcome, ToolExecutio
     })
 }
 
-fn translate_extracted_record(record: SequenceRecord) -> Result<SequenceRecord, ToolExecutionError> {
-    let protein = translate_dna_strict(&dna_equivalent_residues(record.residues())).map_err(|error| {
-        PlatformError::new(ErrorCategory::Validation, error.to_string())
-            .with_code("tools.coderet.translation.invalid_coding_sequence")
-    })?;
+fn translate_extracted_record(
+    record: SequenceRecord,
+) -> Result<SequenceRecord, ToolExecutionError> {
+    let protein =
+        translate_dna_strict(&dna_equivalent_residues(record.residues())).map_err(|error| {
+            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                .with_code("tools.coderet.translation.invalid_coding_sequence")
+        })?;
     let identifier = SequenceIdentifier::new(format!("{}.pep", record.identifier().accession()))
         .map_err(|error| {
             PlatformError::new(ErrorCategory::Validation, error.to_string())
@@ -99,7 +105,10 @@ fn translate_extracted_record(record: SequenceRecord) -> Result<SequenceRecord, 
 }
 
 fn dna_equivalent_residues(residues: &str) -> String {
-    residues.chars().map(|symbol| if symbol == 'U' { 'T' } else { symbol }).collect()
+    residues
+        .chars()
+        .map(|symbol| if symbol == 'U' { 'T' } else { symbol })
+        .collect()
 }
 
 #[cfg(test)]
@@ -119,7 +128,10 @@ mod tests {
         .expect("coderet should execute");
 
         assert_eq!(outcome.records.len(), 1);
-        assert_eq!(outcome.records[0].molecule(), emboss_core::MoleculeKind::Protein);
+        assert_eq!(
+            outcome.records[0].molecule(),
+            emboss_core::MoleculeKind::Protein
+        );
         assert_eq!(outcome.records[0].residues(), "Y");
     }
 }

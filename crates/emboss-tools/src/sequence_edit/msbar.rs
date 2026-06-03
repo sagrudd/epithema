@@ -64,7 +64,10 @@ pub fn run_msbar(params: MsbarParams) -> Result<MsbarOutcome, ToolExecutionError
         if !seen.insert(mutation.position) {
             return Err(PlatformError::new(
                 ErrorCategory::Validation,
-                format!("msbar received duplicate mutation for position {}", mutation.position),
+                format!(
+                    "msbar received duplicate mutation for position {}",
+                    mutation.position
+                ),
             )
             .with_code("tools.msbar.position.duplicate"));
         }

@@ -348,8 +348,8 @@ fn sense_codon_table() -> &'static [(&'static str, char)] {
 #[cfg(test)]
 mod tests {
     use super::{
-        CodonUsageError, CodonUsageProfile, cai_for_profile, derive_cai_weights, sense_codons,
-        summarize_coding_sequence, total_variation_distance,
+        cai_for_profile, derive_cai_weights, sense_codons, summarize_coding_sequence,
+        total_variation_distance, CodonUsageError, CodonUsageProfile,
     };
 
     #[test]

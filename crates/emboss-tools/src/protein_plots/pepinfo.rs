@@ -1,13 +1,13 @@
 //! Internal `pepinfo` implementation under staged plotting rollout.
 
-use emboss_core::{protein_pepinfo_profile, ProteinPepinfoError, ProteinPepinfoProfile};
+use emboss_core::{ProteinPepinfoError, ProteinPepinfoProfile, protein_pepinfo_profile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
     PlotProvenance, PlotSeries, PlotSpec, SeriesStyle,
 };
 
-use crate::sequence_stream::{load_sequence_records, SequenceInput, ToolExecutionError};
+use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
 
 /// Typed parameters for the staged `pepinfo` tool path.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -179,7 +179,7 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{build_pepinfo_plot, map_error, run_pepinfo, PepinfoParams};
+    use super::{PepinfoParams, build_pepinfo_plot, map_error, run_pepinfo};
     use crate::sequence_stream::SequenceInput;
     use emboss_core::{PepinfoWindow, ProteinPepinfoError, ProteinPepinfoProfile};
 

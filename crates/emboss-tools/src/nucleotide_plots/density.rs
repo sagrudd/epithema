@@ -1,13 +1,13 @@
 //! Internal `density` implementation under staged plotting rollout.
 
-use emboss_core::{NucleotideDensityError, NucleotideDensityProfile, nucleotide_density_profile};
+use emboss_core::{nucleotide_density_profile, NucleotideDensityError, NucleotideDensityProfile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
     PlotProvenance, PlotSeries, PlotSpec, SeriesStyle,
 };
 
-use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
+use crate::sequence_stream::{load_sequence_records, SequenceInput, ToolExecutionError};
 
 /// Typed parameters for the staged `density` tool path.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -80,31 +80,29 @@ fn build_density_plot(
         }),
         PlotAxis::new("Window start").with_scale_hint(AxisScaleHint::Linear),
         PlotAxis::new("GC fraction").with_scale_hint(AxisScaleHint::Linear),
-        vec![
-            PlotSeries::new(
-                "density_gc_fraction",
-                "GC fraction",
-                DataVector::Numeric(
-                    profile
-                        .windows
-                        .iter()
-                        .map(|window| window.window_start as f64)
-                        .collect(),
-                ),
+        vec![PlotSeries::new(
+            "density_gc_fraction",
+            "GC fraction",
+            DataVector::Numeric(
                 profile
                     .windows
                     .iter()
-                    .map(|window| window.gc_fraction)
+                    .map(|window| window.window_start as f64)
                     .collect(),
-            )
-            .with_legend_label("GC fraction")
-            .with_semantic_group("gc_fraction")
-            .with_style(
-                SeriesStyle::empty()
-                    .with_geometry_hint(GeometryHint::Line)
-                    .with_color_role("primary"),
             ),
-        ],
+            profile
+                .windows
+                .iter()
+                .map(|window| window.gc_fraction)
+                .collect(),
+        )
+        .with_legend_label("GC fraction")
+        .with_semantic_group("gc_fraction")
+        .with_style(
+            SeriesStyle::empty()
+                .with_geometry_hint(GeometryHint::Line)
+                .with_color_role("primary"),
+        )],
     );
     plot.validate().map_err(|error| {
         PlatformError::new(ErrorCategory::Validation, error.to_string())
@@ -132,7 +130,7 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{DensityParams, build_density_plot, map_error, run_density};
+    use super::{build_density_plot, map_error, run_density, DensityParams};
     use crate::sequence_stream::SequenceInput;
     use emboss_core::{DensityWindow, NucleotideDensityError, NucleotideDensityProfile};
 

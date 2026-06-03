@@ -1,8 +1,8 @@
 //! Deterministic local pairwise alignment primitives.
 
 use crate::{
-    Alignment, AlignmentRow, AlignmentMode, MoleculeKind, SequenceIdentifier, SequenceRecord,
-    infer_alignment_mode,
+    infer_alignment_mode, Alignment, AlignmentMode, AlignmentRow, MoleculeKind, SequenceIdentifier,
+    SequenceRecord,
 };
 
 const NEG_INF: i32 = i32::MIN / 4;
@@ -383,7 +383,7 @@ fn unique_target_identifier(
 
 #[cfg(test)]
 mod tests {
-    use super::{AlignmentMode, LocalAlignmentError, LocalAlignmentScoring, local_align};
+    use super::{local_align, AlignmentMode, LocalAlignmentError, LocalAlignmentScoring};
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
     #[test]

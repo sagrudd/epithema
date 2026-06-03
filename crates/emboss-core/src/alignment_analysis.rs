@@ -3,8 +3,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
-    Alignment, AlignmentMode, AlignmentSymbol, MoleculeKind, SequenceIdentifier, SequenceRecord,
-    global_alignment::infer_alignment_mode,
+    global_alignment::infer_alignment_mode, Alignment, AlignmentMode, AlignmentSymbol,
+    MoleculeKind, SequenceIdentifier, SequenceRecord,
 };
 
 /// Summary of a direct ungapped positional comparison between two sequences.
@@ -308,7 +308,11 @@ fn consensus_symbol(
 }
 
 fn fallback_placeholder(molecule: MoleculeKind) -> char {
-    if molecule.is_nucleotide() { 'N' } else { 'X' }
+    if molecule.is_nucleotide() {
+        'N'
+    } else {
+        'X'
+    }
 }
 
 fn nucleotide_ambiguity_symbol(observations: &BTreeSet<char>) -> Option<char> {
@@ -374,7 +378,7 @@ fn is_nucleotide_string(residues: &str) -> bool {
 mod tests {
     use crate::{Alignment, AlignmentRow, MoleculeKind, SequenceIdentifier};
 
-    use super::{ConsensusStrategy, consensus_sequence, direct_match_summary, p_distance_matrix};
+    use super::{consensus_sequence, direct_match_summary, p_distance_matrix, ConsensusStrategy};
 
     fn dna_record(id: &str, residues: &str) -> crate::SequenceRecord {
         crate::SequenceRecord::new(

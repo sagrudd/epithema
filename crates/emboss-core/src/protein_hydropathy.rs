@@ -1,8 +1,8 @@
 //! Sliding-window protein hydropathy profiles for plot-producing analytical tools.
 
-use crate::Alphabet;
 use crate::residue_properties::protein_residue_property;
 use crate::sequence::SequenceRecord;
+use crate::Alphabet;
 
 /// Errors for hydropathy-profile computation.
 #[derive(Clone, Debug, PartialEq)]
@@ -153,7 +153,7 @@ fn residue_hydropathy(residues: &str) -> Result<Vec<f64>, ProteinHydropathyError
 mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{ProteinHydropathyError, protein_hydropathy_profile};
+    use super::{protein_hydropathy_profile, ProteinHydropathyError};
 
     #[test]
     fn computes_expected_profile() {
@@ -164,8 +164,7 @@ mod tests {
         )
         .expect("protein sequence should build");
 
-        let profile =
-            protein_hydropathy_profile(&record, 2, 1).expect("profile should compute");
+        let profile = protein_hydropathy_profile(&record, 2, 1).expect("profile should compute");
         assert_eq!(profile.windows.len(), 3);
         assert!((profile.windows[0].mean_hydropathy - 4.35).abs() < 1e-9);
         assert!((profile.windows[1].mean_hydropathy - 4.0).abs() < 1e-9);
@@ -181,8 +180,8 @@ mod tests {
         )
         .expect("protein sequence should build");
 
-        let error = protein_hydropathy_profile(&record, 3, 1)
-            .expect_err("unsupported residue should fail");
+        let error =
+            protein_hydropathy_profile(&record, 3, 1).expect_err("unsupported residue should fail");
         assert_eq!(
             error,
             ProteinHydropathyError::UnsupportedResidue {

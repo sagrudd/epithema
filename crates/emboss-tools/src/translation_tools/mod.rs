@@ -17,12 +17,12 @@ pub use backtranambig::{
     BacktranambigOutcome, BacktranambigParams, backtranambig_help, run_backtranambig,
 };
 pub use backtranseq::{BacktranseqOutcome, BacktranseqParams, backtranseq_help, run_backtranseq};
+pub use checktrans::{ChecktransOutcome, ChecktransParams, checktrans_help, run_checktrans};
 pub use getorf::{GetorfOutcome, GetorfParams, getorf_help, run_getorf};
 pub use prettyseq::{PrettyseqOutcome, PrettyseqParams, prettyseq_help, run_prettyseq};
-pub use checktrans::{ChecktransOutcome, ChecktransParams, checktrans_help, run_checktrans};
 pub use shared::TranslationFrameSelection;
-pub use tranalign::{TranalignOutcome, TranalignParams, tranalign_help, run_tranalign};
-pub use transeq::{TranseqOutcome, TranseqParams, transeq_help, run_transeq};
+pub use tranalign::{TranalignOutcome, TranalignParams, run_tranalign, tranalign_help};
+pub use transeq::{TranseqOutcome, TranseqParams, run_transeq, transeq_help};
 
 /// `backtranseq` descriptor.
 pub const BACKTRANSEQ_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

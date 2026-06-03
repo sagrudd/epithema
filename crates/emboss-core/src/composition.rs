@@ -198,7 +198,7 @@ pub fn protein_molecular_weight(sequence: &str) -> Result<f64, CompositionError>
 
 #[cfg(test)]
 mod tests {
-    use super::{GcSummary, ResidueComposition, protein_molecular_weight};
+    use super::{protein_molecular_weight, GcSummary, ResidueComposition};
 
     #[test]
     fn counts_residues_without_gaps() {

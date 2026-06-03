@@ -60,15 +60,19 @@ pub fn run_transeq(params: TranseqParams) -> Result<TranseqOutcome, ToolExecutio
             let frame_label = format!("frame{}", frame_offset + 1);
             let metadata = derived_metadata(
                 record.metadata(),
-                &format!("translated protein {}", frame_label.replace("frame", "frame ")),
+                &format!(
+                    "translated protein {}",
+                    frame_label.replace("frame", "frame ")
+                ),
             );
             let identifier = identifier_with_suffix(record.identifier(), &frame_label)?;
-            let translated_record = SequenceRecord::new(identifier, MoleculeKind::Protein, translated)
-                .map(|derived| derived.with_metadata(metadata))
-                .map_err(|error| {
-                    PlatformError::new(ErrorCategory::Validation, error.to_string())
-                        .with_code("tools.transeq.sequence.invalid")
-                })?;
+            let translated_record =
+                SequenceRecord::new(identifier, MoleculeKind::Protein, translated)
+                    .map(|derived| derived.with_metadata(metadata))
+                    .map_err(|error| {
+                        PlatformError::new(ErrorCategory::Validation, error.to_string())
+                            .with_code("tools.transeq.sequence.invalid")
+                    })?;
             records.push(translated_record);
         }
     }

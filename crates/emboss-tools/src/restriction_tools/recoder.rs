@@ -50,7 +50,9 @@ pub fn run_recoder(params: RecoderParams) -> Result<RecoderOutcome, ToolExecutio
 
     for record in load_sequence_records(&params.input)? {
         let sequence = validate_coding_dna_record("recoder", &record)?;
-        for (occurrence_index, occurrence_start) in site_positions(&sequence, &site).into_iter().enumerate() {
+        for (occurrence_index, occurrence_start) in
+            site_positions(&sequence, &site).into_iter().enumerate()
+        {
             let record_id = record.identifier().accession().to_owned();
             candidates.extend(
                 recoder_candidates(&sequence, &site, occurrence_start)?

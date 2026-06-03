@@ -412,7 +412,7 @@ pub fn nucleotide_base_info(symbol: char) -> Option<NucleotideBaseInfo> {
 
 #[cfg(test)]
 mod tests {
-    use super::{nucleotide_base_info, protein_residue_property, protein_residue_properties};
+    use super::{nucleotide_base_info, protein_residue_properties, protein_residue_property};
 
     #[test]
     fn exposes_expected_residue_properties() {

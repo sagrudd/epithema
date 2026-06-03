@@ -180,7 +180,7 @@ fn negative_fraction(ph: f64, pka: f64) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use super::{ProteinIsoelectricError, estimate_protein_isoelectric_point};
+    use super::{estimate_protein_isoelectric_point, ProteinIsoelectricError};
 
     #[test]
     fn estimates_basic_and_acidic_pi_values() {

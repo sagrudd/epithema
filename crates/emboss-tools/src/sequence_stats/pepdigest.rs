@@ -107,29 +107,31 @@ pub fn pepdigest_help() -> &'static str {
 pub fn run_pepdigest(params: PepdigestParams) -> Result<PepdigestOutcome, ToolExecutionError> {
     let peptides = load_sequence_records(&params.input)?
         .into_iter()
-        .map(|record| -> Result<Vec<PepdigestPeptide>, ToolExecutionError> {
-            validate_protein_record("pepdigest", &record)?;
-            let digested =
-                digest_protein_sequence(record.residues(), params.protease.to_core()).map_err(
-                    |error| {
-                        PlatformError::new(ErrorCategory::Validation, error.to_string())
-                            .with_code("tools.pepdigest.residue.unsupported")
-                    },
-                )?;
+        .map(
+            |record| -> Result<Vec<PepdigestPeptide>, ToolExecutionError> {
+                validate_protein_record("pepdigest", &record)?;
+                let digested =
+                    digest_protein_sequence(record.residues(), params.protease.to_core()).map_err(
+                        |error| {
+                            PlatformError::new(ErrorCategory::Validation, error.to_string())
+                                .with_code("tools.pepdigest.residue.unsupported")
+                        },
+                    )?;
 
-            Ok(digested
-                .into_iter()
-                .map(|peptide| PepdigestPeptide {
-                    record_id: record.identifier().accession().to_owned(),
-                    protease: params.protease,
-                    peptide_index: peptide.ordinal,
-                    start: peptide.start,
-                    end: peptide.end,
-                    cleavage_after: peptide.cleavage_after,
-                    sequence: peptide.sequence,
-                })
-                .collect())
-        })
+                Ok(digested
+                    .into_iter()
+                    .map(|peptide| PepdigestPeptide {
+                        record_id: record.identifier().accession().to_owned(),
+                        protease: params.protease,
+                        peptide_index: peptide.ordinal,
+                        start: peptide.start,
+                        end: peptide.end,
+                        cleavage_after: peptide.cleavage_after,
+                        sequence: peptide.sequence,
+                    })
+                    .collect())
+            },
+        )
         .collect::<Result<Vec<Vec<_>>, _>>()?
         .into_iter()
         .flatten()

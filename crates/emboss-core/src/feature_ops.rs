@@ -372,9 +372,9 @@ mod tests {
     };
 
     use super::{
-        FeatureOperationError, copy_selected_features, drop_selected_features,
-        extract_selected_regions, extract_single_region, mask_intervals, mask_selected_features,
-        retain_selected_features, summarize_features,
+        copy_selected_features, drop_selected_features, extract_selected_regions,
+        extract_single_region, mask_intervals, mask_selected_features, retain_selected_features,
+        summarize_features, FeatureOperationError,
     };
 
     fn annotated_record() -> SequenceRecord {

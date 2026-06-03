@@ -1,11 +1,13 @@
 //! `getorf` implementation.
 
-use emboss_core::{SequenceRecord, SequenceMetadata};
+use emboss_core::{SequenceMetadata, SequenceRecord};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 use crate::sequence_stream::{SequenceInput, ToolExecutionError, load_sequence_records};
 
-use super::shared::{derived_metadata, dna_equivalent_residues, identifier_with_suffix, validate_nucleotide_record};
+use super::shared::{
+    derived_metadata, dna_equivalent_residues, identifier_with_suffix, validate_nucleotide_record,
+};
 
 /// Typed parameters for `getorf`.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -77,12 +79,13 @@ pub fn run_getorf(params: GetorfParams) -> Result<GetorfOutcome, ToolExecutionEr
                     let identifier = identifier_with_suffix(record.identifier(), &suffix)?;
                     let residues = original[position..stop_end].to_owned();
                     let metadata = orf_metadata(record.metadata(), frame, start, end);
-                    let orf_record = SequenceRecord::new(identifier.clone(), record.molecule(), residues)
-                        .map(|derived| derived.with_metadata(metadata))
-                        .map_err(|error| {
-                            PlatformError::new(ErrorCategory::Validation, error.to_string())
-                                .with_code("tools.getorf.sequence.invalid")
-                        })?;
+                    let orf_record =
+                        SequenceRecord::new(identifier.clone(), record.molecule(), residues)
+                            .map(|derived| derived.with_metadata(metadata))
+                            .map_err(|error| {
+                                PlatformError::new(ErrorCategory::Validation, error.to_string())
+                                    .with_code("tools.getorf.sequence.invalid")
+                            })?;
                     records.push(orf_record);
                     cases.push(GetorfCase {
                         source_id: source_id.clone(),
@@ -118,7 +121,12 @@ fn first_in_frame_stop_end(dna: &str, start: usize) -> Option<usize> {
     None
 }
 
-fn orf_metadata(metadata: &SequenceMetadata, frame: usize, start: usize, end: usize) -> SequenceMetadata {
+fn orf_metadata(
+    metadata: &SequenceMetadata,
+    frame: usize,
+    start: usize,
+    end: usize,
+) -> SequenceMetadata {
     derived_metadata(metadata, &format!("ORF frame {frame} {start}-{end}"))
 }
 

@@ -85,7 +85,10 @@ mod tests {
         assert_eq!(outcome.total_count, 2);
         assert_eq!(outcome.alignment.row_count(), 2);
         assert_eq!(outcome.alignment.column_count(), 5);
-        assert_eq!(outcome.alignment.rows()[0].identifier().accession(), "gamma");
+        assert_eq!(
+            outcome.alignment.rows()[0].identifier().accession(),
+            "gamma"
+        );
     }
 
     #[test]

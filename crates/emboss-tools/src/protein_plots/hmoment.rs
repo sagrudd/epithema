@@ -178,7 +178,12 @@ mod tests {
         assert_eq!(outcome.plot.kind, PlotKind::Line);
         assert_eq!(outcome.plot.series.len(), 1);
         assert_eq!(
-            outcome.plot.metadata.provenance.as_ref().and_then(|p| p.tool.as_deref()),
+            outcome
+                .plot
+                .metadata
+                .provenance
+                .as_ref()
+                .and_then(|p| p.tool.as_deref()),
             Some("hmoment")
         );
     }
@@ -203,7 +208,10 @@ mod tests {
     fn maps_invalid_angle_error() {
         let mapped: PlatformError =
             map_error(ProteinHydrophobicMomentError::InvalidAngle { angle_degrees: 0.0 });
-        assert_eq!(mapped.code().as_deref(), Some("tools.hmoment.angle.invalid"));
+        assert_eq!(
+            mapped.code().as_deref(),
+            Some("tools.hmoment.angle.invalid")
+        );
     }
 
     #[test]
@@ -231,6 +239,9 @@ mod tests {
         })
         .expect("plot should build");
 
-        assert_eq!(plot.series[0].semantic_group.as_deref(), Some("hydrophobic_moment"));
+        assert_eq!(
+            plot.series[0].semantic_group.as_deref(),
+            Some("hydrophobic_moment")
+        );
     }
 }

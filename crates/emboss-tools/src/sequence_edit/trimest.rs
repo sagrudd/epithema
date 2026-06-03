@@ -55,7 +55,10 @@ pub fn run_trimest(params: TrimestParams) -> Result<TrimestOutcome, ToolExecutio
     })
 }
 
-fn trim_record(record: &SequenceRecord, min_tail: usize) -> Result<SequenceRecord, ToolExecutionError> {
+fn trim_record(
+    record: &SequenceRecord,
+    min_tail: usize,
+) -> Result<SequenceRecord, ToolExecutionError> {
     require_nucleotide_record("trimest", record)?;
     let tail_len = record
         .residues()

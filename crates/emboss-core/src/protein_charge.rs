@@ -1,7 +1,7 @@
 //! Sliding-window protein charge profiles for plot-producing analytical tools.
 
-use crate::Alphabet;
 use crate::sequence::SequenceRecord;
+use crate::Alphabet;
 
 /// Errors for charge-profile computation.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -159,7 +159,7 @@ fn residue_charges(residues: &str) -> Result<Vec<f64>, ProteinChargeError> {
 mod tests {
     use crate::{MoleculeKind, SequenceIdentifier, SequenceRecord};
 
-    use super::{ProteinChargeError, protein_charge_profile};
+    use super::{protein_charge_profile, ProteinChargeError};
 
     #[test]
     fn computes_expected_profile() {
