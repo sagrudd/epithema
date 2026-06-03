@@ -5107,3 +5107,25 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
     - Kept this checkpoint scoped to release-truth confirmation rather than
       widening into unrelated Sphinx toctree-warning cleanup.
+
+297. Reassess the shipped `primersearch` slice before any further primer-family continuation is mapped.
+    - Recorded the post-ship `primersearch` reassessment explicitly.
+    - Recorded explicitly that the shipped `primersearch` slice stayed bounded,
+      deterministic, and search-first:
+      - it remained a primer-pair sequence-search workflow rather than
+        widening into primer-design optimization
+      - it kept the normalized table-first hit rows and typed result surface
+        derived from the same matching path
+      - it did not force assay-ranking, thermodynamic scoring, or generalized
+        primer-analysis framework behavior beyond the local method slice
+      - it did not force broader ambiguity-resolution or mismatch-taxonomy
+        claims beyond the bounded local seam
+    - Recorded that the governed release-truth surface remained fully green:
+      - shipped methods: `109`
+      - compared evidence: `109`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `109`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
