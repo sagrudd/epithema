@@ -4751,3 +4751,34 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+283. Inventory the remaining wholly unshipped `Rework` and `Add` families from the current governance appendix.
+    - Recorded explicitly that the already-activated `Rework` families now
+      have shipped representation and therefore are not part of the remaining
+      wholly unshipped family inventory:
+      - plotting and visualization tools
+      - remote retrieval and archive acquisition
+      - protein property and structural-summary utilities
+      - restriction-enzyme design and analysis
+    - Recorded explicitly that the remaining wholly unshipped `Rework`
+      families are:
+      - primer and assay-oriented search
+      - external database preparation helpers
+      - legacy prediction methods with enduring scientific value
+      - command discovery and help-navigation
+    - Recorded explicitly that the remaining wholly unshipped `Add` families
+      are:
+      - HMM and probabilistic homology workflows
+      - modern archive-scale raw data ingestion
+    - Recorded explicitly that these six families now form the live inventory
+      for the next-program recommendation step, rather than any stale
+      inherited family order.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

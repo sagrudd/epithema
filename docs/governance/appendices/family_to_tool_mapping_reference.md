@@ -4209,6 +4209,50 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Remaining wholly unshipped `Rework` and `Add` family inventory
+
+With plotting, remote retrieval, protein-property rework, and the bounded
+restriction-analysis retained kernel now all represented in the shipped
+surface, the repository should make the remaining wholly unshipped
+implementation-program families explicit before generating a new
+recommendation.
+
+The already-activated `Rework` families are therefore not part of the
+remaining wholly unshipped family inventory:
+
+- plotting and visualization tools
+- remote retrieval and archive acquisition
+- protein property and structural-summary utilities
+- restriction-enzyme design and analysis
+
+The remaining wholly unshipped `Rework` families are:
+
+- primer and assay-oriented search
+- external database preparation helpers
+- legacy prediction methods with enduring scientific value
+- command discovery and help-navigation
+
+The remaining wholly unshipped `Add` families are:
+
+- HMM and probabilistic homology workflows
+- modern archive-scale raw data ingestion
+
+Those six families now form the live inventory for the next-program
+recommendation step, rather than any stale inherited family order left over
+from the already-completed plotting, retrieval, protein-property, or
+restriction planning cycles.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
