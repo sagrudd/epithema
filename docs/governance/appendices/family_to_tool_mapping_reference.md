@@ -4141,6 +4141,42 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit closeout of the untriggered reserve-ordering revisit branch
+
+Because the narrowed bounded restriction-analysis seam-review gate remained
+affirmative, the repository should close the opposite branch explicitly rather
+than informally drifting toward reserve-program reshuffling.
+
+The resulting branch consequence is:
+
+- restriction-analysis rework remains the active planning program
+- reserve-program ordering behind it remains deferred and inactive
+- the active bounded continuation pool remains:
+  - `recoder`
+  - `silent`
+
+The broader family is still not activated by inertia:
+
+- no promotion of `rebaseextract` or `redata`
+- no promotion of `remap`, `restrict`, or `restover`
+- no reserve-program reshuffle while the bounded restriction-analysis branch
+  still has viable candidates
+
+So the repository should not revisit reserve ordering at this checkpoint. The
+next bounded planning step remains selection of exactly one lead method from
+the viable bounded pool.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

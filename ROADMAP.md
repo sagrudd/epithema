@@ -4612,3 +4612,29 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+278. Close the untriggered reserve-ordering revisit branch explicitly after the affirmative restriction-analysis seam review.
+    - Recorded explicitly that the narrowed bounded restriction-analysis
+      branch stayed affirmative at the seam-review gate.
+    - Recorded explicitly that the reserve-ordering revisit branch is not
+      taken at this checkpoint.
+    - The resulting branch consequence is:
+      - restriction-analysis rework remains the active planning program
+      - reserve-program ordering behind it remains deferred and inactive
+      - the active bounded continuation pool remains:
+        - `recoder`
+        - `silent`
+    - The broader family is still not activated by inertia:
+      - no promotion of `rebaseextract` or `redata`
+      - no promotion of `remap`, `restrict`, or `restover`
+      - no reserve-program reshuffle while the bounded restriction-analysis
+        branch still has viable candidates
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
