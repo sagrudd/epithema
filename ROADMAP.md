@@ -4561,3 +4561,27 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+276. Activate restriction-analysis rework as the next active planning program by explicit branch resolution.
+    - Recorded explicitly that plotting, bounded retrieval continuation, and
+      protein-property rework are no longer the active next-planning branches.
+    - Promoted restriction-analysis rework from reserve status to the active
+      next planning program by explicit branch resolution.
+    - Recorded explicitly that the active bounded restriction-analysis
+      planning subset is now narrowed to:
+      - `recoder`
+      - `silent`
+    - This activation does not widen restriction-analysis scope beyond the
+      already governed bounded branch posture:
+      - no broad enzyme-catalog or provider-parity claims
+      - no implicit promotion of omitted broader restriction workflows
+      - no early activation of post-restriction reserve-program ordering
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

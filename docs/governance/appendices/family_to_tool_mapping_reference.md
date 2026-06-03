@@ -4063,6 +4063,44 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Activation of restriction-analysis rework as the next active planning program
+
+After the bounded protein-property rework branch closes explicitly, the
+repository should promote the next reserve program by branch resolution rather
+than by inertia.
+
+The resulting next-program activation is:
+
+- plotting is no longer the active continuation branch
+- bounded retrieval continuation is no longer the active continuation branch
+- protein-property rework is no longer the active continuation branch
+- restriction-analysis rework now becomes the next active planning program
+
+The active bounded restriction-analysis planning subset is now narrowed to:
+
+- `recoder`
+- `silent`
+
+This activation should remain bounded:
+
+- it does not imply broad enzyme-catalog or provider-parity claims
+- it does not reopen omitted broader restriction workflows by inertia
+- it does not preemptively activate any later reserve-program ordering
+- it preserves the existing expectation that any shipped
+  restriction-analysis continuation must remain deterministic, method-local,
+  and scientifically explicit
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded
