@@ -4369,6 +4369,40 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Lead-method selection inside the active primer-family branch
+
+After the bounded primer-family seam-review gate remains affirmative, the
+repository should choose exactly one lead method from the active bounded pool
+before capturing method-specific acceptance criteria and start conditions.
+
+The selected bounded lead candidate is:
+
+- `primersearch`
+
+`primersearch` leads the active pool because:
+
+- it is the narrowest remaining search-first surface in the family
+- it appears easier to keep deterministic than primer-design or
+  siRNA-selection workflows
+- it avoids immediately forcing optimization-heavy scoring or broader
+  biological-design policy claims
+
+The non-selected bounded family members remain documented but inactive:
+
+- `eprimer3`
+- `sirna`
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained

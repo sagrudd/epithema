@@ -4869,3 +4869,26 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+287. Choose exactly one bounded lead candidate from the active primer-family pool.
+    - Recorded explicitly that the selected bounded lead candidate is:
+      - `primersearch`
+    - Recorded explicitly why `primersearch` leads the active pool:
+      - it is the narrowest remaining search-first surface in the family
+      - it appears easier to keep deterministic than primer-design or
+        siRNA-selection workflows
+      - it avoids immediately forcing optimization-heavy scoring or broader
+        biological-design policy claims
+    - Recorded explicitly that the non-selected bounded family members remain
+      documented but inactive:
+      - `eprimer3`
+      - `sirna`
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
