@@ -1,0 +1,124 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "primersearch-v1",
+  "tool": {
+    "name": "primersearch",
+    "family": "primer_tools",
+    "summary": "Report deterministic complete primer-pair hits against local nucleotide sequence inputs",
+    "legacy_names": [
+      "primersearch"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`primersearch` is the bounded primer-pair search member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface searches one local nucleotide sequence input against one local tab-delimited primer-pair file and returns deterministic complete-pair hit rows as a stable table-first report."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly two local inputs: one nucleotide sequence file and one primer-pair TSV. Each non-empty primer row must contain exactly three tab-delimited fields: pair name, forward primer, and reverse primer. Provider-backed sequence acquisition, inline literals, and non-nucleotide targets remain outside the bounded v1 seam."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable normalized table with record identifier, primer-pair name, strand/orientation, one-based inclusive left and right primer coordinates, one-based inclusive amplicon coordinates and length, and the matched left and right primer slices. The bounded seam reports complete pair hits only and keeps all coordinates tied to the same matching path."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This bounded release keeps one historical `primersearch` user need in scope while modernizing around deterministic primer-hit table reporting rather than primer-design optimization or broader assay-ranking behavior. The committed validation seam is currently executable-only: the governed local search path is shipped, and the canonical compared fixture will be closed in the next evidence step."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs primersearch`. The governed surface currently ships with a checked-in validation stub, curated legacy provenance, and Rust coverage that exercises the bounded local target-plus-primer-file path, while the canonical compared analytical fixture remains pending."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `primersearch` seam is intentionally narrow. It does not perform primer-design optimization, thermodynamic scoring, assay ranking, or generalized primer-analysis orchestration, and it does not widen into `eprimer3` or `sirna` merely because this bounded search slice ships."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "primersearch_targets_fixture",
+      "label": "Primersearch nucleotide target fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/primersearch_targets.fasta"
+      },
+      "description": "Repository-managed nucleotide targets used for deterministic bounded primersearch validation."
+    },
+    {
+      "id": "primersearch_pairs_fixture",
+      "label": "Primersearch primer-pair fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv"
+      },
+      "description": "Repository-managed primer-pair rows used for deterministic bounded primersearch validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "primersearch_hits_example",
+      "title": "Search one local nucleotide input for deterministic complete primer-pair hits",
+      "description": "Executes the bounded primersearch seam against the committed target FASTA and primer-pair TSV fixtures to emit stable normalized hit rows.",
+      "artifact_ids": [
+        "primersearch_targets_fixture",
+        "primersearch_pairs_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "primersearch_table",
+          "label": "Bounded primersearch analytical table",
+          "description": "Stable normalized complete-pair hit rows with strand, primer coordinates, amplicon coordinates, and matched primer slices."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS primersearch application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd",
+        "invocation": "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS primersearch application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd",
+        "invocation": "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "primersearch_hits_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

@@ -5046,3 +5046,27 @@ implementation-program cycle. The near-term priorities are:
     - Added focused bounded validation for:
       - provider-backed sequence inputs not supported by this local seam
       - invalid primer-pair file rows
+
+294. Expose `primersearch` through the governed shipped surface.
+    - Wired `primersearch` through the governed tool registry, governed
+      service dispatch/help surface, and CLI parsing path.
+    - Added the curated autodoc contract for `primersearch` plus the
+      generated shipped docs and validation stub.
+    - Refreshed the generated cohort/report surface to the honest interim
+      shipped state:
+      - shipped methods: `109`
+      - compared evidence: `108`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `109`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
+    - Recorded explicitly that this is an executable-only shipment boundary:
+      - the governed local `primersearch` seam is now shipped
+      - the canonical compared analytical fixture is still pending
+      - the full-compared release gate does not go green again until the next
+        evidence-closing task
+      - the release-readiness truth surface was refreshed to the new
+        `109`-method interim state so the generated cohort and release docs
+        agree even though the compared-evidence gate remains amber

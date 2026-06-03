@@ -360,6 +360,7 @@ impl EmbossService {
             "octanol" => self.invoke_octanol(request, descriptor),
             "pepinfo" => self.invoke_pepinfo(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
+            "primersearch" => self.invoke_primersearch(request, descriptor),
             "psiphi" => self.invoke_psiphi(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
             "silent" => self.invoke_silent(request, descriptor),
@@ -12603,6 +12604,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "octanol" => octanol_help(),
         "pepinfo" => pepinfo_help(),
         "pepwindow" => pepwindow_help(),
+        "primersearch" => primersearch_help(),
         "psiphi" => psiphi_help(),
         "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
@@ -18298,6 +18300,25 @@ mod tests {
         assert!(error
             .to_string()
             .contains("must contain exactly 3 tab-delimited fields"));
+    }
+
+    #[test]
+    fn dispatches_primersearch_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("primersearch").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![
+            primersearch_fixture().display().to_string(),
+            primersearch_pairs_fixture().display().to_string(),
+        ]);
+
+        let response = service
+            .invoke(request)
+            .expect("primersearch should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "primersearch");
     }
 
     #[test]

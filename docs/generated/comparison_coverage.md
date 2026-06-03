@@ -6,16 +6,17 @@ This page is generated from the shipped cohort validation report and the governa
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
-- Shipped methods: `108`
-- Family rows: `10`
+- Shipped methods: `109`
+- Family rows: `11`
 - Compared-evidence methods: `108`
-- Executable-only methods: `0`
-- Harvested-but-not-compared methods: `0`
+- Executable-only methods: `1`
+- Harvested-but-not-compared methods: `1`
 
 ## Family Coverage Table
 
 | Family | Shipped methods | Compared | Executable-only | Harvested but not compared |
 |---|---:|---:|---:|---:|
+| Modernize — Rework — Primer and assay-oriented search | 1 | 0 | 1 | 1 |
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 0 |
 | Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 0 |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 0 |

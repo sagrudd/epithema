@@ -1,0 +1,53 @@
+{
+  "tool_name": "primersearch",
+  "document_id": "primersearch-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "primersearch_hits_example",
+      "title": "Search one local nucleotide input for deterministic complete primer-pair hits",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "primersearch_targets_fixture",
+        "primersearch_pairs_fixture"
+      ],
+      "expected_output_ids": [
+        "primersearch_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS primersearch application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd",
+          "invocation": "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS primersearch application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd",
+      "invocation": "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout"
+    }
+  ]
+}
