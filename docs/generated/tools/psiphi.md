@@ -32,9 +32,13 @@ The current interface accepts exactly one local coordinate file. The bounded v1 
 
 The result is a stable per-residue table with chain identifier, residue identity, insertion code, backbone-atom presence flags, previous/next continuity flags, and bounded `phi_degrees` and `psi_degrees` values. Torsions remain absent rather than inferred when required backbone atoms or same-chain sequential continuity are missing.
 
+## Legacy Context
+
+This bounded release keeps one historical `psiphi` user need in scope while modernizing around deterministic normalized phi/psi table reporting instead of Ramachandran plotting or broad structural-analysis behavior. The committed compared example stays narrow: one checked-in local backbone coordinate fixture is executed through the governed protein-coordinate seam and compared against a checked-in expected torsion-angle table.
+
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs psiphi`. The shipped interim surface is executable-only at this checkpoint: Rust coverage exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same governed computation path, but compared acceptance evidence and harvested legacy provenance are not yet closed in this task.
+This method is implemented and exposed through `emboss-rs psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path.
 
 ## Caveats
 
@@ -59,16 +63,20 @@ The v1 `psiphi` seam is intentionally narrow. It does not render Ramachandran pl
 - Referenced artifacts: `psiphi_fixture`
 - Expected outputs:
   - `psiphi_table`: Bounded psiphi analytical table (Stable per-residue torsion-angle rows with explicit continuity and backbone-presence fields.)
+- Legacy reference: EMBOSS psiphi application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/psiphi.acd`
+  - Invocation: `psiphi -infile psiphi_backbone.txt -outfile stdout`
 
 ## Provenance
 
 - Curated by: emboss-rs maintainers
-- Source references: none declared
+- Source references:
+  - EMBOSS psiphi application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/psiphi.acd`)
 
 ## Declared Validation Intent
 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `psiphi_profile_example`
-- Future legacy comparison requested: no
-- Future execution must capture provenance: no
+- Future legacy comparison requested: yes
+- Future execution must capture provenance: yes

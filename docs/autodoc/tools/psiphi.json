@@ -29,10 +29,16 @@
       "content": "The result is a stable per-residue table with chain identifier, residue identity, insertion code, backbone-atom presence flags, previous/next continuity flags, and bounded `phi_degrees` and `psi_degrees` values. Torsions remain absent rather than inferred when required backbone atoms or same-chain sequential continuity are missing."
     },
     {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This bounded release keeps one historical `psiphi` user need in scope while modernizing around deterministic normalized phi/psi table reporting instead of Ramachandran plotting or broad structural-analysis behavior. The committed compared example stays narrow: one checked-in local backbone coordinate fixture is executed through the governed protein-coordinate seam and compared against a checked-in expected torsion-angle table."
+    },
+    {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs psiphi`. The shipped interim surface is executable-only at this checkpoint: Rust coverage exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same governed computation path, but compared acceptance evidence and harvested legacy provenance are not yet closed in this task."
+      "content": "This method is implemented and exposed through `emboss-rs psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path."
     },
     {
       "id": "caveats",
@@ -74,19 +80,29 @@
           "description": "Stable per-residue torsion-angle rows with explicit continuity and backbone-presence fields."
         }
       ],
-      "legacy_reference": null
+      "legacy_reference": {
+        "source": "EMBOSS psiphi application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/psiphi.acd",
+        "invocation": "psiphi -infile psiphi_backbone.txt -outfile stdout"
+      }
     }
   ],
   "provenance": {
     "source_mode": "curated",
     "curated_by": "emboss-rs maintainers",
-    "source_references": []
+    "source_references": [
+      {
+        "source": "EMBOSS psiphi application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/psiphi.acd",
+        "invocation": "psiphi -infile psiphi_backbone.txt -outfile stdout"
+      }
+    ]
   },
   "validation": {
     "required_example_ids": [
       "psiphi_profile_example"
     ],
-    "compare_against_legacy": false,
-    "require_provenance_capture": false
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
   }
 }

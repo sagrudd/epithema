@@ -1,0 +1,4 @@
+ordinal	chain	residue_name	residue_number	insertion_code	has_backbone_n	has_backbone_ca	has_backbone_c	previous_contiguous	next_contiguous	phi_degrees	psi_degrees
+1	A	GLY	1	-	true	true	true	false	true	-	-166.590128
+2	A	ALA	2	-	true	true	true	true	true	143.701451	165.846421
+3	A	SER	3	-	true	true	true	true	false	-171.894981	-

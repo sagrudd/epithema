@@ -117,13 +117,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `108`
-- Compared-evidence methods: `107`
-- Executable-evidence methods: `1`
-- Methods with harvested legacy provenance recorded: `107`
-- Full compared cohort: `no`
+- Compared-evidence methods: `108`
+- Executable-evidence methods: `0`
+- Methods with harvested legacy provenance recorded: `108`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `1`
-- Weakest evidence family: `Modernize — Rework — Protein property and structural-summary utilities`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -152,8 +152,6 @@ Current generated release-truth markers:
 
 ### Ready With Known Limitations
 
-- The shipped cohort is not yet fully harvested or fully compared on this
-  branch because `psiphi` is currently shipped with executable evidence only.
 - The retained governance backlog is `0`, so the dominant remaining work is
   bounded plotting-rework completion plus post-closure release/process
   discipline rather than retained-method implementation.
@@ -231,7 +229,7 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `107/108` shipped methods at compared evidence with `1`
+  and now records `108/108` shipped methods at compared evidence with `0`
   methods below compared evidence.
 
 ### Harvest coverage reporting
@@ -240,8 +238,8 @@ Current generated release-truth markers:
 - Basis: the harvest-coverage exceptions report is generated at:
   - `docs/generated/validation/harvest_coverage.json`
   - `docs/generated/harvest_coverage.md`
-  and currently records `107/108` shipped methods with harvested legacy
-  provenance and `1` harvest exception.
+  and now records `108/108` shipped methods with harvested legacy
+  provenance and `0` harvest exceptions.
 
 ### Retained backlog closure tracking
 
@@ -297,20 +295,18 @@ Current generated release-truth markers:
 - The dominant remaining implementation work is now future bounded retrieval
   continuation planning rather than shipped-cohort evidence debt.
 
-### Legacy harvesting remains partial
+### Legacy harvesting is complete
 
-- The cohort report now records `107` methods with harvested legacy
+- The cohort report now records `108` methods with harvested legacy
   provenance.
-- Harvest coverage is not yet complete across the shipped cohort while
-  `psiphi` remains below harvested provenance capture.
+- Harvest coverage is complete across the shipped cohort at this checkpoint.
 
-### Comparison-based acceptance remains partial
+### Comparison-based acceptance is complete
 
-- The cohort report now records `107` methods with compared evidence and `1`
-  shipped method at executable evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily not green while the bounded `psiphi` slice
-  remains below compared evidence.
+- The cohort report now records `108` methods with compared evidence and `0`
+  shipped methods at executable evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green at this checkpoint.
 
 ### Plotting limitations
 
@@ -337,9 +333,9 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `108`
-- Compared-evidence methods: `107`
-- Executable-evidence methods: `1`
-- Methods with harvested legacy provenance recorded: `107`
+- Compared-evidence methods: `108`
+- Executable-evidence methods: `0`
+- Methods with harvested legacy provenance recorded: `108`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

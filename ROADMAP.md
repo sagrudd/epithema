@@ -4447,9 +4447,18 @@ implementation-program cycle. The near-term priorities are:
       provenance capture until Task 271 closes that slice.
 
 271. Close the `psiphi` compared-evidence and harvested-provenance slice.
-    - Add canonical bounded fixtures, harvested provenance, and compared
-      evidence for the shipped `psiphi` slice.
-    - Restore the generated/report surface to the fully green state.
+    - Complete. Added canonical bounded fixtures, harvested provenance, and
+      compared evidence for the shipped `psiphi` slice.
+    - Wired `psiphi` into the acceptance-anchor harness with a checked-in
+      torsion-angle table fixture and harvested legacy reference.
+    - Restored the generated/report surface to the fully green state:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`
 
 272. Re-run the full release-truth surface after shipping `psiphi`.
     - Re-run the governed release-truth surface after the bounded `psiphi`

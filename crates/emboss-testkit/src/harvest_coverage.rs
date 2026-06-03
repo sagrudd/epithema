@@ -268,11 +268,10 @@ mod tests {
             .expect("harvest-coverage report should derive");
 
         assert_eq!(report.summary.total_method_count, 108);
-        assert_eq!(report.summary.harvested_legacy_presence_count, 107);
-        assert_eq!(report.summary.harvest_exception_count, 1);
-        assert!(!report.summary.harvest_coverage_complete);
-        assert_eq!(report.exceptions.len(), 1);
-        assert_eq!(report.exceptions[0].tool_name, "psiphi");
+        assert_eq!(report.summary.harvested_legacy_presence_count, 108);
+        assert_eq!(report.summary.harvest_exception_count, 0);
+        assert!(report.summary.harvest_coverage_complete);
+        assert!(report.exceptions.is_empty());
     }
 
     #[test]
@@ -283,8 +282,6 @@ mod tests {
 
         assert!(markdown.contains("# Harvest Coverage Exceptions"));
         assert!(markdown.contains("## Summary"));
-        assert!(markdown.contains("Harvest coverage complete: `no`"));
-        assert!(markdown.contains("`psiphi`"));
-        assert!(markdown.contains("## Exceptions"));
+        assert!(markdown.contains("Harvest coverage complete: `yes`"));
     }
 }

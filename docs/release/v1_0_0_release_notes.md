@@ -66,13 +66,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `107` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
-- `107` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- `108` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
+- `108` shipped methods record harvested legacy provenance
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Protein property and structural-summary utilities`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -102,10 +102,10 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `0` shipped methods remain at declared or documented-only evidence
 
-This means the shipped retained cohort remains fully closed, but the shipped
-governed cohort is temporarily below the fully green release gate while the
-bounded `psiphi` slice remains at executable evidence without harvested legacy
-provenance in this interim task boundary.
+This means the shipped retained cohort remains fully closed and the shipped
+governed cohort is back at the fully green release gate, with the bounded
+`psiphi` slice now carrying canonical checked-in compared evidence and
+harvested legacy provenance.
 
 ### First-class R story
 

@@ -278,8 +278,8 @@ mod tests {
             .expect("comparison coverage report should derive");
 
         assert_eq!(report.summary.total_method_count, 108);
-        assert_eq!(report.summary.compared_count, 107);
-        assert_eq!(report.summary.executable_only_count, 1);
+        assert_eq!(report.summary.compared_count, 108);
+        assert_eq!(report.summary.executable_only_count, 0);
         assert_eq!(report.summary.harvested_but_not_compared_count, 0);
 
         let family = report
@@ -302,5 +302,6 @@ mod tests {
         assert!(markdown.contains("## Family Coverage Table"));
         assert!(markdown.contains("Harvested but not compared"));
         assert!(markdown.contains("Core Retain — Sequence editing and manipulation"));
+        assert!(markdown.contains("Executable-only methods: `0`"));
     }
 }
