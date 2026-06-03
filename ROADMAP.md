@@ -4666,3 +4666,39 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+280. Extend the roadmap from the actual post-restriction shipped state.
+    - Recorded the current governed truth explicitly:
+      - shipped methods `108`
+      - compared evidence `108`
+      - executable evidence `0`
+      - harvested legacy provenance present `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the previously assumed bounded restriction-analysis continuation tier
+        is already closed in the actual shipped state because `recoder` and
+        `silent` are both already shipped and fully evidenced
+      - no comparably bounded restriction-analysis continuation candidate
+        remains active
+      - the roadmap is back in an ambiguity-resolution state rather than on a
+        preselected implementation branch
+      - the next planning cycle must therefore be derived from current
+        governance and generated truth rather than from stale reserve-order
+        assumptions
+    - The next mapped tier is now Tasks `281` through `294`, centered on:
+      - explicitly closing the bounded restriction-analysis continuation branch
+      - confirming the broader restriction-analysis family remains inactive
+        unless a new bounded local slice is justified
+      - inventorying the remaining unshipped rework and add families from the
+        current governance appendix
+      - generating an explicit next-program recommendation from current
+        shipped-state truth rather than from inherited family order
+      - choosing one next planning program only after that recommendation is
+        made explicit
+      - capturing bounded acceptance criteria, start conditions, and stop
+        conditions for the newly selected program before any code starts
