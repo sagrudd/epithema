@@ -5092,3 +5092,18 @@ implementation-program cycle. The near-term priorities are:
       - no weak-evidence family remains active in the generated cohort
       - the bounded `primersearch` slice is now fully evidenced rather than
         executable-only
+
+296. Re-run the release-truth checkpoint after the `primersearch` evidence closure.
+    - Used this as the post-`primersearch` release-truth checkpoint only.
+    - Recorded that the observed generated state remains fully green after the
+      bounded `primersearch` evidence closure:
+      - shipped methods: `109`
+      - compared evidence: `109`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `109`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
+    - Kept this checkpoint scoped to release-truth confirmation rather than
+      widening into unrelated Sphinx toctree-warning cleanup.
