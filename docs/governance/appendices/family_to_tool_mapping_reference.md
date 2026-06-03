@@ -4177,6 +4177,45 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Reconciliation of the bounded restriction-analysis lead-candidate assumption
+
+After the narrowed bounded restriction-analysis branch stayed affirmative, the
+next planned step would ordinarily be explicit lead-method selection.
+However, the actual repository state must be checked before that step is
+treated as real.
+
+That check shows the previously assumed bounded candidate pool is already
+fully shipped and evidenced:
+
+- `recoder`
+- `silent`
+
+Each already appears in the governed shipped registry and already carries:
+
+- compared evidence
+- harvested legacy provenance
+- fully green release-truth coverage
+
+So no new lead candidate needs to be selected at this checkpoint. Instead,
+the planning consequence should be recorded honestly:
+
+- the bounded restriction-analysis continuation plan written before this
+  check is stale relative to the actual shipped state
+- further restriction-analysis planning must be rebased on the actual
+  post-`recoder` and post-`silent` shipped state before any new continuation
+  tier is mapped
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

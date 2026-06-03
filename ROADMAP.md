@@ -4638,3 +4638,31 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+279. Reconcile the bounded restriction-analysis lead-candidate assumption against the actual shipped state.
+    - Complete. Closed this checkpoint as an honesty correction rather than a
+      lead-method selection.
+    - Recorded explicitly that the previously assumed bounded candidate pool
+      is already fully shipped and evidenced in the actual repository state:
+      - `recoder`
+      - `silent`
+    - Recorded explicitly that no new lead candidate needs to be selected at
+      this checkpoint because:
+      - both methods already appear in the governed shipped registry
+      - both methods already carry compared evidence
+      - both methods already carry harvested legacy provenance
+    - The resulting planning consequence is:
+      - the bounded restriction-analysis continuation plan written in Task
+        `274` is stale relative to current repository truth
+      - further restriction-analysis planning must be rebased on the actual
+        post-`recoder` and post-`silent` shipped state before any new
+        continuation tier is mapped
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
