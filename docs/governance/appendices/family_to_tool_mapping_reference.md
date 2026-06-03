@@ -4141,6 +4141,37 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit closeout of the bounded restriction-analysis continuation branch
+
+After reconciling the previously assumed bounded restriction-analysis
+continuation tier against the actual shipped state, the repository should make
+the branch-resolution consequence explicit rather than leaving
+restriction-analysis continuation implicitly active.
+
+That closeout is now honest because the retained bounded members of the family
+are already shipped and evidenced:
+
+- `recoder`
+- `silent`
+
+No comparably bounded restriction-analysis continuation candidate remains
+active after that reconciliation step.
+
+So the repository should record the bounded restriction-analysis continuation
+branch as closed and should no longer treat restriction-analysis continuation
+as an active implementation branch.
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained

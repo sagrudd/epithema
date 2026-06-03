@@ -4702,3 +4702,24 @@ implementation-program cycle. The near-term priorities are:
         made explicit
       - capturing bounded acceptance criteria, start conditions, and stop
         conditions for the newly selected program before any code starts
+
+281. Confirm that the bounded restriction-analysis continuation branch is now closed in the actual shipped state.
+    - Recorded explicitly that the bounded restriction-analysis continuation
+      branch is now closed in the actual shipped state because its retained
+      bounded members are already shipped:
+      - `recoder`
+      - `silent`
+    - Recorded explicitly that no comparably bounded restriction-analysis
+      continuation candidate remains active after the post-shipment
+      reconciliation step.
+    - Recorded explicitly that restriction-analysis continuation should no
+      longer be treated as an active implementation branch.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
