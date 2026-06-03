@@ -4001,6 +4001,36 @@ The repository should now pause and reassess before implementation if:
    alternate-conformer policy, or comparative structure-analysis claims that
    are not clearly local to the method
 
+#### Reassessment after the shipped `psiphi` slice
+
+After shipping `psiphi`, closing its compared-evidence and harvested-
+provenance slice, and rerunning the full release-truth surface, the
+repository should reassess whether the shipped protein-property seam stayed
+bounded enough to continue from honestly.
+
+The reassessment result is affirmative:
+
+- the shipped `psiphi` slice stayed bounded, method-associated, and
+  scientifically honest
+- it remained a protein-coordinate, table-first analytical surface rather
+  than forcing Ramachandran plotting or renderer-coupled figure logic
+- it kept the normalized per-residue torsion-angle rows and typed result
+  surface derived from the same coordinate-processing path
+- it did not force broad chain-model normalization, missing-atom imputation,
+  alternate-conformer policy, or comparative structure-analysis claims
+  beyond the local method slice
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Reconfirmation after the `density` shipment gate
 
 After the repository stayed on the plotting path through the bounded

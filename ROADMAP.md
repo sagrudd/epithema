@@ -4477,7 +4477,25 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 273. Reassess the shipped `psiphi` slice before any further continuation is mapped.
-    - Record explicitly whether the shipped `psiphi` slice stayed bounded,
-      method-associated, and scientifically honest.
-    - Use that reassessment rather than inertia to decide what family, if any,
-      should be mapped after the protein-property checkpoint.
+    - Complete. Recorded the post-ship `psiphi` reassessment explicitly after
+      the compared-evidence closure and release-truth rerun.
+    - The reassessment result is affirmative:
+      - the shipped `psiphi` slice stayed bounded, method-associated, and
+        scientifically honest
+      - it remained a protein-coordinate, table-first analytical surface
+        rather than forcing Ramachandran plotting or renderer-coupled figure
+        logic
+      - it kept the normalized per-residue torsion-angle rows and typed
+        result surface derived from the same coordinate-processing path
+      - it did not force broad chain-model normalization, missing-atom
+        imputation, alternate-conformer policy, or comparative
+        structure-analysis claims beyond the local method slice
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
