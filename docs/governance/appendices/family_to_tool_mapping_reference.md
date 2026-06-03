@@ -4437,6 +4437,44 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Exact start conditions for the first `primersearch` implementation patch
+
+Before any code starts, the repository should make the start gate for the
+first bounded `primersearch` patch explicit.
+
+That start gate now requires:
+
+- primer and assay-oriented search to remain the active planning program
+- `primersearch` to remain the single selected bounded lead candidate
+- the active bounded family subset to remain limited to:
+  - `primersearch`
+  - `eprimer3`
+  - `sirna`
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `primersearch` plus the smallest support
+  needed for deterministic primer-pair matching, normalized table-first
+  reporting, and governed docs/validation plumbing
+- the patch to land as a full bounded slice rather than a half-start
+
+The same guardrails remain:
+
+- no primer-design optimization
+- no assay-ranking or thermodynamic scoring framework
+- no widening into `eprimer3` or `sirna`
+- no family-wide continuation claim merely because one bounded `primersearch`
+  slice ships
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
