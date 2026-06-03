@@ -4253,6 +4253,53 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Explicit next-program recommendation from the current shipped-state truth
+
+The current generated surfaces remain neutral at this checkpoint:
+
+- no reprioritization signals were generated
+- no recommendation changes are required automatically
+
+That means the repository still needs an explicit next-program recommendation
+from the remaining live inventory rather than a report-driven reorder.
+
+The recommended next active planning program is:
+
+- primer and assay-oriented search
+
+That family leads the remaining inventory because:
+
+- it is the most bounded remaining user-facing `Rework` family
+- it has only three surviving `Rework` methods after the existing `Omit`
+  decisions:
+  - `eprimer3`
+  - `primersearch`
+  - `sirna`
+- it does not depend on broad provider-ingestion seams or strategic-add
+  platform claims
+- it appears materially less open-ended than legacy prediction or
+  archive-scale `Add` programs
+
+The remaining family order behind it is now:
+
+1. primer and assay-oriented search
+2. command discovery and help-navigation
+3. external database preparation helpers
+4. legacy prediction methods with enduring scientific value
+5. HMM and probabilistic homology workflows
+6. modern archive-scale raw data ingestion
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained

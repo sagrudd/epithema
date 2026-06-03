@@ -4782,3 +4782,40 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+284. Generate an explicit next-program recommendation from current shipped-state truth rather than inherited family order.
+    - Recorded explicitly that the current generated surfaces remain neutral:
+      - no reprioritization signals were generated
+      - no recommendation changes are required automatically
+    - Recorded explicitly that the repository therefore needs a manual
+      recommendation from the remaining live inventory rather than a
+      report-driven reorder.
+    - Recorded explicitly that the recommended next active planning program is:
+      - primer and assay-oriented search
+    - Recorded explicitly why this family leads the remaining inventory:
+      - it is the most bounded remaining user-facing `Rework` family
+      - it has only three surviving `Rework` methods after existing `Omit`
+        decisions:
+        - `eprimer3`
+        - `primersearch`
+        - `sirna`
+      - it does not depend on broad provider-ingestion seams or strategic-add
+        platform claims
+      - it appears materially less open-ended than legacy prediction or
+        archive-scale `Add` programs
+    - Recorded explicitly that the remaining family order behind it is:
+      1. primer and assay-oriented search
+      2. command discovery and help-navigation
+      3. external database preparation helpers
+      4. legacy prediction methods with enduring scientific value
+      5. HMM and probabilistic homology workflows
+      6. modern archive-scale raw data ingestion
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
