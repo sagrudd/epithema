@@ -4499,3 +4499,42 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+274. Extend the roadmap from the actual post-`psiphi` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods `108`
+      - compared evidence `108`
+      - executable evidence `0`
+      - harvested legacy provenance present `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the bounded protein-property rework program has now closed through its
+        single selected candidate
+      - no comparably bounded protein-property rework candidate remains active
+      - restriction-analysis rework now becomes the next active planning
+        program by explicit branch resolution rather than by inertia
+      - the next reserve-program ordering should be revisited only after the
+        bounded restriction-analysis branch is assessed, rather than being
+        implied early from stale backlog assumptions
+    - The next mapped tier is now Tasks `275` through `288`, centered on:
+      - confirming protein-property rework is exhausted as an active bounded
+        branch
+      - activating restriction-analysis rework explicitly
+      - deciding whether the narrowed bounded restriction-analysis branch still
+        passes honest seam review strongly enough to remain active
+      - either revisiting reserve-program ordering if that narrowed branch
+        fails honest seam review, or selecting exactly one bounded
+        restriction-analysis lead candidate from:
+        - `recoder`
+        - `silent`
+      - capturing method-level acceptance criteria, exact patch start
+        conditions, and explicit recoding/seam stop conditions for the chosen
+        method
+      - mapping and shipping one full bounded restriction-analysis slice
+      - rerunning release truth and reassessing the shipped
+        restriction-analysis slice before any further continuation is mapped
