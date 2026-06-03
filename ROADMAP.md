@@ -4819,3 +4819,28 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+285. Activate the recommended next planning program explicitly rather than leaving it as an advisory note only.
+    - Recorded explicitly that primer and assay-oriented search is now the
+      active planning program by branch resolution rather than by inherited
+      family order.
+    - Recorded explicitly that the currently live bounded family subset is:
+      - `eprimer3`
+      - `primersearch`
+      - `sirna`
+    - Recorded explicitly that the remaining families stay inactive behind the
+      newly activated program:
+      - command discovery and help-navigation
+      - external database preparation helpers
+      - legacy prediction methods with enduring scientific value
+      - HMM and probabilistic homology workflows
+      - modern archive-scale raw data ingestion
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `108`
+      - compared evidence: `108`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `108`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

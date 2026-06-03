@@ -4300,6 +4300,39 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Activation of primer and assay-oriented search as the next active planning program
+
+After the recommendation step is made explicit, the repository should activate
+that family deliberately rather than leaving it as an advisory note only.
+
+Primer and assay-oriented search is now the active planning program by branch
+resolution rather than by inherited family order.
+
+The currently live bounded family subset is:
+
+- `eprimer3`
+- `primersearch`
+- `sirna`
+
+The remaining families stay inactive behind the newly activated program:
+
+- command discovery and help-navigation
+- external database preparation helpers
+- legacy prediction methods with enduring scientific value
+- HMM and probabilistic homology workflows
+- modern archive-scale raw data ingestion
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `108`
+- compared evidence: `108`
+- executable evidence: `0`
+- harvested legacy provenance present: `108`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the untriggered reserve-ordering revisit branch
 
 Because the narrowed bounded restriction-analysis seam-review gate remained
