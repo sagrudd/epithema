@@ -5688,3 +5688,44 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+328. Extend the roadmap from the actual post-`sirna` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `111`
+      - compared evidence: `111`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the bounded primer and assay-oriented search rework program has now
+        closed through its final selected candidate
+      - no comparably bounded primer-family continuation candidate remains
+        active
+      - command discovery and help-navigation now becomes the next active
+        planning program by explicit branch resolution rather than by inertia
+      - external database preparation helpers now becomes the reserve next
+        program and should not be promoted unless the bounded
+        command-discovery branch fails honest seam review
+    - The next mapped tier is now Tasks `329` through `342`, centered on:
+      - confirming primer and assay-oriented search is exhausted as an active
+        bounded branch
+      - activating command discovery and help-navigation explicitly
+      - deciding whether the narrowed bounded command-discovery branch still
+        passes honest seam review strongly enough to remain active
+      - either revisiting reserve-program ordering if that narrowed branch
+        fails honest seam review, or selecting exactly one bounded
+        command-discovery lead candidate from:
+        - `embossdata`
+        - `seealso`
+        - `wossname`
+      - capturing method-level acceptance criteria, exact patch start
+        conditions, and explicit discovery/seam stop conditions for the chosen
+        method
+      - mapping and shipping one full bounded command-discovery slice
+      - rerunning release truth and reassessing the shipped
+        command-discovery slice before any further continuation is mapped
