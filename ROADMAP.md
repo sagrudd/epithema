@@ -5129,3 +5129,40 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+298. Extend the roadmap from the actual post-`primersearch` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `109`
+      - compared evidence: `109`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `109`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the first bounded primer-family continuation slice closed cleanly
+        through `primersearch`
+      - primer and assay-oriented search remains the active planning program,
+        but it now has to be re-based onto the remaining bounded candidate pool
+        instead of assuming automatic continuation
+      - command discovery and help-navigation remains the reserve next program
+        and should not be promoted unless the narrowed primer-family
+        continuation branch fails honest seam review
+    - The next mapped tier is now Tasks `299` through `312`, centered on:
+      - rebasing the remaining bounded primer-family continuation pool onto the
+        actual post-`primersearch` state
+      - deciding whether another bounded primer-family continuation candidate
+        still exists after the first shipped slice
+      - either promoting command discovery and help-navigation if the narrowed
+        primer-family continuation branch fails honest seam review, or
+        selecting exactly one next bounded primer-family candidate from:
+        - `eprimer3`
+        - `sirna`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit biological-design/seam stop conditions for the chosen method
+      - mapping and shipping one full bounded primer-family slice
+      - rerunning release truth and reassessing the shipped primer-family
+        slice before any further continuation is mapped
