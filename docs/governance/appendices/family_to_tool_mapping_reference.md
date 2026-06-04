@@ -4245,6 +4245,37 @@ The repository should pause and reassess before implementation if:
    taxonomy, or design-eligibility semantics that are not clearly local to
    the method
 
+#### Explicit post-ship reassessment of the bounded `eprimer3` slice
+
+After the bounded `eprimer3` slice ships, the repository should reassess it
+before mapping any further primer-family continuation.
+
+The result is affirmative:
+
+- the shipped `eprimer3` slice stayed bounded, deterministic, and
+  primer-design-local
+- it remained a primer-and-oligo candidate-generation workflow rather than
+  widening into generalized assay-ranking or thermodynamic-optimization
+  platform behavior
+- it kept the normalized table-first candidate rows and typed result surface
+  derived from the same local design path
+- it kept method-local scoring fields bounded to the conservative candidate
+  screen rather than forcing broad product-scoring or eligibility-taxonomy
+  claims beyond the local method slice
+- it did not force a generalized primer-analysis framework or widened
+  ambiguity-resolution policy beyond the bounded local seam
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `110`
+- compared evidence: `110`
+- executable evidence: `0`
+- harvested legacy provenance present: `110`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

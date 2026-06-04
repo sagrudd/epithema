@@ -5383,3 +5383,27 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+312. Reassess the shipped `eprimer3` slice before any further primer-family continuation is mapped.
+    - Complete. Recorded the post-ship `eprimer3` reassessment explicitly.
+    - Recorded explicitly that the shipped `eprimer3` slice stayed bounded,
+      deterministic, and primer-design-local:
+      - it remained a primer-and-oligo candidate-generation workflow rather
+        than widening into generalized assay-ranking or thermodynamic-
+        optimization platform behavior
+      - it kept the normalized table-first candidate rows and typed result
+        surface derived from the same local design path
+      - it kept method-local scoring fields bounded to the conservative
+        candidate screen rather than forcing broad product-scoring or
+        eligibility-taxonomy claims beyond the local method slice
+      - it did not force a generalized primer-analysis framework or widened
+        ambiguity-resolution policy beyond the bounded local seam
+    - Recorded that the governed release-truth surface remained fully green:
+      - shipped methods: `110`
+      - compared evidence: `110`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `110`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
