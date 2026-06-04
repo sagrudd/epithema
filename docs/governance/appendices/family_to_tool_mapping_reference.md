@@ -4412,6 +4412,34 @@ The same guardrails remain:
 - no family-wide continuation claim merely because one bounded `sirna`
   slice ships
 
+#### Full bounded `sirna` implementation tier
+
+With the acceptance criteria and start gate in place, the repository should
+map the full bounded `sirna` implementation tier before any code starts.
+
+The bounded `sirna` tier is now:
+
+1. implement the bounded siRNA-candidate discovery analytical core
+2. expose the deterministic typed result surface for normalized
+   siRNA-candidate reporting
+3. expose `sirna` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   siRNA-candidate rows
+5. re-run the full release-truth surface after shipping `sirna`
+6. reassess the shipped `sirna` slice before any further primer-family
+   continuation is mapped
+
+The same bounded rules remain:
+
+- siRNA-candidate discovery scope only
+- deterministic table-first reporting from the same local
+  candidate-selection path
+- method-local implementation only
+- no generalized RNAi-efficacy prediction platform
+- no broad off-target search or transcriptome-wide ranking framework
+- no primer-family widening unless `sirna` itself forces a real
+  reassessment
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

@@ -5537,3 +5537,24 @@ implementation-program cycle. The near-term priorities are:
       - no widening into command discovery and help-navigation
       - no family-wide continuation claim merely because one bounded `sirna`
         slice ships
+
+320. Map the full bounded `sirna` implementation tier.
+    - Recorded explicitly that the bounded `sirna` tier is now:
+      1. implement the bounded siRNA-candidate discovery analytical core
+      2. expose the deterministic typed result surface for normalized
+         siRNA-candidate reporting
+      3. expose `sirna` through the governed shipped surface
+      4. add canonical analytical fixtures plus compared evidence on
+         normalized siRNA-candidate rows
+      5. re-run the full release-truth surface after shipping `sirna`
+      6. reassess the shipped `sirna` slice before any further primer-family
+         continuation is mapped
+    - Recorded explicitly that the same bounded rules remain:
+      - siRNA-candidate discovery scope only
+      - deterministic table-first reporting from the same local
+        candidate-selection path
+      - method-local implementation only
+      - no generalized RNAi-efficacy prediction platform
+      - no broad off-target search or transcriptome-wide ranking framework
+      - no primer-family widening unless `sirna` itself forces a real
+        reassessment
