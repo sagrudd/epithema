@@ -5472,3 +5472,15 @@ implementation-program cycle. The near-term priorities are:
       checkpoint:
       - command discovery and help-navigation remains the reserve next
         program and is not promoted here
+
+316. Close the untriggered reserve-promotion branch for the final narrowed primer-family continuation step.
+    - Recorded explicitly that the reserve-promotion branch is not taken at
+      this checkpoint because the final narrowed primer-family seam-review
+      gate stayed affirmative
+    - Recorded explicitly that primer and assay-oriented search therefore
+      remains the active planning program
+    - Recorded explicitly that the active bounded continuation pool is now:
+      - `sirna`
+    - Recorded explicitly that command discovery and help-navigation remains
+      the documented reserve next program rather than being promoted by
+      inertia

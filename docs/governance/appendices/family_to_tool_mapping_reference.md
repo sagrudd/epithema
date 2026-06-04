@@ -4322,6 +4322,23 @@ Reserve promotion does not happen at this checkpoint:
 - command discovery and help-navigation remains the reserve next program and
   is not promoted here
 
+#### Explicit closeout of the untriggered reserve-promotion branch for the final narrowed primer-family continuation step
+
+Once the final narrowed primer-family continuation gate stays affirmative
+after the post-`eprimer3` viability decision, the repository should close the
+untriggered reserve-promotion branch explicitly rather than leaving reserve
+handoff as an implied open possibility.
+
+That reserve-promotion branch is not taken at this checkpoint:
+
+- the final narrowed primer-family seam-review gate stayed affirmative
+- primer and assay-oriented search therefore remains the active planning
+  program
+- the active bounded continuation pool is now:
+  - `sirna`
+- command discovery and help-navigation remains the documented reserve next
+  program rather than being promoted by inertia
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
