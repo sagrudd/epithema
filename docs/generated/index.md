@@ -9,6 +9,12 @@ This section contains Markdown pages generated from validated `emboss-rs autodoc
 :caption: Generated Tools
 
 cohort_validation
+governance_alignment
+cohort_health
+comparison_coverage
+full_compared_cohort
+harvest_coverage
+retained_backlog_closure
 tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair
@@ -38,6 +44,7 @@ tools/distmat
 tools/dreg
 tools/edialign
 tools/einverted
+tools/eprimer3
 tools/extractalign
 tools/extractfeat
 tools/extractseq

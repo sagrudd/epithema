@@ -361,6 +361,7 @@ impl EmbossService {
             "octanol" => self.invoke_octanol(request, descriptor),
             "pepinfo" => self.invoke_pepinfo(request, descriptor),
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
+            "eprimer3" => self.invoke_eprimer3(request, descriptor),
             "primersearch" => self.invoke_primersearch(request, descriptor),
             "psiphi" => self.invoke_psiphi(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
@@ -12703,6 +12704,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "octanol" => octanol_help(),
         "pepinfo" => pepinfo_help(),
         "pepwindow" => pepwindow_help(),
+        "eprimer3" => eprimer3_help(),
         "primersearch" => primersearch_help(),
         "psiphi" => psiphi_help(),
         "aaindexextract" => aaindexextract_help(),
@@ -18489,6 +18491,22 @@ mod tests {
         assert!(error
             .to_string()
             .contains("provider-backed sequence acquisition"));
+    }
+
+    #[test]
+    fn dispatches_eprimer3_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("eprimer3").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![eprimer3_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("eprimer3 should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "eprimer3");
     }
 
     #[test]

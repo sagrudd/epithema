@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `109` methods, including:
+of `110` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -42,6 +42,7 @@ of `109` methods, including:
   `hmoment`, `octanol`, `pepinfo`, `density`, `wobble`, `isochore`, and
   `banana`
 - the bounded protein-coordinate torsion-reporting method `psiphi`
+- the bounded primer-and-oligo design method `eprimer3`
 - the bounded primer-pair search method `primersearch`
 
 ### Governed retrieval
@@ -68,12 +69,12 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `109` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `109` shipped methods record harvested legacy provenance
-- full compared cohort: `yes`
+- `1` shipped methods carry executable evidence
+- `110` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `0`
-- weakest evidence family: `none`
+- blocking cohort gaps: `1`
+- weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -94,6 +95,10 @@ change the release gate state above.
 - `syco` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
+- `eprimer3` now ships through the governed surface with a checked-in
+  executable validation stub, curated legacy provenance, and a bounded local
+  candidate-reporting seam that is intentionally still awaiting canonical
+  compared evidence.
 - `primersearch` now ships through the governed surface with a checked-in
   executable validation stub, curated legacy provenance, and canonical
   compared primer-hit fixture.
@@ -106,10 +111,12 @@ change the release gate state above.
 - `0` retained governance methods remain unshipped
 - `1` shipped methods remain below compared evidence
 
-This means the shipped retained cohort remains fully closed and the shipped
-governed cohort is back at the fully green release gate. The bounded
-`primersearch` slice now ships with curated provenance, a runnable governed
-validation seam, and canonical compared primer-hit evidence.
+This means the shipped retained cohort remains fully closed while the shipped
+governed cohort is in an honest executable-only interim state for one bounded
+primer-family slice. The new `eprimer3` shipment now carries curated
+provenance and a runnable governed validation seam, but the full-compared
+release gate does not go green again until its canonical compared evidence
+lands.
 
 ### First-class R story
 

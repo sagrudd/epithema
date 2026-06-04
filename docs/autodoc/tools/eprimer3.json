@@ -1,0 +1,108 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "eprimer3-v1",
+  "tool": {
+    "name": "eprimer3",
+    "family": "primer_tools",
+    "summary": "Report deterministic bounded primer-and-oligo design candidates against one local nucleotide input",
+    "legacy_names": [
+      "eprimer3"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`eprimer3` is the bounded primer-and-oligo design member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized assay-ranking workflow."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one local nucleotide sequence file. Provider-backed acquisition, inline literals, generalized parameter tuning, and non-nucleotide inputs remain outside the bounded v1 seam. The shipped surface uses one governed default design-parameter set carried through the same computation path."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable normalized table with record identifier, candidate identifier, strand/orientation, one-based inclusive oligo coordinates, oligo length and sequence, canonical and ambiguous symbol counts, GC fraction, conservative melting estimate, and 3'-terminal GC count. All fields come from the same deterministic local candidate-generation path."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This bounded release keeps one historical `eprimer3` user need in scope while modernizing around deterministic local candidate reporting instead of broad thermodynamic optimization or generalized assay-ranking behavior. The governed shipment surface records curated legacy provenance now and will add canonical compared evidence in the follow-on evidence task."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a repository-managed fixture for deterministic executable validation. Canonical compared analytical evidence is not yet part of this task boundary."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `eprimer3` seam is intentionally narrow. It does not perform generalized assay ranking, broad thermodynamic optimization, or family-wide primer-analysis orchestration, and it does not widen into `sirna` merely because this bounded primer-and-oligo design slice ships."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "eprimer3_targets_fixture",
+      "label": "Eprimer3 nucleotide target fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta"
+      },
+      "description": "Repository-managed nucleotide targets used for deterministic bounded eprimer3 validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "eprimer3_candidates_example",
+      "title": "Generate deterministic bounded primer candidates from one local nucleotide input",
+      "description": "Executes the bounded eprimer3 seam against the committed nucleotide fixture to emit stable normalized candidate rows.",
+      "artifact_ids": [
+        "eprimer3_targets_fixture"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "eprimer3_table",
+          "label": "Bounded eprimer3 analytical table",
+          "description": "Stable normalized primer-and-oligo candidate rows with strand, interval, sequence, GC fraction, conservative Tm, and 3'-terminal GC count."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS eprimer3 application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/eprimer3.acd",
+        "invocation": "eprimer3 -sequence eprimer3_targets.fasta -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS eprimer3 application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/eprimer3.acd",
+        "invocation": "eprimer3 -sequence eprimer3_targets.fasta -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "eprimer3_candidates_example"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

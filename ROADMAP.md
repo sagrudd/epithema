@@ -5339,3 +5339,19 @@ implementation-program cycle. The near-term priorities are:
       - no CLI routing yet
       - no autodoc or generated validation surface yet
       - no canonical fixtures or compared evidence yet
+
+309. Expose `eprimer3` through the governed shipped surface.
+    - Wired `eprimer3` through the governed registry, service dispatch, CLI
+      routing, curated autodoc, generated tool docs, validation stub, and
+      the generated cohort/report surface.
+    - Current governed interim state after this task:
+      - shipped methods: `110`
+      - compared evidence: `109`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `110`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`
+    - The expected `truth-check` gate remains red at this boundary because
+      `eprimer3` is still below compared evidence until Task `310` closes
+      the canonical compared-evidence slice.
