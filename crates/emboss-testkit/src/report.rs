@@ -945,7 +945,7 @@ mod tests {
     fn shipped_cohort_report_surfaces_visible_gaps() {
         let report = derive_shipped_cohort_validation_report(repo_root())
             .expect("cohort report should derive");
-        assert_eq!(report.summary.gapped_method_count, 1);
+        assert_eq!(report.summary.gapped_method_count, 0);
         let gap_map = report
             .methods
             .iter()
@@ -972,17 +972,11 @@ mod tests {
         assert!(primersearch.unresolved_gaps.is_empty());
 
         let eprimer3 = gap_map.get("eprimer3").expect("eprimer3 should be present");
-        assert_eq!(
-            eprimer3.evidence_level,
-            CohortEvidenceLevel::ExecutableEvidence
-        );
+        assert_eq!(eprimer3.evidence_level, CohortEvidenceLevel::ComparedEvidence);
         assert!(eprimer3.harvested_legacy_evidence_present);
         assert!(eprimer3.executable_validation_present);
-        assert!(!eprimer3.compared_validation_present);
-        assert_eq!(eprimer3.unresolved_gaps.len(), 1);
-        assert!(eprimer3.unresolved_gaps.iter().any(|gap| {
-            gap.code == crate::report::CohortGapCode::MissingComparedEvidence
-        }));
+        assert!(eprimer3.compared_validation_present);
+        assert!(eprimer3.unresolved_gaps.is_empty());
 
         let charge = gap_map.get("charge").expect("charge should be present");
         assert_eq!(charge.evidence_level, CohortEvidenceLevel::ComparedEvidence);

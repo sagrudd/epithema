@@ -34,11 +34,11 @@ The result is a stable normalized table with record identifier, candidate identi
 
 ## Legacy Context
 
-This bounded release keeps one historical `eprimer3` user need in scope while modernizing around deterministic local candidate reporting instead of broad thermodynamic optimization or generalized assay-ranking behavior. The governed shipment surface records curated legacy provenance now and will add canonical compared evidence in the follow-on evidence task.
+This bounded release keeps one historical `eprimer3` user need in scope while modernizing around deterministic local candidate reporting instead of broad thermodynamic optimization or generalized assay-ranking behavior. The governed validation seam now includes a canonical compared fixture covering stable normalized candidate rows for the bounded local nucleotide-input path.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a repository-managed fixture for deterministic executable validation. Canonical compared analytical evidence is not yet part of this task boundary.
+This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows.
 
 ## Caveats
 
@@ -78,5 +78,5 @@ The v1 `eprimer3` seam is intentionally narrow. It does not perform generalized 
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `eprimer3_candidates_example`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes

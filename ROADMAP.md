@@ -5355,3 +5355,17 @@ implementation-program cycle. The near-term priorities are:
     - The expected `truth-check` gate remains red at this boundary because
       `eprimer3` is still below compared evidence until Task `310` closes
       the canonical compared-evidence slice.
+
+310. Close the `eprimer3` compared-evidence slice.
+    - Complete. Added the canonical bounded candidate-table fixture, wired
+      `eprimer3` into the acceptance-anchor harness, tightened the curated
+      autodoc contract to the bounded compared example, and refreshed the
+      generated validation/report surface back to the fully green state.
+    - Restored the generated/report surface to:
+      - shipped methods: `110`
+      - compared evidence: `110`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `110`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `release_truth_current: true`

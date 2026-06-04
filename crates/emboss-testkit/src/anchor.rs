@@ -132,6 +132,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "psiphi -infile psiphi_backbone.txt -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "eprimer3",
+        autodoc_contract: "docs/autodoc/tools/eprimer3.json",
+        example_id: "eprimer3_candidates_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/eprimer3_generate_deterministic_bounded_primer_candidates.tsv",
+        legacy_source: "EMBOSS eprimer3 application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/eprimer3.acd",
+        legacy_invocation: "eprimer3 -sequence eprimer3_targets.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "primersearch",
         autodoc_contract: "docs/autodoc/tools/primersearch.json",
         example_id: "primersearch_hits_example",
@@ -1385,6 +1394,12 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
         "psiphi" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/psiphi_backbone.txt")
+                .display()
+                .to_string(),
+        ],
+        "eprimer3" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta")
                 .display()
                 .to_string(),
         ],

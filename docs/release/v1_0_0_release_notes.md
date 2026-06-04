@@ -68,13 +68,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `109` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `110` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `110` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -96,9 +96,8 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `eprimer3` now ships through the governed surface with a checked-in
-  executable validation stub, curated legacy provenance, and a bounded local
-  candidate-reporting seam that is intentionally still awaiting canonical
-  compared evidence.
+  canonical compared analytical fixture, curated legacy provenance, and a
+  bounded local candidate-reporting seam.
 - `primersearch` now ships through the governed surface with a checked-in
   executable validation stub, curated legacy provenance, and canonical
   compared primer-hit fixture.
@@ -109,14 +108,12 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `0` retained governance methods remain unshipped
-- `1` shipped methods remain below compared evidence
+- `0` shipped methods remain below compared evidence
 
-This means the shipped retained cohort remains fully closed while the shipped
-governed cohort is in an honest executable-only interim state for one bounded
-primer-family slice. The new `eprimer3` shipment now carries curated
-provenance and a runnable governed validation seam, but the full-compared
-release gate does not go green again until its canonical compared evidence
-lands.
+This means the shipped retained cohort remains fully closed and the shipped
+governed cohort is back at the fully green release gate. The bounded
+`eprimer3` slice now ships with curated provenance, a runnable governed
+validation seam, and canonical compared candidate-table evidence.
 
 ### First-class R story
 

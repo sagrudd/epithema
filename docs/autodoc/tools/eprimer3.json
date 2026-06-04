@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This bounded release keeps one historical `eprimer3` user need in scope while modernizing around deterministic local candidate reporting instead of broad thermodynamic optimization or generalized assay-ranking behavior. The governed shipment surface records curated legacy provenance now and will add canonical compared evidence in the follow-on evidence task."
+      "content": "This bounded release keeps one historical `eprimer3` user need in scope while modernizing around deterministic local candidate reporting instead of broad thermodynamic optimization or generalized assay-ranking behavior. The governed validation seam now includes a canonical compared fixture covering stable normalized candidate rows for the bounded local nucleotide-input path."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a repository-managed fixture for deterministic executable validation. Canonical compared analytical evidence is not yet part of this task boundary."
+      "content": "This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows."
     },
     {
       "id": "caveats",
@@ -102,7 +102,7 @@
     "required_example_ids": [
       "eprimer3_candidates_example"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

@@ -117,13 +117,13 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `110`
-- Compared-evidence methods: `109`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `110`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `110`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `1`
-- Weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
+- Blocking cohort gaps: `0`
+- Weakest evidence family: `none`
 - Retained backlog still unshipped: `0`
 
 ### Complete / Ready
@@ -226,7 +226,7 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `109/110` shipped methods at compared evidence with `1`
+  and now records `110/110` shipped methods at compared evidence with `0`
   methods below compared evidence.
 
 ### Harvest coverage reporting
@@ -287,10 +287,9 @@ Current generated release-truth markers:
 
 ### Missing validation depth
 
-- `1` shipped methods still have blocking evidence debt.
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
-- The remaining evidence-closing blocker is the executable-only `eprimer3`
-  slice, which still lacks canonical compared evidence.
+- There is no remaining evidence-closing blocker at this checkpoint.
 
 ### Legacy harvesting is complete
 
@@ -300,11 +299,10 @@ Current generated release-truth markers:
 
 ### Comparison-based acceptance is complete
 
-- The cohort report now records `109` methods with compared evidence and `1`
+- The cohort report now records `110` methods with compared evidence and `0`
   shipped methods at executable evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is intentionally amber at this checkpoint until `eprimer3`
-  closes its compared-evidence slice.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green at this checkpoint.
 
 ### Plotting limitations
 
@@ -331,8 +329,8 @@ Current generated release-truth markers:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `110`
-- Compared-evidence methods: `109`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `110`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `110`
 - Retained backlog still unshipped: `0`
 
