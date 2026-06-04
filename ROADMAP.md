@@ -5317,3 +5317,25 @@ implementation-program cycle. The near-term priorities are:
       - invalid oligo-length bounds
       - invalid GC or Tm bounds
       - sequences shorter than the requested minimum oligo length
+
+308. Expose the deterministic typed result surface for normalized `eprimer3` candidate reporting.
+    - Added the bounded `eprimer3` result surface in:
+      - `crates/emboss-tools/src/primer_tools/eprimer3.rs`
+      - `crates/emboss-tools/src/primer_tools/mod.rs`
+      - `crates/emboss-service/src/service.rs`
+      - `crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta`
+    - Landed a method-local bounded tool path over the Task 307 analytical
+      core with:
+      - one local nucleotide input only
+      - deterministic default design parameters carried through the same
+        result path
+      - stable table-first candidate rows for record, candidate identity,
+        strand, interval, sequence, GC fraction, Tm, and 3'-terminal GC
+        count
+      - a public direct `EmbossService::invoke_eprimer3(...)` seam that emits
+        `ResultPayload::TableReport`
+    - Intentionally stopped short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no autodoc or generated validation surface yet
+      - no canonical fixtures or compared evidence yet

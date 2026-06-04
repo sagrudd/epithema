@@ -63,7 +63,8 @@ use emboss_tools::pattern_tools::{
     WordfinderParams, WordmatchParams,
 };
 use emboss_tools::primer_tools::{
-    primersearch_help, run_primersearch, PrimersearchPairInput, PrimersearchParams,
+    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, eprimer3_help, primersearch_help,
+    run_eprimer3, run_primersearch,
 };
 use emboss_tools::protein_coordinates::{psiphi_help, run_psiphi, PsiphiInput, PsiphiParams};
 use emboss_tools::protein_plots::{
@@ -2016,6 +2017,104 @@ impl EmbossService {
                 .with_line(format!("Primer pairs: {}", outcome.primer_pair_count))
                 .with_line(format!("Target records: {}", outcome.record_count))
                 .with_line(format!("Hits: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    /// Invokes the bounded local `eprimer3` result surface without shipping it.
+    pub fn invoke_eprimer3(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, eprimer3_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("eprimer3", eprimer3_help()))?;
+        let (input, input_provenance, diagnostics) = self.resolve_local_sequence_input(&input)?;
+        let outcome = run_eprimer3(Eprimer3Params { input })?;
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.record_id.clone(),
+                    row.candidate_id.clone(),
+                    row.strand.clone(),
+                    row.oligo_start.to_string(),
+                    row.oligo_end.to_string(),
+                    row.oligo_length.to_string(),
+                    row.oligo_sequence.clone(),
+                    row.canonical_symbols.to_string(),
+                    row.ambiguous_symbols.to_string(),
+                    format!("{:.4}", row.gc_fraction),
+                    format!("{:.2}", row.tm_celsius),
+                    row.three_prime_gc_count.to_string(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported bounded primer-and-oligo candidates across {} target records",
+                outcome.record_count
+            ),
+            diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "candidate_id".to_owned(),
+                    "strand".to_owned(),
+                    "oligo_start".to_owned(),
+                    "oligo_end".to_owned(),
+                    "oligo_length".to_owned(),
+                    "oligo_sequence".to_owned(),
+                    "canonical_symbols".to_owned(),
+                    "ambiguous_symbols".to_owned(),
+                    "gc_fraction".to_owned(),
+                    "tm_celsius".to_owned(),
+                    "three_prime_gc_count".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Primer-and-oligo candidates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Design parameters: oligo_length={}..={} step={}",
+                    outcome.parameters.min_oligo_length,
+                    outcome.parameters.max_oligo_length,
+                    outcome.parameters.step
+                ))
+                .with_line(format!(
+                    "Bounds: gc_fraction={:.2}..={:.2} tm_celsius={:.1}..={:.1}",
+                    outcome.parameters.min_gc_fraction,
+                    outcome.parameters.max_gc_fraction,
+                    outcome.parameters.min_tm_celsius,
+                    outcome.parameters.max_tm_celsius
+                ))
+                .with_line(
+                    "Design scope: deterministic local candidate generation only".to_owned(),
+                )
+                .with_line(format!("Target records: {}", outcome.record_count))
+                .with_line(format!("Candidates: {}", outcome.rows.len())),
             report.clone(),
         );
 
@@ -12895,6 +12994,11 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/primersearch_targets.fasta")
     }
 
+    fn eprimer3_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/eprimer3_targets.fasta")
+    }
+
     fn primersearch_pairs_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/primersearch_pairs.tsv")
@@ -18319,6 +18423,72 @@ mod tests {
             .expect("primersearch should dispatch through the governed service");
 
         assert_eq!(response.tool.as_str(), "primersearch");
+    }
+
+    #[test]
+    fn executes_eprimer3_against_local_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("eprimer3").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![eprimer3_fixture().display().to_string()]);
+
+        let response = service
+            .invoke_eprimer3(request, emboss_tools::primer_tools::EPRIMER3_DESCRIPTOR)
+            .expect("eprimer3 should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "candidate_id",
+                        "strand",
+                        "oligo_start",
+                        "oligo_end",
+                        "oligo_length",
+                        "oligo_sequence",
+                        "canonical_symbols",
+                        "ambiguous_symbols",
+                        "gc_fraction",
+                        "tm_celsius",
+                        "three_prime_gc_count",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 24);
+                assert_eq!(table.rows[0][0], "ep3targetA");
+                assert_eq!(table.rows[0][1], "ep3targetA:forward:8-26");
+                assert_eq!(table.rows[0][2], "forward");
+                assert_eq!(table.rows[1][1], "ep3targetA:reverse:8-26");
+                assert_eq!(table.rows[1][2], "reverse");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta"));
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Design scope: deterministic local candidate generation only"
+        );
+    }
+
+    #[test]
+    fn rejects_provider_backed_input_for_eprimer3() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("eprimer3").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["AB000263".to_owned()]);
+
+        let error = service
+            .invoke_eprimer3(request, emboss_tools::primer_tools::EPRIMER3_DESCRIPTOR)
+            .expect_err("provider-backed inputs should fail");
+        assert!(error
+            .to_string()
+            .contains("provider-backed sequence acquisition"));
     }
 
     #[test]
