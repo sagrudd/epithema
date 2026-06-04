@@ -4127,6 +4127,29 @@ The active bounded continuation pool remains:
 Command discovery and help-navigation remains the documented reserve next
 program rather than being promoted by inertia.
 
+#### Selection of the next bounded primer-family continuation candidate
+
+Once the narrowed primer-family continuation gate stays affirmative, the
+repository should choose exactly one bounded lead candidate from the remaining
+active pool rather than keeping multiple implementation branches live at once.
+
+The selected bounded continuation candidate is:
+
+- `eprimer3`
+
+`eprimer3` leads the remaining active pool because:
+
+- it stays closer to the core primer-and-oligo design seam than `sirna`
+- it is still easier to bound as a local primer-design modernization than a
+  broader siRNA-selection workflow with stronger biological-efficacy policy
+  pressure
+- it keeps the active family continuation inside primer/oligo design rather
+  than immediately widening into RNA-interference-specific selection semantics
+
+The non-selected bounded family member remains documented but inactive:
+
+- `sirna`
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

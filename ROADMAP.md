@@ -5209,3 +5209,18 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that command discovery and help-navigation remains
       the documented reserve next program rather than being promoted by
       inertia
+
+302. Select the next bounded primer-family continuation candidate.
+    - Recorded explicitly that the selected bounded continuation candidate is:
+      - `eprimer3`
+    - Recorded explicitly why `eprimer3` leads the remaining active pool:
+      - it stays closer to the core primer-and-oligo design seam than `sirna`
+      - it is still easier to bound as a local primer-design modernization
+        than a broader siRNA-selection workflow with stronger biological-
+        efficacy policy pressure
+      - it keeps the active family continuation inside primer/oligo design
+        rather than immediately widening into RNA-interference-specific
+        selection semantics
+    - Recorded explicitly that the non-selected bounded family member remains
+      documented but inactive:
+      - `sirna`
