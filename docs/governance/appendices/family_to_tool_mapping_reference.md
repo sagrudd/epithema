@@ -4440,6 +4440,23 @@ The same bounded rules remain:
 - no primer-family widening unless `sirna` itself forces a real
   reassessment
 
+#### Explicit biological-design/seam stop conditions for `sirna`
+
+After mapping the full bounded `sirna` implementation tier, the repository
+should make the pre-code stop conditions explicit before implementation.
+
+The repository should pause and reassess before implementation if:
+
+1. `sirna` cannot remain table-first with a deterministic typed result
+   surface derived from the same local candidate-selection path
+2. `sirna` requires generalized RNAi-efficacy prediction, broad off-target
+   search policy, or other non-local biological-design behavior
+3. `sirna` cannot remain method-associated and instead demands a generalized
+   small-RNA analysis framework before one shipped slice closes
+4. `sirna` forces broad transcript-eligibility policy, candidate-ranking
+   taxonomy, or duplex-selection semantics that are not clearly local to the
+   method
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

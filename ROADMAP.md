@@ -5558,3 +5558,18 @@ implementation-program cycle. The near-term priorities are:
       - no broad off-target search or transcriptome-wide ranking framework
       - no primer-family widening unless `sirna` itself forces a real
         reassessment
+
+321. Capture the explicit biological-design/seam stop conditions for `sirna`.
+    - Recorded explicitly that the repository should pause and reassess before
+      implementation if:
+      1. `sirna` cannot remain table-first with a deterministic typed result
+         surface derived from the same local candidate-selection path
+      2. `sirna` requires generalized RNAi-efficacy prediction, broad
+         off-target search policy, or other non-local biological-design
+         behavior
+      3. `sirna` cannot remain method-associated and instead demands a
+         generalized small-RNA analysis framework before one shipped slice
+         closes
+      4. `sirna` forces broad transcript-eligibility policy, candidate-
+         ranking taxonomy, or duplex-selection semantics that are not clearly
+         local to the method
