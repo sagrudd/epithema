@@ -5592,6 +5592,31 @@ Replace scattered discovery/help commands with a coherent `emboss-rs` discovery 
 - `tfm` — **Omit** — Display full documentation for an application
 - `wossname` — **Rework** — Find programs by keywords in their short description
 
+### Activation of command discovery and help-navigation as the next active planning program
+
+After the bounded primer-family branch closes through its final shipped slice,
+the next planning program should be made explicit rather than left implicit.
+
+That activation is now:
+
+- primer and assay-oriented search is no longer the active continuation branch
+- command discovery and help-navigation now becomes the next active planning
+  program
+- external database preparation helpers remains the reserve next program and
+  is not promoted by this step
+
+The active bounded command-discovery subset is now narrowed to:
+
+- `embossdata`
+- `seealso`
+- `wossname`
+
+This activation remains bounded:
+
+- it does not imply broad ontology or semantic-navigation activation
+- it does not reopen individually omitted discovery helpers
+- it does not promote the reserve external-database program by inertia
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

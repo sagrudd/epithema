@@ -5756,3 +5756,21 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+330. Activate command discovery and help-navigation as the next active planning program.
+    - Recorded explicitly that:
+      - primer and assay-oriented search is no longer the active continuation
+        branch
+      - command discovery and help-navigation now becomes the next active
+        planning program
+      - external database preparation helpers remains the reserve next
+        program and is not promoted by this step
+    - Recorded explicitly that the active bounded command-discovery subset is
+      now narrowed to:
+      - `embossdata`
+      - `seealso`
+      - `wossname`
+    - Recorded explicitly that this activation remains bounded:
+      - it does not imply broad ontology or semantic-navigation activation
+      - it does not reopen individually omitted discovery helpers
+      - it does not promote the reserve external-database program by inertia
