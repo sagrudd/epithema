@@ -5729,3 +5729,30 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded command-discovery slice
       - rerunning release truth and reassessing the shipped
         command-discovery slice before any further continuation is mapped
+
+329. Confirm that the bounded primer and assay-oriented search rework program has now closed through its final selected candidate.
+    - Recorded explicitly that the bounded primer and assay-oriented search
+      rework program closed cleanly through:
+      - `primersearch`
+      - `eprimer3`
+      - `sirna`
+    - Recorded explicitly why that closeout is now honest:
+      - `primersearch` has shipped, closed compared evidence, rerun release
+        truth, and passed post-ship reassessment
+      - `eprimer3` has shipped, closed compared evidence, rerun release truth,
+        and passed post-ship reassessment
+      - `sirna` has shipped, closed compared evidence, rerun release truth,
+        and passed post-ship reassessment
+      - no comparably bounded primer-family continuation candidate remains
+        active after the shipped `sirna` reassessment
+    - Recorded explicitly that primer and assay-oriented search should no
+      longer be treated as the default next planning branch.
+    - The governed release-truth surface remained fully green:
+      - shipped methods: `111`
+      - compared evidence: `111`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
