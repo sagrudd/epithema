@@ -5641,6 +5641,23 @@ Reserve promotion does not happen at this checkpoint:
 - external database preparation helpers remains the reserve next program and
   is not promoted here
 
+### Explicit closeout of the untriggered reserve-promotion branch after command-discovery viability
+
+Because the narrowed command-discovery seam-review gate stays affirmative
+after the viability decision, the repository should make the branch outcome
+explicit rather than leaving reserve-program promotion ambiguous.
+
+That branch is not taken at this checkpoint:
+
+- command discovery and help-navigation therefore remains the active planning
+  program
+- the active bounded continuation pool remains:
+  - `embossdata`
+  - `seealso`
+  - `wossname`
+- external database preparation helpers remains the documented reserve next
+  program rather than being promoted by inertia
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
