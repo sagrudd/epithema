@@ -5516,3 +5516,24 @@ implementation-program cycle. The near-term priorities are:
       - no broad off-target search or transcriptome-wide ranking framework
       - no widening into command discovery and help-navigation
       - no family-wide continuation claim merely because `sirna` ships
+
+319. Capture the exact start conditions for the first `sirna` implementation patch.
+    - Recorded explicitly that the start gate now requires:
+      - primer and assay-oriented search to remain the active planning
+        program
+      - `sirna` to remain the single selected bounded continuation candidate
+      - the active bounded primer-family subset to remain limited to:
+        - `sirna`
+        - `primersearch`
+        - `eprimer3`
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `sirna` plus the smallest support
+        needed for deterministic siRNA candidate generation, normalized
+        table-first reporting, and governed docs/validation plumbing
+      - the patch to land as a full bounded slice rather than a half-start
+    - Recorded explicitly that the same guardrails remain:
+      - no generalized RNAi-efficacy prediction platform
+      - no broad off-target search or transcriptome-wide ranking framework
+      - no widening into command discovery and help-navigation
+      - no family-wide continuation claim merely because one bounded `sirna`
+        slice ships

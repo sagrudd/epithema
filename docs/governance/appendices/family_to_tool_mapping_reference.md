@@ -4385,6 +4385,33 @@ The non-goals remain:
 - no widening into command discovery and help-navigation
 - no family-wide continuation claim merely because `sirna` ships
 
+#### Exact start conditions for the first `sirna` implementation patch
+
+Before any code starts, the repository should make the start gate for the
+first bounded `sirna` patch explicit.
+
+That start gate now requires:
+
+- primer and assay-oriented search to remain the active planning program
+- `sirna` to remain the single selected bounded continuation candidate
+- the active bounded primer-family subset to remain limited to:
+  - `sirna`
+  - `primersearch`
+  - `eprimer3`
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `sirna` plus the smallest support needed
+  for deterministic siRNA candidate generation, normalized table-first
+  reporting, and governed docs/validation plumbing
+- the patch to land as a full bounded slice rather than a half-start
+
+The same guardrails remain:
+
+- no generalized RNAi-efficacy prediction platform
+- no broad off-target search or transcriptome-wide ranking framework
+- no widening into command discovery and help-navigation
+- no family-wide continuation claim merely because one bounded `sirna`
+  slice ships
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
