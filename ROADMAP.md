@@ -5407,3 +5407,39 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+313. Extend the roadmap from the actual post-`eprimer3` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `110`
+      - compared evidence: `110`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `110`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the second bounded primer-family continuation slice closed cleanly
+        through `eprimer3`
+      - primer and assay-oriented search remains the active planning program,
+        but it now has to be re-based onto the final narrowed candidate pool
+        instead of assuming automatic continuation
+      - command discovery and help-navigation remains the reserve next program
+        and should not be promoted unless the final narrowed primer-family
+        continuation branch fails honest seam review
+    - The next mapped tier is now Tasks `314` through `327`, centered on:
+      - rebasing the remaining bounded primer-family continuation pool onto the
+        actual post-`eprimer3` state
+      - deciding whether another bounded primer-family continuation candidate
+        still exists after the second shipped slice
+      - either promoting command discovery and help-navigation if the final
+        narrowed primer-family continuation branch fails honest seam review, or
+        selecting exactly one next bounded primer-family candidate:
+        - `sirna`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit biological-design/seam stop conditions for the chosen method
+      - mapping and shipping one full bounded primer-family slice
+      - rerunning release truth and reassessing the shipped primer-family
+        slice before any further continuation is mapped
