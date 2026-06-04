@@ -4060,6 +4060,27 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Post-`primersearch` bounded continuation inventory
+
+After the shipped `primersearch` reassessment closes, the repository should
+rebase the remaining primer-family continuation pool onto the actual shipped
+state before deciding whether another bounded continuation candidate still
+exists.
+
+The first bounded primer-family continuation slice is now treated as closed:
+
+- shipped bounded primer-family slice:
+  - `primersearch`
+
+The remaining bounded primer-family continuation pool is now:
+
+- `eprimer3`
+- `sirna`
+
+This checkpoint is inventory only. It does not yet decide whether both
+remaining methods still pass honest seam review strongly enough to remain
+active continuation candidates.
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
