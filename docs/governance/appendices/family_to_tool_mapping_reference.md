@@ -4359,6 +4359,32 @@ because:
 - no other primer-family method remains comparably bounded without reopening
   already-shipped slices or reviving omitted methods by inertia
 
+#### Explicit `sirna` method-level acceptance criteria
+
+With `sirna` selected as the bounded continuation candidate, the repository
+should make the method-specific acceptance criteria explicit before
+implementation.
+
+The governed criteria now make `sirna` concrete before code starts:
+
+- bounded siRNA-candidate discovery workflow only
+- deterministic table-first output derived from the same local
+  candidate-selection path
+- explicit reporting of candidate duplex identity, strand/orientation,
+  genomic interval, and method-local scoring or filter fields from the same
+  computation path
+- canonical analytical fixtures and compared evidence on normalized
+  siRNA-candidate rows
+- honest handling of candidate length policy, ambiguity rules, compositional
+  filters, and eligibility gating
+
+The non-goals remain:
+
+- no generalized RNAi-efficacy prediction platform
+- no broad off-target search or transcriptome-wide ranking framework
+- no widening into command discovery and help-navigation
+- no family-wide continuation claim merely because `sirna` ships
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

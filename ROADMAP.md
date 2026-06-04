@@ -5497,3 +5497,22 @@ implementation-program cycle. The near-term priorities are:
       - no other primer-family method remains comparably bounded without
         reopening already-shipped slices or reviving omitted methods by
         inertia
+
+318. Capture explicit `sirna` method-level acceptance criteria before code starts.
+    - Recorded explicitly that the governed criteria now make `sirna`
+      concrete before implementation:
+      - bounded siRNA-candidate discovery workflow only
+      - deterministic table-first output derived from the same local
+        candidate-selection path
+      - explicit reporting of candidate duplex identity, strand/orientation,
+        genomic interval, and method-local scoring or filter fields from the
+        same computation path
+      - canonical analytical fixtures and compared evidence on normalized
+        siRNA-candidate rows
+      - honest handling of candidate length policy, ambiguity rules,
+        compositional filters, and eligibility gating
+    - Recorded explicitly that the non-goals remain:
+      - no generalized RNAi-efficacy prediction platform
+      - no broad off-target search or transcriptome-wide ranking framework
+      - no widening into command discovery and help-navigation
+      - no family-wide continuation claim merely because `sirna` ships
