@@ -5573,3 +5573,21 @@ implementation-program cycle. The near-term priorities are:
       4. `sirna` forces broad transcript-eligibility policy, candidate-
          ranking taxonomy, or duplex-selection semantics that are not clearly
          local to the method
+
+322. Implement the bounded siRNA-candidate discovery analytical core for `sirna`.
+    - Added the bounded `sirna` analytical core in
+      `crates/emboss-core/src/sirna.rs` and exported it through
+      `crates/emboss-core/src/lib.rs`.
+    - Landed a deterministic local candidate-generation path over one
+      nucleotide sequence with:
+      - explicit bounded design parameters for duplex length, step size, GC
+        fraction, seed A/U content, and homopolymer limits
+      - stable forward candidate rows per accepted target window
+      - method-local scoring and filter fields limited to GC fraction, guide
+        5' base, guide-seed A/U count, and maximum homopolymer run
+      - honest ambiguity handling by skipping non-canonical windows rather
+        than inferring candidates through them
+    - Added focused bounded validation for:
+      - non-nucleotide input
+      - invalid duplex length
+      - invalid seed A/U minimum

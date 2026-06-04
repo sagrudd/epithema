@@ -46,6 +46,7 @@ pub mod protein_psiphi;
 pub mod residue_properties;
 pub mod revseq;
 pub mod sequence;
+pub mod sirna;
 pub mod strand;
 pub mod translation;
 
@@ -145,6 +146,7 @@ pub use revseq::{
     transform_sequence_record,
 };
 pub use sequence::SequenceRecord;
+pub use sirna::{SirnaCandidate, SirnaError, SirnaParameters, SirnaProfile, sirna_profile};
 pub use strand::Strand;
 pub use translation::{
     TranslationError, ambiguous_codon, backtranslate_ambiguous, backtranslate_representative,
