@@ -4081,6 +4081,32 @@ This checkpoint is inventory only. It does not yet decide whether both
 remaining methods still pass honest seam review strongly enough to remain
 active continuation candidates.
 
+#### Post-`primersearch` viability decision for the narrowed primer-family branch
+
+After the shipped `primersearch` reassessment closes and the remaining bounded
+primer-family continuation pool is inventoried, the repository should decide
+explicitly whether another bounded continuation candidate still exists or
+whether the active primer-family branch should stop and hand off to the
+reserve next program.
+
+That decision is affirmative at this checkpoint:
+
+- another bounded primer-family continuation candidate still exists after
+  `primersearch`
+- the no-candidate branch is not taken here
+- primer and assay-oriented search therefore remains the active planning
+  program
+
+The currently viable bounded continuation pool remains:
+
+- `eprimer3`
+- `sirna`
+
+Reserve promotion does not happen at this checkpoint:
+
+- command discovery and help-navigation remains the reserve next program and
+  is not promoted here
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

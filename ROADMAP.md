@@ -5180,3 +5180,19 @@ implementation-program cycle. The near-term priorities are:
       - it does not yet decide whether both remaining methods still pass
         honest seam review strongly enough to remain active continuation
         candidates
+
+300. Decide whether another bounded primer-family continuation candidate still exists after `primersearch`.
+    - Recorded explicitly that the decision is affirmative:
+      - another bounded primer-family continuation candidate still exists
+        after `primersearch`
+      - the no-candidate branch is not taken at this checkpoint
+      - primer and assay-oriented search therefore remains the active
+        planning program
+    - Recorded explicitly that the currently viable bounded continuation pool
+      remains:
+      - `eprimer3`
+      - `sirna`
+    - Recorded explicitly that reserve promotion does not happen at this
+      checkpoint:
+      - command discovery and help-navigation remains the reserve next
+        program and is not promoted here
