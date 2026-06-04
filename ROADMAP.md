@@ -5647,3 +5647,19 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+326. Re-run the full release-truth surface after shipping `sirna`.
+    - Re-ran the governed release-truth surface after the bounded `sirna`
+      evidence closure and recorded the observed clean state.
+    - `python3 scripts/release_metadata.py truth-check` passed.
+    - `make docs` passed.
+    - `git diff --check` passed.
+    - The observed governed state remained fully green:
+      - shipped methods: `111`
+      - compared evidence: `111`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
