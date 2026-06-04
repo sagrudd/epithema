@@ -4457,6 +4457,38 @@ The repository should pause and reassess before implementation if:
    taxonomy, or duplex-selection semantics that are not clearly local to the
    method
 
+#### Post-ship `sirna` reassessment
+
+After the bounded `sirna` slice closes its compared-evidence work and reruns
+release truth, the repository should reassess whether the shipped method stayed
+bounded enough to justify further continuation planning inside the same family.
+
+That reassessment is affirmative:
+
+- the shipped `sirna` slice stayed bounded, deterministic, and
+  siRNA-discovery-local
+- it remained a bounded siRNA-candidate discovery workflow rather than
+  widening into generalized RNAi-efficacy prediction or off-target ranking
+  behavior
+- it kept the normalized table-first candidate rows and typed result surface
+  derived from the same local candidate-selection path
+- it kept method-local scoring and filter fields bounded to duplex
+  composition and homopolymer screening rather than forcing broad transcript-
+  eligibility or candidate-ranking policy beyond the local method slice
+- it did not force a generalized small-RNA analysis framework or widened
+  duplex-selection semantics beyond the bounded local seam
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `111`
+- compared evidence: `111`
+- executable evidence: `0`
+- harvested legacy provenance present: `111`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

@@ -5663,3 +5663,28 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+327. Reassess the shipped `sirna` slice before any further primer-family continuation is mapped.
+    - Recorded the post-ship `sirna` reassessment explicitly.
+    - Recorded explicitly that the shipped `sirna` slice stayed bounded,
+      deterministic, and siRNA-discovery-local:
+      - it remained a bounded siRNA-candidate discovery workflow rather than
+        widening into generalized RNAi-efficacy prediction or off-target
+        ranking behavior
+      - it kept the normalized table-first candidate rows and typed result
+        surface derived from the same local candidate-selection path
+      - it kept method-local scoring and filter fields bounded to duplex
+        composition and homopolymer screening rather than forcing broad
+        transcript-eligibility or candidate-ranking policy beyond the local
+        method slice
+      - it did not force a generalized small-RNA analysis framework or widened
+        duplex-selection semantics beyond the bounded local seam
+    - Recorded that the governed release-truth surface remained fully green:
+      - shipped methods: `111`
+      - compared evidence: `111`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
