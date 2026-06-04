@@ -4174,6 +4174,33 @@ The non-goals remain:
 - no widening into `sirna`
 - no family-wide continuation claim merely because `eprimer3` ships
 
+#### Exact start conditions for the first `eprimer3` implementation patch
+
+Before any code starts, the repository should make the start gate for the
+first bounded `eprimer3` patch explicit.
+
+That start gate now requires:
+
+- primer and assay-oriented search to remain the active planning program
+- `eprimer3` to remain the single selected bounded continuation candidate
+- the active bounded primer-family subset to remain limited to:
+  - `eprimer3`
+  - `primersearch`
+  - `sirna`
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `eprimer3` plus the smallest support
+  needed for deterministic primer/oligo candidate generation, normalized
+  table-first reporting, and governed docs/validation plumbing
+- the patch to land as a full bounded slice rather than a half-start
+
+The same guardrails remain:
+
+- no generalized assay-ranking framework
+- no broad thermodynamic optimization platform
+- no widening into `sirna`
+- no family-wide continuation claim merely because one bounded `eprimer3`
+  slice ships
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

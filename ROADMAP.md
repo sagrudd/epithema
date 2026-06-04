@@ -5243,3 +5243,26 @@ implementation-program cycle. The near-term priorities are:
       - no broad thermodynamic optimization platform
       - no widening into `sirna`
       - no family-wide continuation claim merely because `eprimer3` ships
+
+304. Capture the exact start conditions for the first `eprimer3` implementation patch.
+    - Recorded explicitly that the start gate now requires:
+      - primer and assay-oriented search to remain the active planning
+        program
+      - `eprimer3` to remain the single selected bounded continuation
+        candidate
+      - the active bounded primer-family subset to remain limited to:
+        - `eprimer3`
+        - `primersearch`
+        - `sirna`
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `eprimer3` plus the smallest
+        support needed for deterministic primer/oligo candidate generation,
+        normalized table-first reporting, and governed docs/validation
+        plumbing
+      - the patch to land as a full bounded slice rather than a half-start
+    - Recorded explicitly that the same guardrails remain:
+      - no generalized assay-ranking framework
+      - no broad thermodynamic optimization platform
+      - no widening into `sirna`
+      - no family-wide continuation claim merely because one bounded
+        `eprimer3` slice ships
