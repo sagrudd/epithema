@@ -5224,3 +5224,22 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that the non-selected bounded family member remains
       documented but inactive:
       - `sirna`
+
+303. Capture explicit `eprimer3` method-level acceptance criteria before code starts.
+    - Recorded explicitly that the governed criteria now make `eprimer3`
+      concrete before implementation:
+      - bounded primer-and-oligo design workflow only
+      - deterministic table-first output derived from the same local design
+        path
+      - explicit reporting of candidate oligo identity, strand/orientation,
+        genomic interval, and method-local scoring fields from the same
+        computation path
+      - canonical analytical fixtures and compared evidence on normalized
+        primer-candidate rows
+      - honest handling of primer length policy, product-size bounds,
+        ambiguity rules, and design-eligibility filtering
+    - Recorded explicitly that the non-goals remain:
+      - no generalized assay-ranking framework
+      - no broad thermodynamic optimization platform
+      - no widening into `sirna`
+      - no family-wide continuation claim merely because `eprimer3` ships

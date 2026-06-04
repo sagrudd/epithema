@@ -4150,6 +4150,30 @@ The non-selected bounded family member remains documented but inactive:
 
 - `sirna`
 
+#### Explicit `eprimer3` method-level acceptance criteria
+
+With `eprimer3` selected as the bounded continuation candidate, the repository
+should make the method-specific acceptance criteria explicit before
+implementation.
+
+The governed criteria now make `eprimer3` concrete before code starts:
+
+- bounded primer-and-oligo design workflow only
+- deterministic table-first output derived from the same local design path
+- explicit reporting of candidate oligo identity, strand/orientation, genomic
+  interval, and method-local scoring fields from the same computation path
+- canonical analytical fixtures and compared evidence on normalized
+  primer-candidate rows
+- honest handling of primer length policy, product-size bounds, ambiguity
+  rules, and design-eligibility filtering
+
+The non-goals remain:
+
+- no generalized assay-ranking framework
+- no broad thermodynamic optimization platform
+- no widening into `sirna`
+- no family-wide continuation claim merely because `eprimer3` ships
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
