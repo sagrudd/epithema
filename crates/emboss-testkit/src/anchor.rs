@@ -150,6 +150,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "primersearch -seqall primersearch_targets.fasta -infile primersearch_pairs.tsv -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "sirna",
+        autodoc_contract: "docs/autodoc/tools/sirna.json",
+        example_id: "sirna_candidates_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/sirna_generate_deterministic_bounded_sirna_candidates.tsv",
+        legacy_source: "EMBOSS sirna application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/sirna.acd",
+        legacy_invocation: "sirna -sequence sirna_targets.fasta -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "newseq",
         autodoc_contract: "docs/autodoc/tools/newseq.json",
         example_id: "create_dna_record",
@@ -1410,6 +1419,12 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv")
+                .display()
+                .to_string(),
+        ],
+        "sirna" => vec![
+            repo_root
+                .join("crates/emboss-tools/tests/fixtures/sirna_targets.fasta")
                 .display()
                 .to_string(),
         ],

@@ -69,16 +69,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `110` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `111` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `111` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
-- non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
-
-Fully green release-gate target markers, not the current interim state:
-
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
@@ -107,12 +100,11 @@ change the release gate state above.
   canonical compared analytical fixture, curated legacy provenance, and a
   bounded local candidate-reporting seam.
 - `primersearch` now ships through the governed surface with a checked-in
-  executable validation stub, curated legacy provenance, and canonical
-  compared primer-hit fixture.
-- `sirna` now ships through the governed surface with a checked-in executable
-  validation stub, curated legacy provenance, and a bounded local
-  siRNA-candidate reporting seam; canonical compared evidence remains the next
-  closure step for this bounded slice.
+  canonical compared primer-hit fixture, curated legacy provenance, and a
+  bounded local search seam.
+- `sirna` now ships through the governed surface with a checked-in canonical
+  compared siRNA-candidate fixture, curated legacy provenance, and a bounded
+  local siRNA-candidate reporting seam.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
@@ -120,14 +112,12 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `0` retained governance methods remain unshipped
-- `1` shipped method remains below compared evidence
+- `0` shipped methods remain below compared evidence
 
 This means the shipped retained cohort remains fully closed, harvest coverage
-remains complete, and the governed cohort is in an honest interim executable-
-only posture for one bounded shipped slice rather than at the fully green
-release gate. The new bounded `sirna` slice now ships with curated
-provenance and a runnable governed validation seam while canonical compared
-candidate-table evidence remains pending.
+remains complete, and the governed cohort is back at the fully green release
+gate. The bounded `sirna` slice now ships with curated provenance, a runnable
+governed validation seam, and canonical compared candidate-table evidence.
 
 ### First-class R story
 

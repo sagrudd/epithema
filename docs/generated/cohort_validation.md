@@ -12,9 +12,9 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `111`
-- Methods with executable validation: `1`
-- Methods with compared evidence: `110`
-- Methods with blocking cohort gaps: `1`
+- Methods with executable validation: `0`
+- Methods with compared evidence: `111`
+- Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
 
@@ -106,7 +106,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `pepwindow` | `protein_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |
 | `eprimer3` | `primer_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `primersearch` | `primer_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
-| `sirna` | `primer_tools` | `executable_evidence` | `yes` | `yes` | `yes` | `yes` | `no` | `1` |
+| `sirna` | `primer_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `psiphi` | `protein_coordinates` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `recoder` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `silent` | `restriction_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -152,4 +152,3 @@ Visible gaps may include non-blocking notes that do not lower the tool's current
 - `octanol`: `missing_explicit_legacy_reference`
 - `pepinfo`: `missing_explicit_legacy_reference`
 - `pepwindow`: `missing_explicit_legacy_reference`
-- `sirna`: `missing_compared_evidence`

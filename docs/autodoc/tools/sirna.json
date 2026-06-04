@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This bounded release keeps one historical `sirna` user need in scope while modernizing around deterministic local candidate reporting instead of generalized RNAi-efficacy prediction, transcriptome-wide off-target search, or broad small-RNA ranking behavior. The governed validation seam currently ships with curated provenance and a runnable executable validation stub for the bounded local nucleotide-input path."
+      "content": "This bounded release keeps one historical `sirna` user need in scope while modernizing around deterministic local candidate reporting instead of generalized RNAi-efficacy prediction, transcriptome-wide off-target search, or broad small-RNA ranking behavior. The governed validation seam now includes a canonical compared fixture covering stable normalized siRNA-candidate rows for the bounded local nucleotide-input path."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs sirna`. The governed surface currently ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local nucleotide-input path. Canonical compared analytical evidence remains the next closure step for this bounded slice."
+      "content": "This method is implemented and exposed through `emboss-rs sirna`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized siRNA-candidate rows."
     },
     {
       "id": "caveats",
@@ -102,7 +102,7 @@
     "required_example_ids": [
       "sirna_candidates_example"
     ],
-    "compare_against_legacy": false,
+    "compare_against_legacy": true,
     "require_provenance_capture": true
   }
 }

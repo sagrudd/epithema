@@ -34,11 +34,11 @@ The result is a stable normalized table with record identifier, candidate identi
 
 ## Legacy Context
 
-This bounded release keeps one historical `sirna` user need in scope while modernizing around deterministic local candidate reporting instead of generalized RNAi-efficacy prediction, transcriptome-wide off-target search, or broad small-RNA ranking behavior. The governed validation seam currently ships with curated provenance and a runnable executable validation stub for the bounded local nucleotide-input path.
+This bounded release keeps one historical `sirna` user need in scope while modernizing around deterministic local candidate reporting instead of generalized RNAi-efficacy prediction, transcriptome-wide off-target search, or broad small-RNA ranking behavior. The governed validation seam now includes a canonical compared fixture covering stable normalized siRNA-candidate rows for the bounded local nucleotide-input path.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs sirna`. The governed surface currently ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local nucleotide-input path. Canonical compared analytical evidence remains the next closure step for this bounded slice.
+This method is implemented and exposed through `emboss-rs sirna`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized siRNA-candidate rows.
 
 ## Caveats
 
@@ -78,5 +78,5 @@ The v1 `sirna` seam is intentionally narrow. It does not perform generalized RNA
 This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
 
 - Declared required examples for future validation: `sirna_candidates_example`
-- Future legacy comparison requested: no
+- Future legacy comparison requested: yes
 - Future execution must capture provenance: yes

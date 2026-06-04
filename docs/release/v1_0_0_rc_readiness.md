@@ -8,9 +8,9 @@ Status date: 2026-05-18
 limitations**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
-path, or release automation. The remaining limitations are release cutover,
-intentional scope boundaries, and one bounded shipped method that is still at
-executable evidence while its compared-evidence closure step remains pending.
+path, or release automation. The remaining limitations are release cutover and
+intentional scope boundaries, not evidence-depth debt, retained-backlog
+closure, or broken packaging mechanics.
 
 ## Audited Shipped Cohort
 
@@ -118,16 +118,9 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `111`
-- Compared-evidence methods: `110`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `111`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `111`
-- Full compared cohort: `no`
-- Non-blocking plotting legacy-reference notes remain visible: `yes`
-- Blocking cohort gaps: `0`
-- Weakest evidence family: `none`
-
-Fully green release-gate target markers, not the current interim state:
-
 - Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
@@ -190,11 +183,10 @@ Fully green release-gate target markers, not the current interim state:
 
 ### Validation and evidence presence
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: every shipped method has a validation stub, appears in the cohort
-  report, and records harvested legacy provenance, but one newly shipped
-  bounded method currently remains at executable evidence until its compared
-  acceptance slice closes.
+  report, records harvested legacy provenance, and now reaches compared
+  evidence in the generated cohort state.
 
 ### Cohort-level acceptance reporting
 
@@ -226,17 +218,17 @@ Fully green release-gate target markers, not the current interim state:
 - Basis: the family-level comparison coverage report is generated at:
   - `docs/generated/validation/comparison_coverage.json`
   - `docs/generated/comparison_coverage.md`
-  and now records `1` executable-only shipped method across the current
+  and now records `0` executable-only shipped methods across the current
   governed cohort.
 
 ### Full compared cohort gate
 
-- Status: `ready with known limitations`
+- Status: `complete`
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `110/111` shipped methods at compared evidence with `1`
-  method below compared evidence.
+  and now records `111/111` shipped methods at compared evidence with `0`
+  methods below compared evidence.
 
 ### Harvest coverage reporting
 
@@ -296,10 +288,9 @@ Fully green release-gate target markers, not the current interim state:
 
 ### Missing validation depth
 
-- `1` shipped method still has bounded evidence debt.
+- `0` shipped methods still have blocking evidence debt.
 - The retained governance backlog is now `0`.
-- That remaining gap is the newly shipped bounded `sirna` slice, which still
-  awaits its compared-evidence closure step.
+- There is no remaining evidence-closing blocker at this checkpoint.
 
 ### Legacy harvesting is complete
 
@@ -307,13 +298,12 @@ Fully green release-gate target markers, not the current interim state:
   provenance.
 - Harvest coverage is complete across the shipped cohort at this checkpoint.
 
-### Comparison-based acceptance is almost complete
+### Comparison-based acceptance is complete
 
-- The cohort report now records `110` methods with compared evidence and `1`
-  shipped method at executable evidence.
-- The comparison framework remains real and reusable, but the full compared
-  cohort gate is temporarily amber until the bounded `sirna` compared-
-  evidence closure task lands.
+- The cohort report now records `111` methods with compared evidence and `0`
+  shipped methods at executable evidence.
+- The comparison framework remains real and reusable, and the full compared
+  cohort gate is green at this checkpoint.
 
 ### Plotting limitations
 
@@ -340,8 +330,8 @@ Fully green release-gate target markers, not the current interim state:
 ## Current Generated Count Markers
 
 - Shipped methods audited: `111`
-- Compared-evidence methods: `110`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `111`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `111`
 - Retained backlog still unshipped: `0`
 

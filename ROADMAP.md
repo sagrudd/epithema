@@ -5631,3 +5631,19 @@ implementation-program cycle. The near-term priorities are:
       - canonical compared evidence for `sirna` still belongs to Task `325`
       - the full-compared release gate stays amber until that evidence slice
         closes
+
+325. Close the `sirna` compared-evidence slice.
+    - Added the canonical bounded siRNA-candidate fixture, wired `sirna` into
+      the acceptance-anchor harness, tightened the curated autodoc contract to
+      the compared analytical example, and refreshed the generated
+      validation/report surface and release-facing docs back to the fully
+      green state.
+    - Current generated state is back to the fully green posture:
+      - shipped methods: `111`
+      - compared evidence: `111`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

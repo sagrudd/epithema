@@ -1,0 +1,2 @@
+record	candidate_id	strand	target_start	target_end	duplex_length	sense_sequence	guide_sequence	canonical_symbols	ambiguous_symbols	gc_fraction	guide_five_prime_base	guide_seed_au_count	max_homopolymer_run
+sirnatargetA	sirna-00001	forward	1	21	21	AATATCGCCATGCGATATATT	AATATATCGCATGGCGATATT	21	0	0.3333	A	6	2
