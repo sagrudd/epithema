@@ -5299,3 +5299,21 @@ implementation-program cycle. The near-term priorities are:
       4. `eprimer3` forces broad ambiguity-resolution policy, product-scoring
          taxonomy, or design-eligibility semantics that are not clearly local
          to the method
+
+307. Implement the bounded primer-and-oligo design analytical core for `eprimer3`.
+    - Added the bounded `eprimer3` analytical core in `crates/emboss-core/src/eprimer3.rs`
+      and exported it through `crates/emboss-core/src/lib.rs`.
+    - Landed a deterministic local candidate-generation path over one
+      nucleotide sequence with:
+      - explicit bounded design parameters for oligo length, step size, GC
+        fraction, and conservative Tm limits
+      - stable forward and reverse candidate rows per accepted genomic window
+      - method-local scoring fields limited to GC fraction, conservative Tm,
+        and 3'-terminal GC count
+      - honest ambiguity handling by skipping non-canonical windows rather
+        than inferring candidates through them
+    - Added focused bounded validation for:
+      - non-nucleotide input
+      - invalid oligo-length bounds
+      - invalid GC or Tm bounds
+      - sequences shorter than the requested minimum oligo length
