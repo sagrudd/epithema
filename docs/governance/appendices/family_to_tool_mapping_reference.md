@@ -4339,6 +4339,26 @@ That reserve-promotion branch is not taken at this checkpoint:
 - command discovery and help-navigation remains the documented reserve next
   program rather than being promoted by inertia
 
+#### Selection of the final bounded primer-family continuation candidate
+
+Once the final narrowed primer-family continuation gate stays affirmative, the
+repository should choose the one remaining bounded continuation candidate
+explicitly rather than leaving the final narrowed pool only implied.
+
+The selected bounded continuation candidate is now:
+
+- `sirna`
+
+`sirna` is now activated as the single final bounded continuation candidate
+because:
+
+- it is the only remaining bounded continuation candidate in the narrowed
+  post-`eprimer3` pool
+- the prepared command-discovery reserve branch remains documented but
+  inactive because the no-candidate handoff branch was not taken
+- no other primer-family method remains comparably bounded without reopening
+  already-shipped slices or reviving omitted methods by inertia
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-

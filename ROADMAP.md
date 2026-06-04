@@ -5484,3 +5484,16 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that command discovery and help-navigation remains
       the documented reserve next program rather than being promoted by
       inertia
+
+317. Select the next bounded primer-family continuation candidate.
+    - Recorded explicitly that the selected bounded continuation candidate is:
+      - `sirna`
+    - Recorded explicitly why `sirna` is now activated as the single final
+      bounded continuation candidate:
+      - it is the only remaining bounded continuation candidate in the
+        narrowed post-`eprimer3` pool
+      - the prepared command-discovery reserve branch remains documented but
+        inactive because the no-candidate handoff branch was not taken
+      - no other primer-family method remains comparably bounded without
+        reopening already-shipped slices or reviving omitted methods by
+        inertia
