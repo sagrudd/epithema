@@ -2,6 +2,7 @@
 
 mod eprimer3;
 mod primersearch;
+mod sirna;
 
 use crate::ToolDescriptor;
 
@@ -12,6 +13,7 @@ pub use primersearch::{
     primersearch_help, run_primersearch,
 };
 pub use eprimer3::{Eprimer3Outcome, Eprimer3Params, Eprimer3Row, eprimer3_help, run_eprimer3};
+pub use sirna::{SirnaOutcome, SirnaParams, SirnaRow, run_sirna, sirna_help};
 
 /// `eprimer3` descriptor.
 pub const EPRIMER3_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
@@ -24,5 +26,12 @@ pub const EPRIMER3_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const PRIMERSEARCH_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "primersearch",
     "report deterministic complete primer-pair hits against local nucleotide sequence inputs",
+)
+.with_family(FAMILY);
+
+/// `sirna` descriptor.
+pub const SIRNA_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "sirna",
+    "report deterministic bounded sirna candidate rows against local nucleotide sequence inputs",
 )
 .with_family(FAMILY);

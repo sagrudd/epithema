@@ -63,8 +63,8 @@ use emboss_tools::pattern_tools::{
     WordfinderParams, WordmatchParams,
 };
 use emboss_tools::primer_tools::{
-    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, eprimer3_help, primersearch_help,
-    run_eprimer3, run_primersearch,
+    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, SirnaParams, eprimer3_help,
+    primersearch_help, run_eprimer3, run_primersearch, run_sirna, sirna_help,
 };
 use emboss_tools::protein_coordinates::{psiphi_help, run_psiphi, PsiphiInput, PsiphiParams};
 use emboss_tools::protein_plots::{
@@ -2113,6 +2113,107 @@ impl EmbossService {
                 ))
                 .with_line(
                     "Design scope: deterministic local candidate generation only".to_owned(),
+                )
+                .with_line(format!("Target records: {}", outcome.record_count))
+                .with_line(format!("Candidates: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    /// Invokes the bounded local `sirna` result surface without shipping it.
+    pub fn invoke_sirna(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, sirna_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("sirna", sirna_help()))?;
+        let (input, input_provenance, diagnostics) = self.resolve_local_sequence_input(&input)?;
+        let outcome = run_sirna(SirnaParams { input })?;
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.record_id.clone(),
+                    row.candidate_id.clone(),
+                    row.strand.clone(),
+                    row.target_start.to_string(),
+                    row.target_end.to_string(),
+                    row.duplex_length.to_string(),
+                    row.sense_sequence.clone(),
+                    row.guide_sequence.clone(),
+                    row.canonical_symbols.to_string(),
+                    row.ambiguous_symbols.to_string(),
+                    format!("{:.4}", row.gc_fraction),
+                    row.guide_five_prime_base.clone(),
+                    row.guide_seed_au_count.to_string(),
+                    row.max_homopolymer_run.to_string(),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported bounded sirna candidates across {} target records",
+                outcome.record_count
+            ),
+            diagnostics,
+            vec![input_provenance],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "record".to_owned(),
+                    "candidate_id".to_owned(),
+                    "strand".to_owned(),
+                    "target_start".to_owned(),
+                    "target_end".to_owned(),
+                    "duplex_length".to_owned(),
+                    "sense_sequence".to_owned(),
+                    "guide_sequence".to_owned(),
+                    "canonical_symbols".to_owned(),
+                    "ambiguous_symbols".to_owned(),
+                    "gc_fraction".to_owned(),
+                    "guide_five_prime_base".to_owned(),
+                    "guide_seed_au_count".to_owned(),
+                    "max_homopolymer_run".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("siRNA candidates reported")
+                .with_line(format!("Input: {}", outcome.input.path.display()))
+                .with_line(format!(
+                    "Design parameters: duplex_length={} step={}",
+                    outcome.parameters.duplex_length, outcome.parameters.step
+                ))
+                .with_line(format!(
+                    "Bounds: gc_fraction={:.2}..={:.2} seed_au_min={} max_homopolymer_run={}",
+                    outcome.parameters.min_gc_fraction,
+                    outcome.parameters.max_gc_fraction,
+                    outcome.parameters.min_seed_au_count,
+                    outcome.parameters.max_homopolymer_run
+                ))
+                .with_line(
+                    "Design scope: deterministic local siRNA candidate generation only"
+                        .to_owned(),
                 )
                 .with_line(format!("Target records: {}", outcome.record_count))
                 .with_line(format!("Candidates: {}", outcome.rows.len())),
@@ -13001,6 +13102,11 @@ mod tests {
             .join("../emboss-tools/tests/fixtures/eprimer3_targets.fasta")
     }
 
+    fn sirna_fixture() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../emboss-tools/tests/fixtures/sirna_targets.fasta")
+    }
+
     fn primersearch_pairs_fixture() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../emboss-tools/tests/fixtures/primersearch_pairs.tsv")
@@ -18507,6 +18613,74 @@ mod tests {
             .expect("eprimer3 should dispatch through the governed service");
 
         assert_eq!(response.tool.as_str(), "eprimer3");
+    }
+
+    #[test]
+    fn executes_sirna_against_local_fixture() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("sirna").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sirna_fixture().display().to_string()]);
+
+        let response = service
+            .invoke_sirna(request, emboss_tools::primer_tools::SIRNA_DESCRIPTOR)
+            .expect("sirna should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "record",
+                        "candidate_id",
+                        "strand",
+                        "target_start",
+                        "target_end",
+                        "duplex_length",
+                        "sense_sequence",
+                        "guide_sequence",
+                        "canonical_symbols",
+                        "ambiguous_symbols",
+                        "gc_fraction",
+                        "guide_five_prime_base",
+                        "guide_seed_au_count",
+                        "max_homopolymer_run",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "sirnatargetA");
+                assert_eq!(table.rows[0][1], "sirna-00001");
+                assert_eq!(table.rows[0][2], "forward");
+                assert_eq!(table.rows[0][3], "1");
+                assert_eq!(table.rows[0][4], "21");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(response.result.summary.lines[0]
+            .ends_with("crates/emboss-tools/tests/fixtures/sirna_targets.fasta"));
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Design scope: deterministic local siRNA candidate generation only"
+        );
+    }
+
+    #[test]
+    fn rejects_provider_backed_input_for_sirna() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("sirna").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["AB000263".to_owned()]);
+
+        let error = service
+            .invoke_sirna(request, emboss_tools::primer_tools::SIRNA_DESCRIPTOR)
+            .expect_err("provider-backed inputs should fail");
+        assert!(error
+            .to_string()
+            .contains("provider-backed sequence acquisition"));
     }
 
     #[test]

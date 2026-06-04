@@ -5591,3 +5591,25 @@ implementation-program cycle. The near-term priorities are:
       - non-nucleotide input
       - invalid duplex length
       - invalid seed A/U minimum
+
+323. Expose the deterministic typed result surface for normalized `sirna` candidate reporting.
+    - Added the bounded `sirna` result surface in:
+      - `crates/emboss-tools/src/primer_tools/sirna.rs`
+      - `crates/emboss-tools/src/primer_tools/mod.rs`
+      - `crates/emboss-service/src/service.rs`
+      - `crates/emboss-tools/tests/fixtures/sirna_targets.fasta`
+    - Landed a method-local bounded tool path over the Task 322 analytical
+      core with:
+      - one local nucleotide input only
+      - deterministic default candidate-selection parameters carried through
+        the same result path
+      - stable table-first candidate rows for record, candidate identity,
+        strand, target interval, duplex sequences, GC fraction, guide 5'
+        base, guide-seed A/U count, and maximum homopolymer run
+      - a public direct `EmbossService::invoke_sirna(...)` seam that emits
+        `ResultPayload::TableReport`
+    - Intentionally stopped short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no autodoc or generated validation surface yet
+      - no canonical fixtures or compared evidence yet
