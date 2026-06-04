@@ -5774,3 +5774,19 @@ implementation-program cycle. The near-term priorities are:
       - it does not imply broad ontology or semantic-navigation activation
       - it does not reopen individually omitted discovery helpers
       - it does not promote the reserve external-database program by inertia
+
+331. Decide whether the narrowed bounded command-discovery branch still passes honest seam review strongly enough to remain active.
+    - Recorded explicitly that the decision is affirmative:
+      - a bounded command-discovery continuation candidate still exists
+      - command discovery and help-navigation therefore remains the active
+        planning program
+      - the no-candidate branch is not taken at this checkpoint
+    - Recorded explicitly that the currently viable bounded continuation pool
+      remains:
+      - `embossdata`
+      - `seealso`
+      - `wossname`
+    - Recorded explicitly that reserve promotion does not happen at this
+      checkpoint:
+      - external database preparation helpers remains the reserve next
+        program and is not promoted here

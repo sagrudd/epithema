@@ -5617,6 +5617,30 @@ This activation remains bounded:
 - it does not reopen individually omitted discovery helpers
 - it does not promote the reserve external-database program by inertia
 
+### Honest seam review of the narrowed command-discovery branch
+
+After command discovery and help-navigation becomes the active planning
+program, the repository should decide whether the narrowed bounded
+command-discovery subset still supports an honest local continuation branch.
+
+That decision is affirmative:
+
+- a bounded command-discovery continuation candidate still exists
+- command discovery and help-navigation therefore remains the active
+  planning program
+- the no-candidate branch is not taken at this checkpoint
+
+The currently viable bounded continuation pool remains:
+
+- `embossdata`
+- `seealso`
+- `wossname`
+
+Reserve promotion does not happen at this checkpoint:
+
+- external database preparation helpers remains the reserve next program and
+  is not promoted here
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
