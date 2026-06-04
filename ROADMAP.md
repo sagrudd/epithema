@@ -5369,3 +5369,17 @@ implementation-program cycle. The near-term priorities are:
       - `full_compared_cohort: true`
       - `harvest_coverage_complete: true`
       - `release_truth_current: true`
+
+311. Re-run the full release-truth surface after shipping `eprimer3`.
+    - Complete. Used this task as the post-`eprimer3` release-truth
+      checkpoint only.
+    - Recorded explicitly that the observed governed state remains fully
+      green:
+      - shipped methods: `110`
+      - compared evidence: `110`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `110`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`
