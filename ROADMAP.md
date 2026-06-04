@@ -5286,3 +5286,16 @@ implementation-program cycle. The near-term priorities are:
       - no broad thermodynamic optimization platform
       - no primer-family widening unless `eprimer3` itself forces a real
         reassessment
+
+306. Capture the explicit biological-design/seam stop conditions for `eprimer3`.
+    - Recorded explicitly that the repository should pause and reassess before
+      implementation if:
+      1. `eprimer3` cannot remain table-first with a deterministic typed
+         result surface derived from the same local design path
+      2. `eprimer3` requires generalized assay-ranking, broad thermodynamic
+         optimization policy, or other non-local biological-design behavior
+      3. `eprimer3` cannot remain method-associated and instead demands a
+         generalized primer-analysis framework before one shipped slice closes
+      4. `eprimer3` forces broad ambiguity-resolution policy, product-scoring
+         taxonomy, or design-eligibility semantics that are not clearly local
+         to the method

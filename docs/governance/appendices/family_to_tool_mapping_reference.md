@@ -4228,6 +4228,23 @@ The same bounded rules remain:
 - no primer-family widening unless `eprimer3` itself forces a real
   reassessment
 
+#### Explicit biological-design/seam stop conditions for `eprimer3`
+
+After mapping the full bounded `eprimer3` implementation tier, the repository
+should make the pre-code stop conditions explicit before implementation.
+
+The repository should pause and reassess before implementation if:
+
+1. `eprimer3` cannot remain table-first with a deterministic typed result
+   surface derived from the same local design path
+2. `eprimer3` requires generalized assay-ranking, broad thermodynamic
+   optimization policy, or other non-local biological-design behavior
+3. `eprimer3` cannot remain method-associated and instead demands a
+   generalized primer-analysis framework before one shipped slice closes
+4. `eprimer3` forces broad ambiguity-resolution policy, product-scoring
+   taxonomy, or design-eligibility semantics that are not clearly local to
+   the method
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
