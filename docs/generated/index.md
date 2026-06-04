@@ -107,6 +107,7 @@ tools/seqretsetall
 tools/seqretsplit
 tools/shuffleseq
 tools/silent
+tools/sirna
 tools/sizeseq
 tools/skipredundant
 tools/skipseq

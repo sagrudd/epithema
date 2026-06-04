@@ -4,13 +4,20 @@
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
   "summary": {
-    "total_method_count": 110,
+    "total_method_count": 111,
     "family_count": 11,
     "compared_count": 110,
-    "executable_only_count": 0,
-    "harvested_but_not_compared_count": 0
+    "executable_only_count": 1,
+    "harvested_but_not_compared_count": 1
   },
   "families": [
+    {
+      "family": "Modernize — Rework — Primer and assay-oriented search",
+      "shipped_method_count": 3,
+      "compared_count": 2,
+      "executable_only_count": 1,
+      "harvested_but_not_compared_count": 1
+    },
     {
       "family": "Core Retain — Alignment read-write and post-processing",
       "shipped_method_count": 13,
@@ -57,13 +64,6 @@
       "family": "Modernize — Rework — Plotting and visualization tools",
       "shipped_method_count": 10,
       "compared_count": 10,
-      "executable_only_count": 0,
-      "harvested_but_not_compared_count": 0
-    },
-    {
-      "family": "Modernize — Rework — Primer and assay-oriented search",
-      "shipped_method_count": 2,
-      "compared_count": 2,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

@@ -363,6 +363,7 @@ impl EmbossService {
             "pepwindow" => self.invoke_pepwindow(request, descriptor),
             "eprimer3" => self.invoke_eprimer3(request, descriptor),
             "primersearch" => self.invoke_primersearch(request, descriptor),
+            "sirna" => self.invoke_sirna(request, descriptor),
             "psiphi" => self.invoke_psiphi(request, descriptor),
             "recoder" => self.invoke_recoder(request, descriptor),
             "silent" => self.invoke_silent(request, descriptor),
@@ -12807,6 +12808,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "pepwindow" => pepwindow_help(),
         "eprimer3" => eprimer3_help(),
         "primersearch" => primersearch_help(),
+        "sirna" => sirna_help(),
         "psiphi" => psiphi_help(),
         "aaindexextract" => aaindexextract_help(),
         "complex" => complex_help(),
@@ -18681,6 +18683,22 @@ mod tests {
         assert!(error
             .to_string()
             .contains("provider-backed sequence acquisition"));
+    }
+
+    #[test]
+    fn dispatches_sirna_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("sirna").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sirna_fixture().display().to_string()]);
+
+        let response = service
+            .invoke(request)
+            .expect("sirna should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "sirna");
     }
 
     #[test]

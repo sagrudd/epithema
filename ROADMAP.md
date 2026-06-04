@@ -5613,3 +5613,21 @@ implementation-program cycle. The near-term priorities are:
       - no CLI routing yet
       - no autodoc or generated validation surface yet
       - no canonical fixtures or compared evidence yet
+
+324. Expose `sirna` through the governed shipped surface.
+    - Wired `sirna` through the governed registry, service dispatch, CLI
+      routing, curated autodoc, generated tool docs, validation stub, and the
+      generated cohort/report surface.
+    - Current interim governed state after this task:
+      - shipped methods: `111`
+      - compared evidence: `110`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `111`
+      - `full_compared_cohort: false`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: false`
+    - This task intentionally stops at shipped plus executable evidence:
+      - canonical compared evidence for `sirna` still belongs to Task `325`
+      - the full-compared release gate stays amber until that evidence slice
+        closes

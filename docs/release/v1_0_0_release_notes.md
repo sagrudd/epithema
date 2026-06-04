@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `110` methods, including:
+of `111` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -44,6 +44,7 @@ of `110` methods, including:
 - the bounded protein-coordinate torsion-reporting method `psiphi`
 - the bounded primer-and-oligo design method `eprimer3`
 - the bounded primer-pair search method `primersearch`
+- the bounded siRNA-candidate discovery method `sirna`
 
 ### Governed retrieval
 
@@ -69,8 +70,15 @@ tools for:
 Current evidence posture at the time of this draft:
 
 - `110` shipped methods carry compared evidence
-- `0` shipped methods carry executable evidence
-- `110` shipped methods record harvested legacy provenance
+- `1` shipped methods carry executable evidence
+- `111` shipped methods record harvested legacy provenance
+- full compared cohort: `no`
+- non-blocking plotting legacy-reference notes remain visible: `yes`
+- blocking cohort gaps: `1`
+- weakest evidence family: `Modernize — Rework — Primer and assay-oriented search`
+
+Fully green release-gate target markers, not the current interim state:
+
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
@@ -101,6 +109,10 @@ change the release gate state above.
 - `primersearch` now ships through the governed surface with a checked-in
   executable validation stub, curated legacy provenance, and canonical
   compared primer-hit fixture.
+- `sirna` now ships through the governed surface with a checked-in executable
+  validation stub, curated legacy provenance, and a bounded local
+  siRNA-candidate reporting seam; canonical compared evidence remains the next
+  closure step for this bounded slice.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
@@ -108,12 +120,14 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `0` retained governance methods remain unshipped
-- `0` shipped methods remain below compared evidence
+- `1` shipped method remains below compared evidence
 
-This means the shipped retained cohort remains fully closed and the shipped
-governed cohort is back at the fully green release gate. The bounded
-`eprimer3` slice now ships with curated provenance, a runnable governed
-validation seam, and canonical compared candidate-table evidence.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the governed cohort is in an honest interim executable-
+only posture for one bounded shipped slice rather than at the fully green
+release gate. The new bounded `sirna` slice now ships with curated
+provenance and a runnable governed validation seam while canonical compared
+candidate-table evidence remains pending.
 
 ### First-class R story
 

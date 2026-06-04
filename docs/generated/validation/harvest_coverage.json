@@ -3,8 +3,8 @@
   "report_id": "harvest-coverage-exceptions",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 110,
-    "harvested_legacy_presence_count": 110,
+    "total_method_count": 111,
+    "harvested_legacy_presence_count": 111,
     "harvest_exception_count": 0,
     "harvest_coverage_complete": true
   },
