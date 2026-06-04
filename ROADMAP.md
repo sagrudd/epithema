@@ -5443,3 +5443,17 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded primer-family slice
       - rerunning release truth and reassessing the shipped primer-family
         slice before any further continuation is mapped
+
+314. Rebase the bounded primer-family continuation pool onto the actual post-`eprimer3` state.
+    - Recorded explicitly that the second bounded primer-family continuation
+      slice is now treated as closed:
+      - shipped bounded primer-family slices:
+        - `primersearch`
+        - `eprimer3`
+    - Recorded explicitly that the remaining bounded primer-family
+      continuation pool is now:
+      - `sirna`
+    - Kept this task inventory-only:
+      - it does not yet decide whether the final remaining method still
+        passes honest seam review strongly enough to remain an active
+        continuation candidate
