@@ -5266,3 +5266,23 @@ implementation-program cycle. The near-term priorities are:
       - no widening into `sirna`
       - no family-wide continuation claim merely because one bounded
         `eprimer3` slice ships
+
+305. Map the full bounded `eprimer3` implementation tier.
+    - Recorded explicitly that the bounded `eprimer3` tier is now:
+      1. implement the bounded primer-and-oligo design analytical core
+      2. expose the deterministic typed result surface for normalized
+         primer-candidate reporting
+      3. expose `eprimer3` through the governed shipped surface
+      4. add canonical analytical fixtures plus compared evidence on
+         normalized primer-candidate rows
+      5. re-run the full release-truth surface after shipping `eprimer3`
+      6. reassess the shipped `eprimer3` slice before any further
+         primer-family continuation is mapped
+    - Recorded explicitly that the same bounded rules remain:
+      - primer-and-oligo design scope only
+      - deterministic table-first reporting from the same local design path
+      - method-local implementation only
+      - no generalized assay-ranking framework
+      - no broad thermodynamic optimization platform
+      - no primer-family widening unless `eprimer3` itself forces a real
+        reassessment

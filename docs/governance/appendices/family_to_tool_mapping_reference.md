@@ -4201,6 +4201,33 @@ The same guardrails remain:
 - no family-wide continuation claim merely because one bounded `eprimer3`
   slice ships
 
+#### Full bounded `eprimer3` implementation tier
+
+With the acceptance criteria and start gate in place, the repository should
+map the full bounded `eprimer3` implementation tier before any code starts.
+
+The bounded `eprimer3` tier is now:
+
+1. implement the bounded primer-and-oligo design analytical core
+2. expose the deterministic typed result surface for normalized
+   primer-candidate reporting
+3. expose `eprimer3` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   primer-candidate rows
+5. re-run the full release-truth surface after shipping `eprimer3`
+6. reassess the shipped `eprimer3` slice before any further primer-family
+   continuation is mapped
+
+The same bounded rules remain:
+
+- primer-and-oligo design scope only
+- deterministic table-first reporting from the same local design path
+- method-local implementation only
+- no generalized assay-ranking framework
+- no broad thermodynamic optimization platform
+- no primer-family widening unless `eprimer3` itself forces a real
+  reassessment
+
 #### Explicit closeout of the bounded protein-property rework branch
 
 After the shipped `psiphi` slice closed its compared-evidence and harvested-
