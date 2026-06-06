@@ -5682,6 +5682,29 @@ The non-selected bounded family members remain documented but inactive:
 - `embossdata`
 - `seealso`
 
+### Explicit `wossname` method-level acceptance criteria
+
+With `wossname` selected as the bounded lead candidate, the repository should
+make the method-specific acceptance criteria explicit before implementation.
+
+The governed criteria now make `wossname` concrete before code starts:
+
+- bounded keyword-based discovery workflow only
+- deterministic table-first output derived from the same local lookup path
+- explicit reporting of matched tool identity, short description, and
+  match-bearing keyword or text fields from the same computation path
+- canonical analytical fixtures and compared evidence on normalized
+  keyword-match rows
+- honest handling of tokenization, case-folding, substring behavior, and
+  result ordering
+
+The non-goals remain:
+
+- no broad semantic-ranking or ontology expansion framework
+- no live provider lookup or asset-distribution behavior
+- no widening into `embossdata` or `seealso`
+- no family-wide continuation claim merely because `wossname` ships
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

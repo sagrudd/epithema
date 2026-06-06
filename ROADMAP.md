@@ -5819,3 +5819,21 @@ implementation-program cycle. The near-term priorities are:
       documented but inactive:
       - `embossdata`
       - `seealso`
+
+334. Capture explicit `wossname` method-level acceptance criteria before code starts.
+    - Recorded explicitly that the governed criteria now make `wossname`
+      concrete before implementation:
+      - bounded keyword-based discovery workflow only
+      - deterministic table-first output derived from the same local lookup
+        path
+      - explicit reporting of matched tool identity, short description, and
+        match-bearing keyword or text fields from the same computation path
+      - canonical analytical fixtures and compared evidence on normalized
+        keyword-match rows
+      - honest handling of tokenization, case-folding, substring behavior,
+        and result ordering
+    - Recorded explicitly that the non-goals remain:
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no widening into `embossdata` or `seealso`
+      - no family-wide continuation claim merely because `wossname` ships
