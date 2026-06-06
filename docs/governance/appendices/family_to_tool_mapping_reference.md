@@ -5658,6 +5658,30 @@ That branch is not taken at this checkpoint:
 - external database preparation helpers remains the documented reserve next
   program rather than being promoted by inertia
 
+### Selection of the bounded command-discovery lead candidate
+
+With the reserve-promotion branch closed, the repository should select exactly
+one bounded command-discovery lead candidate before any method-specific
+acceptance criteria are written.
+
+That selected bounded lead candidate is:
+
+- `wossname`
+
+`wossname` now leads the active pool because:
+
+- it is the narrowest remaining discovery surface because it limits itself to
+  local keyword lookup over governed tool metadata
+- it avoids the stronger provider, asset, or file-distribution seams implied
+  by `embossdata`
+- it appears easier to keep deterministic and method-local than the broader
+  related-program ranking semantics implied by `seealso`
+
+The non-selected bounded family members remain documented but inactive:
+
+- `embossdata`
+- `seealso`
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

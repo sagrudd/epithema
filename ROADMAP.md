@@ -5804,3 +5804,18 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that external database preparation helpers remains
       the documented reserve next program rather than being promoted by
       inertia.
+
+333. Select the next bounded command-discovery lead candidate.
+    - Recorded explicitly that the selected bounded lead candidate is:
+      - `wossname`
+    - Recorded explicitly why `wossname` now leads the active pool:
+      - it is the narrowest remaining discovery surface because it limits
+        itself to local keyword lookup over governed tool metadata
+      - it avoids the stronger provider, asset, or file-distribution seams
+        implied by `embossdata`
+      - it appears easier to keep deterministic and method-local than the
+        broader related-program ranking semantics implied by `seealso`
+    - Recorded explicitly that the non-selected bounded family members remain
+      documented but inactive:
+      - `embossdata`
+      - `seealso`
