@@ -5837,3 +5837,24 @@ implementation-program cycle. The near-term priorities are:
       - no live provider lookup or asset-distribution behavior
       - no widening into `embossdata` or `seealso`
       - no family-wide continuation claim merely because `wossname` ships
+
+335. Capture the exact start conditions for the first `wossname` implementation patch.
+    - Recorded explicitly that the start gate now requires:
+      - command discovery and help-navigation to remain the active planning
+        program
+      - `wossname` to remain the single selected bounded lead candidate
+      - the active bounded command-discovery subset to remain limited to:
+        - `wossname`
+        - `embossdata`
+        - `seealso`
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `wossname` plus the smallest
+        support needed for deterministic local keyword lookup, normalized
+        table-first reporting, and governed docs/validation plumbing
+      - the patch to land as a full bounded slice rather than a half-start
+    - Recorded explicitly that the same guardrails remain:
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no widening into `embossdata` or `seealso`
+      - no family-wide continuation claim merely because one bounded
+        `wossname` slice ships
