@@ -5759,6 +5759,22 @@ The same bounded rules remain:
 - no command-discovery family widening unless `wossname` itself forces a
   real reassessment
 
+### Explicit discovery/seam stop conditions for `wossname`
+
+Before any implementation starts, the repository should make the pause and
+reassess conditions for `wossname` explicit.
+
+The repository should pause and reassess before implementation if:
+
+1. `wossname` cannot remain table-first with a deterministic typed result
+   surface derived from the same local lookup path
+2. `wossname` requires broad semantic-ranking, ontology expansion, or other
+   non-local discovery behavior
+3. `wossname` cannot remain method-associated and instead demands a
+   generalized command-discovery framework before one shipped slice closes
+4. `wossname` forces broad tokenization policy, synonym-taxonomy semantics,
+   or result-ranking behavior that is not clearly local to the method
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

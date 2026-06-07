@@ -5878,3 +5878,17 @@ implementation-program cycle. The near-term priorities are:
       - no live provider lookup or asset-distribution behavior
       - no command-discovery family widening unless `wossname` itself forces
         a real reassessment
+
+337. Capture the explicit discovery/seam stop conditions for `wossname`.
+    - Recorded explicitly that the repository should pause and reassess
+      before implementation if:
+      1. `wossname` cannot remain table-first with a deterministic typed
+         result surface derived from the same local lookup path
+      2. `wossname` requires broad semantic-ranking, ontology expansion, or
+         other non-local discovery behavior
+      3. `wossname` cannot remain method-associated and instead demands a
+         generalized command-discovery framework before one shipped slice
+         closes
+      4. `wossname` forces broad tokenization policy, synonym-taxonomy
+         semantics, or result-ranking behavior that is not clearly local to
+         the method
