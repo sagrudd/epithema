@@ -5732,6 +5732,33 @@ The same guardrails remain:
 - no family-wide continuation claim merely because one bounded `wossname`
   slice ships
 
+### Full bounded `wossname` implementation tier
+
+With the acceptance criteria and start gate in place, the repository should
+map the full bounded `wossname` implementation tier before any code starts.
+
+The bounded `wossname` tier is now:
+
+1. implement the bounded keyword-discovery analytical core
+2. expose the deterministic typed result surface for normalized
+   keyword-match reporting
+3. expose `wossname` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   keyword-match rows
+5. re-run the full release-truth surface after shipping `wossname`
+6. reassess the shipped `wossname` slice before any further
+   command-discovery continuation is mapped
+
+The same bounded rules remain:
+
+- keyword-based discovery scope only
+- deterministic table-first reporting from the same local lookup path
+- method-local implementation only
+- no broad semantic-ranking or ontology expansion framework
+- no live provider lookup or asset-distribution behavior
+- no command-discovery family widening unless `wossname` itself forces a
+  real reassessment
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

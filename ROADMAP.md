@@ -5858,3 +5858,23 @@ implementation-program cycle. The near-term priorities are:
       - no widening into `embossdata` or `seealso`
       - no family-wide continuation claim merely because one bounded
         `wossname` slice ships
+
+336. Map the full bounded `wossname` implementation tier.
+    - Recorded explicitly that the bounded `wossname` tier is now:
+      1. implement the bounded keyword-discovery analytical core
+      2. expose the deterministic typed result surface for normalized
+         keyword-match reporting
+      3. expose `wossname` through the governed shipped surface
+      4. add canonical analytical fixtures plus compared evidence on
+         normalized keyword-match rows
+      5. re-run the full release-truth surface after shipping `wossname`
+      6. reassess the shipped `wossname` slice before any further
+         command-discovery continuation is mapped
+    - Recorded explicitly that the same bounded rules remain:
+      - keyword-based discovery scope only
+      - deterministic table-first reporting from the same local lookup path
+      - method-local implementation only
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no command-discovery family widening unless `wossname` itself forces
+        a real reassessment
