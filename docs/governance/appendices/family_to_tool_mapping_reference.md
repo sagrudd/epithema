@@ -5917,6 +5917,33 @@ The non-goals remain:
 - no widening into `embossdata`
 - no family-wide continuation claim merely because `seealso` ships
 
+### Exact start conditions for the first `seealso` implementation patch
+
+Before any code starts, the repository should make the start gate for the
+first bounded `seealso` patch explicit.
+
+That start gate now requires:
+
+- command discovery and help-navigation to remain the active planning program
+- `seealso` to remain the single selected bounded continuation candidate
+- the active bounded command-discovery subset to remain limited to:
+  - `seealso`
+  - `wossname`
+  - `embossdata`
+- the zero-burden release-truth surface to remain intact
+- the first patch to stay limited to `seealso` plus the smallest support
+  needed for deterministic local related-program resolution, normalized
+  table-first reporting, and governed docs/validation plumbing
+- the patch to land as a full bounded slice rather than a half-start
+
+The same guardrails remain:
+
+- no broad semantic-ranking or ontology expansion framework
+- no live provider lookup or asset-distribution behavior
+- no widening into `embossdata`
+- no family-wide continuation claim merely because one bounded `seealso`
+  slice ships
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

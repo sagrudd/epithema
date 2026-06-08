@@ -6117,3 +6117,26 @@ implementation-program cycle. The near-term priorities are:
       - no live provider lookup or asset-distribution behavior
       - no widening into `embossdata`
       - no family-wide continuation claim merely because `seealso` ships
+
+349. Capture the exact start conditions for the first `seealso` implementation patch.
+    - Recorded explicitly that the start gate now requires:
+      - command discovery and help-navigation to remain the active planning
+        program
+      - `seealso` to remain the single selected bounded continuation
+        candidate
+      - the active bounded command-discovery subset to remain limited to:
+        - `seealso`
+        - `wossname`
+        - `embossdata`
+      - the zero-burden release-truth surface to remain intact
+      - the first patch to stay limited to `seealso` plus the smallest
+        support needed for deterministic local related-program resolution,
+        normalized table-first reporting, and governed docs/validation
+        plumbing
+      - the patch to land as a full bounded slice rather than a half-start
+    - Recorded explicitly that the same guardrails remain:
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no widening into `embossdata`
+      - no family-wide continuation claim merely because one bounded
+        `seealso` slice ships
