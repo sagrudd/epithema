@@ -6475,11 +6475,44 @@ implementation-program cycle. The near-term priorities are:
       bounded lead candidate inside the active remote retrieval/data discovery
       rework program.
 
-367. If the fallback path is activated, capture the fallback program's bounded lead candidate.
-    - Select exactly one lead candidate.
-    - Record why it is a stronger next professional milestone than forcing
-      `embossdata` into command discovery.
-    - Keep the unselected fallback branch documented but inactive.
+367. Complete. If the fallback path is activated, capture the fallback program's bounded lead candidate.
+    - Selected exactly one bounded lead candidate:
+      - `whichdb`
+    - Decision:
+      - treat the next remote retrieval/data discovery milestone as a modern
+        provider-discovery rework of `whichdb`, not as a compatibility-first
+        port of historical all-database search behavior
+      - keep the slice planning-only at this step; acceptance criteria, patch
+        start conditions, and implementation-tier mapping remain deferred to
+        Tasks `368` through `370`
+    - Why `whichdb` is the stronger next professional milestone than forcing
+      `embossdata` into command discovery:
+      - it belongs to the governed remote retrieval and archive acquisition
+        family, which is now the active fallback branch
+      - its historical purpose is user-facing data discovery for sequence
+        entries, which aligns with the provider-aware retrieval seams already
+        shipped for `seqret`, `refseqget`, `runinfo`, `runget`, and
+        `infoassembly`
+      - it can be planned as an explicit provider-discovery report without
+        implying EMBOSS-era data-file delivery, local database indexing, or
+        external resource preparation
+      - the existing governance appendix already identifies `whichdb` as a
+        broader retrieval member whose old "search all databases" model needs
+        deliberate modern provider-discovery redesign rather than a
+        compatibility-first port
+    - Why the other remote retrieval candidates are not selected for this
+      lead:
+      - `assemblyget` would widen acquisition and file materialization before
+        provider-discovery semantics are settled
+      - `entret` would reopen historical flatfile and generic remote-entry
+        semantics before the modern source model is explicit
+      - already-shipped retrieval methods remain precedent and substrate, not
+        new lead candidates
+    - The unselected fallback branch remains documented but inactive:
+      - external database preparation helpers
+      - `embossdata`
+    - This task does not add a shipped `whichdb` surface, generated tool page,
+      validation stub, acceptance evidence, or release claim.
 
 368. If the fallback path is activated, capture acceptance criteria for the selected lead candidate.
     - Keep criteria scoped to one bounded shipped slice.
