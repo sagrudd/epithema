@@ -6098,3 +6098,22 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that the non-selected bounded family member remains
       documented but inactive:
       - `embossdata`
+
+348. Capture explicit `seealso` method-level acceptance criteria before code starts.
+    - Recorded explicitly that the governed criteria now make `seealso`
+      concrete before implementation:
+      - bounded related-program discovery workflow only
+      - deterministic table-first output derived from the same local
+        relationship-resolution path
+      - explicit reporting of matched tool identity, related tool identity,
+        governed short descriptions, and relationship-bearing metadata fields
+        from the same computation path
+      - canonical analytical fixtures and compared evidence on normalized
+        related-program rows
+      - honest handling of relationship sources, family proximity rules,
+        tie-ordering, and result ordering
+    - Recorded explicitly that the non-goals remain:
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no widening into `embossdata`
+      - no family-wide continuation claim merely because `seealso` ships

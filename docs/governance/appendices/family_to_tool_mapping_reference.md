@@ -5891,6 +5891,32 @@ The non-selected bounded family member remains documented but inactive:
 
 - `embossdata`
 
+### Explicit `seealso` method-level acceptance criteria
+
+With `seealso` selected as the bounded continuation candidate, the repository
+should make the method-specific acceptance criteria explicit before
+implementation.
+
+The governed criteria now make `seealso` concrete before code starts:
+
+- bounded related-program discovery workflow only
+- deterministic table-first output derived from the same local
+  relationship-resolution path
+- explicit reporting of matched tool identity, related tool identity,
+  governed short descriptions, and relationship-bearing metadata fields from
+  the same computation path
+- canonical analytical fixtures and compared evidence on normalized
+  related-program rows
+- honest handling of relationship sources, family proximity rules,
+  tie-ordering, and result ordering
+
+The non-goals remain:
+
+- no broad semantic-ranking or ontology expansion framework
+- no live provider lookup or asset-distribution behavior
+- no widening into `embossdata`
+- no family-wide continuation claim merely because `seealso` ships
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
