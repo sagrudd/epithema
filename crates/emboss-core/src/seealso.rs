@@ -186,7 +186,8 @@ pub fn seealso_profile(
         }
 
         let normalized_tool_name = normalize_text(tool_name);
-        if let Some(first_index) = seen_tool_names.insert(normalized_tool_name.clone(), entry_index) {
+        if let Some(first_index) = seen_tool_names.insert(normalized_tool_name.clone(), entry_index)
+        {
             return Err(SeealsoError::DuplicateToolName {
                 first_index,
                 duplicate_index: entry_index,
@@ -289,9 +290,7 @@ fn deduplicate_preserving_order(values: &mut Vec<String>) {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        SeealsoCatalogEntry, SeealsoError, SeealsoRelationshipField, seealso_profile,
-    };
+    use super::{SeealsoCatalogEntry, SeealsoError, SeealsoRelationshipField, seealso_profile};
 
     #[test]
     fn rejects_blank_or_unknown_query_tool_names() {
@@ -319,7 +318,11 @@ mod tests {
     fn rejects_blank_catalog_rows_and_duplicate_tool_names() {
         let error = seealso_profile(
             "needle",
-            &[SeealsoCatalogEntry::new("", "pairwise_alignment", "alignment tool")],
+            &[SeealsoCatalogEntry::new(
+                "",
+                "pairwise_alignment",
+                "alignment tool",
+            )],
         )
         .expect_err("blank tool name should fail");
         assert_eq!(error, SeealsoError::EmptyToolName { entry_index: 0 });
@@ -333,7 +336,11 @@ mod tests {
 
         let error = seealso_profile(
             "needle",
-            &[SeealsoCatalogEntry::new("needle", "pairwise_alignment", "   ")],
+            &[SeealsoCatalogEntry::new(
+                "needle",
+                "pairwise_alignment",
+                "   ",
+            )],
         )
         .expect_err("blank description should fail");
         assert_eq!(
