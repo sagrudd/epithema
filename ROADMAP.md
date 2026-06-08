@@ -6646,3 +6646,113 @@ implementation-program cycle. The near-term priorities are:
       - no live-network validation, payload retrieval, archive download, file
         materialization, local database indexing, or broad provider-parity
         claim is permitted before a later explicit task changes that scope
+
+## Next Tier Task Map
+
+The post-`seealso` planning branch is now implementation-ready for exactly one
+bounded remote retrieval/data-discovery milestone: `whichdb` as a modern
+provider-discovery report. The next tier must ship that slice without widening
+into generic provider search, payload acquisition, database indexing, or the
+inactive `embossdata`, `assemblyget`, and `entret` branches.
+
+Current baseline for this tier:
+
+- shipped methods: `113`
+- documentation-complete methods: `113`
+- compared-evidence methods: `113`
+- shipped methods with blocking gaps: `0`
+- retained backlog: `0`
+- harvest coverage complete: `true`
+- retained backlog closed: `true`
+- full compared cohort: `true`
+- release truth current: `true`
+
+372. Complete. Extend the roadmap with the bounded `whichdb` shipment tier.
+    - Added the next concrete task tier from the clean Task `371` gate.
+    - The tier is limited to the active lead candidate selected in Task `367`:
+      - `whichdb`
+    - The tier must preserve the Task `368` acceptance criteria and Task `369`
+      patch start gate:
+      - provider-qualified query input only
+      - deterministic provider-discovery reporting only
+      - mocked-provider or managed local fixture validation only
+      - no hidden live-network validation
+      - no file materialization, archive download, local database indexing,
+        EMBOSS-era server/cache behavior, or generic provider-parity claim
+      - no implementation of `embossdata`, `assemblyget`, or `entret`
+    - The next mapped tasks are now Tasks `373` through `378`.
+
+373. Implement the bounded `whichdb` provider-discovery analytical core.
+    - Add method-associated `whichdb` logic under the retrieval/data-discovery
+      tool area with the smallest support surface needed.
+    - Accept one provider-qualified accession or identifier query.
+    - Normalize provider and query fields deterministically.
+    - Return discovery/reporting data only:
+      - provider route or routes considered
+      - normalized query
+      - discovery status
+      - governed retrieval method or methods the user should use next
+    - Reject local files, inline payload literals, unqualified database-universe
+      searches, and any request that would require live network lookup,
+      payload retrieval, archive download, or local indexing.
+    - Keep the first patch method-associated and avoid broad retrieval
+      framework redesign.
+
+374. Expose the deterministic typed `whichdb` result surface.
+    - Define typed parameters and outcome rows for normalized provider-discovery
+      reporting.
+    - Render a stable table-first or structured report form suitable for CLI,
+      service, generated documentation, and compared expected-output fixtures.
+    - Keep unsupported historical behavior visible through explicit error
+      paths rather than silent fallback.
+    - Add focused Rust coverage for normalization, rejection, and report-row
+      stability.
+
+375. Expose `whichdb` through the governed shipped surface.
+    - Add the governed registry descriptor and service/CLI routing needed for
+      `emboss-rs whichdb`.
+    - Preserve the governed tool registry as the source of truth for generated
+      documentation and validation surfaces.
+    - Ensure no generated page, validation stub, release report, or bridge
+      surface implies broader provider search or retrieval capability than the
+      bounded implementation actually supports.
+    - Run the smallest practical CLI/service checks for the new shipped route.
+
+376. Add canonical `whichdb` documentation, fixtures, validation metadata, and compared evidence.
+    - Add curated autodoc for the bounded provider-discovery report.
+    - Add mocked-provider or managed local fixtures for the canonical accepted
+      query and unsupported-scope cases.
+    - Add compared expected output for stable normalized discovery rows.
+    - Refresh generated tool documentation, validation metadata, and cohort
+      reports.
+    - Keep documentation explicit that `whichdb` is not a live provider search,
+      payload retrieval, archive download, database indexing, or generic
+      database-universe coverage tool.
+
+377. Re-run the full release-truth surface after shipping `whichdb`.
+    - Re-run the generated governance alignment, shipped cohort validation,
+      cohort health, comparison coverage, full-compared cohort, harvest
+      coverage, retained-backlog closure, Sphinx lint, Rust validation, and
+      release-build checks needed for the changed surface.
+    - Confirm the expected post-shipment truth:
+      - shipped methods increased by exactly one
+      - documentation-complete methods increased by exactly one
+      - compared-evidence methods increased by exactly one
+      - no documented-only shipped method
+      - no generated validation gap
+      - release truth current remains `true`
+    - Do not close this task if `whichdb` is only partially shipped or if
+      generated documentation/evidence lags the governed registry.
+
+378. Reassess the shipped `whichdb` slice before mapping further retrieval/data-discovery continuation.
+    - Decide whether the bounded `whichdb` provider-discovery slice is complete
+      enough to continue remote retrieval/data-discovery work.
+    - Confirm whether the next candidate should remain in the `whichdb`/remote
+      discovery family or move to another explicitly governed branch.
+    - Keep inactive branches inactive unless the roadmap records a new
+      governance decision first:
+      - `embossdata`
+      - `assemblyget`
+      - `entret`
+      - external database preparation helpers
+    - If continuation is approved, map the next task tier before code starts.
