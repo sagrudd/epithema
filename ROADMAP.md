@@ -5915,6 +5915,21 @@ implementation-program cycle. The near-term priorities are:
       - blank short descriptions
 
 339. Expose the deterministic typed result surface for normalized keyword-match reporting.
+    - Complete.
+    - Added method-local `emboss-tools` support for bounded `wossname`
+      result reporting in `crates/emboss-tools/src/command_tools/wossname.rs`.
+    - Added a direct public non-shipped `EmbossService::invoke_wossname(...)`
+      seam for local testing without governed registry or CLI exposure.
+    - Added typed normalized result rows for:
+      - matched tool identity
+      - governed tool family
+      - governed short description
+      - normalized matched query terms
+      - explicit matched text fields
+    - Recorded explicitly that this result surface remains bounded:
+      - it adapts governed local tool metadata only
+      - it does not widen into shipped registry exposure, semantic ranking,
+        ontology expansion, or provider-backed discovery
 
 340. Expose `wossname` through the governed shipped surface.
 

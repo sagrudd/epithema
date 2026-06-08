@@ -36,6 +36,7 @@ use emboss_tools::codon_tools::{
     run_chips, run_codcmp, run_codcopy, run_cusp, CaiParams, ChipsParams, CodcmpParams,
     CodcopyParams, CuspParams,
 };
+use emboss_tools::command_tools::{run_wossname, wossname_help, WossnameParams};
 use emboss_tools::feature_tools::{
     coderet_help, extractfeat_help, featcopy_help, featmerge_help, featreport_help, feattext_help,
     maskambignuc_help, maskambigprot_help, maskfeat_help, maskseq_help, run_coderet,
@@ -63,8 +64,8 @@ use emboss_tools::pattern_tools::{
     WordfinderParams, WordmatchParams,
 };
 use emboss_tools::primer_tools::{
-    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, SirnaParams, eprimer3_help,
-    primersearch_help, run_eprimer3, run_primersearch, run_sirna, sirna_help,
+    eprimer3_help, primersearch_help, run_eprimer3, run_primersearch, run_sirna, sirna_help,
+    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, SirnaParams,
 };
 use emboss_tools::protein_coordinates::{psiphi_help, run_psiphi, PsiphiInput, PsiphiParams};
 use emboss_tools::protein_plots::{
@@ -2112,9 +2113,7 @@ impl EmbossService {
                     outcome.parameters.min_tm_celsius,
                     outcome.parameters.max_tm_celsius
                 ))
-                .with_line(
-                    "Design scope: deterministic local candidate generation only".to_owned(),
-                )
+                .with_line("Design scope: deterministic local candidate generation only".to_owned())
                 .with_line(format!("Target records: {}", outcome.record_count))
                 .with_line(format!("Candidates: {}", outcome.rows.len())),
             report.clone(),
@@ -2213,11 +2212,87 @@ impl EmbossService {
                     outcome.parameters.max_homopolymer_run
                 ))
                 .with_line(
-                    "Design scope: deterministic local siRNA candidate generation only"
-                        .to_owned(),
+                    "Design scope: deterministic local siRNA candidate generation only".to_owned(),
                 )
                 .with_line(format!("Target records: {}", outcome.record_count))
                 .with_line(format!("Candidates: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    /// Invokes the bounded local `wossname` result surface without shipping it.
+    pub fn invoke_wossname(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, wossname_help()));
+        }
+
+        let [query]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("wossname", wossname_help()))?;
+        let outcome = run_wossname(WossnameParams { query })?;
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.tool_name.clone(),
+                    row.family.clone(),
+                    row.short_description.clone(),
+                    row.matched_terms.join(","),
+                    row.matched_fields.join(","),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported deterministic keyword matches across {} governed tool entries",
+                outcome.searched_entry_count
+            ),
+            Vec::new(),
+            Vec::new(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "tool".to_owned(),
+                    "family".to_owned(),
+                    "short_description".to_owned(),
+                    "matched_terms".to_owned(),
+                    "matched_fields".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Keyword-matched tool rows reported")
+                .with_line(format!("Query: {}", outcome.query))
+                .with_line(format!(
+                    "Normalized terms: {}",
+                    outcome.normalized_terms.join(", ")
+                ))
+                .with_line(format!(
+                    "Governed entries searched: {}",
+                    outcome.searched_entry_count
+                ))
+                .with_line(
+                    "Discovery scope: deterministic local governed-metadata keyword lookup only",
+                )
+                .with_line(format!("Matches: {}", outcome.rows.len())),
             report.clone(),
         );
 
@@ -18412,10 +18487,7 @@ mod tests {
         ]);
 
         let response = service
-            .invoke_primersearch(
-                request,
-                emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR,
-            )
+            .invoke_primersearch(request, emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR)
             .expect("primersearch should execute");
 
         match &response.result.payload {
@@ -18474,10 +18546,7 @@ mod tests {
         ]);
 
         let error = service
-            .invoke_primersearch(
-                request,
-                emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR,
-            )
+            .invoke_primersearch(request, emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR)
             .expect_err("provider-backed target inputs should fail");
         assert!(error
             .to_string()
@@ -18504,10 +18573,7 @@ mod tests {
         ]);
 
         let error = service
-            .invoke_primersearch(
-                request,
-                emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR,
-            )
+            .invoke_primersearch(request, emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR)
             .expect_err("invalid primer-pair file should fail");
         std::fs::remove_file(path).ok();
 
@@ -18533,6 +18599,70 @@ mod tests {
             .expect("primersearch should dispatch through the governed service");
 
         assert_eq!(response.tool.as_str(), "primersearch");
+    }
+
+    #[test]
+    fn executes_wossname_against_governed_tool_metadata() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wossname").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["pairwise align".to_owned()]);
+
+        let response = service
+            .invoke_wossname(request, emboss_tools::command_tools::WOSSNAME_DESCRIPTOR)
+            .expect("wossname should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "tool",
+                        "family",
+                        "short_description",
+                        "matched_terms",
+                        "matched_fields",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 4);
+                assert_eq!(
+                    table.rows.iter().map(|row| row[0].as_str()).collect::<Vec<_>>(),
+                    vec!["aligncopypair", "needle", "needleall", "water"]
+                );
+                assert_eq!(table.rows[0][1], "alignment_tools");
+                assert_eq!(table.rows[0][3], "pairwise,align");
+                assert_eq!(table.rows[0][4], "tool_name,short_description");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[0], "Query: pairwise align");
+        assert_eq!(
+            response.result.summary.lines[1],
+            "Normalized terms: pairwise, align"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Discovery scope: deterministic local governed-metadata keyword lookup only"
+        );
+    }
+
+    #[test]
+    fn rejects_blank_query_for_wossname() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wossname").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["   ".to_owned()]);
+
+        let error = service
+            .invoke_wossname(request, emboss_tools::command_tools::WOSSNAME_DESCRIPTOR)
+            .expect_err("blank queries should fail");
+        assert!(error
+            .to_string()
+            .contains("requires at least one keyword query term"));
     }
 
     #[test]
