@@ -6161,3 +6161,18 @@ implementation-program cycle. The near-term priorities are:
       - no live provider lookup or asset-distribution behavior
       - no command-discovery family widening unless `seealso` itself forces a
         real reassessment
+
+351. Capture the explicit discovery/seam stop conditions for `seealso`.
+    - Recorded explicitly that the repository should pause and reassess before
+      implementation if:
+      1. `seealso` cannot remain table-first with a deterministic typed
+         result surface derived from the same local
+         relationship-resolution path
+      2. `seealso` requires broad semantic-ranking, ontology expansion, or
+         other non-local discovery behavior
+      3. `seealso` cannot remain method-associated and instead demands a
+         generalized command-discovery framework before one shipped slice
+         closes
+      4. `seealso` forces broad relationship-taxonomy policy, synonym
+         semantics, or result-ranking behavior that is not clearly local to
+         the method

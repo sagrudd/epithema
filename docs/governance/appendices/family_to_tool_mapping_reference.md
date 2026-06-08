@@ -5972,6 +5972,22 @@ The same bounded rules remain:
 - no command-discovery family widening unless `seealso` itself forces a real
   reassessment
 
+### Explicit discovery/seam stop conditions for `seealso`
+
+Before any implementation starts, the repository should make the pause and
+reassess conditions for `seealso` explicit.
+
+The repository should pause and reassess before implementation if:
+
+1. `seealso` cannot remain table-first with a deterministic typed result
+   surface derived from the same local relationship-resolution path
+2. `seealso` requires broad semantic-ranking, ontology expansion, or other
+   non-local discovery behavior
+3. `seealso` cannot remain method-associated and instead demands a
+   generalized command-discovery framework before one shipped slice closes
+4. `seealso` forces broad relationship-taxonomy policy, synonym semantics,
+   or result-ranking behavior that is not clearly local to the method
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
