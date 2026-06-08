@@ -5974,3 +5974,29 @@ implementation-program cycle. The near-term priorities are:
       fully compared rather than executable-only.
 
 342. Re-run the full release-truth surface after shipping `wossname`, then reassess the shipped slice before any further command-discovery continuation is mapped.
+    - Re-ran the governed release-truth surface after the bounded `wossname`
+      evidence closure and recorded the observed clean state.
+    - `python3 scripts/release_metadata.py truth-check` passed.
+    - `make docs` passed.
+    - `git diff --check` passed.
+    - Recorded the post-ship `wossname` reassessment explicitly.
+    - Recorded explicitly that the shipped `wossname` slice stayed bounded,
+      deterministic, and keyword-discovery-local:
+      - it remained a bounded keyword-based discovery workflow rather than
+        widening into broad semantic-ranking or ontology expansion behavior
+      - it kept the normalized table-first keyword-match rows and typed result
+        surface derived from the same local lookup path
+      - it kept match reporting bounded to governed tool identity, short
+        description, matched terms, and matched fields rather than forcing
+        broader synonym-taxonomy or live provider lookup semantics
+      - it did not force a generalized command-discovery framework or widened
+        result-ranking behavior beyond the bounded local seam
+    - Recorded that the governed release-truth surface remained fully green:
+      - shipped methods: `112`
+      - compared evidence: `112`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `112`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `release_truth_current: true`

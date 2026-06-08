@@ -5775,6 +5775,38 @@ The repository should pause and reassess before implementation if:
 4. `wossname` forces broad tokenization policy, synonym-taxonomy semantics,
    or result-ranking behavior that is not clearly local to the method
 
+#### Post-ship `wossname` reassessment
+
+After the bounded `wossname` slice closes its compared-evidence work and
+reruns release truth, the repository should reassess whether the shipped
+method stayed bounded enough to justify further continuation planning inside
+the same family.
+
+That reassessment is affirmative:
+
+- the shipped `wossname` slice stayed bounded, deterministic, and
+  keyword-discovery-local
+- it remained a bounded keyword-based discovery workflow rather than widening
+  into broad semantic-ranking or ontology expansion behavior
+- it kept the normalized table-first keyword-match rows and typed result
+  surface derived from the same local lookup path
+- it kept match reporting bounded to governed tool identity, short
+  description, matched terms, and matched fields rather than forcing broader
+  synonym-taxonomy or live provider lookup semantics
+- it did not force a generalized command-discovery framework or widened
+  result-ranking behavior beyond the bounded local seam
+
+The governed release-truth surface remained fully green:
+
+- shipped methods: `112`
+- compared evidence: `112`
+- executable evidence: `0`
+- harvested legacy provenance present: `112`
+- `full_compared_cohort: true`
+- `harvest_coverage_complete: true`
+- `retained_backlog_closed: true`
+- `release_truth_current: true`
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
