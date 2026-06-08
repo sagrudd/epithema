@@ -5825,6 +5825,31 @@ The remaining bounded command-discovery continuation pool is now:
 - `embossdata`
 - `seealso`
 
+#### Honest seam review of the post-`wossname` command-discovery pool
+
+After the remaining bounded command-discovery pool is rebased onto the actual
+post-`wossname` state, the repository should decide whether another bounded
+continuation candidate still exists before any reserve-program promotion or
+next-method selection occurs.
+
+That decision is affirmative:
+
+- another bounded command-discovery continuation candidate still exists after
+  `wossname`
+- the no-candidate branch is not taken at this checkpoint
+- command discovery and help-navigation therefore remains the active
+  planning program
+
+The currently viable bounded continuation pool remains:
+
+- `embossdata`
+- `seealso`
+
+Reserve promotion does not happen at this checkpoint:
+
+- external database preparation helpers remains the reserve next program and
+  is not promoted here
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
