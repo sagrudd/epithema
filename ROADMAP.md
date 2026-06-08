@@ -6766,20 +6766,25 @@ Current baseline for this tier:
       payload retrieval, archive download, database indexing, or generic
       database-universe coverage tool.
 
-377. Re-run the full release-truth surface after shipping `whichdb`.
-    - Re-run the generated governance alignment, shipped cohort validation,
-      cohort health, comparison coverage, full-compared cohort, harvest
-      coverage, retained-backlog closure, Sphinx lint, Rust validation, and
-      release-build checks needed for the changed surface.
-    - Confirm the expected post-shipment truth:
-      - shipped methods increased by exactly one
-      - documentation-complete methods increased by exactly one
-      - compared-evidence methods increased by exactly one
-      - no documented-only shipped method
-      - no generated validation gap
-      - release truth current remains `true`
-    - Do not close this task if `whichdb` is only partially shipped or if
-      generated documentation/evidence lags the governed registry.
+377. Complete. Re-run the full release-truth surface after shipping `whichdb`.
+    - Re-ran the local release gate after the completed `whichdb` shipment:
+      repository wiring, sister-repository awareness, release metadata truth,
+      generated governance alignment, shipped cohort validation, cohort health,
+      comparison coverage, full-compared cohort, harvest coverage,
+      retained-backlog closure, Sphinx documentation, Rust formatting, clippy,
+      workspace tests, documentation build, and release-mode build.
+    - Confirmed the expected post-shipment truth:
+      - shipped methods: `114`
+      - documentation-complete shipped methods: `114`
+      - compared-evidence methods: `114`
+      - documented-only shipped methods: `0`
+      - blocking cohort gaps: `0`
+      - full-compared cohort: `true`
+      - harvest coverage complete: `true`
+      - retained backlog closed: `true`
+      - release truth current: `true`
+    - Confirmed `whichdb` has current generated documentation and validation
+      metadata, with no unresolved validation gaps.
 
 378. Reassess the shipped `whichdb` slice before mapping further retrieval/data-discovery continuation.
     - Decide whether the bounded `whichdb` provider-discovery slice is complete
