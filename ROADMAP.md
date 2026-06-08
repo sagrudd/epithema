@@ -6786,15 +6786,107 @@ Current baseline for this tier:
     - Confirmed `whichdb` has current generated documentation and validation
       metadata, with no unresolved validation gaps.
 
-378. Reassess the shipped `whichdb` slice before mapping further retrieval/data-discovery continuation.
-    - Decide whether the bounded `whichdb` provider-discovery slice is complete
-      enough to continue remote retrieval/data-discovery work.
-    - Confirm whether the next candidate should remain in the `whichdb`/remote
-      discovery family or move to another explicitly governed branch.
-    - Keep inactive branches inactive unless the roadmap records a new
-      governance decision first:
-      - `embossdata`
+378. Complete. Reassess the shipped `whichdb` slice before mapping further retrieval/data-discovery continuation.
+    - Recorded the post-ship `whichdb` reassessment from the actual
+      generated-truth state.
+    - The result is affirmative for continuing remote retrieval/data-discovery
+      planning, but negative for widening `whichdb` itself:
+      - the shipped `whichdb` slice stayed bounded, deterministic, and
+        route-reporting only
+      - it did not perform live provider search, payload retrieval, archive
+        download, local file indexing, provider fallback, or
+        database-universe discovery
+      - it now gives a stable user-facing routing seam from provider-qualified
+        queries toward already governed retrieval/archive methods
+      - further work should treat `whichdb` as complete for this milestone
+        unless a later explicit task reopens it
+    - Confirmed the next candidate should stay in the governed remote
+      retrieval and archive acquisition branch, because that is the active
+      branch and the full release-truth surface is green:
+      - shipped methods: `114`
+      - documentation-complete shipped methods: `114`
+      - compared-evidence methods: `114`
+      - blocking cohort gaps: `0`
+      - full-compared cohort: `true`
+      - harvest coverage complete: `true`
+      - retained backlog closed: `true`
+      - release truth current: `true`
+    - Kept inactive branches inactive:
+      - `embossdata` remains closed as a command-discovery continuation and
+        must not be revived without a new governance decision
+      - external database preparation helpers remain inactive until a modern
+        source-preparation milestone is explicitly selected
+      - `entret` remains too broad as the immediate next candidate because it
+        reopens generic flatfile and remote-entry semantics before the
+        narrower assembly-specific acquisition seam is reviewed
+    - Selected the next planning focus as `assemblyget` seam review, not
+      implementation:
+      - `assemblyget` is still in the governed remote retrieval and archive
+        acquisition family
+      - it is narrower than `entret`
+      - it can be honestly reviewed against already shipped `infoassembly`,
+        `runinfo`, `runget`, and `whichdb` seams before any file
+        materialization or provider-acquisition behavior is attempted
+
+## Next Tier Task Map
+
+The post-`whichdb` release-truth surface is green, and the bounded
+provider-discovery milestone is complete. The next tier stays inside remote
+retrieval and archive acquisition, but it must begin with planning-only
+seam review for `assemblyget` before any code-bearing work starts.
+
+Current baseline for this tier:
+
+- shipped methods: `114`
+- documentation-complete methods: `114`
+- compared-evidence methods: `114`
+- shipped methods with blocking gaps: `0`
+- harvest coverage complete: `true`
+- retained backlog closed: `true`
+- full compared cohort: `true`
+- release truth current: `true`
+
+379. Rebase the remote retrieval continuation pool onto the actual post-`whichdb` state.
+    - Reconfirm from the generated governance alignment and full scope matrix
+      which remote retrieval/archive acquisition methods are already shipped.
+    - Reconfirm the remaining unshipped historical/core candidates in this
+      branch:
       - `assemblyget`
       - `entret`
-      - external database preparation helpers
-    - If continuation is approved, map the next task tier before code starts.
+    - Reconfirm that `whichdb` should now be treated as shipped and complete
+      for the bounded provider-discovery milestone.
+    - Do not select an implementation candidate in this inventory task.
+
+380. Decide whether `assemblyget` passes honest seam review as the next bounded retrieval/data-discovery continuation candidate.
+    - Evaluate whether a useful first `assemblyget` slice can remain bounded
+      to provider-aware assembly metadata, manifest, or routing semantics.
+    - Reject or defer `assemblyget` if the useful slice requires immediate
+      live-network dependency, archive download, file materialization,
+      provider-wide parity, local database indexing, or generic acquisition
+      orchestration.
+    - Keep `entret`, `embossdata`, and external database preparation helpers
+      inactive while this seam review is unresolved.
+
+381. If `assemblyget` passes seam review, capture explicit method-level acceptance criteria before code starts.
+    - Define the exact input, provider, output, and validation boundaries for
+      one bounded assembly-focused slice.
+    - Require deterministic mocked-provider or managed-fixture validation.
+    - Require documentation to state honestly whether the slice reports
+      metadata/routes/manifests only or materializes any files.
+    - Do not widen into generic flatfile retrieval, live provider search,
+      local database indexing, or external preparation helpers.
+
+382. If `assemblyget` passes seam review, capture exact patch start conditions.
+    - Require the release-truth surface to remain green before any code patch.
+    - Require method-associated implementation naming and scoped fixtures.
+    - Require governed registry, service, CLI, autodoc, generated validation,
+      and compared-evidence plans before shipment.
+    - Pause if the first patch would need a generalized retrieval framework.
+
+383. If `assemblyget` passes seam review, map the full bounded implementation tier.
+    - Split the future implementation into analytical core, typed result
+      surface, governed shipment, canonical evidence, release-truth rerun, and
+      post-ship reassessment tasks.
+    - Keep the tier scoped to exactly one `assemblyget` slice.
+    - Keep `entret`, `embossdata`, and external database preparation helpers
+      inactive unless a later explicit governance task changes that state.
