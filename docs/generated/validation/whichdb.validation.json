@@ -1,0 +1,52 @@
+{
+  "tool_name": "whichdb",
+  "document_id": "whichdb-v1",
+  "source_mode": "curated",
+  "evidence_source": "executed_run",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "report_ena_provider_discovery_route",
+      "title": "Report the bounded ENA provider-discovery route",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
+      "required": true,
+      "artifact_ids": [
+        "whichdb_bounded_ena_case"
+      ],
+      "expected_output_ids": [
+        "whichdb_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS whichdb application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd",
+          "invocation": "whichdb -showall N"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS whichdb application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd",
+      "invocation": "whichdb -showall N"
+    }
+  ]
+}

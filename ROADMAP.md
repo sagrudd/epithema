@@ -6732,23 +6732,36 @@ Current baseline for this tier:
     - This task still does not ship `whichdb`; Task `375` owns governed
       registry, CLI, and service routing.
 
-375. Expose `whichdb` through the governed shipped surface.
-    - Add the governed registry descriptor and service/CLI routing needed for
-      `emboss-rs whichdb`.
-    - Preserve the governed tool registry as the source of truth for generated
-      documentation and validation surfaces.
-    - Ensure no generated page, validation stub, release report, or bridge
-      surface implies broader provider search or retrieval capability than the
-      bounded implementation actually supports.
-    - Run the smallest practical CLI/service checks for the new shipped route.
+375. Complete. Expose `whichdb` through the governed shipped surface.
+    - Added the governed `whichdb` registry descriptor in the retrieval tools
+      family.
+    - Added service dispatch for `emboss-rs whichdb` with a table-report
+      payload derived from the bounded typed result surface.
+    - The CLI external-subcommand route now accepts `whichdb` through the same
+      governed service path as other shipped tools.
+    - The shipped route remains bounded to provider-qualified discovery
+      reporting only:
+      - no live provider search
+      - no payload retrieval
+      - no archive download
+      - no local file indexing
+      - no database-universe fallback chain
+    - Added focused CLI and service coverage for the new shipped route,
+      including unsupported-provider reporting without fallback.
+    - Release gating required this shipped surface to include minimal honest
+      autodoc, generated documentation, validation metadata, and an acceptance
+      anchor for the bounded ENA provider-discovery route.
 
-376. Add canonical `whichdb` documentation, fixtures, validation metadata, and compared evidence.
-    - Add curated autodoc for the bounded provider-discovery report.
-    - Add mocked-provider or managed local fixtures for the canonical accepted
-      query and unsupported-scope cases.
-    - Add compared expected output for stable normalized discovery rows.
+376. Add canonical `whichdb` documentation depth and extended fixture coverage.
+    - Expand the curated autodoc for the bounded provider-discovery report
+      beyond the minimal release-gate contract added in Task `375`.
+    - Add mocked-provider or managed local fixtures for additional accepted
+      provider-qualified query and unsupported-scope cases.
+    - Add compared expected output for any additional stable normalized
+      discovery rows.
     - Refresh generated tool documentation, validation metadata, and cohort
-      reports.
+      reports if the expanded documentation or fixtures change governed
+      evidence.
     - Keep documentation explicit that `whichdb` is not a live provider search,
       payload retrieval, archive download, database indexing, or generic
       database-universe coverage tool.

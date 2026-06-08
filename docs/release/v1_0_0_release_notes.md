@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `113` methods, including:
+of `114` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -47,6 +47,7 @@ of `113` methods, including:
 - the bounded siRNA-candidate discovery method `sirna`
 - the bounded command-discovery keyword-lookup method `wossname`
 - the bounded command-discovery related-program method `seealso`
+- the bounded provider-discovery route-reporting method `whichdb`
 
 ### Governed retrieval
 
@@ -71,9 +72,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `113` shipped methods carry compared evidence
+- `114` shipped methods carry compared evidence
 - `0` shipped methods carry executable evidence
-- `113` shipped methods record harvested legacy provenance
+- `114` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`

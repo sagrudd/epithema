@@ -1,0 +1,107 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "whichdb-v1",
+  "tool": {
+    "name": "whichdb",
+    "family": "retrieval_tools",
+    "summary": "Report bounded provider-discovery routes for one provider-qualified query",
+    "legacy_names": [
+      "whichdb"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`whichdb` reports deterministic provider-discovery rows for one provider-qualified accession or identifier. The EMBOSS-RS v1 surface normalizes the provider prefix and provider-local query, then reports the governed retrieval or metadata methods that can be used next."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one provider-qualified query such as `ena:AB000263`. Bare identifiers, local file paths, inline sequence literals, and unqualified database names are rejected because this seam does not perform database-universe discovery."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable table report with provider, normalized query, route label, discovery status, and next governed methods. Supported providers currently return bounded routing guidance; unsupported providers are reported explicitly without fallback expansion."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs whichdb`. Rust service coverage exercises the governed service route for a supported ENA query and verifies that unsupported providers are reported without fallback."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `whichdb` seam is intentionally bounded. It does not perform live provider search, payload retrieval, archive download, local file indexing, broad database discovery, or a fallback chain across provider universes. Canonical fixtures and compared evidence are tracked as follow-up work."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "whichdb_bounded_ena_case",
+      "label": "Bounded ENA whichdb route fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/whichdb_ena_ab000263_case.md"
+      },
+      "description": "Repository-managed case note for the bounded ENA provider-discovery route exercised by Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "report_ena_provider_discovery_route",
+      "title": "Report the bounded ENA provider-discovery route",
+      "description": "Normalizes an ENA-qualified query and reports the governed retrieval or metadata methods available for that provider-qualified route.",
+      "artifact_ids": [
+        "whichdb_bounded_ena_case"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "value": "ena:AB000263"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "whichdb_table",
+          "label": "Bounded whichdb route table",
+          "description": "A stable table row with provider `ena`, normalized query `AB000263`, route label `ena.sequence-or-archive-discovery`, discovery status `supported_provider`, and next methods `seqret,runinfo,runget,infoassembly`."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS whichdb application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd",
+        "invocation": "whichdb -showall N"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS whichdb application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd",
+        "invocation": "whichdb -showall N"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "report_ena_provider_discovery_route"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

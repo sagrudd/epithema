@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `113`
-- Documentation-complete methods: `113`
-- Methods with validation stubs: `113`
+- Methods in cohort: `114`
+- Documentation-complete methods: `114`
+- Methods with validation stubs: `114`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `113`
+- Methods with harvested legacy provenance recorded: `114`
 - Methods with executable validation: `0`
-- Methods with compared evidence: `113`
+- Methods with compared evidence: `114`
 - Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
@@ -49,6 +49,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqretsetall` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `seqretsplit` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `refseqget` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `whichdb` | `retrieval_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `newseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `makenucseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `makeprotseq` | `sequence_stream` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |

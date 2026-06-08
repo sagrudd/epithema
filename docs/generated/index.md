@@ -123,6 +123,7 @@ tools/twofeat
 tools/union
 tools/vectorstrip
 tools/water
+tools/whichdb
 tools/wobble
 tools/wordcount
 tools/wordfinder

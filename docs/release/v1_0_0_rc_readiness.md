@@ -118,10 +118,10 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `113`
-- Compared-evidence methods: `113`
+- Shipped methods audited: `114`
+- Compared-evidence methods: `114`
 - Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `113`
+- Methods with harvested legacy provenance recorded: `114`
 - Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
@@ -131,9 +131,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `113` shipped methods are documented and present in the generated docs
+- All `114` shipped methods are documented and present in the generated docs
   index.
-- All `113` shipped methods have a checked-in validation stub.
+- All `114` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -231,7 +231,7 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `113/113` shipped methods at compared evidence with `0`
+  and now records `114/114` shipped methods at compared evidence with `0`
   methods below compared evidence.
 
 ### Harvest coverage reporting
@@ -240,7 +240,7 @@ Current generated release-truth markers:
 - Basis: the harvest-coverage exceptions report is generated at:
   - `docs/generated/validation/harvest_coverage.json`
   - `docs/generated/harvest_coverage.md`
-  and now records `113/113` shipped methods with harvested legacy
+  and now records `114/114` shipped methods with harvested legacy
   provenance and `0` harvest exceptions.
 
 ### Retained backlog closure tracking
@@ -298,13 +298,13 @@ Current generated release-truth markers:
 
 ### Legacy harvesting is complete
 
-- The cohort report now records `113` methods with harvested legacy
+- The cohort report now records `114` methods with harvested legacy
   provenance.
 - Harvest coverage is complete across the shipped cohort at this checkpoint.
 
 ### Comparison-based acceptance is complete
 
-- The cohort report now records `113` methods with compared evidence and `0`
+- The cohort report now records `114` methods with compared evidence and `0`
   shipped methods at executable evidence.
 - The comparison framework remains real and reusable, and the full compared
   cohort gate is green at this checkpoint.
@@ -333,10 +333,10 @@ Current generated release-truth markers:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `113`
-- Compared-evidence methods: `113`
+- Shipped methods audited: `114`
+- Compared-evidence methods: `114`
 - Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `113`
+- Methods with harvested legacy provenance recorded: `114`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

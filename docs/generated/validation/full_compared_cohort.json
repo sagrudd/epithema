@@ -3,8 +3,8 @@
   "report_id": "full-compared-cohort-release-gate",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 113,
-    "compared_evidence_count": 113,
+    "total_method_count": 114,
+    "compared_evidence_count": 114,
     "executable_evidence_count": 0,
     "below_compared_method_count": 0,
     "full_compared_cohort": true

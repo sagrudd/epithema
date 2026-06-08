@@ -96,6 +96,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "refseqget -sequence ncbi:protein:NP_000537.3 -outseq stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "whichdb",
+        autodoc_contract: "docs/autodoc/tools/whichdb.json",
+        example_id: "report_ena_provider_discovery_route",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/whichdb_report_ena_provider_discovery_route.tsv",
+        legacy_source: "EMBOSS whichdb application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd",
+        legacy_invocation: "whichdb -showall N",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "runinfo",
         autodoc_contract: "docs/autodoc/tools/runinfo.json",
         example_id: "normalize_ena_run_metadata",
@@ -1418,6 +1427,7 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .display()
                 .to_string(),
         ],
+        "whichdb" => vec!["ena:AB000263".to_owned()],
         "psiphi" => vec![
             repo_root
                 .join("crates/emboss-tools/tests/fixtures/psiphi_backbone.txt")

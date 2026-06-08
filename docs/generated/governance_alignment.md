@@ -8,19 +8,19 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `113`
-- Shipped tools with governance mapping: `113`
+- Shipped tools: `114`
+- Shipped tools with governance mapping: `114`
 - Retained backlog still unshipped: `0`
-- Shipped tools with curated autodoc: `113`
-- Shipped tools with executable or compared evidence: `113`
-- Shipped tools with harvested legacy provenance: `113`
-- Shipped tools with compared evidence: `113`
+- Shipped tools with curated autodoc: `114`
+- Shipped tools with executable or compared evidence: `114`
+- Shipped tools with harvested legacy provenance: `114`
+- Shipped tools with compared evidence: `114`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
 - Shipped retain methods: `90`
-- Shipped rework methods: `23`
+- Shipped rework methods: `24`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
 
@@ -46,7 +46,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 10 | 10 | 10 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 3 | 3 | 3 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 3 | 3 | 3 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 7 | 7 | 7 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 8 | 8 | 8 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — Modern archive-scale raw data ingestion | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -87,6 +87,7 @@ All shipped methods are mapped in the governance appendix.
 | `seqretsetall` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `seqretsplit` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `refseqget` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
+| `whichdb` | `retrieval_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `newseq` | `sequence_stream` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
 | `makenucseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |
 | `makeprotseq` | `sequence_stream` | Core Retain — Sequence editing and manipulation | retain | yes | `compared_evidence` |

@@ -4,9 +4,9 @@ This page is generated from the shipped cohort validation report, the governance
 
 ## Summary
 
-- Shipped methods: `113`
-- Compared-evidence methods: `113`
-- Methods with harvested legacy provenance recorded: `113`
+- Shipped methods: `114`
+- Compared-evidence methods: `114`
+- Methods with harvested legacy provenance recorded: `114`
 - Retained backlog still unshipped: `0`
 - Largest retained backlog family: `none` (`0` remaining)
 - Weakest evidence family: `none` (`0` methods below compared evidence)

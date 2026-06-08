@@ -80,8 +80,8 @@ use emboss_tools::restriction_tools::{
 };
 use emboss_tools::retrieval_tools::{
     RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
-    SeqretsplitParams, refseqget_help, run_refseqget, run_seqret, run_seqretsetall,
-    run_seqretsplit, seqret_help, seqretsetall_help, seqretsplit_help,
+    SeqretsplitParams, WhichdbParams, refseqget_help, run_refseqget, run_seqret, run_seqretsetall,
+    run_seqretsplit, run_whichdb, seqret_help, seqretsetall_help, seqretsplit_help, whichdb_help,
 };
 use emboss_tools::sequence_edit::{
     BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
@@ -307,6 +307,7 @@ impl EmbossService {
             "seqretsetall" => self.invoke_seqretsetall(request, descriptor),
             "seqretsplit" => self.invoke_seqretsplit(request, descriptor),
             "refseqget" => self.invoke_refseqget(request, descriptor),
+            "whichdb" => self.invoke_whichdb(request, descriptor),
             "seqcount" => self.invoke_seqcount(request, descriptor),
             "nthseq" => self.invoke_nthseq(request, descriptor),
             "skipseq" => self.invoke_skipseq(request, descriptor),
@@ -2419,6 +2420,62 @@ impl EmbossService {
         self.invoke_refseqget_with_client::<emboss_providers::ReqwestHttpClient>(
             request, descriptor, None,
         )
+    }
+
+    fn invoke_whichdb(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, whichdb_help()));
+        }
+
+        let [query]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("whichdb", whichdb_help()))?;
+        let outcome = run_whichdb(WhichdbParams { query })?;
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("bounded provider-discovery table");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported {} provider-discovery route(s) for {}:{}",
+                outcome.rows.len(),
+                outcome.provider,
+                outcome.normalized_query
+            ),
+            Vec::new(),
+            vec![output_provenance.clone()],
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                outcome.report_columns(),
+                outcome.report_rows(),
+            )),
+            ResultSummary::new("Provider discovery report completed")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Normalized query: {}", outcome.normalized_query))
+                .with_line("Discovery policy: bounded provider-qualified reporting only")
+                .with_line("Retrieval policy: no live lookup or payload retrieval is performed"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("stdout", ArtifactKind::Table)
+                .with_label("bounded provider-discovery table")
+                .with_provenance(output_provenance),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
     }
 
     /// Invokes `refseqget` using an explicit provider HTTP client.
@@ -12907,6 +12964,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqretsetall" => seqretsetall_help(),
         "seqretsplit" => seqretsplit_help(),
         "refseqget" => refseqget_help(),
+        "whichdb" => whichdb_help(),
         "infoassembly" => infoassembly_help(),
         "runinfo" => runinfo_help(),
         "runget" => runget_help(),
@@ -14031,6 +14089,76 @@ mod tests {
             error.code(),
             Some("service.refseqget.local_input_not_supported")
         );
+    }
+
+    #[test]
+    fn dispatches_whichdb_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("whichdb").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:AB000263".to_owned()]);
+
+        let response = service
+            .invoke(request)
+            .expect("whichdb should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "whichdb");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "provider",
+                        "normalized_query",
+                        "route_label",
+                        "discovery_status",
+                        "next_methods"
+                    ]
+                );
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "ena");
+                assert_eq!(table.rows[0][1], "AB000263");
+                assert_eq!(table.rows[0][2], "ena.sequence-or-archive-discovery");
+                assert_eq!(table.rows[0][3], "supported_provider");
+                assert_eq!(table.rows[0][4], "seqret,runinfo,runget,infoassembly");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(
+            response.result.summary.lines[2],
+            "Discovery policy: bounded provider-qualified reporting only"
+        );
+        assert_eq!(
+            response.result.summary.lines[3],
+            "Retrieval policy: no live lookup or payload retrieval is performed"
+        );
+    }
+
+    #[test]
+    fn whichdb_reports_unsupported_provider_without_fallback() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("whichdb").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["uniprot:P12345".to_owned()]);
+
+        let response = service
+            .invoke(request)
+            .expect("whichdb should report unsupported provider scope");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "uniprot");
+                assert_eq!(table.rows[0][2], "unsupported-provider");
+                assert_eq!(table.rows[0][3], "unsupported_provider");
+                assert_eq!(table.rows[0][4], "");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
     }
 
     #[test]

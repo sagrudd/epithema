@@ -6,9 +6,9 @@ This page is generated from the shipped cohort validation report and the governa
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
-- Shipped methods: `113`
+- Shipped methods: `114`
 - Family rows: `12`
-- Compared-evidence methods: `113`
+- Compared-evidence methods: `114`
 - Executable-only methods: `0`
 - Harvested-but-not-compared methods: `0`
 
@@ -26,5 +26,5 @@ This page is generated from the shipped cohort validation report and the governa
 | Modernize — Rework — Plotting and visualization tools | 10 | 10 | 0 | 0 |
 | Modernize — Rework — Primer and assay-oriented search | 3 | 3 | 0 | 0 |
 | Modernize — Rework — Protein property and structural-summary utilities | 3 | 3 | 0 | 0 |
-| Modernize — Rework — Remote retrieval and archive acquisition | 7 | 7 | 0 | 0 |
+| Modernize — Rework — Remote retrieval and archive acquisition | 8 | 8 | 0 | 0 |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 0 |

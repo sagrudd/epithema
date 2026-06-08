@@ -4,9 +4,9 @@
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
   "summary": {
-    "total_method_count": 113,
+    "total_method_count": 114,
     "family_count": 12,
-    "compared_count": 113,
+    "compared_count": 114,
     "executable_only_count": 0,
     "harvested_but_not_compared_count": 0
   },
@@ -83,8 +83,8 @@
     },
     {
       "family": "Modernize — Rework — Remote retrieval and archive acquisition",
-      "shipped_method_count": 7,
-      "compared_count": 7,
+      "shipped_method_count": 8,
+      "compared_count": 8,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

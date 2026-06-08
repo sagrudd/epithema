@@ -112,6 +112,12 @@ impl WhichdbOutcome {
     }
 }
 
+/// Returns the bounded `whichdb` help text.
+#[must_use]
+pub fn whichdb_help() -> &'static str {
+    "Usage: emboss-rs whichdb <provider-qualified-query>\n\nReport deterministic bounded provider-discovery rows for one provider-qualified accession or identifier. The v1 seam normalizes the provider prefix and provider-local query, reports the governed retrieval or metadata methods to use next, and does not perform live provider search, payload retrieval, archive download, local file indexing, or database-universe discovery."
+}
+
 /// Executes the bounded `whichdb` provider-discovery analytical core.
 pub fn run_whichdb(params: WhichdbParams) -> Result<WhichdbOutcome, ToolExecutionError> {
     let (provider, normalized_query) = parse_provider_qualified_query(&params.query)?;

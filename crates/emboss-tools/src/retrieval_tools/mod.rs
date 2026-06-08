@@ -17,6 +17,7 @@ pub use seqretsplit::{
 };
 pub use whichdb::{
     WhichdbDiscoveryRow, WhichdbDiscoveryStatus, WhichdbOutcome, WhichdbParams, run_whichdb,
+    whichdb_help,
 };
 
 use crate::ToolDescriptor;
@@ -45,5 +46,11 @@ pub const SEQRETSPLIT_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const REFSEQGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "refseqget",
     "retrieve one provider-backed reference sequence through the governed acquisition seam",
+)
+.with_family(FAMILY);
+/// `whichdb` descriptor.
+pub const WHICHDB_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "whichdb",
+    "report bounded provider-discovery routes for one provider-qualified query",
 )
 .with_family(FAMILY);
