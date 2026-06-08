@@ -255,6 +255,27 @@ fn looks_like_local_file_reference(query: &str) -> bool {
 mod tests {
     use super::{WHICHDB_REPORT_COLUMNS, WhichdbDiscoveryStatus, WhichdbParams, run_whichdb};
 
+    fn fixture_text(name: &str) -> String {
+        std::fs::read_to_string(
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("tests/fixtures")
+                .join(name),
+        )
+        .unwrap_or_else(|error| panic!("fixture {name} should load: {error}"))
+    }
+
+    fn fixture_text_without_line_ending(name: &str) -> String {
+        let mut text = fixture_text(name);
+        if text.ends_with("\r\n") {
+            text.truncate(text.len() - 2);
+        } else if text.ends_with('\n') {
+            text.truncate(text.len() - 1);
+        } else {
+            panic!("fixture {name} should end with one newline");
+        }
+        text
+    }
+
     #[test]
     fn normalizes_provider_qualified_ena_query() {
         let outcome = run_whichdb(WhichdbParams {
@@ -302,6 +323,10 @@ mod tests {
             "ncbi.reference-sequence-discovery"
         );
         assert_eq!(outcome.rows[0].next_methods, vec!["refseqget"]);
+        assert_eq!(
+            outcome.render_tsv_report(),
+            fixture_text_without_line_ending("whichdb_ncbi_nested_reference_route.tsv")
+        );
     }
 
     #[test]
@@ -327,6 +352,10 @@ mod tests {
                 "unsupported_provider",
                 "",
             ]
+        );
+        assert_eq!(
+            outcome.render_tsv_report(),
+            fixture_text_without_line_ending("whichdb_unsupported_provider_route.tsv")
         );
     }
 

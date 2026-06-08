@@ -1,0 +1,2 @@
+provider	normalized_query	route_label	discovery_status	next_methods
+uniprot	P12345	unsupported-provider	unsupported_provider	

@@ -6752,17 +6752,17 @@ Current baseline for this tier:
       autodoc, generated documentation, validation metadata, and an acceptance
       anchor for the bounded ENA provider-discovery route.
 
-376. Add canonical `whichdb` documentation depth and extended fixture coverage.
-    - Expand the curated autodoc for the bounded provider-discovery report
+376. Complete. Add canonical `whichdb` documentation depth and extended fixture coverage.
+    - Expanded the curated autodoc for the bounded provider-discovery report
       beyond the minimal release-gate contract added in Task `375`.
-    - Add mocked-provider or managed local fixtures for additional accepted
-      provider-qualified query and unsupported-scope cases.
-    - Add compared expected output for any additional stable normalized
-      discovery rows.
-    - Refresh generated tool documentation, validation metadata, and cohort
-      reports if the expanded documentation or fixtures change governed
-      evidence.
-    - Keep documentation explicit that `whichdb` is not a live provider search,
+    - Added managed fixture notes for the accepted nested NCBI
+      provider-qualified query and unsupported-provider no-fallback case.
+    - Added compared TSV fixtures for the additional stable NCBI normalized
+      route row and the unsupported-provider diagnostic row, with Rust
+      analytical coverage comparing current output against those fixtures.
+    - Refreshed generated tool documentation and validation metadata for the
+      expanded curated examples.
+    - Kept documentation explicit that `whichdb` is not a live provider search,
       payload retrieval, archive download, database indexing, or generic
       database-universe coverage tool.
 

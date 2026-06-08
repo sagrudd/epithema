@@ -1,0 +1,2 @@
+provider	normalized_query	route_label	discovery_status	next_methods
+ncbi	protein:NP_000537.3	ncbi.reference-sequence-discovery	supported_provider	refseqget
