@@ -6000,3 +6000,41 @@ implementation-program cycle. The near-term priorities are:
       - `harvest_coverage_complete: true`
       - `retained_backlog_closed: true`
       - `release_truth_current: true`
+
+343. Extend the roadmap from the actual post-`wossname` branch outcome.
+    - Recorded the current governed truth explicitly:
+      - shipped methods: `112`
+      - compared evidence: `112`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `112`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+      - `gapped_method_count: 0`
+      - `weakest_evidence_family: null`
+      - `release_truth_current: true`
+    - Recorded the branch consequence explicitly:
+      - the first bounded command-discovery continuation slice closed cleanly
+        through `wossname`
+      - command discovery and help-navigation remains the active planning
+        program, but it now has to be re-based onto the remaining narrowed
+        candidate pool instead of assuming automatic continuation
+      - external database preparation helpers remains the reserve next program
+        and should not be promoted unless the narrowed command-discovery
+        continuation branch fails honest seam review
+    - The next mapped tier is now Tasks `344` through `357`, centered on:
+      - rebasing the remaining bounded command-discovery continuation pool
+        onto the actual post-`wossname` state
+      - deciding whether another bounded command-discovery continuation
+        candidate still exists after the first shipped slice
+      - either promoting external database preparation helpers if the
+        narrowed command-discovery continuation branch fails honest seam
+        review, or selecting exactly one next bounded command-discovery
+        candidate from:
+        - `embossdata`
+        - `seealso`
+      - capturing acceptance criteria, exact patch start conditions, and
+        explicit discovery/seam stop conditions for the chosen method
+      - mapping and shipping one full bounded command-discovery slice
+      - rerunning release truth and reassessing the shipped
+        command-discovery slice before any further continuation is mapped
