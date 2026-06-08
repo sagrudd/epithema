@@ -6038,3 +6038,17 @@ implementation-program cycle. The near-term priorities are:
       - mapping and shipping one full bounded command-discovery slice
       - rerunning release truth and reassessing the shipped
         command-discovery slice before any further continuation is mapped
+
+344. Rebase the bounded command-discovery continuation pool onto the actual post-`wossname` state.
+    - Recorded explicitly that the first bounded command-discovery
+      continuation slice is now treated as closed:
+      - shipped bounded command-discovery slice:
+        - `wossname`
+    - Recorded explicitly that the remaining bounded command-discovery
+      continuation pool is now:
+      - `embossdata`
+      - `seealso`
+    - Kept this task inventory-only:
+      - it does not yet decide whether both remaining methods still pass
+        honest seam review strongly enough to remain active continuation
+        candidates

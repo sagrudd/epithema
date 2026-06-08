@@ -5807,6 +5807,24 @@ The governed release-truth surface remained fully green:
 - `retained_backlog_closed: true`
 - `release_truth_current: true`
 
+#### Post-`wossname` bounded continuation inventory
+
+After the shipped `wossname` reassessment closes, the repository should rebase
+the remaining command-discovery continuation pool onto the actual shipped
+state before deciding whether another bounded continuation candidate still
+exists.
+
+The first bounded command-discovery continuation slice is now treated as
+closed:
+
+- shipped bounded command-discovery slice:
+  - `wossname`
+
+The remaining bounded command-discovery continuation pool is now:
+
+- `embossdata`
+- `seealso`
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.
