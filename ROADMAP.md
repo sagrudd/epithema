@@ -6514,11 +6514,41 @@ implementation-program cycle. The near-term priorities are:
     - This task does not add a shipped `whichdb` surface, generated tool page,
       validation stub, acceptance evidence, or release claim.
 
-368. If the fallback path is activated, capture acceptance criteria for the selected lead candidate.
-    - Keep criteria scoped to one bounded shipped slice.
-    - Preserve release truth and documentation honesty.
-    - Avoid re-opening omitted legacy database-indexing helpers unless the
-      governance matrix is explicitly updated first.
+368. Complete. If the fallback path is activated, capture acceptance criteria for the selected lead candidate.
+    - Acceptance criteria for the bounded `whichdb` lead slice:
+      - ship exactly one governed `whichdb` method surface
+      - expose `whichdb` as a modern provider-discovery report, not as a
+        compatibility-first "search every configured database" implementation
+      - accept one provider-qualified accession or identifier query in the
+        first slice
+      - return a deterministic tabular or structured report that names the
+        provider route or routes considered, the normalized query, the
+        discovery status, and the retrieval method or methods the user should
+        use next
+      - validate the slice with mocked-provider or managed local fixtures only
+      - commit curated autodoc, generated validation metadata, and compared
+        expected output before treating the method as shipped
+      - keep release-truth reports at full currentness with no documented-only
+        shipped method and no generated gap
+    - Explicit non-goals for this acceptance gate:
+      - no live-network validation requirement
+      - no silent provider fallback chain
+      - no broad provider-parity claim across all ENA, SRA, NCBI, taxonomy,
+        variation, or local database sources
+      - no file materialization, archive download, or sequence-entry retrieval
+        beyond reporting the discovery result and next governed retrieval path
+      - no local database indexing, EMBOSS cache/server plumbing, or
+        external data-preparation helper behavior
+      - no implementation of `embossdata`, `assemblyget`, or `entret`
+    - Documentation honesty requirements:
+      - generated docs must describe `whichdb` as a bounded provider-discovery
+        report
+      - release and validation pages must not imply generic remote-provider
+        parity, harvested live-network evidence, or database-universe coverage
+      - any unsupported historical behavior must be documented as intentionally
+        out of scope for the first slice
+    - The unselected external database preparation branch remains inactive
+      unless the governance matrix is explicitly updated first.
 
 369. If the fallback path is activated, capture exact patch start conditions for the selected lead candidate.
     - Require clean generated reports and release truth.
