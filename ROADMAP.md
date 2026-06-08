@@ -6247,6 +6247,24 @@ implementation-program cycle. The near-term priorities are:
       generated release-truth surface below the existing full-compared-cohort CI
       contract.
 
-356. Re-run the full release-truth surface after shipping `seealso`.
+356. Complete. Re-run the full release-truth surface after shipping `seealso`.
+    - Re-ran the release-truth surface after the governed `seealso`
+      shipment:
+      - `make release-generated-check
+        PYTHON=/Users/stephen/Projects/emboss-rs/.venv-docs/bin/python`
+      - `python3 scripts/release_metadata.py truth-check`
+      - `make lint-docs
+        PYTHON=/Users/stephen/Projects/emboss-rs/.venv-docs/bin/python`
+      - `make anchor-validation`
+    - Confirmed the current generated truth state:
+      - shipped methods: `113`
+      - compared evidence: `113`
+      - full compared cohort: `true`
+      - harvested legacy provenance: `113`
+      - harvest coverage complete: `true`
+      - retained backlog still unshipped: `0`
+      - release-truth document current: `true`
+    - Corrected stale release-readiness prose that still referenced earlier
+      full-compared and harvest-coverage denominators.
 
 357. Reassess the shipped `seealso` slice before any further command-discovery continuation is mapped.

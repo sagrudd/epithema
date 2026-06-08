@@ -231,7 +231,7 @@ Current generated release-truth markers:
 - Basis: the full-compared-cohort gate is generated at:
   - `docs/generated/validation/full_compared_cohort.json`
   - `docs/generated/full_compared_cohort.md`
-  and now records `111/111` shipped methods at compared evidence with `0`
+  and now records `113/113` shipped methods at compared evidence with `0`
   methods below compared evidence.
 
 ### Harvest coverage reporting
@@ -240,7 +240,7 @@ Current generated release-truth markers:
 - Basis: the harvest-coverage exceptions report is generated at:
   - `docs/generated/validation/harvest_coverage.json`
   - `docs/generated/harvest_coverage.md`
-  and now records `110/110` shipped methods with harvested legacy
+  and now records `113/113` shipped methods with harvested legacy
   provenance and `0` harvest exceptions.
 
 ### Retained backlog closure tracking
