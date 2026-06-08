@@ -4,13 +4,14 @@ Status date: 2026-05-18
 
 ## Recommendation
 
-`emboss-rs` is **ready for a `v1.0.0` release-candidate tag (`RC1`) with known
-limitations**.
+`emboss-rs` is **not currently ready for a `v1.0.0` release-candidate tag
+(`RC1`)**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
-path, or release automation. The remaining limitations are release cutover and
-intentional scope boundaries, not evidence-depth debt, retained-backlog
-closure, or broken packaging mechanics.
+path, or release automation. The current blocker is evidence-depth debt in the
+newly shipped bounded `wossname` slice: the method is shipped with executable
+evidence and harvested provenance, but it is not yet back at compared-evidence
+maturity.
 
 ## Audited Shipped Cohort
 
@@ -81,6 +82,7 @@ shipped cohort is:
 - `charge`
 - `pepwindow`
 - `sirna`
+- `wossname`
 - `recoder`
 - `silent`
 - `aaindexextract`
@@ -117,11 +119,11 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `111`
+- Shipped methods audited: `112`
 - Compared-evidence methods: `111`
-- Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `111`
-- Full compared cohort: `yes`
+- Executable-evidence methods: `1`
+- Methods with harvested legacy provenance recorded: `112`
+- Full compared cohort: `no`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -130,9 +132,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `111` shipped methods are documented and present in the generated docs
+- All `112` shipped methods are documented and present in the generated docs
   index.
-- All `111` shipped methods have a checked-in validation stub.
+- All `112` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -168,10 +170,16 @@ Current generated release-truth markers:
 - Remote retrieval remains governed and compared for the shipped slice, but the
   broader acquisition/orchestration surface is still a future rework program
   rather than a claim of general provider parity.
+- `wossname` now ships through the governed surface with curated legacy
+  provenance and a runnable keyword-match validation seam, but it remains the
+  only executable-only shipped method until the canonical compared fixture
+  lands.
 
 ### Not Ready / Blocked
 
-- No shipped-cohort evidence blockers are currently open.
+- The shipped-cohort evidence blocker is `wossname` in the command-discovery
+  family. Until its canonical compared keyword-match fixture lands, the cohort
+  is not fully compared and the release-truth gate remains amber.
 
 ## Governance And Release Obligation Audit
 

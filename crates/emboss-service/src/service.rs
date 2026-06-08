@@ -351,6 +351,7 @@ impl EmbossService {
             "seqmatchall" => self.invoke_seqmatchall(request, descriptor),
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
+            "wossname" => self.invoke_wossname(request, descriptor),
             "banana" => self.invoke_banana(request, descriptor),
             "density" => self.invoke_density(request, descriptor),
             "wobble" => self.invoke_wobble(request, descriptor),
@@ -2227,7 +2228,7 @@ impl EmbossService {
         ))
     }
 
-    /// Invokes the bounded local `wossname` result surface without shipping it.
+    /// Invokes the bounded shipped `wossname` result surface.
     pub fn invoke_wossname(
         &self,
         request: InvocationRequest,
@@ -12870,6 +12871,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
+        "wossname" => wossname_help(),
         "banana" => banana_help(),
         "density" => density_help(),
         "wobble" => wobble_help(),
@@ -18714,6 +18716,22 @@ mod tests {
                 .to_string()
                 .contains("requires at least one keyword query term")
         );
+    }
+
+    #[test]
+    fn dispatches_wossname_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("wossname").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["pairwise align".to_owned()]);
+
+        let response = service
+            .invoke(request)
+            .expect("wossname should dispatch through the governed service");
+
+        assert_eq!(response.tool.as_str(), "wossname");
     }
 
     #[test]

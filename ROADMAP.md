@@ -5928,6 +5928,30 @@ implementation-program cycle. The near-term priorities are:
         ontology expansion, or provider-backed discovery
 
 340. Expose `wossname` through the governed shipped surface.
+    - Complete.
+    - Added `wossname` to the governed shipped registry in
+      `crates/emboss-tools/src/lib.rs`.
+    - Added shipped service dispatch and shipped help-text routing in
+      `crates/emboss-service/src/service.rs`.
+    - Added CLI routing coverage for `emboss-rs wossname` in
+      `crates/emboss-cli/src/app.rs`.
+    - Added the curated bounded autodoc contract in
+      `docs/autodoc/tools/wossname.json`.
+    - Added the committed query fixture
+      `crates/emboss-tools/tests/fixtures/wossname_query.txt` so the shipped
+      validation case is runnable rather than declared-only.
+    - Regenerated the shipped docs page and validation stub:
+      - `docs/generated/tools/wossname.md`
+      - `docs/generated/validation/wossname.validation.json`
+    - Regenerated the shipped cohort reports into the honest interim state:
+      - shipped methods: `112`
+      - compared evidence: `111`
+      - executable evidence: `1`
+      - harvested legacy provenance present: `112`
+      - `full_compared_cohort: false`
+      - `release_truth_current: false`
+    - Updated release-facing docs honestly to reflect that the bounded
+      `wossname` slice is now shipped but still below compared evidence.
 
 341. Add canonical analytical fixtures plus compared evidence on normalized keyword-match rows.
 

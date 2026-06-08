@@ -1,0 +1,52 @@
+{
+  "tool_name": "wossname",
+  "document_id": "wossname-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "wossname_keyword_matches_example",
+      "title": "Report deterministic keyword matches against governed local tool metadata",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "pending",
+      "required": true,
+      "artifact_ids": [
+        "wossname_query_fixture"
+      ],
+      "expected_output_ids": [
+        "wossname_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS wossname application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd",
+          "invocation": "wossname -search \"pairwise align\" -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS wossname application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd",
+      "invocation": "wossname -search \"pairwise align\" -outfile stdout"
+    }
+  ]
+}

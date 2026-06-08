@@ -126,4 +126,5 @@ tools/wobble
 tools/wordcount
 tools/wordfinder
 tools/wordmatch
+tools/wossname
 ```

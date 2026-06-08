@@ -354,4 +354,12 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("sirna"));
     }
+
+    #[test]
+    fn routes_wossname_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "wossname", "pairwise align"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("wossname"));
+    }
 }

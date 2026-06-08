@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "wossname-v1",
+  "tool": {
+    "name": "wossname",
+    "family": "command_tools",
+    "summary": "Report deterministic bounded keyword matches against governed local tool metadata",
+    "legacy_names": [
+      "wossname"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`wossname` is the bounded command-discovery member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface searches governed local tool metadata with deterministic normalized keyword matching and returns a stable table-first report rather than a semantic-ranking or ontology-driven discovery workflow."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one free-text keyword query. The bounded seam normalizes case, tokenizes the query into local keyword terms, and searches governed tool names plus governed short descriptions only. Live provider lookup, asset-distribution behavior, and broader synonym expansion remain out of scope."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable normalized table with matched tool identity, governed tool family, governed short description, matched normalized query terms, and explicit match-bearing text fields. All rows derive from the same deterministic local lookup path and preserve governed catalog order."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This bounded release keeps one historical `wossname` user need in scope while modernizing around deterministic local governed-metadata lookup instead of broad semantic ranking, ontology expansion, or generalized help-navigation behavior. The governed validation seam is shipped now and the canonical compared fixture is the next bounded follow-on slice."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs wossname`. The governed surface ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local keyword-lookup path. The shipped evidence posture is currently executable-only until the canonical compared keyword-match fixture lands."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `wossname` seam is intentionally narrow. It does not perform broad semantic ranking, ontology expansion, synonym-taxonomy inference, or provider-backed discovery, and it does not widen into `embossdata` or `seealso` merely because this bounded command-discovery slice ships."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "wossname_query_fixture",
+      "label": "Wossname keyword-query fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/wossname_query.txt"
+      },
+      "description": "Repository-managed keyword query fixture used to anchor deterministic bounded wossname validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "wossname_keyword_matches_example",
+      "title": "Report deterministic keyword matches against governed local tool metadata",
+      "description": "Executes the bounded `wossname` seam against the governed local tool catalog with a committed keyword query to emit stable normalized keyword-match rows.",
+      "artifact_ids": [
+        "wossname_query_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "value": "pairwise align"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "wossname_table",
+          "label": "Bounded wossname analytical table",
+          "description": "Stable normalized keyword-match rows with tool identity, governed family, governed short description, matched query terms, and matched text fields."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS wossname application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd",
+        "invocation": "wossname -search \"pairwise align\" -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS wossname application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd",
+        "invocation": "wossname -search \"pairwise align\" -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "wossname_keyword_matches_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}
