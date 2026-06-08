@@ -6595,10 +6595,30 @@ implementation-program cycle. The near-term priorities are:
       - reintroducing EMBOSS-era server/cache/indexing semantics
       - widening into `embossdata`, `assemblyget`, or `entret`
 
-370. If the fallback path is activated, map the selected lead candidate's full bounded implementation tier.
-    - Split implementation, result-surface, governed-shipment, evidence,
-      release-truth, and post-ship reassessment into separate tasks.
-    - Keep provider and acquisition semantics explicit.
+370. Complete. If the fallback path is activated, map the selected lead candidate's full bounded implementation tier.
+    - The bounded `whichdb` tier is now explicit:
+      1. implement the bounded provider-discovery analytical core
+      2. expose the deterministic typed result surface for normalized
+         provider-discovery reporting
+      3. expose `whichdb` through the governed shipped surface
+      4. add canonical mocked-provider or managed-fixture inputs plus compared
+         evidence on normalized discovery rows
+      5. re-run the full release-truth surface after shipping `whichdb`
+      6. reassess the shipped `whichdb` slice before any further
+         retrieval/data-discovery continuation is mapped
+    - The first implementation slice must preserve the active provider and
+      acquisition semantics:
+      - discovery/reporting only
+      - provider-qualified query input only
+      - deterministic table-first or structured report output
+      - no payload retrieval, archive download, file materialization, local
+        database indexing, or EMBOSS-era server/cache behavior
+      - no hidden live-network validation
+      - no broad provider-parity or database-universe coverage claim
+      - no widening into `embossdata`, `assemblyget`, or `entret`
+    - This mapping does not ship `whichdb` and does not imply generated
+      documentation, validation metadata, compared evidence, or release
+      readiness before the future code-bearing tier completes.
 
 371. Preserve the zero-burden release-truth gate before any post-`seealso` code-bearing work starts.
     - Re-run the smallest practical release-truth checks needed for whichever
