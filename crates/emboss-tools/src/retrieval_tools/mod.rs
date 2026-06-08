@@ -4,6 +4,7 @@ mod refseqget;
 mod seqret;
 mod seqretsetall;
 mod seqretsplit;
+mod whichdb;
 
 pub use refseqget::{RefseqgetOutcome, RefseqgetParams, refseqget_help, run_refseqget};
 pub use seqret::{SeqretOutcome, SeqretParams, SeqretSource, run_seqret, seqret_help};
@@ -13,6 +14,9 @@ pub use seqretsetall::{
 };
 pub use seqretsplit::{
     SeqretsplitOutcome, SeqretsplitOutputFile, SeqretsplitParams, run_seqretsplit, seqretsplit_help,
+};
+pub use whichdb::{
+    WhichdbDiscoveryRow, WhichdbDiscoveryStatus, WhichdbOutcome, WhichdbParams, run_whichdb,
 };
 
 use crate::ToolDescriptor;

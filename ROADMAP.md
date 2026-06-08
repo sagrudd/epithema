@@ -6682,21 +6682,36 @@ Current baseline for this tier:
       - no implementation of `embossdata`, `assemblyget`, or `entret`
     - The next mapped tasks are now Tasks `373` through `378`.
 
-373. Implement the bounded `whichdb` provider-discovery analytical core.
-    - Add method-associated `whichdb` logic under the retrieval/data-discovery
-      tool area with the smallest support surface needed.
-    - Accept one provider-qualified accession or identifier query.
-    - Normalize provider and query fields deterministically.
-    - Return discovery/reporting data only:
-      - provider route or routes considered
+373. Complete. Implement the bounded `whichdb` provider-discovery analytical core.
+    - Added method-associated `whichdb` logic under `retrieval_tools` with no
+      governed registry, CLI, autodoc, generated validation, or bridge exposure
+      yet.
+    - The analytical core accepts one provider-qualified accession or
+      identifier query and normalizes:
+      - provider prefix
+      - provider-local query suffix
+    - The core returns discovery/reporting data only:
+      - provider route considered
       - normalized query
       - discovery status
       - governed retrieval method or methods the user should use next
-    - Reject local files, inline payload literals, unqualified database-universe
-      searches, and any request that would require live network lookup,
-      payload retrieval, archive download, or local indexing.
-    - Keep the first patch method-associated and avoid broad retrieval
-      framework redesign.
+    - The current bounded route map is deliberately small:
+      - `ena` -> `seqret`, `runinfo`, `runget`, `infoassembly`
+      - `ncbi` -> `refseqget`
+      - `sra` -> `runinfo`, `runget`, `infoassembly`
+      - syntactically valid but unsupported providers report
+        `unsupported_provider` without a fallback chain
+    - The core rejects:
+      - empty input
+      - local file references
+      - inline payload literals
+      - unqualified database-universe queries
+      - empty provider prefixes
+      - invalid provider-prefix syntax
+      - empty provider-local queries
+    - This task does not ship `whichdb`; Tasks `374` through `376` still own
+      report rendering, governed exposure, documentation, generated validation,
+      fixtures, and compared evidence.
 
 374. Expose the deterministic typed `whichdb` result surface.
     - Define typed parameters and outcome rows for normalized provider-discovery
