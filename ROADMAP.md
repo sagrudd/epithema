@@ -6068,3 +6068,16 @@ implementation-program cycle. The near-term priorities are:
       checkpoint:
       - external database preparation helpers remains the reserve next
         program and is not promoted here
+
+346. Close the untriggered reserve-promotion branch for the narrowed command-discovery continuation step.
+    - Recorded explicitly that the reserve-promotion branch is not taken at
+      this checkpoint because the narrowed command-discovery seam-review gate
+      stayed affirmative
+    - Recorded explicitly that command discovery and help-navigation
+      therefore remains the active planning program
+    - Recorded explicitly that the active bounded continuation pool remains:
+      - `embossdata`
+      - `seealso`
+    - Recorded explicitly that external database preparation helpers remains
+      the documented reserve next program rather than being promoted by
+      inertia
