@@ -6550,10 +6550,50 @@ implementation-program cycle. The near-term priorities are:
     - The unselected external database preparation branch remains inactive
       unless the governance matrix is explicitly updated first.
 
-369. If the fallback path is activated, capture exact patch start conditions for the selected lead candidate.
-    - Require clean generated reports and release truth.
-    - Require method-associated implementation boundaries.
-    - Require explicit docs and validation plumbing before shipment.
+369. Complete. If the fallback path is activated, capture exact patch start conditions for the selected lead candidate.
+    - The exact `whichdb` patch start gate now requires:
+      - Task `367` to remain the active lead-candidate decision:
+        - `whichdb` is the only selected lead
+        - `embossdata`, external database preparation helpers,
+          `assemblyget`, and `entret` remain inactive for this slice
+      - Task `368` acceptance criteria to remain intact:
+        - bounded provider-discovery report
+        - one provider-qualified accession or identifier query in the first
+          slice
+        - deterministic mocked-provider or managed-fixture validation
+        - no live-network validation requirement
+        - no file materialization, archive download, local database indexing,
+          or generic provider-parity claim
+      - the zero-burden release-truth surface to remain clean before code
+        starts:
+        - generated governance alignment current
+        - shipped cohort validation current
+        - no documented-only shipped method
+        - no generated validation gap
+      - the first code patch to stay method-associated:
+        - `whichdb` implementation logic must live in a `whichdb`-named
+          method file or the smallest retrieval-provider support file needed
+          for the selected slice
+        - no broad retrieval framework, provider-fallback chain, database
+          preparation module, or indexing subsystem may be introduced in the
+          first patch
+      - docs and validation plumbing to be planned before shipment:
+        - governed registry exposure
+        - curated autodoc
+        - generated tool documentation
+        - generated validation metadata
+        - compared expected output for the bounded discovery report
+      - Task `370` to map the full bounded implementation tier before any
+        `whichdb` code-bearing patch starts.
+    - Pause and reopen planning before code starts if the first patch would
+      require:
+      - hidden live-network behavior
+      - implicit provider precedence or fallback chains
+      - searching an unbounded database universe
+      - returning or downloading retrieved sequence/archive payloads rather
+        than reporting discovery status and next governed retrieval paths
+      - reintroducing EMBOSS-era server/cache/indexing semantics
+      - widening into `embossdata`, `assemblyget`, or `entret`
 
 370. If the fallback path is activated, map the selected lead candidate's full bounded implementation tier.
     - Split implementation, result-surface, governed-shipment, evidence,
