@@ -6441,12 +6441,39 @@ implementation-program cycle. The near-term priorities are:
       - broad asset-distribution semantics
       - a generalized retrieval framework
 
-366. If `embossdata` fails seam review, activate the better-aligned fallback planning program explicitly.
-    - Candidate fallback programs are:
+366. Complete. If `embossdata` fails seam review, activate the better-aligned fallback planning program explicitly.
+    - Activated exactly one fallback planning program:
       - remote retrieval/data discovery rework
+    - Kept the other candidate fallback branch documented but inactive:
       - external database preparation helpers
-    - Choose one active program only, from current generated truth and
-      governance policy, before mapping any implementation tasks.
+    - Current generated truth supports this activation:
+      - shipped methods: `113`
+      - documentation-complete methods: `113`
+      - compared-evidence methods: `113`
+      - gapped methods: `0`
+      - shipped provider/retrieval-adjacent methods already include
+        `seqret`, `seqretsetall`, `seqretsplit`, `refseqget`, `runinfo`,
+        `runget`, and `infoassembly`
+      - no `embossdata` shipped, autodoc, generated tool, or generated
+        validation surface exists
+    - Governance policy supports this ordering:
+      - remote retrieval and archive acquisition is explicitly
+        `Modernize / Rework` and should replace EMBOSS-era
+        server/database plumbing with provider integrations such as ENA and
+        SRA
+      - external database preparation helpers are only retained where an
+        enduring user need exists and must be redesigned around modern
+        resource preparation
+      - EMBOSS local database indexing administration is excluded permanently
+        because index-construction and database-admin commands mainly served
+        the old EMBOSS database layer
+    - Release documentation also supports the selected branch because the
+      current release already includes governed retrieval layers and
+      archive metadata or manifest-oriented surfaces.
+    - This task does not choose a lead candidate, map acceptance criteria, or
+      start implementation. The next active task must select exactly one
+      bounded lead candidate inside the active remote retrieval/data discovery
+      rework program.
 
 367. If the fallback path is activated, capture the fallback program's bounded lead candidate.
     - Select exactly one lead candidate.
