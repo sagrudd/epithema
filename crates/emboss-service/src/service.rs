@@ -36,7 +36,9 @@ use emboss_tools::codon_tools::{
     codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai, run_chips, run_codcmp,
     run_codcopy, run_cusp,
 };
-use emboss_tools::command_tools::{WossnameParams, run_wossname, wossname_help};
+use emboss_tools::command_tools::{
+    SeealsoParams, WossnameParams, run_seealso, run_wossname, seealso_help, wossname_help,
+};
 use emboss_tools::feature_tools::{
     CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
     FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams, MaskseqParams,
@@ -2293,6 +2295,89 @@ impl EmbossService {
                     "Discovery scope: deterministic local governed-metadata keyword lookup only",
                 )
                 .with_line(format!("Matches: {}", outcome.rows.len())),
+            report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    /// Invokes the bounded staged `seealso` result surface.
+    pub fn invoke_seealso(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, seealso_help()));
+        }
+
+        let [tool_name]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("seealso", seealso_help()))?;
+        let outcome = run_seealso(SeealsoParams { tool_name })?;
+        let rows = outcome
+            .rows
+            .iter()
+            .map(|row| {
+                vec![
+                    row.query_tool.clone(),
+                    row.related_tool.clone(),
+                    row.related_family.clone(),
+                    row.related_short_description.clone(),
+                    row.relationship_terms.join(","),
+                    row.relationship_fields.join(","),
+                ]
+            })
+            .collect();
+
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported deterministic related-program rows across {} governed tool entries",
+                outcome.searched_entry_count
+            ),
+            Vec::new(),
+            Vec::new(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                vec![
+                    "query_tool".to_owned(),
+                    "related_tool".to_owned(),
+                    "related_family".to_owned(),
+                    "related_short_description".to_owned(),
+                    "relationship_terms".to_owned(),
+                    "relationship_fields".to_owned(),
+                ],
+                rows,
+            )),
+            ResultSummary::new("Related-program rows reported")
+                .with_line(format!("Query tool: {}", outcome.query_tool_name))
+                .with_line(format!(
+                    "Resolved tool: {}",
+                    outcome.resolved_tool_name
+                ))
+                .with_line(format!(
+                    "Resolved family: {}",
+                    outcome.resolved_family
+                ))
+                .with_line(format!(
+                    "Governed entries searched: {}",
+                    outcome.searched_entry_count
+                ))
+                .with_line(
+                    "Discovery scope: deterministic local governed-metadata relationship lookup only",
+                )
+                .with_line(format!("Related tools: {}", outcome.rows.len())),
             report.clone(),
         );
 
@@ -18732,6 +18817,67 @@ mod tests {
             .expect("wossname should dispatch through the governed service");
 
         assert_eq!(response.tool.as_str(), "wossname");
+    }
+
+    #[test]
+    fn executes_seealso_against_governed_tool_metadata() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seealso").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["needle".to_owned()]);
+
+        let response = service
+            .invoke_seealso(request, emboss_tools::command_tools::SEEALSO_DESCRIPTOR)
+            .expect("seealso should execute");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "query_tool",
+                        "related_tool",
+                        "related_family",
+                        "related_short_description",
+                        "relationship_terms",
+                        "relationship_fields",
+                    ]
+                );
+                assert!(table.rows.iter().any(|row| row[1] == "water"));
+                let water = table
+                    .rows
+                    .iter()
+                    .find(|row| row[1] == "water")
+                    .expect("water should be related to needle");
+                assert_eq!(water[0], "needle");
+                assert_eq!(water[2], "pairwise_alignment");
+                assert!(water[5].contains("family"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert_eq!(response.result.summary.lines[0], "Query tool: needle");
+        assert_eq!(response.result.summary.lines[1], "Resolved tool: needle");
+        assert_eq!(
+            response.result.summary.lines[4],
+            "Discovery scope: deterministic local governed-metadata relationship lookup only"
+        );
+    }
+
+    #[test]
+    fn rejects_unknown_tool_for_seealso() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seealso").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["missing-tool".to_owned()]);
+
+        let error = service
+            .invoke_seealso(request, emboss_tools::command_tools::SEEALSO_DESCRIPTOR)
+            .expect_err("unknown tool should fail");
+        assert!(error.to_string().contains("could not find governed tool"));
     }
 
     #[test]

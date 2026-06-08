@@ -6201,6 +6201,30 @@ implementation-program cycle. The near-term priorities are:
       - unknown query tool names
 
 353. Expose the deterministic typed result surface for normalized related-program reporting.
+    - Complete.
+    - Added method-associated bounded `seealso` result-surface support in:
+      - `crates/emboss-tools/src/command_tools/seealso.rs`
+      - `crates/emboss-tools/src/command_tools/mod.rs`
+      - `crates/emboss-service/src/service.rs`
+    - Added a typed tools-layer wrapper over the Task `352` analytical core
+      that adapts governed local tool descriptors into normalized
+      related-program rows.
+    - Added a direct public `EmbossService::invoke_seealso(...)` seam that
+      reports deterministic table-first rows for:
+      - query tool
+      - related tool
+      - related family
+      - related governed short description
+      - relationship terms
+      - relationship fields
+    - Added focused validation for:
+      - successful related-program reporting for `needle`
+      - unknown governed tool queries at both the tools and service seams
+    - This intentionally stops short of shipment:
+      - no governed registry exposure yet
+      - no CLI routing yet
+      - no autodoc or generated validation surface yet
+      - no canonical fixtures or compared evidence yet
 
 354. Expose `seealso` through the governed shipped surface.
 
