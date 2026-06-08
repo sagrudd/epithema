@@ -285,6 +285,7 @@ mod tests {
                 "seqmatchall",
                 "wordmatch",
                 "wordfinder",
+                "seealso",
                 "wossname",
                 "banana",
                 "density",
