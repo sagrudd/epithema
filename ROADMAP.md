@@ -2599,10 +2599,6 @@ implementation-program cycle. The near-term priorities are:
     - The repository remains on the plotting continuation path and can move to
       the next bounded selection step.
 
-167. Decide explicitly whether another bounded plotting continuation candidate still exists after `wobble`.
-    - Either keep the plotting branch active with a non-empty narrowed pool, or
-      trigger the no-candidate branch honestly.
-
 168. Complete. If no credible bounded continuation candidate remains after the post-`wobble` review, activate the prepared retrieval fallback path explicitly.
     - Closed this as an untriggered conditional branch.
     - The post-`wobble` viability gate stayed affirmative, so the narrowed pool
