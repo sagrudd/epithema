@@ -5867,6 +5867,30 @@ That branch is not taken at this checkpoint:
 - external database preparation helpers remains the documented reserve next
   program rather than being promoted by inertia
 
+### Selection of the bounded post-`wossname` command-discovery candidate
+
+With the reserve-promotion branch closed, the repository should select exactly
+one bounded command-discovery continuation candidate before any
+method-specific acceptance criteria are written.
+
+That selected bounded continuation candidate is:
+
+- `seealso`
+
+`seealso` now leads the remaining active pool because:
+
+- it stays inside local governed tool metadata and related-program discovery
+  rather than forcing the stronger asset-location and file-retrieval seams
+  implied by `embossdata`
+- it appears easier to keep method-local than broad provider-backed data
+  discovery as long as its relationship semantics stay explicit and bounded
+- it keeps the active family continuation inside command/help navigation
+  rather than immediately widening into data-file delivery behavior
+
+The non-selected bounded family member remains documented but inactive:
+
+- `embossdata`
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

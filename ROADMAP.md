@@ -6081,3 +6081,20 @@ implementation-program cycle. The near-term priorities are:
     - Recorded explicitly that external database preparation helpers remains
       the documented reserve next program rather than being promoted by
       inertia
+
+347. Select the next bounded command-discovery continuation candidate.
+    - Recorded explicitly that the selected bounded continuation candidate is:
+      - `seealso`
+    - Recorded explicitly why `seealso` leads the remaining active pool:
+      - it stays inside local governed tool metadata and related-program
+        discovery rather than forcing the stronger asset-location and file-
+        retrieval seams implied by `embossdata`
+      - it appears easier to keep method-local than broad provider-backed
+        data discovery as long as its relationship semantics stay explicit and
+        bounded
+      - it keeps the active family continuation inside command/help
+        navigation rather than immediately widening into data-file delivery
+        behavior
+    - Recorded explicitly that the non-selected bounded family member remains
+      documented but inactive:
+      - `embossdata`
