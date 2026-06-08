@@ -6713,15 +6713,24 @@ Current baseline for this tier:
       report rendering, governed exposure, documentation, generated validation,
       fixtures, and compared evidence.
 
-374. Expose the deterministic typed `whichdb` result surface.
-    - Define typed parameters and outcome rows for normalized provider-discovery
-      reporting.
-    - Render a stable table-first or structured report form suitable for CLI,
-      service, generated documentation, and compared expected-output fixtures.
-    - Keep unsupported historical behavior visible through explicit error
-      paths rather than silent fallback.
-    - Add focused Rust coverage for normalization, rejection, and report-row
-      stability.
+374. Complete. Expose the deterministic typed `whichdb` result surface.
+    - The typed parameters, outcome, and discovery rows now expose stable
+      normalized provider-discovery reporting fields.
+    - Added stable table-first report columns and row projection for:
+      - provider
+      - normalized query
+      - route label
+      - discovery status
+      - next governed methods
+    - Added stable TSV rendering suitable for the later CLI, service,
+      generated documentation, and compared expected-output fixture surfaces.
+    - Unsupported provider scope remains explicit through the
+      `unsupported_provider` row status and empty next-method list rather than
+      a silent fallback chain.
+    - Focused Rust coverage now checks supported-row rendering,
+      unsupported-row projection, normalization, and rejection paths.
+    - This task still does not ship `whichdb`; Task `375` owns governed
+      registry, CLI, and service routing.
 
 375. Expose `whichdb` through the governed shipped surface.
     - Add the governed registry descriptor and service/CLI routing needed for

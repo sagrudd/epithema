@@ -5,6 +5,15 @@ use emboss_diagnostics::{ErrorCategory, PlatformError};
 /// Shared execution error for `whichdb`.
 pub type ToolExecutionError = PlatformError;
 
+/// Stable table columns for `whichdb` provider-discovery reports.
+pub const WHICHDB_REPORT_COLUMNS: [&str; 5] = [
+    "provider",
+    "normalized_query",
+    "route_label",
+    "discovery_status",
+    "next_methods",
+];
+
 /// Typed parameters for `whichdb` provider discovery.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct WhichdbParams {
@@ -47,6 +56,20 @@ pub struct WhichdbDiscoveryRow {
     pub next_methods: Vec<String>,
 }
 
+impl WhichdbDiscoveryRow {
+    /// Projects the row into stable report fields.
+    #[must_use]
+    pub fn report_fields(&self) -> Vec<String> {
+        vec![
+            self.provider.clone(),
+            self.normalized_query.clone(),
+            self.route_label.clone(),
+            self.status.as_str().to_owned(),
+            self.next_methods.join(","),
+        ]
+    }
+}
+
 /// Structured `whichdb` analytical outcome.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct WhichdbOutcome {
@@ -56,6 +79,37 @@ pub struct WhichdbOutcome {
     pub normalized_query: String,
     /// Deterministic provider-discovery rows.
     pub rows: Vec<WhichdbDiscoveryRow>,
+}
+
+impl WhichdbOutcome {
+    /// Returns stable report columns for table-first `whichdb` rendering.
+    #[must_use]
+    pub fn report_columns(&self) -> Vec<String> {
+        WHICHDB_REPORT_COLUMNS
+            .iter()
+            .map(|column| (*column).to_owned())
+            .collect()
+    }
+
+    /// Projects discovery rows into stable table-first report rows.
+    #[must_use]
+    pub fn report_rows(&self) -> Vec<Vec<String>> {
+        self.rows
+            .iter()
+            .map(WhichdbDiscoveryRow::report_fields)
+            .collect()
+    }
+
+    /// Renders a stable tab-separated report suitable for CLI and fixture use.
+    #[must_use]
+    pub fn render_tsv_report(&self) -> String {
+        let mut rendered = self.report_columns().join("\t");
+        for row in self.report_rows() {
+            rendered.push('\n');
+            rendered.push_str(&row.join("\t"));
+        }
+        rendered
+    }
 }
 
 /// Executes the bounded `whichdb` provider-discovery analytical core.
@@ -193,7 +247,7 @@ fn looks_like_local_file_reference(query: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{WhichdbDiscoveryStatus, WhichdbParams, run_whichdb};
+    use super::{WHICHDB_REPORT_COLUMNS, WhichdbDiscoveryStatus, WhichdbParams, run_whichdb};
 
     #[test]
     fn normalizes_provider_qualified_ena_query() {
@@ -218,6 +272,13 @@ mod tests {
         assert_eq!(
             outcome.rows[0].next_methods,
             vec!["seqret", "runinfo", "runget", "infoassembly"]
+        );
+        assert_eq!(
+            outcome.report_columns(),
+            WHICHDB_REPORT_COLUMNS
+                .iter()
+                .map(|column| (*column).to_owned())
+                .collect::<Vec<_>>()
         );
     }
 
@@ -251,6 +312,39 @@ mod tests {
             WhichdbDiscoveryStatus::UnsupportedProvider
         );
         assert!(outcome.rows[0].next_methods.is_empty());
+        assert_eq!(
+            outcome.rows[0].report_fields(),
+            vec![
+                "uniprot",
+                "P12345",
+                "unsupported-provider",
+                "unsupported_provider",
+                "",
+            ]
+        );
+    }
+
+    #[test]
+    fn renders_stable_table_first_report() {
+        let outcome = run_whichdb(WhichdbParams {
+            query: "sra:SRR000001".to_owned(),
+        })
+        .expect("provider-qualified SRA query should succeed");
+
+        assert_eq!(
+            outcome.report_rows(),
+            vec![vec![
+                "sra".to_owned(),
+                "SRR000001".to_owned(),
+                "sra.archive-discovery".to_owned(),
+                "supported_provider".to_owned(),
+                "runinfo,runget,infoassembly".to_owned(),
+            ]]
+        );
+        assert_eq!(
+            outcome.render_tsv_report(),
+            "provider\tnormalized_query\troute_label\tdiscovery_status\tnext_methods\nsra\tSRR000001\tsra.archive-discovery\tsupported_provider\truninfo,runget,infoassembly"
+        );
     }
 
     #[test]
