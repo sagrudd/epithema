@@ -100,6 +100,7 @@ tools/refseqget
 tools/revseq
 tools/runget
 tools/runinfo
+tools/seealso
 tools/seqcount
 tools/seqmatchall
 tools/seqret

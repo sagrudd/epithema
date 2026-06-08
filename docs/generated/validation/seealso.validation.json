@@ -1,0 +1,52 @@
+{
+  "tool_name": "seealso",
+  "document_id": "seealso-v1",
+  "source_mode": "curated",
+  "evidence_source": "executed_run",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 0,
+    "harvested_case_count": 1,
+    "runnable_case_count": 0,
+    "executed_case_count": 1,
+    "compared_case_count": 1,
+    "passed_case_count": 1,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "seealso_related_programs_example",
+      "title": "Report deterministic related-program rows for a governed local tool",
+      "evidence_source": "executed_run",
+      "declaration_status": "harvested",
+      "execution_status": "executed",
+      "comparison_status": "passed",
+      "required": true,
+      "artifact_ids": [
+        "seealso_query_tool_fixture"
+      ],
+      "expected_output_ids": [
+        "seealso_table"
+      ],
+      "provenance": [
+        {
+          "source": "EMBOSS seealso application",
+          "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd",
+          "invocation": "seealso -program needle -outfile stdout"
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": [
+    {
+      "source": "EMBOSS seealso application",
+      "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd",
+      "invocation": "seealso -program needle -outfile stdout"
+    }
+  ]
+}

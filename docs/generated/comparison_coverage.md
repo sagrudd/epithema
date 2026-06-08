@@ -6,9 +6,9 @@ This page is generated from the shipped cohort validation report and the governa
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
-- Shipped methods: `112`
+- Shipped methods: `113`
 - Family rows: `12`
-- Compared-evidence methods: `112`
+- Compared-evidence methods: `113`
 - Executable-only methods: `0`
 - Harvested-but-not-compared methods: `0`
 
@@ -22,7 +22,7 @@ This page is generated from the shipped cohort validation report and the governa
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 0 |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 0 |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 0 |
-| Modernize — Rework — Command discovery and help-navigation | 1 | 1 | 0 | 0 |
+| Modernize — Rework — Command discovery and help-navigation | 2 | 2 | 0 | 0 |
 | Modernize — Rework — Plotting and visualization tools | 10 | 10 | 0 | 0 |
 | Modernize — Rework — Primer and assay-oriented search | 3 | 3 | 0 | 0 |
 | Modernize — Rework — Protein property and structural-summary utilities | 3 | 3 | 0 | 0 |

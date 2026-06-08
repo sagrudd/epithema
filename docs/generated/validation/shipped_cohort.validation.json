@@ -3,15 +3,15 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 112,
-    "documentation_complete_count": 112,
-    "validation_stub_count": 112,
+    "total_method_count": 113,
+    "documentation_complete_count": 113,
+    "validation_stub_count": 113,
     "documented_only_count": 0,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
-    "harvested_legacy_presence_count": 112,
+    "harvested_legacy_presence_count": 113,
     "executable_evidence_count": 0,
-    "compared_evidence_count": 112,
+    "compared_evidence_count": 113,
     "gapped_method_count": 0
   },
   "methods": [
@@ -1189,6 +1189,24 @@
       "tool_name": "wordfinder",
       "family": "pattern_tools",
       "summary": "report maximal exact shared regions between one query and multiple targets",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "compared_evidence",
+      "harvested_legacy_evidence_present": true,
+      "executable_validation_present": true,
+      "compared_validation_present": true,
+      "unresolved_gaps": []
+    },
+    {
+      "tool_name": "seealso",
+      "family": "command_tools",
+      "summary": "report deterministic local related-program rows from governed tool metadata",
       "documentation": {
         "autodoc_contract_present": true,
         "autodoc_contract_valid": true,

@@ -1,0 +1,8 @@
+query_tool	related_tool	related_family	related_short_description	relationship_terms	relationship_fields
+needle	aligncopypair	alignment_tools	copy a single pairwise alignment unchanged and reject non-pairwise inputs	pairwise,alignment	short_description
+needle	diffseq	alignment_tools	compare two similar sequences and report contiguous difference blocks from a deterministic global alignment	deterministic,global,alignment	short_description
+needle	matcher	alignment_analysis	deterministic ungapped pairwise similarity summary	deterministic,pairwise	short_description
+needle	needleall	pairwise_alignment	perform deterministic many-vs-many global pairwise alignment and report comparison summaries	pairwise_alignment,perform,deterministic,global,pairwise,alignment	family,short_description
+needle	water	pairwise_alignment	perform deterministic local pairwise alignment between exactly one query and one target	pairwise_alignment,perform,deterministic,pairwise,alignment,between,exactly,query,target	family,short_description
+needle	wordfinder	pattern_tools	report maximal exact shared regions between one query and multiple targets	between,query	short_description
+needle	oddcomp	sequence_stats	report deterministic exact protein word-composition counts for query words	deterministic,query	short_description

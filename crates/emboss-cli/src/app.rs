@@ -362,4 +362,12 @@ mod tests {
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("wossname"));
     }
+
+    #[test]
+    fn routes_seealso_to_tool_path() {
+        let cli =
+            Cli::try_parse_from(["emboss-rs", "seealso", "needle"]).expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("seealso"));
+    }
 }

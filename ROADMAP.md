@@ -6227,8 +6227,25 @@ implementation-program cycle. The near-term priorities are:
       - no canonical fixtures or compared evidence yet
 
 354. Expose `seealso` through the governed shipped surface.
+    - Complete.
+    - Added `seealso` to the governed descriptor registry and the shared
+      service dispatch/help surfaces.
+    - Kept CLI routing on the existing governed external-tool path and added a
+      focused parser regression for `emboss-rs seealso needle`.
+    - Added governed autodoc input plus generated docs and validation metadata
+      for the bounded shipped surface.
+    - Added the canonical analytical fixture and compared acceptance-anchor
+      evidence for deterministic related-program rows because the governed
+      shipped surface must keep the existing release-truth and CI gates green.
+    - The generated documentation honestly records the current evidence
+      posture: shipped executable surface with compared related-program
+      evidence and no executable legacy provider.
 
 355. Add canonical analytical fixtures plus compared evidence on normalized related-program rows.
+    - Complete as part of Task `354`.
+    - The work was folded into the shipped-surface patch to avoid leaving the
+      generated release-truth surface below the existing full-compared-cohort CI
+      contract.
 
 356. Re-run the full release-truth surface after shipping `seealso`.
 

@@ -150,6 +150,7 @@ pub const fn governed_tool_descriptors() -> &'static [ToolDescriptor] {
         pattern_tools::SEQMATCHALL_DESCRIPTOR,
         pattern_tools::WORDMATCH_DESCRIPTOR,
         pattern_tools::WORDFINDER_DESCRIPTOR,
+        command_tools::SEEALSO_DESCRIPTOR,
         command_tools::WOSSNAME_DESCRIPTOR,
         nucleotide_plots::BANANA_DESCRIPTOR,
         nucleotide_plots::DENSITY_DESCRIPTOR,

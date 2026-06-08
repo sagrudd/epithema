@@ -1,0 +1,113 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "seealso-v1",
+  "tool": {
+    "name": "seealso",
+    "family": "command_tools",
+    "summary": "Report deterministic bounded related-program rows from governed local tool metadata",
+    "legacy_names": [
+      "seealso"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`seealso` is the bounded related-program member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface resolves one governed local tool and reports deterministic related-program rows derived from governed family metadata and bounded short-description term overlap."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts exactly one governed tool name. The bounded seam resolves that tool against the local governed registry and searches only governed tool family and short-description metadata. Live provider lookup, ontology expansion, and broad semantic ranking remain out of scope."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The result is a stable normalized table with query tool identity, related tool identity, related governed family, related governed short description, normalized relationship terms, and explicit relationship-bearing metadata fields. Rows are deterministic and derive only from the governed local catalog."
+    },
+    {
+      "id": "legacy_context",
+      "kind": "legacy_context",
+      "title": "Legacy Context",
+      "content": "This bounded release keeps one historical `seealso` user need in scope while modernizing around deterministic local governed-metadata lookup instead of broad semantic ranking, ontology expansion, synonym-taxonomy inference, or generalized help-navigation behavior."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs seealso`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local related-program lookup path, and canonical compared evidence for deterministic related-program rows."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The v1 `seealso` seam is intentionally narrow. It does not perform broad semantic ranking, ontology expansion, provider-backed discovery, or generalized command-discovery behavior, and it does not widen the command-discovery family merely because this bounded related-program slice ships."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "seealso_query_tool_fixture",
+      "label": "Seealso query-tool fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/emboss-tools/tests/fixtures/seealso_query_tool.txt"
+      },
+      "description": "Repository-managed query-tool fixture used to anchor deterministic bounded seealso validation."
+    }
+  ],
+  "examples": [
+    {
+      "id": "seealso_related_programs_example",
+      "title": "Report deterministic related-program rows for a governed local tool",
+      "description": "Executes the bounded `seealso` seam against the governed local tool catalog with `needle` as the query tool to emit stable normalized related-program rows.",
+      "artifact_ids": [
+        "seealso_query_tool_fixture"
+      ],
+      "parameters": [
+        {
+          "name": "tool_name",
+          "value": "needle"
+        }
+      ],
+      "expected_outputs": [
+        {
+          "id": "seealso_table",
+          "label": "Bounded seealso analytical table",
+          "description": "Stable normalized related-program rows with query tool, related tool, governed family, governed short description, relationship terms, and relationship fields."
+        }
+      ],
+      "legacy_reference": {
+        "source": "EMBOSS seealso application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd",
+        "invocation": "seealso -program needle -outfile stdout"
+      }
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "emboss-rs maintainers",
+    "source_references": [
+      {
+        "source": "EMBOSS seealso application",
+        "locator": "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd",
+        "invocation": "seealso -program needle -outfile stdout"
+      }
+    ]
+  },
+  "validation": {
+    "required_example_ids": [
+      "seealso_related_programs_example"
+    ],
+    "compare_against_legacy": true,
+    "require_provenance_capture": true
+  }
+}

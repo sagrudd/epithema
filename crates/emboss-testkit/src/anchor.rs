@@ -168,6 +168,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "wossname -search \"pairwise align\" -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "seealso",
+        autodoc_contract: "docs/autodoc/tools/seealso.json",
+        example_id: "seealso_related_programs_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/seealso_report_deterministic_related_program_rows_for_a_governed_local_tool.tsv",
+        legacy_source: "EMBOSS seealso application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd",
+        legacy_invocation: "seealso -program needle -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "newseq",
         autodoc_contract: "docs/autodoc/tools/newseq.json",
         example_id: "create_dna_record",
@@ -2164,6 +2173,14 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 repo_root.join("crates/emboss-tools/tests/fixtures/wossname_query.txt"),
             )
             .expect("wossname query fixture should read")
+            .trim()
+            .to_owned(),
+        ],
+        "seealso" => vec![
+            std::fs::read_to_string(
+                repo_root.join("crates/emboss-tools/tests/fixtures/seealso_query_tool.txt"),
+            )
+            .expect("seealso query-tool fixture should read")
             .trim()
             .to_owned(),
         ],

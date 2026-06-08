@@ -118,10 +118,10 @@ shipped cohort is:
 
 Current generated release-truth markers:
 
-- Shipped methods audited: `112`
-- Compared-evidence methods: `112`
+- Shipped methods audited: `113`
+- Compared-evidence methods: `113`
 - Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `112`
+- Methods with harvested legacy provenance recorded: `113`
 - Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
@@ -131,9 +131,9 @@ Current generated release-truth markers:
 ### Complete / Ready
 
 - Workspace version metadata is normalized to `1.0.0`.
-- All `112` shipped methods are documented and present in the generated docs
+- All `113` shipped methods are documented and present in the generated docs
   index.
-- All `112` shipped methods have a checked-in validation stub.
+- All `113` shipped methods have a checked-in validation stub.
 - The cohort-level evidence report is present in both JSON and Markdown forms.
 - The governance-alignment report is present in both JSON and Markdown forms.
 - The cohort-health reprioritization gate is present in both JSON and Markdown
@@ -298,13 +298,13 @@ Current generated release-truth markers:
 
 ### Legacy harvesting is complete
 
-- The cohort report now records `111` methods with harvested legacy
+- The cohort report now records `113` methods with harvested legacy
   provenance.
 - Harvest coverage is complete across the shipped cohort at this checkpoint.
 
 ### Comparison-based acceptance is complete
 
-- The cohort report now records `111` methods with compared evidence and `0`
+- The cohort report now records `113` methods with compared evidence and `0`
   shipped methods at executable evidence.
 - The comparison framework remains real and reusable, and the full compared
   cohort gate is green at this checkpoint.
@@ -333,10 +333,10 @@ Current generated release-truth markers:
 
 ## Current Generated Count Markers
 
-- Shipped methods audited: `111`
-- Compared-evidence methods: `111`
+- Shipped methods audited: `113`
+- Compared-evidence methods: `113`
 - Executable-evidence methods: `0`
-- Methods with harvested legacy provenance recorded: `111`
+- Methods with harvested legacy provenance recorded: `113`
 - Retained backlog still unshipped: `0`
 
 ## Practical Validation Run

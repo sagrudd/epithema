@@ -5,8 +5,8 @@ This page is generated from the shipped cohort validation report. It exists to m
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Shipped methods: `112`
-- Compared-evidence methods: `112`
+- Shipped methods: `113`
+- Compared-evidence methods: `113`
 - Executable-evidence methods: `0`
 - Methods below compared evidence: `0`
 - Full compared cohort: `yes`

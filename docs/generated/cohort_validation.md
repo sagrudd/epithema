@@ -5,15 +5,15 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `112`
-- Documentation-complete methods: `112`
-- Methods with validation stubs: `112`
+- Methods in cohort: `113`
+- Documentation-complete methods: `113`
+- Methods with validation stubs: `113`
 - Documented-only methods: `0`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
-- Methods with harvested legacy provenance recorded: `112`
+- Methods with harvested legacy provenance recorded: `113`
 - Methods with executable validation: `0`
-- Methods with compared evidence: `112`
+- Methods with compared evidence: `113`
 - Methods with blocking cohort gaps: `0`
 
 ## Evidence Level Definitions
@@ -94,6 +94,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `seqmatchall` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordmatch` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wordfinder` | `pattern_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `seealso` | `command_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `wossname` | `command_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `banana` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `density` | `nucleotide_plots` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `1` |

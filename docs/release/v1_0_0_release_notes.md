@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `112` methods, including:
+of `113` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -46,6 +46,7 @@ of `112` methods, including:
 - the bounded primer-pair search method `primersearch`
 - the bounded siRNA-candidate discovery method `sirna`
 - the bounded command-discovery keyword-lookup method `wossname`
+- the bounded command-discovery related-program method `seealso`
 
 ### Governed retrieval
 
@@ -70,9 +71,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `112` shipped methods carry compared evidence
+- `113` shipped methods carry compared evidence
 - `0` shipped methods carry executable evidence
-- `112` shipped methods record harvested legacy provenance
+- `113` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
@@ -120,9 +121,9 @@ change the release gate state above.
 
 This means the shipped retained cohort remains fully closed, harvest coverage
 remains complete, and the governed cohort is back at the fully green release
-gate. The bounded `wossname` slice now ships with curated provenance, a
-runnable governed validation seam, and canonical compared keyword-match
-evidence.
+gate. The bounded `wossname` and `seealso` slices now ship with curated
+provenance, runnable governed validation seams, and canonical compared
+command-discovery evidence.
 
 ### First-class R story
 

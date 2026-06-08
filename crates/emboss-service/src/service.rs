@@ -353,6 +353,7 @@ impl EmbossService {
             "seqmatchall" => self.invoke_seqmatchall(request, descriptor),
             "wordmatch" => self.invoke_wordmatch(request, descriptor),
             "wordfinder" => self.invoke_wordfinder(request, descriptor),
+            "seealso" => self.invoke_seealso(request, descriptor),
             "wossname" => self.invoke_wossname(request, descriptor),
             "banana" => self.invoke_banana(request, descriptor),
             "density" => self.invoke_density(request, descriptor),
@@ -12956,6 +12957,7 @@ fn feature_tool_help(tool: &str) -> &'static str {
         "seqmatchall" => seqmatchall_help(),
         "wordmatch" => wordmatch_help(),
         "wordfinder" => wordfinder_help(),
+        "seealso" => seealso_help(),
         "wossname" => wossname_help(),
         "banana" => banana_help(),
         "density" => density_help(),
@@ -18878,6 +18880,21 @@ mod tests {
             .invoke_seealso(request, emboss_tools::command_tools::SEEALSO_DESCRIPTOR)
             .expect_err("unknown tool should fail");
         assert!(error.to_string().contains("could not find governed tool"));
+    }
+
+    #[test]
+    fn dispatches_seealso_through_the_governed_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("seealso").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["needle".to_owned()]);
+
+        let response = service
+            .invoke(request)
+            .expect("seealso should dispatch through the governed service");
+        assert_eq!(response.tool.as_str(), "seealso");
     }
 
     #[test]

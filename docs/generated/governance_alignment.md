@@ -8,19 +8,19 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `112`
-- Shipped tools with governance mapping: `112`
+- Shipped tools: `113`
+- Shipped tools with governance mapping: `113`
 - Retained backlog still unshipped: `0`
-- Shipped tools with curated autodoc: `112`
-- Shipped tools with executable or compared evidence: `112`
-- Shipped tools with harvested legacy provenance: `112`
-- Shipped tools with compared evidence: `112`
+- Shipped tools with curated autodoc: `113`
+- Shipped tools with executable or compared evidence: `113`
+- Shipped tools with harvested legacy provenance: `113`
+- Shipped tools with compared evidence: `113`
 - Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
 - Shipped retain methods: `90`
-- Shipped rework methods: `22`
+- Shipped rework methods: `23`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
 
@@ -40,7 +40,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Exclude Permanently — EMBOSS local database indexing administration | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Exclude Permanently — EMBOSS-era server-cache-registry plumbing | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Exclude Permanently — Wrapper-only compatibility commands | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Command discovery and help-navigation | 0 | 0 | 0 | 1 | 1 | 1 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Command discovery and help-navigation | 0 | 0 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — External database preparation helpers | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Legacy prediction methods with enduring scientific value | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 10 | 10 | 10 | family is aligned at the current governance and evidence threshold |
@@ -132,6 +132,7 @@ All shipped methods are mapped in the governance appendix.
 | `seqmatchall` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `wordmatch` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
 | `wordfinder` | `pattern_tools` | Core Retain — Simple motif, pattern, and regular-expression search | retain | yes | `compared_evidence` |
+| `seealso` | `command_tools` | Modernize — Rework — Command discovery and help-navigation | rework | yes | `compared_evidence` |
 | `wossname` | `command_tools` | Modernize — Rework — Command discovery and help-navigation | rework | yes | `compared_evidence` |
 | `banana` | `nucleotide_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
 | `density` | `nucleotide_plots` | Modernize — Rework — Plotting and visualization tools | rework | yes | `compared_evidence` |
