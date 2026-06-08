@@ -6176,3 +6176,36 @@ implementation-program cycle. The near-term priorities are:
       4. `seealso` forces broad relationship-taxonomy policy, synonym
          semantics, or result-ranking behavior that is not clearly local to
          the method
+
+352. Implement the bounded related-program discovery analytical core.
+    - Complete.
+    - Added method-associated bounded `emboss-core` support for `seealso`
+      in `crates/emboss-core/src/seealso.rs`.
+    - Added typed domain support for:
+      - bounded catalog rows with governed family metadata
+      - stable related-program rows
+      - explicit relationship-field reporting across local family and
+        short-description metadata
+      - deterministic relationship terms derived from the same local
+        resolution path
+    - Recorded explicitly that the analytical core remains bounded:
+      - it operates over local governed metadata rows only
+      - it resolves related-program rows deterministically from shared family
+        and bounded summary-term overlap with stable catalog-order output
+      - it does not widen into registry/service exposure, semantic ranking,
+        ontology expansion, or provider-backed discovery
+    - Added focused validation for:
+      - blank query tool names
+      - blank catalog fields
+      - duplicate governed tool identities
+      - unknown query tool names
+
+353. Expose the deterministic typed result surface for normalized related-program reporting.
+
+354. Expose `seealso` through the governed shipped surface.
+
+355. Add canonical analytical fixtures plus compared evidence on normalized related-program rows.
+
+356. Re-run the full release-truth surface after shipping `seealso`.
+
+357. Reassess the shipped `seealso` slice before any further command-discovery continuation is mapped.

@@ -45,6 +45,7 @@ pub mod protein_pepinfo;
 pub mod protein_psiphi;
 pub mod residue_properties;
 pub mod revseq;
+pub mod seealso;
 pub mod sequence;
 pub mod sirna;
 pub mod strand;
@@ -145,6 +146,10 @@ pub use residue_properties::{
 pub use revseq::{
     RevseqError, RevseqMode, reverse_complement_residues, reverse_residues,
     transform_sequence_record,
+};
+pub use seealso::{
+    SeealsoCatalogEntry, SeealsoError, SeealsoProfile, SeealsoRelatedTool,
+    SeealsoRelationshipField, seealso_profile,
 };
 pub use sequence::SequenceRecord;
 pub use sirna::{SirnaCandidate, SirnaError, SirnaParameters, SirnaProfile, sirna_profile};
