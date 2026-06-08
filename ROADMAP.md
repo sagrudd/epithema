@@ -6359,16 +6359,39 @@ implementation-program cycle. The near-term priorities are:
       - it does not implement `embossdata`
       - it does not activate either fallback planning branch
 
-360. Decide whether `embossdata` still passes honest seam review as a bounded command-discovery continuation candidate.
-    - Evaluate whether a useful v1 `embossdata` slice can remain:
-      - local and deterministic
-      - table-first
-      - method-associated
-      - free of live provider lookup
-      - free of broad data-file retrieval, acquisition, or indexing behavior
-    - If those conditions fail, record that command-discovery continuation is
-      closed and route the next planning step to the better-aligned
-      retrieval/data-preparation program.
+360. Complete. Decide whether `embossdata` still passes honest seam review as a bounded command-discovery continuation candidate.
+    - Recorded the `embossdata` seam-review decision explicitly:
+      - `embossdata` does not pass as a bounded command-discovery
+        continuation candidate.
+    - The decisive scope-matrix signal is that historical `embossdata` is
+      described as:
+      - `Find and retrieve EMBOSS data files`
+      - `Rework`
+      - `Retain the user need, but redesign around modern
+        accession/provider-aware retrieval and metadata services
+        (ENA/SRA/RefSeq/taxonomy/variation).`
+    - That description fails the bounded command-discovery continuation test:
+      - a useful honest slice would not merely search governed local tool
+        metadata, unlike `wossname` and `seealso`
+      - a useful honest slice would need to explain data-file identity,
+        provenance, retrieval, or provider/data-source semantics
+      - silently reducing it to local command metadata would misrepresent the
+        retained user need
+      - broadening it to data-file delivery, provider lookup, acquisition, or
+        indexing would exceed the command-discovery seam
+    - Existing repository surfaces reinforce the routing decision:
+      - `crates/emboss-tools/src/command_tools/mod.rs` only contains the
+        shipped bounded local-metadata helpers `wossname` and `seealso`
+      - no `embossdata` autodoc, generated tool page, or generated validation
+        report exists
+      - provider/archive retrieval surfaces already exist for bounded
+        accession and metadata workflows such as `runget`, `runinfo`, and
+        `infoassembly`
+    - Command-discovery continuation is therefore closed by this decision.
+    - The next planning path should route through the explicit branch-closure
+      checkpoint, then activate the better-aligned retrieval/data-preparation
+      fallback planning program rather than forcing `embossdata` into command
+      discovery.
 
 361. Close the untriggered branch explicitly after the `embossdata` seam-review decision.
     - If `embossdata` remains viable, close the fallback-promotion branch.
