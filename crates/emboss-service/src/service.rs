@@ -2308,7 +2308,7 @@ impl EmbossService {
         ))
     }
 
-    /// Invokes the bounded staged `seealso` result surface.
+    /// Invokes the bounded shipped `seealso` result surface.
     pub fn invoke_seealso(
         &self,
         request: InvocationRequest,
