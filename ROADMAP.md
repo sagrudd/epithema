@@ -6620,8 +6620,29 @@ implementation-program cycle. The near-term priorities are:
       documentation, validation metadata, compared evidence, or release
       readiness before the future code-bearing tier completes.
 
-371. Preserve the zero-burden release-truth gate before any post-`seealso` code-bearing work starts.
-    - Re-run the smallest practical release-truth checks needed for whichever
-      branch becomes active.
-    - Do not allow a planning branch to imply shipped capability before code,
-      docs, generated validation, compared evidence, and CI support exist.
+371. Complete. Preserve the zero-burden release-truth gate before any post-`seealso` code-bearing work starts.
+    - Re-ran the release-truth checks needed before starting any code-bearing
+      `whichdb` work:
+      - `make release-truth-check`
+      - `make release-generated-check`
+      - `make lint-docs`
+    - The generated release-truth surface remained clean:
+      - shipped methods: `113`
+      - documentation-complete methods: `113`
+      - compared-evidence methods: `113`
+      - shipped methods with blocking gaps: `0`
+      - retained backlog: `0`
+      - harvest coverage complete: `true`
+      - retained backlog closed: `true`
+      - full compared cohort: `true`
+      - release truth current: `true`
+    - This gate does not ship `whichdb`.
+    - The active implementation start state remains bounded by Tasks `367`
+      through `370`:
+      - `whichdb` is the only selected lead candidate
+      - the first slice is provider-discovery reporting only
+      - provider-qualified query input remains required
+      - validation must use mocked-provider or managed local fixtures only
+      - no live-network validation, payload retrieval, archive download, file
+        materialization, local database indexing, or broad provider-parity
+        claim is permitted before a later explicit task changes that scope
