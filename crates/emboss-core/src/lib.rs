@@ -49,6 +49,7 @@ pub mod sequence;
 pub mod sirna;
 pub mod strand;
 pub mod translation;
+pub mod wossname;
 
 pub use alignment::{Alignment, AlignmentRow, AlignmentSymbol, GAP_SYMBOL};
 pub use alignment_analysis::{
@@ -151,4 +152,8 @@ pub use strand::Strand;
 pub use translation::{
     TranslationError, ambiguous_codon, backtranslate_ambiguous, backtranslate_representative,
     representative_codon, translate_dna_frame, translate_dna_strict,
+};
+pub use wossname::{
+    WossnameCatalogEntry, WossnameError, WossnameMatch, WossnameMatchField, WossnameProfile,
+    wossname_profile,
 };

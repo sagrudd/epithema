@@ -5892,3 +5892,32 @@ implementation-program cycle. The near-term priorities are:
       4. `wossname` forces broad tokenization policy, synonym-taxonomy
          semantics, or result-ranking behavior that is not clearly local to
          the method
+
+338. Implement the bounded keyword-discovery analytical core.
+    - Complete.
+    - Added method-associated bounded `emboss-core` support for `wossname`
+      in `crates/emboss-core/src/wossname.rs`.
+    - Added typed domain support for:
+      - bounded catalog rows
+      - normalized query terms
+      - stable keyword-match rows
+      - explicit matched-field reporting across local tool-name and
+        short-description text
+    - Recorded explicitly that the analytical core remains bounded:
+      - it operates over local metadata rows only
+      - it uses deterministic normalized keyword matching with stable
+        catalog-order output
+      - it does not widen into registry/service exposure, semantic ranking,
+        ontology expansion, or provider-backed discovery
+    - Added focused validation for:
+      - blank or punctuation-only queries
+      - blank tool names
+      - blank short descriptions
+
+339. Expose the deterministic typed result surface for normalized keyword-match reporting.
+
+340. Expose `wossname` through the governed shipped surface.
+
+341. Add canonical analytical fixtures plus compared evidence on normalized keyword-match rows.
+
+342. Re-run the full release-truth surface after shipping `wossname`, then reassess the shipped slice before any further command-discovery continuation is mapped.
