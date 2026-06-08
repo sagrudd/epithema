@@ -5944,6 +5944,34 @@ The same guardrails remain:
 - no family-wide continuation claim merely because one bounded `seealso`
   slice ships
 
+### Full bounded `seealso` implementation tier
+
+With the acceptance criteria and start gate in place, the repository should
+map the full bounded `seealso` implementation tier before any code starts.
+
+The bounded `seealso` tier is now:
+
+1. implement the bounded related-program discovery analytical core
+2. expose the deterministic typed result surface for normalized
+   related-program reporting
+3. expose `seealso` through the governed shipped surface
+4. add canonical analytical fixtures plus compared evidence on normalized
+   related-program rows
+5. re-run the full release-truth surface after shipping `seealso`
+6. reassess the shipped `seealso` slice before any further
+   command-discovery continuation is mapped
+
+The same bounded rules remain:
+
+- related-program discovery scope only
+- deterministic table-first reporting from the same relationship-resolution
+  path
+- method-local implementation only
+- no broad semantic-ranking or ontology expansion framework
+- no live provider lookup or asset-distribution behavior
+- no command-discovery family widening unless `seealso` itself forces a real
+  reassessment
+
 ## Defer — Ontology command group
 
 Omit ontology command surfaces initially, while preserving an extension path for future ontology-aware metadata.

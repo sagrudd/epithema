@@ -6140,3 +6140,24 @@ implementation-program cycle. The near-term priorities are:
       - no widening into `embossdata`
       - no family-wide continuation claim merely because one bounded
         `seealso` slice ships
+
+350. Map the full bounded `seealso` implementation tier.
+    - Recorded explicitly that the bounded `seealso` tier is now:
+      1. implement the bounded related-program discovery analytical core
+      2. expose the deterministic typed result surface for normalized
+         related-program reporting
+      3. expose `seealso` through the governed shipped surface
+      4. add canonical analytical fixtures plus compared evidence on
+         normalized related-program rows
+      5. re-run the full release-truth surface after shipping `seealso`
+      6. reassess the shipped `seealso` slice before any further
+         command-discovery continuation is mapped
+    - Recorded explicitly that the same bounded rules remain:
+      - related-program discovery scope only
+      - deterministic table-first reporting from the same
+        relationship-resolution path
+      - method-local implementation only
+      - no broad semantic-ranking or ontology expansion framework
+      - no live provider lookup or asset-distribution behavior
+      - no command-discovery family widening unless `seealso` itself forces a
+        real reassessment
