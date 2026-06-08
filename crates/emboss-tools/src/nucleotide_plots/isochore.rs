@@ -51,7 +51,8 @@ pub fn run_isochore(params: IsochoreParams) -> Result<IsochoreOutcome, ToolExecu
         .with_detail(format!("observed {} records", records.len()))
     })?;
 
-    let profile = nucleotide_isochore_profile(&record, params.window, params.step).map_err(map_error)?;
+    let profile =
+        nucleotide_isochore_profile(&record, params.window, params.step).map_err(map_error)?;
     let plot = build_isochore_plot(&profile)?;
 
     Ok(IsochoreOutcome {
@@ -187,8 +188,7 @@ mod tests {
 
     #[test]
     fn maps_invalid_window_error() {
-        let mapped: PlatformError =
-            map_error(NucleotideIsochoreError::InvalidWindow { window: 0 });
+        let mapped: PlatformError = map_error(NucleotideIsochoreError::InvalidWindow { window: 0 });
         assert_eq!(
             mapped.code().as_deref(),
             Some("tools.isochore.window.invalid")

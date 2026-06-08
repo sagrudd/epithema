@@ -2,7 +2,9 @@
 
 use std::path::PathBuf;
 
-use emboss_core::{CodonUsageError, NucleotideSycoError, NucleotideSycoProfile, nucleotide_syco_profile};
+use emboss_core::{
+    CodonUsageError, NucleotideSycoError, NucleotideSycoProfile, nucleotide_syco_profile,
+};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 use emboss_plot_contract::{
     AxisScaleHint, DataVector, GeometryHint, PlotAxis, PlotKind, PlotMetadata, PlotPayload,
@@ -57,8 +59,9 @@ pub fn run_syco(params: SycoParams) -> Result<SycoOutcome, ToolExecutionError> {
     })?;
 
     let reference = load_profile_source(&params.reference)?;
-    let profile = nucleotide_syco_profile(&record, &reference, params.codon_window, params.codon_step)
-        .map_err(map_error)?;
+    let profile =
+        nucleotide_syco_profile(&record, &reference, params.codon_window, params.codon_step)
+            .map_err(map_error)?;
     let plot = build_syco_plot(&profile)?;
 
     Ok(SycoOutcome {

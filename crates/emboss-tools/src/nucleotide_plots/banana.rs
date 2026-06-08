@@ -59,7 +59,11 @@ fn build_banana_plot(profile: &NucleotideBananaProfile) -> Result<PlotPayload, T
     let defined_points = profile
         .points
         .iter()
-        .filter_map(|point| point.curvature.map(|curvature| (point.position as f64, curvature)))
+        .filter_map(|point| {
+            point
+                .curvature
+                .map(|curvature| (point.position as f64, curvature))
+        })
         .collect::<Vec<_>>();
 
     let plot = PlotSpec::new(

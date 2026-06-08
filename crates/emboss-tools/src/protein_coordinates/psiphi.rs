@@ -3,7 +3,7 @@
 use std::fs;
 use std::path::PathBuf;
 
-use emboss_core::{protein_psiphi_profile, ProteinPsiphiProfile};
+use emboss_core::{ProteinPsiphiProfile, protein_psiphi_profile};
 use emboss_diagnostics::{ErrorCategory, PlatformError};
 
 /// Local protein-coordinate input handled by the bounded `psiphi` seam.
@@ -69,7 +69,7 @@ pub fn run_psiphi(params: PsiphiParams) -> Result<PsiphiOutcome, ToolExecutionEr
 
 #[cfg(test)]
 mod tests {
-    use super::{run_psiphi, PsiphiInput, PsiphiParams};
+    use super::{PsiphiInput, PsiphiParams, run_psiphi};
 
     fn fixture(name: &str) -> std::path::PathBuf {
         std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))

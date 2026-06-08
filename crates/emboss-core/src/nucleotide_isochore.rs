@@ -138,7 +138,10 @@ pub fn nucleotide_isochore_profile(
             counts.adenine_symbols + counts.thymine_or_uracil_symbols,
             denominator,
         );
-        let gc_fraction = fraction(counts.guanine_symbols + counts.cytosine_symbols, denominator);
+        let gc_fraction = fraction(
+            counts.guanine_symbols + counts.cytosine_symbols,
+            denominator,
+        );
         windows.push(IsochoreWindow {
             window_start: start + 1,
             window_end: start + window,

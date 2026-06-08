@@ -177,10 +177,8 @@ pub fn nucleotide_banana_profile(
     let curvature_margin = CURVATURE_BRACKET + AVERAGING_RADIUS + 1;
     if sequence_length >= curvature_margin * 2 {
         for position in curvature_margin..=(sequence_length - curvature_margin + 1) {
-            let delta_x =
-                xave[position + CURVATURE_BRACKET] - xave[position - CURVATURE_BRACKET];
-            let delta_y =
-                yave[position + CURVATURE_BRACKET] - yave[position - CURVATURE_BRACKET];
+            let delta_x = xave[position + CURVATURE_BRACKET] - xave[position - CURVATURE_BRACKET];
+            let delta_y = yave[position + CURVATURE_BRACKET] - yave[position - CURVATURE_BRACKET];
             curve[position] = Some(delta_x.hypot(delta_y));
         }
     }
@@ -265,7 +263,10 @@ mod tests {
 
         let twenty_first = &profile.points[20];
         assert!((twenty_first.local_bend.expect("bend should be defined") - 3.36).abs() < 1e-9);
-        assert!((twenty_first.curvature.expect("curvature should be defined") - 10.48310492061).abs() < 1e-9);
+        assert!(
+            (twenty_first.curvature.expect("curvature should be defined") - 10.48310492061).abs()
+                < 1e-9
+        );
     }
 
     #[test]

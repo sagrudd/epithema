@@ -177,12 +177,12 @@ pub fn sirna_profile(
     while start <= last_start {
         let slice = &residues[start..start + duplex_length];
         if let Some(window) = candidate_window(slice) {
-            let guide_sequence =
-                reverse_complement_residues(record.molecule(), slice).expect(
-                    "validated canonical nucleotide windows always support reverse complements",
-                );
+            let guide_sequence = reverse_complement_residues(record.molecule(), slice).expect(
+                "validated canonical nucleotide windows always support reverse complements",
+            );
             let guide_five_prime_base = char::from(guide_sequence.as_bytes()[0]);
-            let guide_seed_au_count = count_au_like(&guide_sequence[1..guide_sequence.len().min(8)]);
+            let guide_seed_au_count =
+                count_au_like(&guide_sequence[1..guide_sequence.len().min(8)]);
 
             if candidate_passes_bounds(
                 parameters,
@@ -305,8 +305,7 @@ fn candidate_passes_bounds(
     if gc_fraction < parameters.min_gc_fraction || gc_fraction > parameters.max_gc_fraction {
         return false;
     }
-    if parameters.require_guide_five_prime_au && !matches!(guide_five_prime_base, 'A' | 'T' | 'U')
-    {
+    if parameters.require_guide_five_prime_au && !matches!(guide_five_prime_base, 'A' | 'T' | 'U') {
         return false;
     }
     if guide_seed_au_count < parameters.min_seed_au_count {
@@ -460,6 +459,11 @@ mod tests {
             },
         )
         .expect_err("oversized seed AU minimum should fail");
-        assert_eq!(error, SirnaError::InvalidSeedAuMinimum { min_seed_au_count: 8 });
+        assert_eq!(
+            error,
+            SirnaError::InvalidSeedAuMinimum {
+                min_seed_au_count: 8
+            }
+        );
     }
 }

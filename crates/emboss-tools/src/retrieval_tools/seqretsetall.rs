@@ -93,8 +93,9 @@ mod tests {
 
     #[test]
     fn preserves_input_partitioning_and_order() {
-        let local_records = load_sequence_records(&SequenceInput::new(fixture("three_records.fasta")))
-            .expect("fixture should load");
+        let local_records =
+            load_sequence_records(&SequenceInput::new(fixture("three_records.fasta")))
+                .expect("fixture should load");
         let retrieved_record = SequenceRecord::new(
             SequenceIdentifier::new("AB000263").expect("identifier should build"),
             MoleculeKind::Dna,
@@ -123,10 +124,7 @@ mod tests {
         assert_eq!(outcome.record_sets[0].len(), 3);
         assert_eq!(outcome.record_sets[1].len(), 1);
         assert_eq!(outcome.total_records, 4);
-        assert_eq!(
-            outcome.record_sets[0][0].identifier().accession(),
-            "alpha"
-        );
+        assert_eq!(outcome.record_sets[0][0].identifier().accession(), "alpha");
         assert_eq!(
             outcome.record_sets[1][0].identifier().accession(),
             "AB000263"
@@ -154,8 +152,10 @@ mod tests {
             inputs: vec![
                 SeqretsetallInputSet {
                     source: SeqretSource::LocalPath(fixture("three_records.fasta")),
-                    records: load_sequence_records(&SequenceInput::new(fixture("three_records.fasta")))
-                        .expect("fixture should load"),
+                    records: load_sequence_records(&SequenceInput::new(fixture(
+                        "three_records.fasta",
+                    )))
+                    .expect("fixture should load"),
                 },
                 SeqretsetallInputSet {
                     source: SeqretSource::Retrieved {

@@ -451,10 +451,12 @@ mod tests {
         };
 
         let profile = eprimer3_profile(&record, parameters).expect("profile should compute");
-        assert!(profile
-            .candidates
-            .iter()
-            .all(|candidate| candidate.ambiguous_symbols == 0));
+        assert!(
+            profile
+                .candidates
+                .iter()
+                .all(|candidate| candidate.ambiguous_symbols == 0)
+        );
         assert_eq!(profile.candidates.len(), 2);
         assert_eq!(profile.candidates[0].candidate_id, "ep3b:forward:5-8");
     }

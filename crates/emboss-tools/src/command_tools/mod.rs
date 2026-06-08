@@ -6,7 +6,7 @@ use crate::ToolDescriptor;
 
 const FAMILY: &str = "command_tools";
 
-pub use wossname::{run_wossname, wossname_help, WossnameOutcome, WossnameParams, WossnameRow};
+pub use wossname::{WossnameOutcome, WossnameParams, WossnameRow, run_wossname, wossname_help};
 
 /// `wossname` descriptor.
 pub const WOSSNAME_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(

@@ -1,9 +1,9 @@
 //! `wossname` implementation.
 
-use emboss_core::{wossname_profile, WossnameCatalogEntry};
+use emboss_core::{WossnameCatalogEntry, wossname_profile};
 
 use crate::sequence_stream::ToolExecutionError;
-use crate::{governed_tool_descriptors, ToolDescriptor};
+use crate::{ToolDescriptor, governed_tool_descriptors};
 
 /// Typed parameters for `wossname`.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -101,7 +101,7 @@ fn descriptor_for_tool<'a>(
 
 #[cfg(test)]
 mod tests {
-    use super::{run_wossname, WossnameParams};
+    use super::{WossnameParams, run_wossname};
 
     #[test]
     fn reports_expected_keyword_match_rows() {
@@ -137,8 +137,10 @@ mod tests {
         })
         .expect_err("blank query should fail");
 
-        assert!(error
-            .to_string()
-            .contains("requires at least one keyword query term"));
+        assert!(
+            error
+                .to_string()
+                .contains("requires at least one keyword query term")
+        );
     }
 }

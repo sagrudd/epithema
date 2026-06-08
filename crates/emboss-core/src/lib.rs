@@ -16,8 +16,8 @@ pub mod alphabet;
 pub mod codon_usage;
 pub mod complexity;
 pub mod composition;
-pub mod error;
 pub mod eprimer3;
+pub mod error;
 pub mod feature;
 pub mod feature_ops;
 pub mod feature_selector;
@@ -67,10 +67,10 @@ pub use complexity::{
     sequence_complexity, sliding_window_complexity,
 };
 pub use composition::{CompositionError, GcSummary, ResidueComposition, protein_molecular_weight};
-pub use error::DomainError;
 pub use eprimer3::{
     Eprimer3Candidate, Eprimer3Error, Eprimer3Parameters, Eprimer3Profile, eprimer3_profile,
 };
+pub use error::DomainError;
 pub use feature::{Feature, FeatureKind, FeatureLocation, FeatureSpan};
 pub use feature_ops::{
     ExtractedFeatureRecord, FeatureOperationError, FeatureSummary, copy_selected_features,

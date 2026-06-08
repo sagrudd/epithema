@@ -207,7 +207,7 @@ fn normalize_text(text: impl AsRef<str>) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{wossname_profile, WossnameCatalogEntry, WossnameError, WossnameMatchField};
+    use super::{WossnameCatalogEntry, WossnameError, WossnameMatchField, wossname_profile};
 
     #[test]
     fn rejects_blank_queries() {

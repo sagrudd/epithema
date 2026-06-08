@@ -476,7 +476,10 @@ mod tests {
             derive_cohort_health_report(repo_root()).expect("cohort health report should derive");
         let markdown = render_cohort_health_markdown(&report);
         assert!(markdown.contains("# Cohort Health Gate"));
-        assert!(markdown.contains("Weakest evidence family: `none` (`0` methods below compared evidence)"));
+        assert!(
+            markdown
+                .contains("Weakest evidence family: `none` (`0` methods below compared evidence)")
+        );
         assert!(markdown.contains("## Reprioritization Signals"));
         assert!(markdown.contains("Release-truth document current: `yes`"));
     }

@@ -105,7 +105,8 @@ pub fn protein_psiphi_profile(
     for (index, residue) in residues.iter().enumerate() {
         let previous = index.checked_sub(1).and_then(|prev| residues.get(prev));
         let next = residues.get(index + 1);
-        let previous_contiguous = previous.is_some_and(|prev| residues_are_contiguous(prev, residue));
+        let previous_contiguous =
+            previous.is_some_and(|prev| residues_are_contiguous(prev, residue));
         let next_contiguous = next.is_some_and(|next| residues_are_contiguous(residue, next));
 
         let phi_degrees = if previous_contiguous {
@@ -198,8 +199,7 @@ impl AltLocationPriority {
 fn parse_backbone_residues(input: &str) -> Result<Vec<ResidueBackbone>, ProteinPsiphiError> {
     let mut residues = Vec::<ResidueBackbone>::new();
     let mut indexes = HashMap::<ResidueKey, usize>::new();
-    let mut atom_priorities =
-        HashMap::<(ResidueKey, &'static str), AltLocationPriority>::new();
+    let mut atom_priorities = HashMap::<(ResidueKey, &'static str), AltLocationPriority>::new();
 
     for (line_index, line) in input.lines().enumerate() {
         let line_number = line_index + 1;

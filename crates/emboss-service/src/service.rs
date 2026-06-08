@@ -5,8 +5,8 @@ use std::str::FromStr;
 
 use emboss_config::PlatformConfig;
 use emboss_core::{
-    FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PatternError,
-    ProteinPattern, RevseqMode, Strand, PLATFORM_IDENTITY,
+    FeatureKind, FeatureSelector, Interval, MoleculeKind, NucleotidePattern, PLATFORM_IDENTITY,
+    PatternError, ProteinPattern, RevseqMode, Strand,
 };
 use emboss_diagnostics::{
     ArtifactProvenance, Diagnostic, ErrorCategory, ExecutionOutcome, ExecutionReport,
@@ -16,114 +16,114 @@ use emboss_providers::{
     AcquisitionRequest, ArchiveObjectClass, ProviderHttpClient, ProviderRegistry,
     RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
 };
+use emboss_tools::ToolDescriptor;
 use emboss_tools::alignment_analysis::{
-    cons_help, consambig_help, distmat_help, matcher_help, run_cons, run_consambig, run_distmat,
-    run_matcher, ConsParams, ConsambigParams, DistmatParams, MatcherParams,
+    ConsParams, ConsambigParams, DistmatParams, MatcherParams, cons_help, consambig_help,
+    distmat_help, matcher_help, run_cons, run_consambig, run_distmat, run_matcher,
 };
 use emboss_tools::alignment_tools::{
-    aligncopy_help, aligncopypair_help, diffseq_help, edialign_help, extractalign_help,
-    infoalign_help, nthseqset_help, run_aligncopy, run_aligncopypair, run_diffseq, run_edialign,
-    run_extractalign, run_infoalign, run_nthseqset, AligncopyParams, AligncopypairParams,
-    AlignmentInput, DiffseqParams, EdialignParams, ExtractalignParams, InfoalignParams,
-    NthseqsetParams,
+    AligncopyParams, AligncopypairParams, AlignmentInput, DiffseqParams, EdialignParams,
+    ExtractalignParams, InfoalignParams, NthseqsetParams, aligncopy_help, aligncopypair_help,
+    diffseq_help, edialign_help, extractalign_help, infoalign_help, nthseqset_help, run_aligncopy,
+    run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use emboss_tools::archive_tools::{
-    infoassembly_help, run_infoassembly, run_runget, run_runinfo, runget_help, runinfo_help,
-    InfoassemblyParams, RungetParams, RuninfoParams,
+    InfoassemblyParams, RungetParams, RuninfoParams, infoassembly_help, run_infoassembly,
+    run_runget, run_runinfo, runget_help, runinfo_help,
 };
 use emboss_tools::codon_tools::{
-    cai_help, chips_help, codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai,
-    run_chips, run_codcmp, run_codcopy, run_cusp, CaiParams, ChipsParams, CodcmpParams,
-    CodcopyParams, CuspParams,
+    CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
+    codcmp_help, codcopy_help, cusp_help, render_profile_rows, run_cai, run_chips, run_codcmp,
+    run_codcopy, run_cusp,
 };
-use emboss_tools::command_tools::{run_wossname, wossname_help, WossnameParams};
+use emboss_tools::command_tools::{WossnameParams, run_wossname, wossname_help};
 use emboss_tools::feature_tools::{
-    coderet_help, extractfeat_help, featcopy_help, featmerge_help, featreport_help, feattext_help,
-    maskambignuc_help, maskambigprot_help, maskfeat_help, maskseq_help, run_coderet,
-    run_extractfeat, run_featcopy, run_featmerge, run_featreport, run_feattext, run_maskambignuc,
-    run_maskambigprot, run_maskfeat, run_maskseq, run_splitsource, run_twofeat, splitsource_help,
-    twofeat_help, CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams,
-    FeatreportParams, FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams,
-    MaskseqParams, SplitsourceParams, TwofeatParams,
+    CoderetParams, ExtractfeatParams, FeatcopyParams, FeatmergeParams, FeatreportParams,
+    FeattextParams, MaskambignucParams, MaskambigprotParams, MaskfeatParams, MaskseqParams,
+    SplitsourceParams, TwofeatParams, coderet_help, extractfeat_help, featcopy_help,
+    featmerge_help, featreport_help, feattext_help, maskambignuc_help, maskambigprot_help,
+    maskfeat_help, maskseq_help, run_coderet, run_extractfeat, run_featcopy, run_featmerge,
+    run_featreport, run_feattext, run_maskambignuc, run_maskambigprot, run_maskfeat, run_maskseq,
+    run_splitsource, run_twofeat, splitsource_help, twofeat_help,
 };
 use emboss_tools::nucleotide_plots::{
-    banana_help, density_help, isochore_help, run_banana, run_density, run_isochore, run_syco,
-    run_wobble, syco_help, wobble_help, BananaParams, DensityParams, IsochoreParams, SycoParams,
-    WobbleParams,
+    BananaParams, DensityParams, IsochoreParams, SycoParams, WobbleParams, banana_help,
+    density_help, isochore_help, run_banana, run_density, run_isochore, run_syco, run_wobble,
+    syco_help, wobble_help,
 };
 use emboss_tools::pairwise_alignment::{
-    needle_help, needleall_help, run_needle, run_needleall, run_water, water_help, NeedleParams,
-    NeedleallParams, WaterParams,
+    NeedleParams, NeedleallParams, WaterParams, needle_help, needleall_help, run_needle,
+    run_needleall, run_water, water_help,
 };
 use emboss_tools::pattern_tools::{
-    dreg_help, einverted_help, fuzznuc_help, fuzzpro_help, fuzztran_help, palindrome_help,
-    patmatdb_help, preg_help, run_dreg, run_einverted, run_fuzznuc, run_fuzzpro, run_fuzztran,
-    run_palindrome, run_patmatdb, run_preg, run_seqmatchall, run_wordfinder, run_wordmatch,
-    seqmatchall_help, wordfinder_help, wordmatch_help, DregParams, EinvertedParams, FuzznucParams,
-    FuzzproParams, FuzztranParams, PalindromeParams, PatmatdbParams, PregParams, SeqmatchallParams,
-    WordfinderParams, WordmatchParams,
+    DregParams, EinvertedParams, FuzznucParams, FuzzproParams, FuzztranParams, PalindromeParams,
+    PatmatdbParams, PregParams, SeqmatchallParams, WordfinderParams, WordmatchParams, dreg_help,
+    einverted_help, fuzznuc_help, fuzzpro_help, fuzztran_help, palindrome_help, patmatdb_help,
+    preg_help, run_dreg, run_einverted, run_fuzznuc, run_fuzzpro, run_fuzztran, run_palindrome,
+    run_patmatdb, run_preg, run_seqmatchall, run_wordfinder, run_wordmatch, seqmatchall_help,
+    wordfinder_help, wordmatch_help,
 };
 use emboss_tools::primer_tools::{
-    eprimer3_help, primersearch_help, run_eprimer3, run_primersearch, run_sirna, sirna_help,
-    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, SirnaParams,
+    Eprimer3Params, PrimersearchPairInput, PrimersearchParams, SirnaParams, eprimer3_help,
+    primersearch_help, run_eprimer3, run_primersearch, run_sirna, sirna_help,
 };
-use emboss_tools::protein_coordinates::{psiphi_help, run_psiphi, PsiphiInput, PsiphiParams};
+use emboss_tools::protein_coordinates::{PsiphiInput, PsiphiParams, psiphi_help, run_psiphi};
 use emboss_tools::protein_plots::{
-    charge_help, hmoment_help, octanol_help, pepinfo_help, pepwindow_help, run_charge, run_hmoment,
-    run_octanol, run_pepinfo, run_pepwindow, ChargeParams, HmomentParams, OctanolParams,
-    PepinfoParams, PepwindowParams,
+    ChargeParams, HmomentParams, OctanolParams, PepinfoParams, PepwindowParams, charge_help,
+    hmoment_help, octanol_help, pepinfo_help, pepwindow_help, run_charge, run_hmoment, run_octanol,
+    run_pepinfo, run_pepwindow,
 };
 use emboss_tools::restriction_tools::{
-    recoder_help, run_recoder, run_silent, silent_help, RecoderParams, SilentParams,
+    RecoderParams, SilentParams, recoder_help, run_recoder, run_silent, silent_help,
 };
 use emboss_tools::retrieval_tools::{
-    refseqget_help, run_refseqget, run_seqret, run_seqretsetall, run_seqretsplit, seqret_help,
-    seqretsetall_help, seqretsplit_help, RefseqgetParams, SeqretParams, SeqretSource,
-    SeqretsetallInputSet, SeqretsetallParams, SeqretsplitParams,
+    RefseqgetParams, SeqretParams, SeqretSource, SeqretsetallInputSet, SeqretsetallParams,
+    SeqretsplitParams, refseqget_help, run_refseqget, run_seqret, run_seqretsetall,
+    run_seqretsplit, seqret_help, seqretsetall_help, seqretsplit_help,
 };
 use emboss_tools::sequence_edit::{
-    biosed_help, degapseq_help, descseq_help, msbar_help, revseq_help, run_biosed, run_degapseq,
-    run_descseq, run_msbar, run_revseq, run_trimest, run_trimseq, run_vectorstrip, trimest_help,
-    trimseq_help, vectorstrip_help, BiosedParams, DegapseqParams, DescseqParams, MsbarMutation,
-    MsbarParams, RevseqParams, TrimestParams, TrimseqParams, VectorstripParams,
+    BiosedParams, DegapseqParams, DescseqParams, MsbarMutation, MsbarParams, RevseqParams,
+    TrimestParams, TrimseqParams, VectorstripParams, biosed_help, degapseq_help, descseq_help,
+    msbar_help, revseq_help, run_biosed, run_degapseq, run_descseq, run_msbar, run_revseq,
+    run_trimest, run_trimseq, run_vectorstrip, trimest_help, trimseq_help, vectorstrip_help,
 };
 use emboss_tools::sequence_stats::{
-    aaindexextract_help, complex_help, compseq_help, dan_help, geecee_help, iep_help,
-    infobase_help, inforesidue_help, infoseq_help, oddcomp_help, parse_aaindexextract_index,
-    pepdigest_help, pepstats_help, run_aaindexextract, run_complex, run_compseq, run_dan,
-    run_geecee, run_iep, run_infobase, run_inforesidue, run_infoseq, run_oddcomp, run_pepdigest,
-    run_pepstats, run_wordcount, word_frequency, wordcount_help, AaindexextractParams,
-    ComplexParams, CompseqParams, DanParams, GeeceeParams, IepParams, InfobaseParams,
-    InforesidueParams, InfoseqParams, OddcompParams, PepdigestParams, PepdigestProtease,
-    PepstatsParams, WordcountParams,
+    AaindexextractParams, ComplexParams, CompseqParams, DanParams, GeeceeParams, IepParams,
+    InfobaseParams, InforesidueParams, InfoseqParams, OddcompParams, PepdigestParams,
+    PepdigestProtease, PepstatsParams, WordcountParams, aaindexextract_help, complex_help,
+    compseq_help, dan_help, geecee_help, iep_help, infobase_help, inforesidue_help, infoseq_help,
+    oddcomp_help, parse_aaindexextract_index, pepdigest_help, pepstats_help, run_aaindexextract,
+    run_complex, run_compseq, run_dan, run_geecee, run_iep, run_infobase, run_inforesidue,
+    run_infoseq, run_oddcomp, run_pepdigest, run_pepstats, run_wordcount, word_frequency,
+    wordcount_help,
 };
 use emboss_tools::sequence_stream::{
+    ListorParams, MakenucseqParams, MakeprotseqParams, NewseqParams, NotseqParams, NthseqParams,
+    SeqcountParams, SequenceInput, SequenceSetOperator, SkipredundantParams, SkipseqParams,
     listor_help, load_sequence_records, makenucseq_help, makeprotseq_help, newseq_help,
     notseq_help, nthseq_help, run_listor, run_makenucseq, run_makeprotseq, run_newseq, run_notseq,
     run_nthseq, run_seqcount, run_skipredundant, run_skipseq, seqcount_help, skipredundant_help,
-    skipseq_help, ListorParams, MakenucseqParams, MakeprotseqParams, NewseqParams, NotseqParams,
-    NthseqParams, SeqcountParams, SequenceInput, SequenceSetOperator, SkipredundantParams,
-    SkipseqParams,
+    skipseq_help,
 };
 use emboss_tools::sequence_transform::{
-    cutseq_help, extractseq_help, megamerger_help, merger_help, pasteseq_help, run_cutseq,
-    run_extractseq, run_megamerger, run_merger, run_pasteseq, run_shuffleseq, run_sizeseq,
-    run_splitter, run_union, shuffleseq_help, sizeseq_help, splitter_help, union_help,
     CutseqParams, ExtractseqParams, MegamergerParams, MergerParams, PasteseqParams,
-    ShuffleseqParams, SizeseqParams, SplitterParams, UnionParams,
+    ShuffleseqParams, SizeseqParams, SplitterParams, UnionParams, cutseq_help, extractseq_help,
+    megamerger_help, merger_help, pasteseq_help, run_cutseq, run_extractseq, run_megamerger,
+    run_merger, run_pasteseq, run_shuffleseq, run_sizeseq, run_splitter, run_union,
+    shuffleseq_help, sizeseq_help, splitter_help, union_help,
 };
 use emboss_tools::translation_tools::{
-    backtranambig_help, backtranseq_help, checktrans_help, getorf_help, prettyseq_help,
-    run_backtranambig, run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign,
-    run_transeq, tranalign_help, transeq_help, BacktranambigParams, BacktranseqParams,
-    ChecktransParams, GetorfParams, PrettyseqParams, TranalignParams, TranseqParams,
-    TranslationFrameSelection,
+    BacktranambigParams, BacktranseqParams, ChecktransParams, GetorfParams, PrettyseqParams,
+    TranalignParams, TranseqParams, TranslationFrameSelection, backtranambig_help,
+    backtranseq_help, checktrans_help, getorf_help, prettyseq_help, run_backtranambig,
+    run_backtranseq, run_checktrans, run_getorf, run_prettyseq, run_tranalign, run_transeq,
+    tranalign_help, transeq_help,
 };
-use emboss_tools::ToolDescriptor;
 
+use crate::ServiceDocumentationAcquisition;
 use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
-use crate::error::{unknown_tool, ServiceError};
+use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
@@ -133,7 +133,6 @@ use crate::result::{
     TextReport,
 };
 use crate::sequence_retrieval::ServiceSequenceRetrieval;
-use crate::ServiceDocumentationAcquisition;
 
 /// Front-end-neutral EMBOSS-RS service façade.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
@@ -12920,7 +12919,7 @@ mod tests {
     use emboss_core::MoleculeKind;
     use emboss_diagnostics::PlatformError;
     use emboss_providers::{HttpRequest, HttpResponse, ProviderHttpClient};
-    use emboss_tools::{governed_tool_descriptors, ToolDescriptor};
+    use emboss_tools::{ToolDescriptor, governed_tool_descriptors};
 
     use super::EmbossService;
     use crate::{
@@ -12989,18 +12988,24 @@ mod tests {
     #[test]
     fn starts_with_default_platform_configuration_and_builtin_sequence_providers() {
         let service = EmbossService::empty();
-        assert!(service
-            .providers()
-            .find(&emboss_providers::ProviderId::new("ena").expect("valid provider"))
-            .is_some());
-        assert!(service
-            .providers()
-            .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
-            .is_some());
-        assert!(service
-            .providers()
-            .find(&emboss_providers::ProviderId::new("sra").expect("valid provider"))
-            .is_some());
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("ena").expect("valid provider"))
+                .is_some()
+        );
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("ncbi").expect("valid provider"))
+                .is_some()
+        );
+        assert!(
+            service
+                .providers()
+                .find(&emboss_providers::ProviderId::new("sra").expect("valid provider"))
+                .is_some()
+        );
         assert!(service.config().acquisition.allow_remote_acquisition);
     }
 
@@ -13965,12 +13970,14 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response
-            .result
-            .summary
-            .lines
-            .iter()
-            .any(|line| line == "Provider: ena"));
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Provider: ena")
+        );
     }
 
     #[test]
@@ -13998,12 +14005,14 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response
-            .result
-            .summary
-            .lines
-            .iter()
-            .any(|line| line == "Provider: sra"));
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Provider: sra")
+        );
     }
 
     #[test]
@@ -14061,10 +14070,12 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row == &vec!["assembly_accession".to_owned(), "ERP000001".to_owned()]
                 }));
-                assert!(table
-                    .rows
-                    .iter()
-                    .any(|row| { row == &vec!["file_count".to_owned(), "2".to_owned()] }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row == &vec!["file_count".to_owned(), "2".to_owned()] })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -14275,18 +14286,22 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response
-            .result
-            .summary
-            .lines
-            .iter()
-            .any(|line| line == "Query span: 3-7"));
-        assert!(response
-            .result
-            .summary
-            .lines
-            .iter()
-            .any(|line| line == "Target span: 3-7"));
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Query span: 3-7")
+        );
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Target span: 3-7")
+        );
     }
 
     #[test]
@@ -16250,9 +16265,11 @@ mod tests {
         match &response.result.payload {
             ResultPayload::TextReport(report) => {
                 assert!(report.body.contains("ID   FEAT1"));
-                assert!(report
-                    .body
-                    .contains("FEATURES             Location/Qualifiers"));
+                assert!(
+                    report
+                        .body
+                        .contains("FEATURES             Location/Qualifiers")
+                );
                 assert!(report.body.contains("/product=\"short peptide\""));
             }
             payload => panic!("unexpected payload: {payload:?}"),
@@ -16346,8 +16363,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+        );
         assert_eq!(response.result.summary.lines[1], "Frame selection: frame 1");
         assert_eq!(response.result.summary.lines[2], "Genetic code: standard");
     }
@@ -16521,8 +16540,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
         assert_eq!(response.result.summary.lines[1], "Pattern: ACGN");
         assert_eq!(
             response.result.summary.lines[2],
@@ -16559,8 +16580,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/protein_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/protein_records.fasta")
+        );
         assert_eq!(response.result.summary.lines[1], "Pattern: MX");
         assert_eq!(
             response.result.summary.lines[2],
@@ -16600,8 +16623,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta")
+        );
         assert_eq!(response.result.summary.lines[1], "Pattern: MA");
         assert_eq!(
             response.result.summary.lines[2],
@@ -17071,15 +17096,19 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record" && row[1] == "nucA" && row[4] == "N" && row[5] == "1"
                 }));
-                assert!(table
-                    .rows
-                    .iter()
-                    .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[4] == "C" && row[5] == "4" })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[1],
             "Scope: per-record plus aggregate summary"
@@ -17110,10 +17139,12 @@ mod tests {
                 assert!(table.rows.iter().any(|row| {
                     row[0] == "record" && row[1] == "protA" && row[4] == "*" && row[5] == "1"
                 }));
-                assert!(table
-                    .rows
-                    .iter()
-                    .any(|row| { row[0] == "aggregate" && row[4] == "L" && row[5] == "1" }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[4] == "L" && row[5] == "1" })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -18290,8 +18321,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[1],
             "Scope: per-record plus aggregate summary"
@@ -18379,8 +18412,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/protein_stats_records.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[1],
             "Mass convention: average residue masses plus one water molecule"
@@ -18462,8 +18497,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/psiphi_backbone.txt"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/psiphi_backbone.txt")
+        );
         assert_eq!(
             response.result.summary.lines[1],
             "Coordinate scope: local PDB ATOM backbone records only"
@@ -18519,10 +18556,14 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/primersearch_targets.fasta"));
-        assert!(response.result.summary.lines[1]
-            .ends_with("crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/primersearch_targets.fasta")
+        );
+        assert!(
+            response.result.summary.lines[1]
+                .ends_with("crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv")
+        );
         assert_eq!(
             response.result.summary.lines[2],
             "Matching scope: exact or IUPAC-ambiguous primer text only"
@@ -18548,9 +18589,11 @@ mod tests {
         let error = service
             .invoke_primersearch(request, emboss_tools::primer_tools::PRIMERSEARCH_DESCRIPTOR)
             .expect_err("provider-backed target inputs should fail");
-        assert!(error
-            .to_string()
-            .contains("provider-backed sequence acquisition"));
+        assert!(
+            error
+                .to_string()
+                .contains("provider-backed sequence acquisition")
+        );
     }
 
     #[test]
@@ -18577,9 +18620,11 @@ mod tests {
             .expect_err("invalid primer-pair file should fail");
         std::fs::remove_file(path).ok();
 
-        assert!(error
-            .to_string()
-            .contains("must contain exactly 3 tab-delimited fields"));
+        assert!(
+            error
+                .to_string()
+                .contains("must contain exactly 3 tab-delimited fields")
+        );
     }
 
     #[test]
@@ -18628,7 +18673,11 @@ mod tests {
                 );
                 assert_eq!(table.rows.len(), 4);
                 assert_eq!(
-                    table.rows.iter().map(|row| row[0].as_str()).collect::<Vec<_>>(),
+                    table
+                        .rows
+                        .iter()
+                        .map(|row| row[0].as_str())
+                        .collect::<Vec<_>>(),
                     vec!["aligncopypair", "needle", "needleall", "water"]
                 );
                 assert_eq!(table.rows[0][1], "alignment_tools");
@@ -18660,9 +18709,11 @@ mod tests {
         let error = service
             .invoke_wossname(request, emboss_tools::command_tools::WOSSNAME_DESCRIPTOR)
             .expect_err("blank queries should fail");
-        assert!(error
-            .to_string()
-            .contains("requires at least one keyword query term"));
+        assert!(
+            error
+                .to_string()
+                .contains("requires at least one keyword query term")
+        );
     }
 
     #[test]
@@ -18706,8 +18757,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[3],
             "Design scope: deterministic local candidate generation only"
@@ -18726,9 +18779,11 @@ mod tests {
         let error = service
             .invoke_eprimer3(request, emboss_tools::primer_tools::EPRIMER3_DESCRIPTOR)
             .expect_err("provider-backed inputs should fail");
-        assert!(error
-            .to_string()
-            .contains("provider-backed sequence acquisition"));
+        assert!(
+            error
+                .to_string()
+                .contains("provider-backed sequence acquisition")
+        );
     }
 
     #[test]
@@ -18790,8 +18845,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/sirna_targets.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/sirna_targets.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[3],
             "Design scope: deterministic local siRNA candidate generation only"
@@ -18810,9 +18867,11 @@ mod tests {
         let error = service
             .invoke_sirna(request, emboss_tools::primer_tools::SIRNA_DESCRIPTOR)
             .expect_err("provider-backed inputs should fail");
-        assert!(error
-            .to_string()
-            .contains("provider-backed sequence acquisition"));
+        assert!(
+            error
+                .to_string()
+                .contains("provider-backed sequence acquisition")
+        );
     }
 
     #[test]
@@ -18846,9 +18905,11 @@ mod tests {
                 emboss_tools::protein_coordinates::PSIPHI_DESCRIPTOR,
             )
             .expect_err("provider-backed inputs should fail");
-        assert!(error
-            .to_string()
-            .contains("provider-backed coordinate acquisition"));
+        assert!(
+            error
+                .to_string()
+                .contains("provider-backed coordinate acquisition")
+        );
     }
 
     #[test]
@@ -18930,8 +18991,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/iep_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/iep_records.fasta")
+        );
         assert_eq!(
             response.result.summary.lines[1],
             "Model: fixed explicit pKa set for termini and D/E/C/Y/H/K/R"
@@ -19020,8 +19083,10 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
-        assert!(response.result.summary.lines[0]
-            .ends_with("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta"));
+        assert!(
+            response.result.summary.lines[0]
+                .ends_with("crates/emboss-tools/tests/fixtures/pepdigest_records.fasta")
+        );
         assert_eq!(response.result.summary.lines[1], "Protease: trypsin");
         assert_eq!(
             response.result.summary.lines[2],
@@ -19208,10 +19273,12 @@ mod tests {
         let response = service.invoke(request).expect("chips should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
-                assert!(table
-                    .rows
-                    .iter()
-                    .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "aggregate" && row[2] == "CTT" && row[4] == "5" })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -19288,10 +19355,12 @@ mod tests {
         let response = service.invoke(request).expect("codcmp should execute");
         match &response.result.payload {
             ResultPayload::TableReport(table) => {
-                assert!(table
-                    .rows
-                    .iter()
-                    .any(|row| { row[0] == "CTT" && row[2] == "5" && row[4] == "0" }));
+                assert!(
+                    table
+                        .rows
+                        .iter()
+                        .any(|row| { row[0] == "CTT" && row[2] == "5" && row[4] == "0" })
+                );
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }

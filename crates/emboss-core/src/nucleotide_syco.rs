@@ -41,10 +41,9 @@ impl std::fmt::Display for NucleotideSycoError {
                 write!(f, "syco requires a nucleotide coding-sequence input")
             }
             Self::InvalidCodingSequence(error) => write!(f, "{error}"),
-            Self::EmptyReferenceProfile => write!(
-                f,
-                "syco requires a non-empty reference codon-usage profile"
-            ),
+            Self::EmptyReferenceProfile => {
+                write!(f, "syco requires a non-empty reference codon-usage profile")
+            }
             Self::InvalidCodonWindow { codon_window } => {
                 write!(f, "codon window length must be >= 1, got {codon_window}")
             }
@@ -187,7 +186,8 @@ fn normalized_sense_codons(sequence: &str, terminal_stop: Option<&str>) -> Vec<S
 #[cfg(test)]
 mod tests {
     use crate::{
-        CodonUsageError, MoleculeKind, SequenceIdentifier, SequenceRecord, summarize_coding_sequence,
+        CodonUsageError, MoleculeKind, SequenceIdentifier, SequenceRecord,
+        summarize_coding_sequence,
     };
 
     use super::{NucleotideSycoError, nucleotide_syco_profile};

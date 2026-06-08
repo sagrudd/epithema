@@ -2,7 +2,7 @@
 
 mod psiphi;
 
-pub use psiphi::{psiphi_help, run_psiphi, PsiphiInput, PsiphiOutcome, PsiphiParams};
+pub use psiphi::{PsiphiInput, PsiphiOutcome, PsiphiParams, psiphi_help, run_psiphi};
 
 use crate::ToolDescriptor;
 

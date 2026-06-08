@@ -972,7 +972,10 @@ mod tests {
         assert!(primersearch.unresolved_gaps.is_empty());
 
         let eprimer3 = gap_map.get("eprimer3").expect("eprimer3 should be present");
-        assert_eq!(eprimer3.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert_eq!(
+            eprimer3.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
         assert!(eprimer3.harvested_legacy_evidence_present);
         assert!(eprimer3.executable_validation_present);
         assert!(eprimer3.compared_validation_present);
@@ -1058,7 +1061,10 @@ mod tests {
         }));
 
         let isochore = gap_map.get("isochore").expect("isochore should be present");
-        assert_eq!(isochore.evidence_level, CohortEvidenceLevel::ComparedEvidence);
+        assert_eq!(
+            isochore.evidence_level,
+            CohortEvidenceLevel::ComparedEvidence
+        );
         assert!(
             isochore
                 .unresolved_gaps

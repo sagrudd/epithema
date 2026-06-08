@@ -157,6 +157,10 @@ mod tests {
         })
         .expect_err("protein input should fail");
 
-        assert!(error.to_string().contains("requires a nucleotide sequence input"));
+        assert!(
+            error
+                .to_string()
+                .contains("requires a nucleotide sequence input")
+        );
     }
 }

@@ -5,14 +5,14 @@ mod seqret;
 mod seqretsetall;
 mod seqretsplit;
 
-pub use refseqget::{refseqget_help, run_refseqget, RefseqgetOutcome, RefseqgetParams};
-pub use seqret::{run_seqret, seqret_help, SeqretOutcome, SeqretParams, SeqretSource};
+pub use refseqget::{RefseqgetOutcome, RefseqgetParams, refseqget_help, run_refseqget};
+pub use seqret::{SeqretOutcome, SeqretParams, SeqretSource, run_seqret, seqret_help};
 pub use seqretsetall::{
-    run_seqretsetall, seqretsetall_help, SeqretsetallInputSet, SeqretsetallOutcome,
-    SeqretsetallParams,
+    SeqretsetallInputSet, SeqretsetallOutcome, SeqretsetallParams, run_seqretsetall,
+    seqretsetall_help,
 };
 pub use seqretsplit::{
-    run_seqretsplit, seqretsplit_help, SeqretsplitOutcome, SeqretsplitOutputFile, SeqretsplitParams,
+    SeqretsplitOutcome, SeqretsplitOutputFile, SeqretsplitParams, run_seqretsplit, seqretsplit_help,
 };
 
 use crate::ToolDescriptor;

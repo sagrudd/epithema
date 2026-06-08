@@ -86,7 +86,13 @@ fn deterministic_output_file_name(source: &SeqretSource, accession: &str) -> Str
         SeqretSource::Retrieved {
             provider,
             accession,
-        } => return format!("{}_{}.fasta", sanitize_filename_component(provider), sanitize_filename_component(accession)),
+        } => {
+            return format!(
+                "{}_{}.fasta",
+                sanitize_filename_component(provider),
+                sanitize_filename_component(accession)
+            );
+        }
     };
 
     format!(

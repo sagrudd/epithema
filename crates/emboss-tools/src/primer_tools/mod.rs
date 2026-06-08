@@ -8,11 +8,11 @@ use crate::ToolDescriptor;
 
 const FAMILY: &str = "primer_tools";
 
+pub use eprimer3::{Eprimer3Outcome, Eprimer3Params, Eprimer3Row, eprimer3_help, run_eprimer3};
 pub use primersearch::{
     PrimersearchOutcome, PrimersearchPairInput, PrimersearchParams, PrimersearchRow,
     primersearch_help, run_primersearch,
 };
-pub use eprimer3::{Eprimer3Outcome, Eprimer3Params, Eprimer3Row, eprimer3_help, run_eprimer3};
 pub use sirna::{SirnaOutcome, SirnaParams, SirnaRow, run_sirna, sirna_help};
 
 /// `eprimer3` descriptor.

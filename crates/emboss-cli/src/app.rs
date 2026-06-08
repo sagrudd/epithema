@@ -320,8 +320,8 @@ mod tests {
 
     #[test]
     fn routes_psiphi_to_tool_path() {
-        let cli = Cli::try_parse_from(["emboss-rs", "psiphi", "example.pdb"])
-            .expect("tool should parse");
+        let cli =
+            Cli::try_parse_from(["emboss-rs", "psiphi", "example.pdb"]).expect("tool should parse");
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("psiphi"));
     }
