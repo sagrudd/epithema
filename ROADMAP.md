@@ -6393,11 +6393,23 @@ implementation-program cycle. The near-term priorities are:
       fallback planning program rather than forcing `embossdata` into command
       discovery.
 
-361. Close the untriggered branch explicitly after the `embossdata` seam-review decision.
-    - If `embossdata` remains viable, close the fallback-promotion branch.
-    - If `embossdata` fails seam review, close the command-discovery
-      continuation branch.
-    - Do not leave both branches implicitly active.
+361. Complete. Close the untriggered branch explicitly after the `embossdata` seam-review decision.
+    - Closed the command-discovery continuation branch explicitly because Task
+      `360` decided that `embossdata` does not pass as a bounded
+      command-discovery continuation candidate.
+    - The `embossdata`-viable branch is therefore inactive:
+      - no `embossdata` command-discovery acceptance criteria should be
+        captured
+      - no `embossdata` command-discovery start conditions should be captured
+      - no `embossdata` bounded command-discovery implementation tier should
+        be mapped
+      - no provider/data stop conditions should be framed as if
+        `embossdata` were still a command-discovery candidate
+    - The fallback-promotion branch is now the only active planning branch
+      after this checkpoint.
+    - The next executable roadmap step is therefore Task `366`, which must
+      activate exactly one better-aligned fallback planning program rather
+      than forcing `embossdata` into command discovery.
 
 362. If `embossdata` remains viable, capture explicit method-level acceptance criteria before code starts.
     - Define exactly what the bounded shipped surface may report.
