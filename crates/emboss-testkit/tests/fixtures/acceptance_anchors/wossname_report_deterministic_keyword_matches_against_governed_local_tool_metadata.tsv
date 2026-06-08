@@ -1,0 +1,5 @@
+tool	family	short_description	matched_terms	matched_fields
+aligncopypair	alignment_tools	copy a single pairwise alignment unchanged and reject non-pairwise inputs	pairwise,align	tool_name,short_description
+needle	pairwise_alignment	perform deterministic global pairwise alignment between exactly one query and one target	pairwise,align	short_description
+needleall	pairwise_alignment	perform deterministic many-vs-many global pairwise alignment and report comparison summaries	pairwise,align	short_description
+water	pairwise_alignment	perform deterministic local pairwise alignment between exactly one query and one target	pairwise,align	short_description

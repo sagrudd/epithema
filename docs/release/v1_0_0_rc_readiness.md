@@ -4,14 +4,13 @@ Status date: 2026-05-18
 
 ## Recommendation
 
-`emboss-rs` is **not currently ready for a `v1.0.0` release-candidate tag
-(`RC1`)**.
+`emboss-rs` is **ready for a `v1.0.0` release-candidate tag (`RC1`) with known
+limitations**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
-path, or release automation. The current blocker is evidence-depth debt in the
-newly shipped bounded `wossname` slice: the method is shipped with executable
-evidence and harvested provenance, but it is not yet back at compared-evidence
-maturity.
+path, or release automation. The remaining limitations are release cutover and
+intentional scope boundaries, not evidence-depth debt, retained-backlog
+closure, or broken packaging mechanics.
 
 ## Audited Shipped Cohort
 
@@ -120,10 +119,10 @@ shipped cohort is:
 Current generated release-truth markers:
 
 - Shipped methods audited: `112`
-- Compared-evidence methods: `111`
-- Executable-evidence methods: `1`
+- Compared-evidence methods: `112`
+- Executable-evidence methods: `0`
 - Methods with harvested legacy provenance recorded: `112`
-- Full compared cohort: `no`
+- Full compared cohort: `yes`
 - Non-blocking plotting legacy-reference notes remain visible: `yes`
 - Blocking cohort gaps: `0`
 - Weakest evidence family: `none`
@@ -170,16 +169,13 @@ Current generated release-truth markers:
 - Remote retrieval remains governed and compared for the shipped slice, but the
   broader acquisition/orchestration surface is still a future rework program
   rather than a claim of general provider parity.
-- `wossname` now ships through the governed surface with curated legacy
-  provenance and a runnable keyword-match validation seam, but it remains the
-  only executable-only shipped method until the canonical compared fixture
-  lands.
+- `wossname` now ships through the governed surface with a checked-in canonical
+  compared keyword-match fixture, curated legacy provenance, and a bounded
+  local governed-metadata lookup seam.
 
 ### Not Ready / Blocked
 
-- The shipped-cohort evidence blocker is `wossname` in the command-discovery
-  family. Until its canonical compared keyword-match fixture lands, the cohort
-  is not fully compared and the release-truth gate remains amber.
+- No shipped-cohort evidence blockers are currently open.
 
 ## Governance And Release Obligation Audit
 

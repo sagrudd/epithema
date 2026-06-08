@@ -159,6 +159,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "sirna -sequence sirna_targets.fasta -outfile stdout",
     },
     AcceptanceAnchorSpec {
+        tool_name: "wossname",
+        autodoc_contract: "docs/autodoc/tools/wossname.json",
+        example_id: "wossname_keyword_matches_example",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/wossname_report_deterministic_keyword_matches_against_governed_local_tool_metadata.tsv",
+        legacy_source: "EMBOSS wossname application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd",
+        legacy_invocation: "wossname -search \"pairwise align\" -outfile stdout",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "newseq",
         autodoc_contract: "docs/autodoc/tools/newseq.json",
         example_id: "create_dna_record",
@@ -2149,6 +2158,14 @@ fn anchor_arguments(repo_root: &Path, tool_name: &str) -> Vec<String> {
                 .to_string(),
             "--word-size".to_owned(),
             "4".to_owned(),
+        ],
+        "wossname" => vec![
+            std::fs::read_to_string(
+                repo_root.join("crates/emboss-tools/tests/fixtures/wossname_query.txt"),
+            )
+            .expect("wossname query fixture should read")
+            .trim()
+            .to_owned(),
         ],
         "dreg" => vec![
             repo_root

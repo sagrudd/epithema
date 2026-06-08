@@ -5954,5 +5954,23 @@ implementation-program cycle. The near-term priorities are:
       `wossname` slice is now shipped but still below compared evidence.
 
 341. Add canonical analytical fixtures plus compared evidence on normalized keyword-match rows.
+    - Complete.
+    - Added the canonical compared acceptance-anchor fixture in
+      `crates/emboss-testkit/tests/fixtures/acceptance_anchors/wossname_report_deterministic_keyword_matches_against_governed_local_tool_metadata.tsv`.
+    - Added `wossname` to the acceptance-anchor harness in
+      `crates/emboss-testkit/src/anchor.rs`.
+    - Wired the acceptance anchor to the committed keyword-query fixture so
+      the bounded command-discovery slice executes through the governed local
+      lookup path before comparison.
+    - Regenerated the validation stub and cohort reports into the fully green
+      post-comparison state:
+      - shipped methods: `112`
+      - compared evidence: `112`
+      - executable evidence: `0`
+      - harvested legacy provenance present: `112`
+      - `full_compared_cohort: true`
+      - `release_truth_current: true`
+    - Updated release-facing docs honestly to reflect that `wossname` is now
+      fully compared rather than executable-only.
 
 342. Re-run the full release-truth surface after shipping `wossname`, then reassess the shipped slice before any further command-discovery continuation is mapped.

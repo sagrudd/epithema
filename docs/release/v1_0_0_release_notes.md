@@ -70,13 +70,13 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `111` shipped methods carry compared evidence
-- `1` shipped methods carry executable evidence
+- `112` shipped methods carry compared evidence
+- `0` shipped methods carry executable evidence
 - `112` shipped methods record harvested legacy provenance
-- full compared cohort: `no`
+- full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
-- blocking cohort gaps: `1`
-- weakest evidence family: `Modernize — Rework — Command discovery and help-navigation`
+- blocking cohort gaps: `0`
+- weakest evidence family: `none`
 
 The remaining visible plotting notes for `charge` and `pepwindow` are
 non-blocking provenance/documentation nuances about missing explicit
@@ -107,8 +107,8 @@ change the release gate state above.
   compared siRNA-candidate fixture, curated legacy provenance, and a bounded
   local siRNA-candidate reporting seam.
 - `wossname` now ships through the governed surface with a checked-in
-  validation stub, curated legacy provenance, and a bounded local
-  keyword-match reporting seam.
+  canonical compared keyword-match fixture, curated legacy provenance, and a
+  bounded local keyword-match reporting seam.
 - `wobble` now ships through the governed surface with canonical checked-in
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
@@ -116,14 +116,13 @@ change the release gate state above.
   analytical and plot-contract fixtures plus compared acceptance evidence for
   both surfaces.
 - `0` retained governance methods remain unshipped
-- `1` shipped methods remain below compared evidence
+- `0` shipped methods remain below compared evidence
 
-This means the shipped retained cohort remains fully closed and harvest
-coverage remains complete, but the governed cohort is not yet back at the
-fully green release gate. The bounded `wossname` slice now ships with curated
-provenance and a runnable governed validation seam, while the command-discovery
-family remains the single executable-only holdout until its canonical compared
-keyword-match fixture lands.
+This means the shipped retained cohort remains fully closed, harvest coverage
+remains complete, and the governed cohort is back at the fully green release
+gate. The bounded `wossname` slice now ships with curated provenance, a
+runnable governed validation seam, and canonical compared keyword-match
+evidence.
 
 ### First-class R story
 

@@ -8,21 +8,21 @@ This page is generated from the shipped cohort validation report and the governa
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
 - Shipped methods: `112`
 - Family rows: `12`
-- Compared-evidence methods: `111`
-- Executable-only methods: `1`
-- Harvested-but-not-compared methods: `1`
+- Compared-evidence methods: `112`
+- Executable-only methods: `0`
+- Harvested-but-not-compared methods: `0`
 
 ## Family Coverage Table
 
 | Family | Shipped methods | Compared | Executable-only | Harvested but not compared |
 |---|---:|---:|---:|---:|
-| Modernize — Rework — Command discovery and help-navigation | 1 | 0 | 1 | 1 |
 | Core Retain — Alignment read-write and post-processing | 13 | 13 | 0 | 0 |
 | Core Retain — Basic sequence IO and conversion | 18 | 18 | 0 | 0 |
 | Core Retain — Core sequence statistics and composition | 16 | 16 | 0 | 0 |
 | Core Retain — ORF and translation-adjacent utilities | 4 | 4 | 0 | 0 |
 | Core Retain — Sequence editing and manipulation | 23 | 23 | 0 | 0 |
 | Core Retain — Simple motif, pattern, and regular-expression search | 12 | 12 | 0 | 0 |
+| Modernize — Rework — Command discovery and help-navigation | 1 | 1 | 0 | 0 |
 | Modernize — Rework — Plotting and visualization tools | 10 | 10 | 0 | 0 |
 | Modernize — Rework — Primer and assay-oriented search | 3 | 3 | 0 | 0 |
 | Modernize — Rework — Protein property and structural-summary utilities | 3 | 3 | 0 | 0 |
