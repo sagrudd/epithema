@@ -6846,16 +6846,33 @@ Current baseline for this tier:
 - full compared cohort: `true`
 - release truth current: `true`
 
-379. Rebase the remote retrieval continuation pool onto the actual post-`whichdb` state.
-    - Reconfirm from the generated governance alignment and full scope matrix
-      which remote retrieval/archive acquisition methods are already shipped.
-    - Reconfirm the remaining unshipped historical/core candidates in this
-      branch:
-      - `assemblyget`
-      - `entret`
-    - Reconfirm that `whichdb` should now be treated as shipped and complete
-      for the bounded provider-discovery milestone.
-    - Do not select an implementation candidate in this inventory task.
+379. Complete. Rebase the remote retrieval continuation pool onto the actual post-`whichdb` state.
+    - Reconfirmed from the generated governance-alignment JSON and Markdown
+      that the currently shipped remote retrieval/archive acquisition cohort is:
+      - `seqret`
+      - `refseqget`
+      - `runinfo`
+      - `runget`
+      - `infoassembly`
+      - `whichdb`
+    - Reconfirmed the shipped cohort remains fully governed and
+      compared-evidence backed:
+      - shipped methods: `114`
+      - shipped methods with governance mapping: `114`
+      - shipped rework methods: `24`
+      - shipped compared-evidence methods: `114`
+      - retained backlog count: `0`
+      - documented-only shipped methods: `0`
+    - Reconfirmed from the full scope matrix that `assemblyget` and `entret`
+      both remain historical/core `Rework` candidates in the remote retrieval
+      and archive acquisition branch.
+    - Reconfirmed that neither `assemblyget` nor `entret` appears in the
+      shipped-method cohort, so both remain unshipped continuation candidates.
+    - Reconfirmed that `whichdb` is now shipped, compared, documented, and
+      complete for the bounded provider-discovery milestone; later planning
+      must not treat it as an unshipped retrieval gap.
+    - This inventory task did not select an implementation candidate. Task
+      `380` still owns the honest `assemblyget` seam decision.
 
 380. Decide whether `assemblyget` passes honest seam review as the next bounded retrieval/data-discovery continuation candidate.
     - Evaluate whether a useful first `assemblyget` slice can remain bounded
