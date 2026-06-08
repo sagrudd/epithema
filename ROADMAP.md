@@ -6329,13 +6329,35 @@ implementation-program cycle. The near-term priorities are:
       - otherwise activating the appropriate fallback planning program
         explicitly rather than by inertia
 
-359. Rebase the bounded command-discovery continuation pool onto the actual post-`seealso` state.
-    - Reconfirm from governed reports and the scope matrix which
-      command-discovery and help-navigation methods are already shipped.
-    - Record the remaining candidate pool honestly after removing `wossname`
-      and `seealso`.
-    - Keep this as an inventory-only checkpoint; do not decide or implement
-      `embossdata` in the same task.
+359. Complete. Rebase the bounded command-discovery continuation pool onto the actual post-`seealso` state.
+    - Reconfirmed from the generated shipped-cohort report that the shipped
+      command-discovery and help-navigation methods are:
+      - `wossname`
+      - `seealso`
+    - Reconfirmed from the generated governance-alignment report that both
+      shipped methods belong to:
+      - `Modernize — Rework — Command discovery and help-navigation`
+    - Reconfirmed from the full scope matrix that the historical
+      command-discovery and help-navigation rework candidates relevant to this
+      branch are:
+      - `embossdata`
+      - `seealso`
+      - `wossname`
+    - Reconfirmed from the full scope matrix that `embossdata` is still
+      described as:
+      - `Find and retrieve EMBOSS data files`
+      - `Rework`
+      - `Retain the user need, but redesign around modern
+        accession/provider-aware retrieval and metadata services
+        (ENA/SRA/RefSeq/taxonomy/variation).`
+    - After removing the two shipped bounded slices, the remaining named
+      continuation candidate pool is therefore:
+      - `embossdata`
+    - This checkpoint remains inventory-only:
+      - it does not decide whether `embossdata` still passes bounded
+        command-discovery seam review
+      - it does not implement `embossdata`
+      - it does not activate either fallback planning branch
 
 360. Decide whether `embossdata` still passes honest seam review as a bounded command-discovery continuation candidate.
     - Evaluate whether a useful v1 `embossdata` slice can remain:
