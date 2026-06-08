@@ -62,7 +62,7 @@ fn build_banana_plot(profile: &NucleotideBananaProfile) -> Result<PlotPayload, T
         .filter_map(|point| {
             point
                 .curvature
-                .map(|curvature| (point.position as f64, curvature))
+                .map(|curvature| (point.position as f64, normalize_plot_value(curvature)))
         })
         .collect::<Vec<_>>();
 
@@ -105,6 +105,11 @@ fn build_banana_plot(profile: &NucleotideBananaProfile) -> Result<PlotPayload, T
     Ok(plot)
 }
 
+fn normalize_plot_value(value: f64) -> f64 {
+    const SCALE: f64 = 100_000_000_000_000.0;
+    (value * SCALE).round() / SCALE
+}
+
 fn map_error(error: NucleotideBananaError) -> ToolExecutionError {
     let code = match error {
         NucleotideBananaError::NonNucleotideSequence => "tools.banana.input.non_nucleotide",
@@ -123,7 +128,7 @@ mod tests {
     use emboss_diagnostics::PlatformError;
     use emboss_plot_contract::PlotKind;
 
-    use super::{BananaParams, build_banana_plot, map_error, run_banana};
+    use super::{BananaParams, build_banana_plot, map_error, normalize_plot_value, run_banana};
     use crate::sequence_stream::SequenceInput;
     use emboss_core::{BananaPoint, NucleotideBananaError, NucleotideBananaProfile};
 
@@ -207,5 +212,12 @@ mod tests {
         .expect("plot should build");
 
         assert_eq!(plot.series[0].semantic_group.as_deref(), Some("curvature"));
+        assert_eq!(plot.series[0].y[0], 10.48310492061);
+    }
+
+    #[test]
+    fn normalizes_plot_values_to_stable_precision() {
+        assert_eq!(normalize_plot_value(10.483104920609545), 10.48310492060955);
+        assert_eq!(normalize_plot_value(10.483104920609547), 10.48310492060955);
     }
 }
