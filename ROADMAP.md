@@ -6291,3 +6291,130 @@ implementation-program cycle. The near-term priorities are:
     - Because the only remaining command-discovery candidate is the broader
       `embossdata` seam, the next planning cycle must explicitly rebase the
       continuation pool before any further implementation starts.
+
+358. Complete. Extend the roadmap from the actual post-`seealso` branch outcome.
+    - Added the next mapped tier from the current generated truth state:
+      - shipped methods: `113`
+      - compared evidence: `113`
+      - harvested legacy provenance: `113`
+      - full compared cohort: `true`
+      - harvest coverage complete: `true`
+      - retained backlog still unshipped: `0`
+      - weakest evidence family: `none`
+      - release-truth document current: `true`
+    - Recorded explicitly that the bounded command-discovery slices now shipped
+      through the governed surface are:
+      - `wossname`
+      - `seealso`
+    - Recorded explicitly that the only remaining previously named
+      command-discovery candidate is:
+      - `embossdata`
+    - Recorded explicitly that `embossdata` has stronger seam pressure than
+      the shipped command-discovery helpers:
+      - historical `embossdata` describes EMBOSS data-file discovery and
+        retrieval, not only local governed command metadata
+      - the governance matrix marks it as rework around modern
+        accession/provider-aware retrieval and metadata services
+      - implementation must not silently widen command discovery into provider
+        data-file delivery or external database preparation behavior
+    - The next mapped tier is now Tasks `359` through `371`, centered on:
+      - rebasing the remaining command-discovery continuation pool onto the
+        post-`seealso` state
+      - deciding whether `embossdata` remains a bounded command-discovery
+        candidate or should hand off to a retrieval/data-preparation planning
+        program instead
+      - only if the seam review stays affirmative, capturing bounded
+        acceptance criteria, start conditions, stop conditions, and an
+        implementation tier before code starts
+      - otherwise activating the appropriate fallback planning program
+        explicitly rather than by inertia
+
+359. Rebase the bounded command-discovery continuation pool onto the actual post-`seealso` state.
+    - Reconfirm from governed reports and the scope matrix which
+      command-discovery and help-navigation methods are already shipped.
+    - Record the remaining candidate pool honestly after removing `wossname`
+      and `seealso`.
+    - Keep this as an inventory-only checkpoint; do not decide or implement
+      `embossdata` in the same task.
+
+360. Decide whether `embossdata` still passes honest seam review as a bounded command-discovery continuation candidate.
+    - Evaluate whether a useful v1 `embossdata` slice can remain:
+      - local and deterministic
+      - table-first
+      - method-associated
+      - free of live provider lookup
+      - free of broad data-file retrieval, acquisition, or indexing behavior
+    - If those conditions fail, record that command-discovery continuation is
+      closed and route the next planning step to the better-aligned
+      retrieval/data-preparation program.
+
+361. Close the untriggered branch explicitly after the `embossdata` seam-review decision.
+    - If `embossdata` remains viable, close the fallback-promotion branch.
+    - If `embossdata` fails seam review, close the command-discovery
+      continuation branch.
+    - Do not leave both branches implicitly active.
+
+362. If `embossdata` remains viable, capture explicit method-level acceptance criteria before code starts.
+    - Define exactly what the bounded shipped surface may report.
+    - Keep any source catalog, result row, and provenance fields deterministic
+      and local.
+    - Record explicit non-goals for provider-backed lookup, file
+      materialization, indexing, and asset-distribution behavior.
+
+363. If `embossdata` remains viable, capture the exact start conditions for the first implementation patch.
+    - Require the zero-burden release-truth surface to remain intact.
+    - Require the implementation patch to stay limited to `embossdata` plus
+      the smallest governed docs, validation, and fixture support needed.
+    - Require a full bounded slice plan before any registry shipment starts.
+
+364. If `embossdata` remains viable, map the full bounded implementation tier.
+    - Split the work into analytical core, typed result surface, governed
+      shipment, canonical evidence, release-truth rerun, and post-ship
+      reassessment tasks.
+    - Keep method-specific logic in method-associated files.
+    - Do not introduce a generalized data-discovery framework unless the seam
+      review has explicitly justified it.
+
+365. If `embossdata` remains viable, capture explicit provider/data stop conditions.
+    - Pause before implementation if the slice requires:
+      - live network lookup
+      - provider-backed accession resolution
+      - file materialization
+      - local database indexing
+      - broad asset-distribution semantics
+      - a generalized retrieval framework
+
+366. If `embossdata` fails seam review, activate the better-aligned fallback planning program explicitly.
+    - Candidate fallback programs are:
+      - remote retrieval/data discovery rework
+      - external database preparation helpers
+    - Choose one active program only, from current generated truth and
+      governance policy, before mapping any implementation tasks.
+
+367. If the fallback path is activated, capture the fallback program's bounded lead candidate.
+    - Select exactly one lead candidate.
+    - Record why it is a stronger next professional milestone than forcing
+      `embossdata` into command discovery.
+    - Keep the unselected fallback branch documented but inactive.
+
+368. If the fallback path is activated, capture acceptance criteria for the selected lead candidate.
+    - Keep criteria scoped to one bounded shipped slice.
+    - Preserve release truth and documentation honesty.
+    - Avoid re-opening omitted legacy database-indexing helpers unless the
+      governance matrix is explicitly updated first.
+
+369. If the fallback path is activated, capture exact patch start conditions for the selected lead candidate.
+    - Require clean generated reports and release truth.
+    - Require method-associated implementation boundaries.
+    - Require explicit docs and validation plumbing before shipment.
+
+370. If the fallback path is activated, map the selected lead candidate's full bounded implementation tier.
+    - Split implementation, result-surface, governed-shipment, evidence,
+      release-truth, and post-ship reassessment into separate tasks.
+    - Keep provider and acquisition semantics explicit.
+
+371. Preserve the zero-burden release-truth gate before any post-`seealso` code-bearing work starts.
+    - Re-run the smallest practical release-truth checks needed for whichever
+      branch becomes active.
+    - Do not allow a planning branch to imply shipped capability before code,
+      docs, generated validation, compared evidence, and CI support exist.
