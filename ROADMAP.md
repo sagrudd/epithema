@@ -6874,15 +6874,34 @@ Current baseline for this tier:
     - This inventory task did not select an implementation candidate. Task
       `380` still owns the honest `assemblyget` seam decision.
 
-380. Decide whether `assemblyget` passes honest seam review as the next bounded retrieval/data-discovery continuation candidate.
-    - Evaluate whether a useful first `assemblyget` slice can remain bounded
-      to provider-aware assembly metadata, manifest, or routing semantics.
-    - Reject or defer `assemblyget` if the useful slice requires immediate
-      live-network dependency, archive download, file materialization,
-      provider-wide parity, local database indexing, or generic acquisition
-      orchestration.
-    - Keep `entret`, `embossdata`, and external database preparation helpers
-      inactive while this seam review is unresolved.
+380. Complete. Decide whether `assemblyget` passes honest seam review as the next bounded retrieval/data-discovery continuation candidate.
+    - Decided that `assemblyget` passes seam review only as a narrow
+      provider-aware assembly manifest and routing report, not as historical
+      file acquisition.
+    - The useful first slice can stay bounded because the shipped substrate
+      already has:
+      - `infoassembly` for assembly-first archive metadata projection
+      - `runget` for manifest reporting without file materialization
+      - `whichdb` for provider-qualified route reporting
+      - mocked-provider service coverage for ENA and SRA metadata paths
+    - The affirmative decision is conditional on preserving the current
+      conservative acquisition boundary:
+      - no live-network dependency in required validation
+      - no archive download
+      - no file materialization
+      - no provider-wide parity claim
+      - no local database indexing
+      - no generic acquisition orchestration
+      - no hidden fallback from unsupported providers or object classes
+    - The first `assemblyget` slice should report deterministic assembly-level
+      route and manifest intent for one provider-qualified accession, using
+      mocked-provider or managed-fixture evidence.
+    - `assemblyget` must be rejected or deferred if implementation pressure
+      requires turning the route/manifest report into a downloader, local file
+      writer, external database preparer, or generic archive orchestration
+      framework.
+    - `entret`, `embossdata`, and external database preparation helpers remain
+      inactive after this decision.
 
 381. If `assemblyget` passes seam review, capture explicit method-level acceptance criteria before code starts.
     - Define the exact input, provider, output, and validation boundaries for
