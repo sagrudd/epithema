@@ -7003,15 +7003,26 @@ Current baseline for this tier:
     - `entret`, `embossdata`, and external database preparation helpers remain
       inactive unless a later explicit governance task changes that state.
 
-384. Implement the bounded `assemblyget` analytical core and input/output model.
-    - Add method-associated `assemblyget` Rust logic only.
-    - Accept exactly one provider-qualified archive or assembly accession.
-    - Reject local files, inline literals, bare identifiers, unqualified
-      database names, and multi-accession batches.
-    - Produce a deterministic assembly manifest/routing model with explicit
+384. Complete. Implement the bounded `assemblyget` analytical core and input/output model.
+    - Added method-associated `assemblyget` Rust logic under
+      `archive_tools::assemblyget` only.
+    - Added a typed `AssemblygetParams` input model and `AssemblygetOutcome`
+      result model for the bounded assembly manifest/routing report.
+    - Added explicit `AssemblygetMaterializationStatus::NotMaterialized` state
+      with the stable `not_materialized` report label.
+    - The analytical core accepts exactly one provider-qualified archive or
+      assembly accession and normalizes the provider label.
+    - The analytical core rejects local files, inline payload literals, bare
+      identifiers, and multi-accession batches.
+    - The result model records provider, requested accession, object class,
+      selected assembly/study/project accession, linked run accession, route
+      endpoint, manifest mode, file count, known total bytes, and explicit
       no-materialization status.
-    - Keep provider data mocked or injected; do not require live-network
-      validation.
+    - This task did not add a governed descriptor, service route, CLI route,
+      generated documentation, generated validation metadata, or compared
+      evidence; those remain assigned to Tasks `385` through `387`.
+    - Validation uses deterministic Rust unit tests only and does not require
+      live-network access.
 
 385. Expose the deterministic typed `assemblyget` result and stable table report.
     - Define stable output fields from Task `381`.
