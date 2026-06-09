@@ -6903,14 +6903,45 @@ Current baseline for this tier:
     - `entret`, `embossdata`, and external database preparation helpers remain
       inactive after this decision.
 
-381. If `assemblyget` passes seam review, capture explicit method-level acceptance criteria before code starts.
-    - Define the exact input, provider, output, and validation boundaries for
-      one bounded assembly-focused slice.
-    - Require deterministic mocked-provider or managed-fixture validation.
-    - Require documentation to state honestly whether the slice reports
-      metadata/routes/manifests only or materializes any files.
-    - Do not widen into generic flatfile retrieval, live provider search,
-      local database indexing, or external preparation helpers.
+381. Complete. Capture explicit method-level acceptance criteria for the bounded `assemblyget` slice before code starts.
+    - The first accepted `assemblyget` slice must accept exactly one
+      provider-qualified archive or assembly accession argument.
+    - Local file paths, inline literals, bare identifiers, unqualified database
+      names, and multi-accession batches must be rejected rather than silently
+      routed.
+    - The accepted provider boundary is limited to the existing archive
+      provider seam and mocked-provider or managed-fixture validation. Required
+      validation must not depend on live network access.
+    - The first output surface must be table/report oriented and must describe
+      assembly-level manifest intent rather than materializing files.
+    - Required output fields for the bounded slice are:
+      - provider
+      - requested accession
+      - normalized object class
+      - selected assembly or study/project accession
+      - linked run accession when available
+      - route endpoint
+      - manifest mode
+      - file count
+      - total known bytes when available
+      - explicit materialization status
+    - The materialization status must be `not_materialized` or an equivalently
+      explicit no-download value for the first slice.
+    - Any table rows that mention files must be manifest rows only; they must
+      not imply that bytes were downloaded, staged, unpacked, indexed, or
+      written locally.
+    - The service summary and generated documentation must state honestly that
+      the first `assemblyget` slice reports metadata/routes/manifests only.
+    - Deterministic validation must include:
+      - a mocked or managed ENA success case if the slice uses the existing
+        ENA manifest seam
+      - an explicit unsupported-provider or unsupported-object-class rejection
+      - an explicit no-download/no-materialization assertion
+    - Compared evidence must cover the stable table output, not just successful
+      dispatch or provenance intent.
+    - The slice must not widen into generic flatfile retrieval, live provider
+      search, local database indexing, external database preparation helpers,
+      generic archive orchestration, or provider-wide parity claims.
 
 382. If `assemblyget` passes seam review, capture exact patch start conditions.
     - Require the release-truth surface to remain green before any code patch.
