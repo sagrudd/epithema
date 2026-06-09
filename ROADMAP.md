@@ -7024,14 +7024,24 @@ Current baseline for this tier:
     - Validation uses deterministic Rust unit tests only and does not require
       live-network access.
 
-385. Expose the deterministic typed `assemblyget` result and stable table report.
-    - Define stable output fields from Task `381`.
-    - Render table/report output that says manifest intent only and
-      `not_materialized` or an equivalent explicit no-download value.
-    - Add focused Rust coverage for success, unsupported provider/object class,
-      and no-materialization behavior.
-    - Do not ship the governed CLI/service route in this task unless it is the
-      smallest safe patch; otherwise leave shipment to Task `386`.
+385. Complete. Expose the deterministic typed `assemblyget` result and stable table report.
+    - Added a stable `ASSEMBLYGET_REPORT_COLUMNS` table contract for provider,
+      requested accession, object class, selected assembly accession, optional
+      run accession, route endpoint, manifest mode, file count, optional total
+      bytes, and explicit materialization status.
+    - Added deterministic row projection and tab-separated rendering on the
+      typed `AssemblygetOutcome`.
+    - The rendered report keeps the slice manifest/routing-only by exposing
+      `manifest_intent_only` from the caller-provided bounded mode and the
+      explicit `not_materialized` no-download status.
+    - Added bounded provider rejection for unsupported providers and bounded
+      object-class rejection for unsupported object classes.
+    - Added focused Rust coverage for successful report rendering, optional
+      no-materialization fields, unsupported providers, and unsupported object
+      classes.
+    - This task did not add a governed descriptor, CLI route, service route,
+      generated documentation, or compared evidence; shipment remains assigned
+      to Task `386`.
 
 386. Expose `assemblyget` through the governed shipped surface.
     - Add the governed registry descriptor.

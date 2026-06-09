@@ -5,6 +5,20 @@ use emboss_diagnostics::{ErrorCategory, PlatformError};
 /// Shared execution error for archive tools.
 pub type ToolExecutionError = PlatformError;
 
+/// Stable table columns for bounded `assemblyget` manifest/routing reports.
+pub const ASSEMBLYGET_REPORT_COLUMNS: [&str; 10] = [
+    "provider",
+    "requested_accession",
+    "object_class",
+    "assembly_accession",
+    "run_accession",
+    "route_endpoint",
+    "manifest_mode",
+    "file_count",
+    "total_size_bytes",
+    "materialization_status",
+];
+
 /// Explicit materialization state for the bounded `assemblyget` slice.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum AssemblygetMaterializationStatus {
@@ -68,16 +82,60 @@ pub struct AssemblygetOutcome {
     pub materialization_status: AssemblygetMaterializationStatus,
 }
 
+impl AssemblygetOutcome {
+    /// Returns stable report columns for table-first `assemblyget` rendering.
+    #[must_use]
+    pub fn report_columns(&self) -> Vec<String> {
+        ASSEMBLYGET_REPORT_COLUMNS
+            .iter()
+            .map(|column| (*column).to_owned())
+            .collect()
+    }
+
+    /// Projects the deterministic outcome into one stable table row.
+    #[must_use]
+    pub fn report_row(&self) -> Vec<String> {
+        vec![
+            self.provider.clone(),
+            self.accession.clone(),
+            self.object_class.clone(),
+            self.assembly_accession.clone(),
+            self.run_accession.clone().unwrap_or_else(|| "-".to_owned()),
+            self.route_endpoint.clone(),
+            self.manifest_mode.clone(),
+            self.file_count.to_string(),
+            self.total_size_bytes
+                .map(|size| size.to_string())
+                .unwrap_or_else(|| "-".to_owned()),
+            self.materialization_status.as_str().to_owned(),
+        ]
+    }
+
+    /// Projects the deterministic outcome into stable table-first report rows.
+    #[must_use]
+    pub fn report_rows(&self) -> Vec<Vec<String>> {
+        vec![self.report_row()]
+    }
+
+    /// Renders a stable tab-separated manifest/routing report.
+    #[must_use]
+    pub fn render_tsv_report(&self) -> String {
+        let mut rendered = self.report_columns().join("\t");
+        for row in self.report_rows() {
+            rendered.push('\n');
+            rendered.push_str(&row.join("\t"));
+        }
+        rendered
+    }
+}
+
 /// Executes the bounded `assemblyget` analytical core.
 pub fn run_assemblyget(
     params: AssemblygetParams,
 ) -> Result<AssemblygetOutcome, ToolExecutionError> {
     let (provider, accession) = parse_provider_qualified_query(&params.query)?;
-    let object_class = require_non_empty(
-        &params.object_class,
-        "assemblyget requires a non-empty archive object class",
-        "tools.assemblyget.object_class.empty",
-    )?;
+    ensure_supported_provider(&provider)?;
+    let object_class = normalize_object_class(&params.object_class)?;
     let assembly_accession = require_non_empty(
         &params.assembly_accession,
         "assemblyget requires a selected assembly, study, or project accession",
@@ -159,6 +217,35 @@ fn parse_provider_qualified_query(query: &str) -> Result<(String, String), ToolE
     Ok((provider, accession.to_owned()))
 }
 
+fn ensure_supported_provider(provider: &str) -> Result<(), ToolExecutionError> {
+    match provider {
+        "ena" | "sra" => Ok(()),
+        _ => Err(validation_error(
+            "assemblyget supports only bounded ENA and SRA manifest/routing reports",
+            "tools.assemblyget.provider.unsupported",
+        )
+        .with_detail(format!("received '{provider}'"))),
+    }
+}
+
+fn normalize_object_class(value: &str) -> Result<String, ToolExecutionError> {
+    let object_class = require_non_empty(
+        value,
+        "assemblyget requires a non-empty archive object class",
+        "tools.assemblyget.object_class.empty",
+    )?;
+    let normalized = object_class.to_ascii_lowercase();
+
+    match normalized.as_str() {
+        "assembly" | "project" | "run" | "study" => Ok(normalized),
+        _ => Err(validation_error(
+            "assemblyget supports only assembly, project, study, and run object classes",
+            "tools.assemblyget.object_class.unsupported",
+        )
+        .with_detail(format!("received '{object_class}'"))),
+    }
+}
+
 fn require_non_empty(
     value: &str,
     message: &'static str,
@@ -186,7 +273,10 @@ fn validation_error(message: &'static str, code: &'static str) -> ToolExecutionE
 
 #[cfg(test)]
 mod tests {
-    use super::{AssemblygetMaterializationStatus, AssemblygetParams, run_assemblyget};
+    use super::{
+        ASSEMBLYGET_REPORT_COLUMNS, AssemblygetMaterializationStatus, AssemblygetParams,
+        run_assemblyget,
+    };
 
     fn base_params() -> AssemblygetParams {
         AssemblygetParams {
@@ -221,6 +311,61 @@ mod tests {
     }
 
     #[test]
+    fn exposes_stable_report_columns_and_row() {
+        let outcome = run_assemblyget(base_params()).expect("assemblyget core should succeed");
+
+        assert_eq!(
+            outcome.report_columns(),
+            ASSEMBLYGET_REPORT_COLUMNS
+                .iter()
+                .map(|column| (*column).to_owned())
+                .collect::<Vec<_>>()
+        );
+        assert_eq!(
+            outcome.report_rows(),
+            vec![vec![
+                "ena".to_owned(),
+                "ERR123456".to_owned(),
+                "run".to_owned(),
+                "ERP000001".to_owned(),
+                "ERR123456".to_owned(),
+                "ena.portal.filereport".to_owned(),
+                "manifest_intent_only".to_owned(),
+                "2".to_owned(),
+                "22".to_owned(),
+                "not_materialized".to_owned(),
+            ]]
+        );
+    }
+
+    #[test]
+    fn renders_manifest_intent_only_no_materialization_report() {
+        let outcome = run_assemblyget(base_params()).expect("assemblyget core should succeed");
+
+        assert_eq!(
+            outcome.render_tsv_report(),
+            "provider\trequested_accession\tobject_class\tassembly_accession\trun_accession\troute_endpoint\tmanifest_mode\tfile_count\ttotal_size_bytes\tmaterialization_status\n\
+             ena\tERR123456\trun\tERP000001\tERR123456\tena.portal.filereport\tmanifest_intent_only\t2\t22\tnot_materialized"
+        );
+    }
+
+    #[test]
+    fn uses_placeholders_for_absent_optional_report_values() {
+        let mut params = base_params();
+        params.run_accession = None;
+        params.total_size_bytes = None;
+
+        let outcome = run_assemblyget(params).expect("missing optional values should report");
+
+        assert_eq!(outcome.report_row()[4], "-");
+        assert_eq!(outcome.report_row()[8], "-");
+        assert_eq!(
+            outcome.materialization_status,
+            AssemblygetMaterializationStatus::NotMaterialized
+        );
+    }
+
+    #[test]
     fn normalizes_provider_and_trims_accession() {
         let mut params = base_params();
         params.query = " ENA:ERR123456 ".to_owned();
@@ -229,6 +374,39 @@ mod tests {
 
         assert_eq!(outcome.provider, "ena");
         assert_eq!(outcome.accession, "ERR123456");
+    }
+
+    #[test]
+    fn normalizes_supported_object_class() {
+        let mut params = base_params();
+        params.object_class = " Study ".to_owned();
+
+        let outcome = run_assemblyget(params).expect("supported object class should normalize");
+
+        assert_eq!(outcome.object_class, "study");
+    }
+
+    #[test]
+    fn rejects_unsupported_providers() {
+        let mut params = base_params();
+        params.query = "uniprot:P12345".to_owned();
+
+        let error = run_assemblyget(params).expect_err("unsupported providers should fail");
+
+        assert_eq!(error.code(), Some("tools.assemblyget.provider.unsupported"));
+    }
+
+    #[test]
+    fn rejects_unsupported_object_classes() {
+        let mut params = base_params();
+        params.object_class = "sample".to_owned();
+
+        let error = run_assemblyget(params).expect_err("unsupported object classes should fail");
+
+        assert_eq!(
+            error.code(),
+            Some("tools.assemblyget.object_class.unsupported")
+        );
     }
 
     #[test]
