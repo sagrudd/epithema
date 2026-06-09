@@ -6943,12 +6943,47 @@ Current baseline for this tier:
       search, local database indexing, external database preparation helpers,
       generic archive orchestration, or provider-wide parity claims.
 
-382. If `assemblyget` passes seam review, capture exact patch start conditions.
-    - Require the release-truth surface to remain green before any code patch.
-    - Require method-associated implementation naming and scoped fixtures.
-    - Require governed registry, service, CLI, autodoc, generated validation,
-      and compared-evidence plans before shipment.
-    - Pause if the first patch would need a generalized retrieval framework.
+382. Complete. Capture exact patch start conditions for the bounded `assemblyget` slice.
+    - The first code-bearing `assemblyget` patch may start only from a clean
+      working tree on `main` with no unrelated local changes.
+    - The pre-patch release-truth surface must remain green. At minimum,
+      confirm the generated report state still records:
+      - shipped methods: `114`
+      - shipped methods with governance mapping: `114`
+      - compared-evidence methods: `114`
+      - documented-only shipped methods: `0`
+      - `full_compared_cohort: true`
+      - `harvest_coverage_complete: true`
+      - `retained_backlog_closed: true`
+    - If a local broad gate is needed before code starts, use
+      `make release-check`; otherwise use the smallest generated-report and CI
+      checks that prove the touched release-truth surface is still current.
+    - Implementation logic must be method-associated:
+      - Rust tool logic in an `assemblyget`-named archive/retrieval module
+      - service dispatch through an explicit `assemblyget` route
+      - no broad shared retrieval framework unless a later task approves one
+    - Fixtures must be scoped to the accepted bounded slice:
+      - one mocked or managed provider success case
+      - one unsupported-provider or unsupported-object-class rejection case
+      - one explicit no-download/no-materialization assertion
+    - The first shipment plan must include, before completion:
+      - governed registry descriptor
+      - service route and CLI dispatch
+      - curated autodoc source
+      - generated tool documentation
+      - generated validation metadata
+      - compared expected-output fixture for the stable table report
+      - focused Rust/service coverage
+      - Sphinx documentation validation
+    - Pause before code if the first patch would require any of the following:
+      - live-network validation as required evidence
+      - archive download or local file materialization
+      - generalized acquisition orchestration
+      - local database indexing
+      - generic flatfile retrieval
+      - provider-wide parity claims
+      - activation of `entret`, `embossdata`, or external database preparation
+        helpers
 
 383. If `assemblyget` passes seam review, map the full bounded implementation tier.
     - Split the future implementation into analytical core, typed result
