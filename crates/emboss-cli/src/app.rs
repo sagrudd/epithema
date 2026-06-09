@@ -223,6 +223,14 @@ mod tests {
     }
 
     #[test]
+    fn routes_assemblyget_to_tool_path() {
+        let cli = Cli::try_parse_from(["emboss-rs", "assemblyget", "ena:ERR123456"])
+            .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("assemblyget"));
+    }
+
+    #[test]
     fn routes_whichdb_to_tool_path() {
         let cli = Cli::try_parse_from(["emboss-rs", "whichdb", "ena:AB000263"])
             .expect("tool should parse");

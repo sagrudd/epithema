@@ -8,19 +8,19 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
-- Shipped tools: `114`
-- Shipped tools with governance mapping: `114`
+- Shipped tools: `115`
+- Shipped tools with governance mapping: `115`
 - Retained backlog still unshipped: `0`
 - Shipped tools with curated autodoc: `114`
 - Shipped tools with executable or compared evidence: `114`
 - Shipped tools with harvested legacy provenance: `114`
 - Shipped tools with compared evidence: `114`
-- Shipped tools still documented-only: `0`
+- Shipped tools still documented-only: `1`
 
 ## Shipped Decision Split
 
 - Shipped retain methods: `90`
-- Shipped rework methods: `24`
+- Shipped rework methods: `25`
 - Shipped omit methods: `0`
 - Shipped add methods: `0`
 
@@ -73,6 +73,7 @@ All shipped methods are mapped in the governance appendix.
 | `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `nthseqset` | `alignment_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
+| `assemblyget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | no | `documented_only` |
 | `infoassembly` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `runinfo` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `runget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |

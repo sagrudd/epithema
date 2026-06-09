@@ -28,8 +28,9 @@ use emboss_tools::alignment_tools::{
     run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use emboss_tools::archive_tools::{
-    InfoassemblyParams, RungetParams, RuninfoParams, infoassembly_help, run_infoassembly,
-    run_runget, run_runinfo, runget_help, runinfo_help,
+    AssemblygetParams, InfoassemblyParams, RungetParams, RuninfoParams, assemblyget_help,
+    infoassembly_help, run_assemblyget, run_infoassembly, run_runget, run_runinfo, runget_help,
+    runinfo_help,
 };
 use emboss_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
@@ -290,6 +291,7 @@ impl EmbossService {
             "infoalign" => self.invoke_infoalign(request, descriptor),
             "extractalign" => self.invoke_extractalign(request, descriptor),
             "nthseqset" => self.invoke_nthseqset(request, descriptor),
+            "assemblyget" => self.invoke_assemblyget(request, descriptor),
             "infoassembly" => self
                 .invoke_infoassembly_with_client::<emboss_providers::ReqwestHttpClient>(
                     request, descriptor, None,
@@ -1133,6 +1135,86 @@ impl EmbossService {
                 .with_line(format!("Files: {}", metadata.files.len()))
                 .with_line(format!("Route: {}", metadata.route.endpoint)),
             report.clone(),
+        );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_assemblyget(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_assemblyget_with_client::<emboss_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
+    }
+
+    /// Invokes `assemblyget` using an explicit provider HTTP client.
+    pub fn invoke_assemblyget_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, assemblyget_help()));
+        }
+
+        let [input]: [String; 1] = request
+            .arguments
+            .clone()
+            .try_into()
+            .map_err(|_| tool_usage_error("assemblyget", assemblyget_help()))?;
+        let (outcome, provenance, diagnostics) =
+            self.resolve_assemblyget_with_client(&input, client)?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description("bounded assembly manifest intent table");
+        let mut report_provenance = provenance;
+        report_provenance.push(output_provenance.clone());
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "reported assembly manifest intent for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            diagnostics,
+            report_provenance,
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TableReport(TableReport::new(
+                outcome.report_columns(),
+                outcome.report_rows(),
+            )),
+            ResultSummary::new("Assembly manifest intent reported")
+                .with_line(format!("Provider: {}", outcome.provider))
+                .with_line(format!("Requested accession: {}", outcome.accession))
+                .with_line(format!("Object class: {}", outcome.object_class))
+                .with_line(format!("Assembly: {}", outcome.assembly_accession))
+                .with_line(format!(
+                    "Run: {}",
+                    outcome.run_accession.as_deref().unwrap_or("-")
+                ))
+                .with_line(format!("Manifest mode: {}", outcome.manifest_mode))
+                .with_line(format!(
+                    "Materialization: {}",
+                    outcome.materialization_status.as_str()
+                ))
+                .with_line("Acquisition policy: manifest intent only; no files are downloaded"),
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("stdout", ArtifactKind::Table)
+                .with_label("bounded assembly manifest intent table")
+                .with_provenance(output_provenance),
         );
 
         Ok(InvocationResponse::completed(
@@ -9361,6 +9443,88 @@ impl EmbossService {
         ))
     }
 
+    fn resolve_assemblyget_with_client<C: ProviderHttpClient>(
+        &self,
+        raw: &str,
+        client: Option<&C>,
+    ) -> Result<
+        (
+            emboss_tools::archive_tools::AssemblygetOutcome,
+            Vec<ArtifactProvenance>,
+            Vec<Diagnostic>,
+        ),
+        ServiceError,
+    > {
+        let reference = self.classify_input(raw.to_owned())?;
+        let (request, route_provenance, diagnostics) = match self
+            .resolve_input(reference, emboss_providers::ResolutionIntent::ArchiveAsset)?
+        {
+            ToolInputResolution::ProviderRouted {
+                request,
+                provenance,
+                diagnostics,
+                ..
+            } => (request, provenance, diagnostics),
+            ToolInputResolution::LocalFile { provenance, .. } => {
+                return Err(PlatformError::new(
+                    ErrorCategory::Validation,
+                    "assemblyget expects provider-qualified archive accessions, not a local file",
+                )
+                .with_code("service.assemblyget.local_input_not_supported")
+                .with_detail(provenance.locator().to_owned()));
+            }
+            ToolInputResolution::InlineSequence { .. } => {
+                return Err(PlatformError::new(
+                    ErrorCategory::Validation,
+                    "assemblyget does not accept inline sequence literals",
+                )
+                .with_code("service.assemblyget.inline_not_supported"));
+            }
+            ToolInputResolution::Unresolved {
+                reference,
+                diagnostics,
+            } => {
+                return Err(PlatformError::new(
+                    ErrorCategory::Validation,
+                    format!("could not resolve assemblyget input '{}'", reference.raw()),
+                )
+                .with_code("service.assemblyget.input.unresolved")
+                .with_detail(
+                    diagnostics
+                        .iter()
+                        .map(|diagnostic| diagnostic.message().to_owned())
+                        .collect::<Vec<_>>()
+                        .join("; "),
+                ));
+            }
+        };
+
+        let metadata = self.retrieve_archive_metadata_request_with_client(&request, client)?;
+        let outcome = run_assemblyget(AssemblygetParams {
+            query: format!(
+                "{}:{}",
+                metadata.provider.as_str(),
+                metadata.requested_accession
+            ),
+            object_class: metadata.object_class.as_str().to_owned(),
+            assembly_accession: metadata
+                .study_accession
+                .clone()
+                .unwrap_or_else(|| "-".to_owned()),
+            run_accession: metadata.run_accession.clone(),
+            route_endpoint: metadata.route.endpoint.clone(),
+            manifest_mode: "manifest_intent_only".to_owned(),
+            file_count: metadata.files.len(),
+            total_size_bytes: metadata.total_size_bytes(),
+        })?;
+
+        Ok((
+            outcome,
+            vec![route_provenance, metadata.provenance.clone()],
+            diagnostics,
+        ))
+    }
+
     fn retrieve_archive_metadata_request_with_client<C: ProviderHttpClient>(
         &self,
         request: &AcquisitionRequest,
@@ -14297,6 +14461,92 @@ mod tests {
             payload => panic!("unexpected payload: {payload:?}"),
         }
         assert_eq!(response.report.provenance().len(), 2);
+    }
+
+    #[test]
+    fn invokes_assemblyget_with_mocked_ena_metadata_into_manifest_intent_table() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("assemblyget").expect("tool name should be valid"),
+        )
+        .with_arguments(vec!["ena:ERR123456".to_owned()]);
+        let client = MockHttpClient::default().with_response(
+            "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+            HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+        );
+
+        let response = service
+            .invoke_assemblyget_with_client(
+                request,
+                emboss_tools::archive_tools::ASSEMBLYGET_DESCRIPTOR,
+                Some(&client),
+            )
+            .expect("assemblyget surface should execute");
+
+        assert_eq!(response.tool.as_str(), "assemblyget");
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "provider",
+                        "requested_accession",
+                        "object_class",
+                        "assembly_accession",
+                        "run_accession",
+                        "route_endpoint",
+                        "manifest_mode",
+                        "file_count",
+                        "total_size_bytes",
+                        "materialization_status"
+                    ]
+                );
+                assert_eq!(table.rows.len(), 1);
+                assert_eq!(table.rows[0][0], "ena");
+                assert_eq!(table.rows[0][1], "ERR123456");
+                assert_eq!(table.rows[0][2], "run");
+                assert_eq!(table.rows[0][3], "ERP000001");
+                assert_eq!(table.rows[0][4], "ERR123456");
+                assert_eq!(table.rows[0][5], "ena.portal.filereport");
+                assert_eq!(table.rows[0][6], "manifest_intent_only");
+                assert_eq!(table.rows[0][7], "2");
+                assert_eq!(table.rows[0][8], "22");
+                assert_eq!(table.rows[0][9], "not_materialized");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Materialization: not_materialized")
+        );
+        assert!(response.result.summary.lines.iter().any(
+            |line| line == "Acquisition policy: manifest intent only; no files are downloaded"
+        ));
+        assert_eq!(response.report.provenance().len(), 3);
+    }
+
+    #[test]
+    fn assemblyget_rejects_local_file_inputs_through_service_surface() {
+        let service = implemented_service();
+        let request = InvocationRequest::new(
+            ExecutionContext::default(),
+            ToolName::new("assemblyget").expect("tool name should be valid"),
+        )
+        .with_arguments(vec![sequence_fixture().display().to_string()]);
+
+        let error = service
+            .invoke(request)
+            .expect_err("assemblyget should reject local file inputs");
+
+        assert_eq!(
+            error.code(),
+            Some("service.assemblyget.local_input_not_supported")
+        );
     }
 
     #[test]

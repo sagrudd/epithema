@@ -3,16 +3,16 @@
   "cohort_id": "shipped-method-cohort",
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
-    "total_method_count": 114,
-    "documentation_complete_count": 114,
-    "validation_stub_count": 114,
-    "documented_only_count": 0,
+    "total_method_count": 115,
+    "documentation_complete_count": 115,
+    "validation_stub_count": 115,
+    "documented_only_count": 1,
     "declared_evidence_count": 0,
     "harvested_evidence_count": 0,
     "harvested_legacy_presence_count": 114,
     "executable_evidence_count": 0,
     "compared_evidence_count": 114,
-    "gapped_method_count": 0
+    "gapped_method_count": 1
   },
   "methods": [
     {
@@ -140,6 +140,45 @@
       "executable_validation_present": true,
       "compared_validation_present": true,
       "unresolved_gaps": []
+    },
+    {
+      "tool_name": "assemblyget",
+      "family": "archive_tools",
+      "summary": "report bounded assembly-level manifest intent for one provider-qualified archive accession",
+      "documentation": {
+        "autodoc_contract_present": true,
+        "autodoc_contract_valid": true,
+        "generated_page_present": true,
+        "indexed_in_generated_docs": true,
+        "status": "complete"
+      },
+      "validation_stub_present": true,
+      "evidence_level": "documented_only",
+      "harvested_legacy_evidence_present": false,
+      "executable_validation_present": false,
+      "compared_validation_present": false,
+      "unresolved_gaps": [
+        {
+          "code": "missing_validation_cases",
+          "message": "tool 'assemblyget' has no declared validation cases"
+        },
+        {
+          "code": "missing_harvested_legacy_evidence",
+          "message": "tool 'assemblyget' has no harvested legacy evidence recorded yet"
+        },
+        {
+          "code": "missing_executable_evidence",
+          "message": "tool 'assemblyget' has no runnable or executed validation case yet"
+        },
+        {
+          "code": "missing_compared_evidence",
+          "message": "tool 'assemblyget' has no compared validation evidence yet"
+        },
+        {
+          "code": "validation_report_gap",
+          "message": "tool 'assemblyget' needs at least one declared example to establish validation evidence"
+        }
+      ]
     },
     {
       "tool_name": "infoassembly",

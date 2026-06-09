@@ -6,7 +6,8 @@ mod runget;
 mod runinfo;
 
 pub use assemblyget::{
-    AssemblygetMaterializationStatus, AssemblygetOutcome, AssemblygetParams, run_assemblyget,
+    ASSEMBLYGET_REPORT_COLUMNS, AssemblygetMaterializationStatus, AssemblygetOutcome,
+    AssemblygetParams, assemblyget_help, run_assemblyget,
 };
 pub use infoassembly::{
     InfoassemblyOutcome, InfoassemblyParams, infoassembly_help, run_infoassembly,
@@ -22,6 +23,13 @@ const FAMILY: &str = "archive_tools";
 pub const INFOASSEMBLY_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "infoassembly",
     "normalize provider-backed archive metadata into a bounded assembly-first report",
+)
+.with_family(FAMILY);
+
+/// `assemblyget` descriptor.
+pub const ASSEMBLYGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "assemblyget",
+    "report bounded assembly-level manifest intent for one provider-qualified archive accession",
 )
 .with_family(FAMILY);
 

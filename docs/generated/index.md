@@ -18,6 +18,7 @@ retained_backlog_closure
 tools/aaindexextract
 tools/aligncopy
 tools/aligncopypair
+tools/assemblyget
 tools/backtranambig
 tools/backtranseq
 tools/banana

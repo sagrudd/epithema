@@ -6,10 +6,10 @@
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,
-    "shipped_tool_count": 114,
-    "shipped_with_governance_mapping_count": 114,
+    "shipped_tool_count": 115,
+    "shipped_with_governance_mapping_count": 115,
     "shipped_retain_count": 90,
-    "shipped_rework_count": 24,
+    "shipped_rework_count": 25,
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
     "retained_backlog_count": 0,
@@ -17,7 +17,7 @@
     "shipped_executable_or_better_count": 114,
     "shipped_harvested_legacy_presence_count": 114,
     "shipped_compared_count": 114,
-    "shipped_documented_only_count": 0
+    "shipped_documented_only_count": 1
   },
   "shipped_methods": [
     {
@@ -82,6 +82,15 @@
       "governance_decision": "retain",
       "curated_autodoc_present": true,
       "evidence_level": "compared_evidence"
+    },
+    {
+      "tool_name": "assemblyget",
+      "shipped_family": "archive_tools",
+      "shipped_summary": "report bounded assembly-level manifest intent for one provider-qualified archive accession",
+      "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
+      "governance_decision": "rework",
+      "curated_autodoc_present": false,
+      "evidence_level": "documented_only"
     },
     {
       "tool_name": "infoassembly",

@@ -5,16 +5,16 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 ## Summary
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
-- Methods in cohort: `114`
-- Documentation-complete methods: `114`
-- Methods with validation stubs: `114`
-- Documented-only methods: `0`
+- Methods in cohort: `115`
+- Documentation-complete methods: `115`
+- Methods with validation stubs: `115`
+- Documented-only methods: `1`
 - Methods with declared evidence only: `0`
 - Methods at harvested-evidence maturity: `0`
 - Methods with harvested legacy provenance recorded: `114`
 - Methods with executable validation: `0`
 - Methods with compared evidence: `114`
-- Methods with blocking cohort gaps: `0`
+- Methods with blocking cohort gaps: `1`
 
 ## Evidence Level Definitions
 
@@ -35,6 +35,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 | `infoalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `extractalign` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `nthseqset` | `alignment_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
+| `assemblyget` | `archive_tools` | `documented_only` | `yes` | `yes` | `no` | `no` | `no` | `5` |
 | `infoassembly` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `runinfo` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
 | `runget` | `archive_tools` | `compared_evidence` | `yes` | `yes` | `yes` | `yes` | `yes` | `0` |
@@ -147,6 +148,7 @@ This page is generated from the governed EMBOSS-RS tool registry plus checked-in
 
 Visible gaps may include non-blocking notes that do not lower the tool's current evidence maturity or contribute to the blocking cohort-gap count above. In the current zero-burden state, the remaining visible plotting notes reflect missing explicit legacy-reference artefacts rather than missing compared evidence.
 
+- `assemblyget`: `missing_validation_cases`, `missing_harvested_legacy_evidence`, `missing_executable_evidence`, `missing_compared_evidence`, `validation_report_gap`
 - `density`: `missing_explicit_legacy_reference`
 - `wobble`: `missing_explicit_legacy_reference`
 - `isochore`: `missing_explicit_legacy_reference`

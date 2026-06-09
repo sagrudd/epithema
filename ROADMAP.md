@@ -7043,15 +7043,25 @@ Current baseline for this tier:
       generated documentation, or compared evidence; shipment remains assigned
       to Task `386`.
 
-386. Expose `assemblyget` through the governed shipped surface.
-    - Add the governed registry descriptor.
-    - Add service dispatch through an explicit `assemblyget` route.
-    - Add CLI routing through the governed service path.
-    - Keep the shipped route bounded to provider-aware manifest/routing
-      reporting only.
-    - Preserve all rejection behavior for downloads, local files, inline
-      literals, unsupported providers, unsupported object classes, and
-      unqualified inputs.
+386. Complete. Expose `assemblyget` through the governed shipped surface.
+    - Added the governed `assemblyget` descriptor under the archive-tools
+      family and included it in the registry-backed descriptor list.
+    - Added an explicit service dispatch route for `assemblyget` that accepts
+      one provider-qualified archive accession and resolves metadata through
+      the existing governed archive provider seam.
+    - Added CLI parse coverage proving `emboss-rs assemblyget <query>` routes
+      through the shared governed tool path.
+    - The shipped service adapter emits the stable typed `assemblyget` table
+      report from Task `385` with `manifest_intent_only` mode and
+      `not_materialized` materialization status.
+    - The route remains bounded to provider-aware manifest intent reporting:
+      it does not download, stage, unpack, index, or write archive files.
+    - Added mocked ENA service coverage for the governed route and explicit
+      local-file rejection coverage.
+    - Added the minimum registry-backed autodoc contract and generated
+      validation metadata required for the shipped descriptor; canonical
+      narrative documentation and compared fixture evidence remain assigned to
+      Task `387`.
 
 387. Add canonical `assemblyget` documentation and compared fixture evidence.
     - Add curated autodoc source for the bounded manifest/routing report.

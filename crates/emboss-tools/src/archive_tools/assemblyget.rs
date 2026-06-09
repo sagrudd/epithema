@@ -129,6 +129,12 @@ impl AssemblygetOutcome {
     }
 }
 
+/// Returns the bounded `assemblyget` help text.
+#[must_use]
+pub fn assemblyget_help() -> &'static str {
+    "Usage: emboss-rs assemblyget <provider-qualified-archive-accession>\n\nReport deterministic assembly-level manifest intent for one provider-qualified ENA or SRA archive accession. The v1 seam resolves archive metadata through the governed provider route, emits a stable table report, and does not download, stage, unpack, index, or write archive files."
+}
+
 /// Executes the bounded `assemblyget` analytical core.
 pub fn run_assemblyget(
     params: AssemblygetParams,

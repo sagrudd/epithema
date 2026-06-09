@@ -1,0 +1,52 @@
+{
+  "schema_version": "emboss-rs.autodoc/v1",
+  "document_id": "assemblyget-stub-v1",
+  "tool": {
+    "name": "assemblyget",
+    "family": "archive_tools",
+    "summary": "Report bounded assembly-level manifest intent for one provider-qualified archive accession",
+    "legacy_names": [
+      "assemblyget"
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`assemblyget` reports deterministic assembly-level manifest intent for one provider-qualified archive accession. The v1 surface resolves bounded ENA or SRA archive metadata through the governed provider route and projects a stable table report. It is not a downloader, local file writer, database preparer, or generic archive orchestration layer."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "This archive-facing tool accepts exactly one provider-qualified archive accession such as `ena:ERR123456` or `sra:SRR123456`. The shipped governed service route rejects local file paths, inline literals, bare identifiers, unqualified database names, and multi-accession batches."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The implementation emits a table with provider, requested accession, normalized object class, selected assembly or study/project accession, linked run accession when available, route endpoint, manifest mode, file count, total known bytes when available, and explicit materialization status. The shipped route uses `manifest_intent_only` mode and `not_materialized` status; files are not downloaded, staged, unpacked, indexed, or written locally."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `emboss-rs assemblyget`. Rust service coverage exercises the governed mocked ENA route and asserts the explicit `not_materialized` no-download status. The generated tool page and machine-readable validation stub are current, but canonical compared fixture evidence remains a follow-on documentation task."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The bounded v1 route does not claim broad provider parity, live provider search, archive download, local database indexing, external database preparation, or historical EMBOSS behaviour beyond the explicitly shipped manifest-intent report."
+    }
+  ],
+  "artifacts": [],
+  "examples": [],
+  "provenance": {
+    "source_mode": "registry_stub",
+    "curated_by": "emboss-rs autodoc stub generator",
+    "source_references": []
+  },
+  "validation": null
+}
