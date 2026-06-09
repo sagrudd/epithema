@@ -6985,10 +6985,79 @@ Current baseline for this tier:
       - activation of `entret`, `embossdata`, or external database preparation
         helpers
 
-383. If `assemblyget` passes seam review, map the full bounded implementation tier.
-    - Split the future implementation into analytical core, typed result
-      surface, governed shipment, canonical evidence, release-truth rerun, and
-      post-ship reassessment tasks.
-    - Keep the tier scoped to exactly one `assemblyget` slice.
-    - Keep `entret`, `embossdata`, and external database preparation helpers
+383. Complete. Map the full bounded implementation tier for the accepted `assemblyget` slice.
+    - Split the implementation into one bounded `assemblyget` slice with no
+      file materialization, no downloader, no generic acquisition framework,
+      and no provider-wide parity claim.
+    - The tier starts only after the Task `382` patch gates are reconfirmed.
+    - The implementation order is:
+      1. analytical core and argument/output model
+      2. typed result surface and report rendering
+      3. governed registry, service, and CLI dispatch
+      4. curated autodoc, generated docs, generated validation metadata, and
+         compared evidence
+      5. full release-truth rerun
+      6. post-ship reassessment
+    - Keep the tier scoped to exactly one provider-aware assembly manifest and
+      routing report.
+    - `entret`, `embossdata`, and external database preparation helpers remain
       inactive unless a later explicit governance task changes that state.
+
+384. Implement the bounded `assemblyget` analytical core and input/output model.
+    - Add method-associated `assemblyget` Rust logic only.
+    - Accept exactly one provider-qualified archive or assembly accession.
+    - Reject local files, inline literals, bare identifiers, unqualified
+      database names, and multi-accession batches.
+    - Produce a deterministic assembly manifest/routing model with explicit
+      no-materialization status.
+    - Keep provider data mocked or injected; do not require live-network
+      validation.
+
+385. Expose the deterministic typed `assemblyget` result and stable table report.
+    - Define stable output fields from Task `381`.
+    - Render table/report output that says manifest intent only and
+      `not_materialized` or an equivalent explicit no-download value.
+    - Add focused Rust coverage for success, unsupported provider/object class,
+      and no-materialization behavior.
+    - Do not ship the governed CLI/service route in this task unless it is the
+      smallest safe patch; otherwise leave shipment to Task `386`.
+
+386. Expose `assemblyget` through the governed shipped surface.
+    - Add the governed registry descriptor.
+    - Add service dispatch through an explicit `assemblyget` route.
+    - Add CLI routing through the governed service path.
+    - Keep the shipped route bounded to provider-aware manifest/routing
+      reporting only.
+    - Preserve all rejection behavior for downloads, local files, inline
+      literals, unsupported providers, unsupported object classes, and
+      unqualified inputs.
+
+387. Add canonical `assemblyget` documentation and compared fixture evidence.
+    - Add curated autodoc source for the bounded manifest/routing report.
+    - Add managed fixture notes for the mocked or managed provider success
+      case and rejection/no-materialization cases.
+    - Refresh generated tool documentation and validation metadata.
+    - Add compared expected-output fixture coverage for the stable table
+      report.
+    - Documentation must state honestly that no files are downloaded,
+      materialized, unpacked, indexed, or written.
+
+388. Re-run the full release-truth surface after shipping `assemblyget`.
+    - Re-run the required release-generated and release-truth reports.
+    - Confirm the shipped method count, documented/compared method count,
+      full-compared cohort, harvest coverage, retained-backlog closure, and
+      release truth are current.
+    - Run the smallest practical local checks plus Sphinx/doc checks needed
+      for the touched surface.
+    - Commit and push any generated documentation or validation refreshes.
+
+389. Reassess the shipped `assemblyget` slice before any further retrieval/data-discovery continuation.
+    - Confirm whether the shipped slice stayed bounded to manifest/routing
+      reporting.
+    - Confirm whether any pressure appeared for downloads, file
+      materialization, provider-wide parity, local indexing, generic flatfile
+      retrieval, or generic acquisition orchestration.
+    - Decide whether remote retrieval planning should continue, pause, or
+      switch to a different milestone.
+    - Keep `entret`, `embossdata`, and external database preparation helpers
+      inactive unless the reassessment explicitly changes that state.
