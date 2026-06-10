@@ -7159,13 +7159,26 @@ Current baseline for the next milestone:
       repository checks: local Sphinx/release checks remain the current source
       of validation until Actions are re-enabled.
 
-392. Capture the local CI-parity command set required while GitHub Actions remain suspended.
-    - Identify the smallest practical local commands that cover formatting,
-      workspace tests, generated release reports, Sphinx docs, release checks,
-      and packaging freshness.
-    - Record environment prerequisites honestly, including Docker availability
-      for container smoke validation.
-    - Do not claim hosted CI coverage while workflows are disabled.
+392. Complete. Capture the local CI-parity command set required while GitHub Actions remain suspended.
+    - Added an explicit local CI-parity sequence to the release process for the
+      period while GitHub Actions remain disabled:
+      - `cargo fmt --check`
+      - `make lint-repo`
+      - `make check-sister-repo`
+      - `make lint-docs`
+      - `make docs`
+      - `cargo test --workspace --all-features`
+      - `make release-version-check`
+      - `make release-truth-check`
+      - `make release-generated-check`
+      - `make release-check`
+      - `make release-artifacts`
+    - Recorded environment prerequisites honestly, including Rust/Cargo,
+      Python/Sphinx docs requirements, optional sibling `emboss-r` availability,
+      and Docker availability for `make release-container`.
+    - Stated explicitly that hosted CI, Pages deployment, GHCR publication,
+      release attachment, and repository-token permission behavior cannot be
+      claimed locally while hosted workflows are disabled.
 
 393. Run the release-candidate generated-truth and release-check suite locally.
     - Run the current release-generated and release-truth gates.

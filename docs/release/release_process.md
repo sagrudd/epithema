@@ -163,6 +163,44 @@ For a conservative local candidate build, run:
 The release bundle is written under `dist/release/<version>/`. It is intended
 for inspection and local smoke verification before a `v*` tag is created.
 
+## Local CI-parity while GitHub Actions are suspended
+
+The `emboss-rs` GitHub Actions workflows are intentionally disabled manually as
+of 2026-06-10. While they remain disabled, do not claim hosted CI, hosted Pages,
+hosted release, or hosted container coverage. Use this local command set as the
+minimum replacement for the repository-owned parts of those checks:
+
+1. `cargo fmt --check`
+2. `make lint-repo`
+3. `make check-sister-repo`
+4. `make lint-docs`
+5. `make docs`
+6. `cargo test --workspace --all-features`
+7. `make release-version-check`
+8. `make release-truth-check`
+9. `make release-generated-check`
+10. `make release-check`
+11. `make release-artifacts`
+
+The broad `make ci` target remains useful for day-to-day local parity, but the
+explicit sequence above is preferred for release-candidate evidence while
+hosted workflows are suspended because it also captures release-truth,
+generated-artifact, release-gate, and bundle freshness checks.
+
+Environment prerequisites:
+
+- Rust toolchain and Cargo must be available for formatting, builds, Clippy,
+  and workspace tests.
+- The selected Python/Sphinx environment must provide the docs requirements.
+- `../emboss-r` should be present when cross-repository awareness is part of
+  the local validation claim; otherwise `make check-sister-repo` can only
+  report that the sibling repository is unavailable.
+- Docker must be available before claiming Linux container smoke validation
+  with `make release-container`.
+- GitHub Pages deployment, GHCR publication, release attachment, and
+  repository-token permission behavior cannot be validated locally while the
+  hosted workflows are disabled.
+
 With the shipped cohort now fully compared and fully harvested, `make
 release-truth-check` also treats these as hard release conditions:
 
