@@ -7123,3 +7123,67 @@ Current baseline for this tier:
       of assuming another retrieval/data-discovery continuation.
     - `entret`, `embossdata`, and external database preparation helpers remain
       inactive.
+
+Current baseline for the next milestone:
+
+- shipped methods audited: `115`
+- compared-evidence methods: `115`
+- executable-evidence methods: `0`
+- harvested legacy provenance present: `115`
+- retained backlog still unshipped: `0`
+- release truth current: `true`
+- GitHub Actions status: intentionally suspended by manual workflow disablement
+  on `2026-06-10`
+
+390. Complete. Open the release-candidate operational hardening milestone after retrieval expansion paused.
+    - Selected release-candidate operational hardening as the next
+      professional milestone because the generated truth surface reports no
+      remaining shipped-cohort evidence debt and Task `389` paused direct
+      retrieval/data-discovery expansion.
+    - The milestone must prioritize release/process truth and local validation
+      parity while GitHub Actions remain intentionally disabled.
+    - The milestone does not reopen method implementation, retrieval
+      expansion, `entret`, `embossdata`, external database preparation helpers,
+      or broad provider acquisition work.
+
+391. Reconcile release documentation and automation truth after GitHub Actions suspension.
+    - Update release-readiness and release-process documentation that still
+      states or implies GitHub Actions are actively verifying CI, Pages, release,
+      or container paths.
+    - State honestly that workflows are disabled manually and that validation
+      must be local until Actions are re-enabled.
+    - Preserve the distinction between suspended automation and broken
+      repository checks.
+    - Regenerate Sphinx documentation if touched pages require generated output.
+
+392. Capture the local CI-parity command set required while GitHub Actions remain suspended.
+    - Identify the smallest practical local commands that cover formatting,
+      workspace tests, generated release reports, Sphinx docs, release checks,
+      and packaging freshness.
+    - Record environment prerequisites honestly, including Docker availability
+      for container smoke validation.
+    - Do not claim hosted CI coverage while workflows are disabled.
+
+393. Run the release-candidate generated-truth and release-check suite locally.
+    - Run the current release-generated and release-truth gates.
+    - Run release-version and release-check targets.
+    - Review and commit only intentional generated/documentation updates.
+
+394. Validate local Sphinx publication readiness while the Pages workflow is disabled.
+    - Build the Sphinx documentation locally.
+    - Confirm generated release, governance, and tool pages remain internally
+      consistent.
+    - Record any Pages-only checks that cannot be validated without hosted
+      Actions.
+
+395. Assess release artifact and container smoke readiness in the current local environment.
+    - Run release artifact packaging where practical.
+    - Check whether Docker is available for the Linux container smoke path.
+    - Record blockers plainly instead of treating unavailable Docker or hosted
+      publication as passed validation.
+
+396. Reassess whether GitHub Actions should remain suspended before release cutover.
+    - Summarize local validation status from Tasks `391` through `395`.
+    - Identify any checks that remain materially weaker without hosted Actions.
+    - Decide whether to keep workflows disabled, re-enable selected workflows,
+      or defer release cutover until hosted validation is available again.
