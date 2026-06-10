@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "extractseq-v1",
   "tool": {
     "name": "extractseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`extractseq` extracts the same contiguous region from every input sequence record using the shared EMBOSS-RS interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content."
+      "content": "`extractseq` extracts the same contiguous region from every input sequence record using the shared Epithema interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractseq`. Validation currently covers interior extraction against a committed multi-record FASTA fixture. Boundary cases, full-length extraction, and invalid coordinate handling are covered by Rust tests in the tool and service layers."
+      "content": "This method is implemented and exposed through `epithema extractseq`. Validation currently covers interior extraction against a committed multi-record FASTA fixture. Boundary cases, full-length extraction, and invalid coordinate handling are covered by Rust tests in the tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic extractseq validation."
     }
@@ -88,7 +88,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

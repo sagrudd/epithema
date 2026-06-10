@@ -9,7 +9,7 @@ Mask nucleotide ambiguity residues with N while preserving record order
 ## Document Metadata
 
 - Document ID: `maskambignuc-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `maskambignuc`
@@ -22,7 +22,7 @@ Mask nucleotide ambiguity residues with N while preserving record order
 
 ## Overview
 
-`maskambignuc` rewrites conservative nucleotide ambiguity symbols to `N` through the shared sequence-record model. The EMBOSS-RS v1 implementation is deliberately narrow: it accepts nucleotide records only, preserves record order and annotations, and leaves canonical `A/C/G/T/U` residues unchanged.
+`maskambignuc` rewrites conservative nucleotide ambiguity symbols to `N` through the shared sequence-record model. The Epithema v1 implementation is deliberately narrow: it accepts nucleotide records only, preserves record order and annotations, and leaves canonical `A/C/G/T/U` residues unchanged.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a FASTA sequence collection through the shared result path. Each 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs maskambignuc`. Validation currently covers deterministic masking against a committed nucleotide FASTA fixture and explicit rejection of non-nucleotide inputs in the Rust tool layer.
+This method is implemented and exposed through `epithema maskambignuc`. Validation currently covers deterministic masking against a committed nucleotide FASTA fixture and explicit rejection of non-nucleotide inputs in the Rust tool layer.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release masks only the conservative ambiguity set `N/R/Y/S/W/K/M/B/D/H
 - Artifact ID: `ambiguous_nucleotide_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/ambiguous_nucleotide_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/ambiguous_nucleotide_records.fasta`
 - Notes: Repository-managed nucleotide FASTA fixture containing conservative ambiguity symbols for deterministic masking validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The first release masks only the conservative ambiguity set `N/R/Y/S/W/K/M/B/D/H
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

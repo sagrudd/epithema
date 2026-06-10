@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "einverted-v1",
   "tool": {
     "name": "einverted",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`einverted` reports exact inverted-repeat arms in nucleotide sequence records. EMBOSS-RS v1 searches for exact reverse-complement arm pairs with a bounded spacer and reports overlapping hits deterministically."
+      "content": "`einverted` reports exact inverted-repeat arms in nucleotide sequence records. Epithema v1 searches for exact reverse-complement arm pairs with a bounded spacer and reports overlapping hits deterministically."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs einverted`. Validation currently covers exact 4-residue inverted-repeat arm detection with bounded spacer length against a committed nucleotide FASTA fixture."
+      "content": "This method is implemented and exposed through `epithema einverted`. Validation currently covers exact 4-residue inverted-repeat arm detection with bounded spacer length against a committed nucleotide FASTA fixture."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/einverted_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/einverted_records.fasta"
       },
       "description": "Repository-managed nucleotide FASTA fixture containing exact inverted-repeat arms with bounded spacer length."
     }
@@ -92,7 +92,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS einverted application",

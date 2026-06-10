@@ -1,4 +1,4 @@
-# EMBOSS-RS Foundational Architecture Brief
+# Epithema Foundational Architecture Brief
 
 Sponsored work for Mnemosyne Biosciences Ltd
 
@@ -8,44 +8,44 @@ Date: 2026-04-15
 
 Primary repositories:
 
-- `emboss-rs`
-- `emboss-r`
+- `epithema`
+- `epithemaR`
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 
 1. EXECUTIVE SUMMARY
 
-EMBOSS-RS is a full-platform reboot of the historic EMBOSS collection of bioinformatics tools. This work is sponsored by Mnemosyne Biosciences Ltd.
+Epithema is a full-platform reboot of the historic EMBOSS collection of bioinformatics tools. This work is sponsored by Mnemosyne Biosciences Ltd.
 
 The reboot is concept-compatible with EMBOSS rather than strictly CLI-compatible. The objective is to preserve and modernize the scientific utility, breadth, and reputation of EMBOSS while replacing its legacy implementation model with a contemporary Rust architecture, a first-class R interface, and a modern validation and documentation pipeline.
 
 The platform has two first-class user surfaces:
 
 1) Rust / CLI surface via the single binary:
-   emboss-rs
+   epithema
 
 2) R surface via the sister package:
-   emboss-r
+   epithemaR
 
 The R package is not merely a plotting adapter. It has two equal responsibilities:
 
 1) it is the exclusive plotting backend for graphical tools
-2) it exposes the full set of emboss-rs methods to R users through Rust integration
+2) it exposes the full set of epithema methods to R users through Rust integration
 
 The system must support the historic breadth of EMBOSS, including some historically fringe or non-production tools, while allowing permanent omission of tools that are biologically obsolete, redundant, or not defensible to maintain.
 
-The defining acceptance criterion is historical scientific reproducibility through executable documentation. Historic EMBOSS vignettes, example runs, datasets, and expected outputs must be harvested into an automated validation and documentation framework that compares legacy EMBOSS and EMBOSS-RS behavior on canonical datasets. This is a critical requirement and a central proof obligation of the project.
+The defining acceptance criterion is historical scientific reproducibility through executable documentation. Historic EMBOSS vignettes, example runs, datasets, and expected outputs must be harvested into an automated validation and documentation framework that compares legacy EMBOSS and Epithema behavior on canonical datasets. This is a critical requirement and a central proof obligation of the project.
 
 
 2. PROJECT MANDATE
 
-EMBOSS-RS must satisfy all of the following:
+Epithema must satisfy all of the following:
 
 - reimplement EMBOSS as a modern Rust platform
 - expose all tool functionality behind a single binary:
-  emboss-rs <tool> ...
+  epithema <tool> ...
 - avoid standalone legacy tool executables such as needle or water
 - treat R as a first-class citizen
 - use R as the only plotting backend
@@ -76,7 +76,7 @@ The following decisions are established:
    Aggressive modernization is allowed, provided practical analytical results remain sound and acceptance evidence is preserved.
 
 5) Naming strategy
-   Historic EMBOSS tool identities are preserved conceptually, but all tools are exposed behind the emboss-rs binary.
+   Historic EMBOSS tool identities are preserved conceptually, but all tools are exposed behind the epithema binary.
 
 6) CLI strategy
    Single binary only. No standalone executable shims such as needle, water, or seqret.
@@ -106,10 +106,10 @@ The following decisions are established:
     Linux first, with Linux containers used to support macOS and Windows users.
 
 15) Acceptance strategy
-    Legacy EMBOSS vignettes, example runs, and example outputs are mandatory acceptance artifacts. Legacy EMBOSS and EMBOSS-RS must be compared on those datasets. This corpus must also drive auto-documentation.
+    Legacy EMBOSS vignettes, example runs, and example outputs are mandatory acceptance artifacts. Legacy EMBOSS and Epithema must be compared on those datasets. This corpus must also drive auto-documentation.
 
 16) R platform strategy
-    R is a first-class user interface and integration target, not just a rendering helper. The sister repository emboss-r will expose the full method catalog to R users through Rust integration.
+    R is a first-class user interface and integration target, not just a rendering helper. The sister repository epithemaR will expose the full method catalog to R users through Rust integration.
 
 
 4. SPONSORSHIP CONTEXT
@@ -132,7 +132,7 @@ This architecture brief therefore serves both product and engineering purposes:
 
 - full-platform reboot of EMBOSS in Rust
 - companion R package for plotting and full method access
-- unified command runtime behind emboss-rs
+- unified command runtime behind epithema
 - internal service layer for future API exposure
 - legacy vignette ingestion and automated example reproduction
 - broad catalog scaffolding across nearly all EMBOSS tools
@@ -162,7 +162,7 @@ Scientific logic must not be duplicated across CLI, R, and future API surfaces. 
 
 6.3 R as a peer, not a wrapper
 
-The emboss-r package must expose the full method set to R users and own the rendering of graphical outputs. It is a primary client surface.
+The epithemaR package must expose the full method set to R users and own the rendering of graphical outputs. It is a primary client surface.
 
 6.4 Scientific contract through examples
 
@@ -191,18 +191,18 @@ Lack of R installation must not cause fatal failure for non-graphical workflows.
 
 Canonical invocation model:
 
-  emboss-rs <tool> [arguments...]
+  epithema <tool> [arguments...]
 
 Examples:
 
-  emboss-rs needle ...
-  emboss-rs water ...
-  emboss-rs seqret ...
-  emboss-rs complex ...
+  epithema needle ...
+  epithema water ...
+  epithema seqret ...
+  epithema complex ...
 
 Rules:
 
-- emboss-rs is the only executable surface
+- epithema is the only executable surface
 - no standalone command shims
 - all implemented tools are listed as normal commands
 - command discovery and help are provided centrally
@@ -232,7 +232,7 @@ The architecture must allow an upcoming API sprint to expose the method catalog 
 
 8. REPOSITORY TOPOLOGY
 
-8.1 emboss-rs
+8.1 epithema
 
 Primary Rust repository.
 
@@ -248,7 +248,7 @@ Responsibilities:
 - documentation generation tooling
 - R-facing Rust bridge
 
-8.2 emboss-r
+8.2 epithemaR
 
 Primary R repository.
 
@@ -275,8 +275,8 @@ A submodule relationship or equivalent coupling strategy may be introduced by CO
 The platform consists of the following layers:
 
 1) user interfaces
-   - CLI via emboss-rs
-   - R via emboss-r
+   - CLI via epithema
+   - R via epithemaR
 
 2) shared service and execution layer
    - tool dispatch
@@ -308,29 +308,29 @@ The platform consists of the following layers:
    - plot-ready typed objects emitted by Rust tools
 
 6) R rendering backend
-   - rendering implementation in emboss-r
+   - rendering implementation in epithemaR
 
 
 10. RECOMMENDED RUST WORKSPACE STRUCTURE
 
 The exact crate layout may evolve, but the following separation of concerns is recommended:
 
-emboss-rs/
+epithema/
   Cargo.toml
   Makefile
   crates/
-    emboss-core/
-    emboss-io/
-    emboss-tools/
-    emboss-service/
-    emboss-cli/
-    emboss-plot-contract/
-    emboss-r-bridge/
-    emboss-testkit/
-    emboss-docgen/
-    emboss-fixtures/
+    epithema-core/
+    epithema-io/
+    epithema-tools/
+    epithema-service/
+    epithema-cli/
+    epithema-plot-contract/
+    epithema-r-bridge/
+    epithema-testkit/
+    epithema-docgen/
+    epithema-fixtures/
 
-10.1 emboss-core
+10.1 epithema-core
 
 Contains shared scientific primitives and domain abstractions, including:
 
@@ -345,7 +345,7 @@ Contains shared scientific primitives and domain abstractions, including:
 
 No CLI-specific logic. No R-specific logic.
 
-10.2 emboss-io
+10.2 epithema-io
 
 Contains classic bioinformatics format parsing and writing, including:
 
@@ -360,7 +360,7 @@ Contains classic bioinformatics format parsing and writing, including:
 - stream-oriented IO
 - compressed input support where appropriate
 
-10.3 emboss-tools
+10.3 epithema-tools
 
 Contains the tool registry and tool implementations.
 
@@ -375,7 +375,7 @@ Responsibilities:
 
 This crate replaces the historical ACD-driven application definition model.
 
-10.4 emboss-service
+10.4 epithema-service
 
 Contains the shared execution runtime.
 
@@ -390,9 +390,9 @@ Responsibilities:
 - shared diagnostics and error models
 - front-end-agnostic invocation interface
 
-10.5 emboss-cli
+10.5 epithema-cli
 
-Contains the emboss-rs binary.
+Contains the epithema binary.
 
 Responsibilities:
 
@@ -400,11 +400,11 @@ Responsibilities:
 - help generation
 - terminal-facing error presentation
 - exit code behavior
-- dispatch into emboss-service
+- dispatch into epithema-service
 
 Scientific logic must not live here.
 
-10.6 emboss-plot-contract
+10.6 epithema-plot-contract
 
 Contains plot-ready data structures and metadata emitted by scientific tools for R rendering.
 
@@ -418,7 +418,7 @@ Responsibilities:
 
 No rendering implementation lives here.
 
-10.7 emboss-r-bridge
+10.7 epithema-r-bridge
 
 Contains the Rust side of the R integration.
 
@@ -430,20 +430,20 @@ Responsibilities:
 - vectorization-aware interfaces where appropriate
 - efficient movement of large scientific data
 
-10.8 emboss-testkit
+10.8 epithema-testkit
 
 Contains the acceptance and regression harness.
 
 Responsibilities:
 
 - execution of legacy EMBOSS
-- execution of EMBOSS-RS
+- execution of Epithema
 - output comparison utilities
 - tolerance policies for intentional divergence
 - performance measurement harnesses
 - fixture orchestration
 
-10.9 emboss-docgen
+10.9 epithema-docgen
 
 Contains the executable documentation system.
 
@@ -454,7 +454,7 @@ Responsibilities:
 - rendering of documentation pages and reports
 - embedding of inputs, commands, outputs, plots, and benchmark summaries
 
-10.10 emboss-fixtures
+10.10 epithema-fixtures
 
 Contains curated datasets and comparison assets.
 
@@ -581,12 +581,12 @@ The IO layer should support:
 
 14. R INTEGRATION ARCHITECTURE
 
-14.1 Role of emboss-r
+14.1 Role of epithemaR
 
-emboss-r has two equal responsibilities:
+epithemaR has two equal responsibilities:
 
 1) render all graphical outputs
-2) expose the complete EMBOSS-RS method surface to R users
+2) expose the complete Epithema method surface to R users
 
 14.2 Binding philosophy
 
@@ -607,7 +607,7 @@ The Rust to R bridge must support:
 
 - robust type conversion
 - efficient movement of large data structures
-- stable version contracts between emboss-rs and emboss-r
+- stable version contracts between epithema and epithemaR
 - clear propagation of domain errors into R
 - optional batching and concurrency-friendly entry points
 
@@ -640,18 +640,18 @@ For R usage:
 
 15.1 Canonical command shape
 
-  emboss-rs <tool> [tool-arguments...]
+  epithema <tool> [tool-arguments...]
 
 15.2 Administrative commands
 
 Additional top-level administrative commands may be introduced, such as:
 
-  emboss-rs help
-  emboss-rs list
-  emboss-rs version
-  emboss-rs doc <tool>
-  emboss-rs example <tool>
-  emboss-rs validate <tool>
+  epithema help
+  epithema list
+  epithema version
+  epithema doc <tool>
+  epithema example <tool>
+  epithema validate <tool>
 
 These are platform-level conveniences and are not attempts to reproduce historical EMBOSS behavior.
 
@@ -670,7 +670,7 @@ Scientific logic must remain outside the CLI layer.
 
 16.1 Core principle
 
-The only convincing proof that EMBOSS-RS is correct is that it reproduces the intended scientific behavior demonstrated by historic EMBOSS tools on their published example datasets and example outputs, while clearly documenting any justified differences.
+The only convincing proof that Epithema is correct is that it reproduces the intended scientific behavior demonstrated by historic EMBOSS tools on their published example datasets and example outputs, while clearly documenting any justified differences.
 
 16.2 Mandatory acceptance inputs
 
@@ -685,13 +685,13 @@ Acceptance material must be constructed from:
 16.3 Validation modes
 
 A) Legacy comparison
-   Run original EMBOSS and compare against EMBOSS-RS on canonical examples.
+   Run original EMBOSS and compare against Epithema on canonical examples.
 
 B) Scientific validity
-   Confirm biological correctness on trusted datasets, including cases where EMBOSS-RS intentionally improves on the original implementation.
+   Confirm biological correctness on trusted datasets, including cases where Epithema intentionally improves on the original implementation.
 
 C) Performance comparison
-   Measure legacy EMBOSS and EMBOSS-RS on selected datasets for speed and scalability.
+   Measure legacy EMBOSS and Epithema on selected datasets for speed and scalability.
 
 D) Documentation generation
    Use the same executions to generate user-facing documentation and acceptance reports.
@@ -702,7 +702,7 @@ Each tool should ultimately have:
 
 - fixture set
 - historical example mapping
-- canonical emboss-rs invocation
+- canonical epithema invocation
 - expected output or explicit comparison rule
 - comparison against legacy EMBOSS where possible
 - benchmark scenario
@@ -721,11 +721,11 @@ Not all outputs compare by simple byte equality. The framework must support:
 
 16.6 R validation
 
-For tools exposed in emboss-r, the validation framework should eventually compare:
+For tools exposed in epithemaR, the validation framework should eventually compare:
 
-- legacy EMBOSS vs emboss-rs CLI
-- emboss-rs CLI vs shared Rust service layer
-- shared Rust service layer vs emboss-r function calls
+- legacy EMBOSS vs epithema CLI
+- epithema CLI vs shared Rust service layer
+- shared Rust service layer vs epithemaR function calls
 - plot payload vs rendered plot expectations where appropriate
 
 16.7 Acceptance reporting
@@ -734,7 +734,7 @@ The acceptance system must produce reports that clearly demonstrate:
 
 - what historical example was used
 - how EMBOSS was run
-- how EMBOSS-RS was run
+- how Epithema was run
 - whether results matched, diverged acceptably, or failed
 - any benchmark outcomes
 - links to generated documentation artifacts
@@ -753,7 +753,7 @@ Each documented tool page should ideally include:
 - tool purpose
 - parameter summary
 - example datasets
-- canonical emboss-rs command
+- canonical epithema command
 - resulting outputs
 - performance notes where available
 - plot outputs where relevant
@@ -825,7 +825,7 @@ macOS and Windows users are supported through Linux container delivery rather th
 - reproducible builds
 - CI-generated artifacts
 - container images for end users and integration environments
-- clear version pairing between emboss-rs and emboss-r
+- clear version pairing between epithema and epithemaR
 
 
 20. NON-FUNCTIONAL REQUIREMENTS
@@ -901,7 +901,7 @@ This architecture implies the need for explicit governance over:
 - tool inclusion and omission decisions
 - divergence from legacy EMBOSS behavior
 - fixture curation
-- version compatibility between emboss-rs and emboss-r
+- version compatibility between epithema and epithemaR
 - validation thresholds
 - documentation publication standards
 
@@ -912,12 +912,12 @@ Because this work is sponsored by Mnemosyne Biosciences Ltd, governance should a
 
 The reboot should be considered architecturally successful when the following are true:
 
-- emboss-rs provides a unified Rust command surface for the EMBOSS catalog
-- emboss-r provides first-class R access to the method catalog and all plotting functionality
+- epithema provides a unified Rust command surface for the EMBOSS catalog
+- epithemaR provides first-class R access to the method catalog and all plotting functionality
 - scientific logic is shared across CLI, R, and future API surfaces
 - the platform demonstrates strong performance and parallel execution characteristics
 - the historic EMBOSS example corpus has been converted into executable validation and documentation assets
-- acceptance reports can demonstrate, tool by tool, that EMBOSS-RS matches or acceptably improves upon legacy EMBOSS behavior
+- acceptance reports can demonstrate, tool by tool, that Epithema matches or acceptably improves upon legacy EMBOSS behavior
 - Linux-native and containerized delivery are reproducible and support downstream integration needs
 
 
@@ -925,8 +925,8 @@ The reboot should be considered architecturally successful when the following ar
 
 The next documents that should be produced from this brief are:
 
-1) a crate-by-crate technical specification for emboss-rs
-2) an R integration specification for emboss-r
+1) a crate-by-crate technical specification for epithema
+2) an R integration specification for epithemaR
 3) a tool registry design and trait model
 4) a validation and executable-documentation specification
 5) a migration and prioritization plan for harvesting legacy EMBOSS examples
@@ -936,7 +936,7 @@ The next documents that should be produced from this brief are:
 
 25. CLOSING STATEMENT
 
-EMBOSS-RS is not merely a port of legacy EMBOSS. It is a scientific platform reboot.
+Epithema is not merely a port of legacy EMBOSS. It is a scientific platform reboot.
 
 Its essential promise is that the breadth and trustworthiness historically associated with EMBOSS will be recovered and modernized through:
 

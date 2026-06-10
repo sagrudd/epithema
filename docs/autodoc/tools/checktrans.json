@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "checktrans-v1",
   "tool": {
     "name": "checktrans",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`checktrans` strictly translates DNA coding-sequence records in frame 1 under the standard genetic code and compares them against paired expected protein records. EMBOSS-RS v1 keeps the pairing rule simple and deterministic: inputs must contain the same number of records and are compared by input order."
+      "content": "`checktrans` strictly translates DNA coding-sequence records in frame 1 under the standard genetic code and compares them against paired expected protein records. Epithema v1 keeps the pairing rule simple and deterministic: inputs must contain the same number of records and are compared by input order."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `checktrans` invocation in view and compares the EMBOSS-RS table payload against a committed expected output. The governed comparison validates strict frame-1 translation, terminal-stop normalization, and deterministic row ordering."
+      "content": "This acceptance anchor keeps one historical-style `checktrans` invocation in view and compares the Epithema table payload against a committed expected output. The governed comparison validates strict frame-1 translation, terminal-stop normalization, and deterministic row ordering."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs checktrans`. Current validation covers the matching committed fixture pair, mismatch reporting, unequal record-count failure, and invalid-codon rejection."
+      "content": "This method is implemented and exposed through `epithema checktrans`. Current validation covers the matching committed fixture pair, mismatch reporting, unequal record-count failure, and invalid-codon rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta"
       },
       "description": "Repository-managed coding-sequence fixture used for strict translation checking."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_protein.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/checktrans_protein.fasta"
       },
       "description": "Repository-managed expected protein fixture paired by input order with the committed coding sequences."
     }
@@ -105,7 +105,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS checktrans application",

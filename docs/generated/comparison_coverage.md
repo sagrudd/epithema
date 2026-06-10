@@ -4,7 +4,7 @@ This page is generated from the shipped cohort validation report and the governa
 
 ## Summary
 
-- Registry source: `emboss_tools::governed_tool_descriptors`
+- Registry source: `epithema_tools::governed_tool_descriptors`
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
 - Shipped methods: `115`
 - Family rows: `12`

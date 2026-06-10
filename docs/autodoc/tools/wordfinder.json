@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "wordfinder-v1",
   "tool": {
     "name": "wordfinder",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`wordfinder` extends the exact-region model of `wordmatch` to one query sequence against a target set. EMBOSS-RS v1 preserves target-record order and reports maximal exact ungapped regions in a stable table."
+      "content": "`wordfinder` extends the exact-region model of `wordmatch` to one query sequence against a target set. Epithema v1 preserves target-record order and reports maximal exact ungapped regions in a stable table."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs wordfinder`. Validation currently covers one committed query fixture and one committed two-record target set through the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema wordfinder`. Validation currently covers one committed query fixture and one committed two-record target set through the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -49,7 +49,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wordmatch_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wordmatch_query.fasta"
       },
       "description": "Repository-managed one-record query FASTA fixture used for multi-target exact-region reporting."
     },
@@ -60,7 +60,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wordfinder_targets.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wordfinder_targets.fasta"
       },
       "description": "Repository-managed two-record target FASTA fixture whose first record shares one exact region with the query."
     }
@@ -96,7 +96,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS wordfinder application",

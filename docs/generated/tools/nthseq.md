@@ -9,7 +9,7 @@ Select one sequence record by 1-based ordinal position
 ## Document Metadata
 
 - Document ID: `nthseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `nthseq`
@@ -22,7 +22,7 @@ Select one sequence record by 1-based ordinal position
 
 ## Overview
 
-`nthseq` selects exactly one sequence record from a local sequence stream by ordinal position. The tool reuses the shared EMBOSS-RS sequence loader and typed single-record result path instead of re-parsing format-specific content inside the command.
+`nthseq` selects exactly one sequence record from a local sequence stream by ordinal position. The tool reuses the shared Epithema sequence loader and typed single-record result path instead of re-parsing format-specific content inside the command.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current v1 interface accepts one local sequence input path plus one selectio
 
 ## Outputs
 
-The tool emits one selected sequence record through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, selected index, total record count, and FASTA output format.
+The tool emits one selected sequence record through the shared FASTA output path. CLI output also includes the standard Epithema method summary lines reporting the input path, selected index, total record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs nthseq`. Validation currently covers first, interior, and last-record selection plus empty-input, malformed-input, and out-of-range failure behavior.
+This method is implemented and exposed through `epithema nthseq`. Validation currently covers first, interior, and last-record selection plus empty-input, malformed-input, and out-of-range failure behavior.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports ordinal selection only. Identifier-based selection, m
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate stable ordinal selection.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release supports ordinal selection only. Identifier-based selection, m
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ report maximal exact shared regions between two singleton sequences
 ## Document Metadata
 
 - Document ID: `wordmatch-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `wordmatch`
@@ -22,7 +22,7 @@ report maximal exact shared regions between two singleton sequences
 
 ## Overview
 
-`wordmatch` finds maximal exact ungapped shared regions between exactly one query sequence and one target sequence. EMBOSS-RS v1 reports a stable table of exact identity regions instead of producing a dotplot or an exploratory visual summary.
+`wordmatch` finds maximal exact ungapped shared regions between exactly one query sequence and one target sequence. Epithema v1 reports a stable table of exact identity regions instead of producing a dotplot or an exploratory visual summary.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable table with one row per maximal exact shared region that s
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs wordmatch`. Validation currently covers one committed exact-region pair through the Rust tool and service layers.
+This method is implemented and exposed through `epithema wordmatch`. Validation currently covers one committed exact-region pair through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release reports exact ungapped regions only. It does not compute wordm
 - Artifact ID: `wordmatch_query_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wordmatch_query.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wordmatch_query.fasta`
 - Notes: Repository-managed one-record query FASTA fixture used for exact shared-region reporting.
 
 ### Wordmatch target FASTA fixture
@@ -55,7 +55,7 @@ The first release reports exact ungapped regions only. It does not compute wordm
 - Artifact ID: `wordmatch_target_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wordmatch_target.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wordmatch_target.fasta`
 - Notes: Repository-managed one-record target FASTA fixture sharing one exact region with the query.
 
 ## Declared Examples
@@ -75,7 +75,7 @@ The first release reports exact ungapped regions only. It does not compute wordm
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS wordmatch application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordmatch.acd`)
 

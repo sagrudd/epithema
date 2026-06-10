@@ -9,7 +9,7 @@ Normalize local sequence inputs or retrieve one provider-backed sequence accessi
 ## Document Metadata
 
 - Document ID: `seqret-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `retrieval_tools`
 - Legacy names: `seqret`
@@ -22,7 +22,7 @@ Normalize local sequence inputs or retrieve one provider-backed sequence accessi
 
 ## Overview
 
-`seqret` is the current EMBOSS-RS sequence retrieval and normalization entry point. In v1 it supports two real paths: reading a local sequence file through the shared sequence IO layer, or retrieving one provider-qualified accession through the governed provider seam and returning the result as normalized sequence records.
+`seqret` is the current Epithema sequence retrieval and normalization entry point. In v1 it supports two real paths: reading a local sequence file through the shared sequence IO layer, or retrieving one provider-qualified accession through the governed provider seam and returning the result as normalized sequence records.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The result is a normalized sequence collection rendered through the shared seque
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `seqret` normalization example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is deliberately narrow and local-file based; it does not claim full historical provider or literal-input parity.
+This acceptance anchor keeps one historical-style `seqret` normalization example in view and compares the Epithema FASTA payload against a committed expected output. The comparison is deliberately narrow and local-file based; it does not claim full historical provider or literal-input parity.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqret`. The local-file normalization path is exercised directly against a committed FASTA fixture. The provider-backed accession path is also implemented and covered in Rust service tests using mocked remote retrieval so the retrieval seam is executable without claiming that live network acceptance evidence has been harvested yet.
+This method is implemented and exposed through `epithema seqret`. The local-file normalization path is exercised directly against a committed FASTA fixture. The provider-backed accession path is also implemented and covered in Rust service tests using mocked remote retrieval so the retrieval seam is executable without claiming that live network acceptance evidence has been harvested yet.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is intentionally narrow. `seqret` is not yet a broad accession
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate local normalization and preserved record ordering.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The first release is intentionally narrow. `seqret` is not yet a broad accession
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS seqret application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqret.acd`)
 

@@ -9,7 +9,7 @@ Exclude one sequence record by 1-based ordinal position
 ## Document Metadata
 
 - Document ID: `notseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `notseq`
@@ -22,7 +22,7 @@ Exclude one sequence record by 1-based ordinal position
 
 ## Overview
 
-`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path instead of embedding format-specific stream logic.
+`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared Epithema sequence loader and sequence-collection result path instead of embedding format-specific stream logic.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current v1 interface accepts one local sequence input path plus one exclusio
 
 ## Outputs
 
-The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format.
+The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard Epithema method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases.
+This method is implemented and exposed through `epithema notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports exclusion by ordinal position only. Identifier-based 
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate deterministic exclusion order.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release supports exclusion by ordinal position only. Identifier-based 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

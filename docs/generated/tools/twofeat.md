@@ -9,7 +9,7 @@ Report neighbouring feature pairs that satisfy conservative selector and distanc
 ## Document Metadata
 
 - Document ID: `twofeat-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `twofeat`
@@ -22,7 +22,7 @@ Report neighbouring feature pairs that satisfy conservative selector and distanc
 
 ## Overview
 
-`twofeat` reports neighbouring feature pairs from annotated sequence records. EMBOSS-RS v1 defines neighbours conservatively as adjacent features in source order, supports the existing selector model for the left and right features independently, and emits a governed table report instead of a feature-rewriting payload.
+`twofeat` reports neighbouring feature pairs from annotated sequence records. Epithema v1 defines neighbours conservatively as adjacent features in source order, supports the existing selector model for the left and right features independently, and emits a governed table report instead of a feature-rewriting payload.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a stable table report through the shared result layer. Rows prese
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs twofeat`. Validation currently covers deterministic reporting of one adjacent `gene`/`CDS` pair from a committed annotated fixture, plus distance-filter rejection in the Rust tool layer.
+This method is implemented and exposed through `epithema twofeat`. Validation currently covers deterministic reporting of one adjacent `gene`/`CDS` pair from a committed annotated fixture, plus distance-filter rejection in the Rust tool layer.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not attempt the broader historical EMBOSS neighbourhood m
 - Artifact ID: `annotated_feature_gbk`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture containing one `gene` followed by one `CDS`, used for deterministic neighbouring-feature reporting.
 
 ## Declared Examples
@@ -68,7 +68,7 @@ The first release does not attempt the broader historical EMBOSS neighbourhood m
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

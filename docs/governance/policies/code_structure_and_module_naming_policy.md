@@ -1,17 +1,17 @@
-# EMBOSS-RS Code Structure and Module Naming Policy
+# Epithema Code Structure and Module Naming Policy
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 ## Purpose
 
-This policy establishes mandatory structural rules for the `emboss-rs` and related codebases so that the project remains navigable, reviewable, and maintainable as a large volume of code is generated and revised over time.
+This policy establishes mandatory structural rules for the `epithema` and related codebases so that the project remains navigable, reviewable, and maintainable as a large volume of code is generated and revised over time.
 
 The policy exists to ensure that code organization is deliberate rather than incidental, and that growth in the number of tools, modules, and integrations does not degrade the clarity of the codebase.
 
 ## Policy Statement
 
-The EMBOSS-RS project shall maintain a clear and durable internal structure.
+The Epithema project shall maintain a clear and durable internal structure.
 
 To achieve that objective:
 
@@ -25,7 +25,7 @@ To achieve that objective:
 
 ### 1. Method-Aligned Module Naming
 
-Where a module implements a specific EMBOSS or EMBOSS-RS method, the module name should match or closely reflect the method name.
+Where a module implements a specific EMBOSS or Epithema method, the module name should match or closely reflect the method name.
 
 Examples:
 
@@ -204,7 +204,7 @@ Where there is tension between rapid code generation and structural clarity, str
 
 ## Closing Principle
 
-EMBOSS-RS is expected to grow into a large and durable codebase.
+Epithema is expected to grow into a large and durable codebase.
 
 Its internal structure must therefore be treated as part of the product.
 

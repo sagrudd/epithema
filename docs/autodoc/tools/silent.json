@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "silent-v1",
   "tool": {
     "name": "silent",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`silent` reports conservative synonymous single-codon edits that create an exact canonical DNA restriction site in a coding sequence while preserving translation. EMBOSS-RS v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system."
+      "content": "`silent` reports conservative synonymous single-codon edits that create an exact canonical DNA restriction site in a coding sequence while preserving translation. Epithema v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs silent`. Validation currently covers deterministic synonymous creation candidates against a committed coding-DNA fixture and non-coding-input rejection."
+      "content": "This method is implemented and exposed through `epithema silent`. Validation currently covers deterministic synonymous creation candidates against a committed coding-DNA fixture and non-coding-input rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/silent_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/silent_records.fasta"
       },
       "description": "Repository-managed coding-DNA fixture that is one synonymous codon edit away from an exact EcoRI site."
     }

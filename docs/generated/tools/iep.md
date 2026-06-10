@@ -9,7 +9,7 @@ Estimate deterministic protein isoelectric points from a fixed explicit pKa mode
 ## Document Metadata
 
 - Document ID: `iep-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `iep`
@@ -22,11 +22,11 @@ Estimate deterministic protein isoelectric points from a fixed explicit pKa mode
 
 ## Overview
 
-`iep` estimates one protein isoelectric point per input record. The EMBOSS-RS v1 implementation uses a fixed explicit pKa model for the N terminus, C terminus, and the D/E/C/Y/H/K/R side chains, and reports the same model's net charge at pH 7.0.
+`iep` estimates one protein isoelectric point per input record. The Epithema v1 implementation uses a fixed explicit pKa model for the N terminus, C terminus, and the D/E/C/Y/H/K/R side chains, and reports the same model's net charge at pH 7.0.
 
 ## Inputs
 
-The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Gap symbols are ignored; stop symbols are ignored before estimation; unsupported ambiguous protein residues are rejected.
+The current interface accepts one local protein input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Gap symbols are ignored; stop symbols are ignored before estimation; unsupported ambiguous protein residues are rejected.
 
 ## Outputs
 
@@ -38,7 +38,7 @@ This first release is intentionally narrow and deterministic. It solves for the 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs iep`. Validation currently covers basic versus mixed protein fixtures, stable per-record reporting, and nucleotide-input rejection.
+This method is implemented and exposed through `epithema iep`. Validation currently covers basic versus mixed protein fixtures, stable per-record reporting, and nucleotide-input rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is a governed deterministic estimate, not a broad biochemical 
 - Artifact ID: `iep_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/iep_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/iep_records.fasta`
 - Notes: Repository-managed protein fixture used to validate deterministic per-record pI estimation.
 
 ## Declared Examples

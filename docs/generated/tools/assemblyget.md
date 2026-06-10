@@ -9,7 +9,7 @@ Report bounded assembly-level manifest intent for one provider-qualified archive
 ## Document Metadata
 
 - Document ID: `assemblyget-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `archive_tools`
 - Legacy names: `assemblyget`
@@ -38,7 +38,7 @@ The historical EMBOSS `assemblyget` name implies acquisition of assembly-associa
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs assemblyget`. Rust service coverage exercises the governed mocked ENA route and local-file rejection, and the acceptance-anchor harness compares the mocked ENA manifest-intent table against a committed expected TSV fixture.
+This method is implemented and exposed through `epithema assemblyget`. Rust service coverage exercises the governed mocked ENA route and local-file rejection, and the acceptance-anchor harness compares the mocked ENA manifest-intent table against a committed expected TSV fixture.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ This method is implemented and exposed through `emboss-rs assemblyget`. Rust ser
 - Artifact ID: `assemblyget_mocked_ena_manifest_intent_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/assemblyget_ena_err123456_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/assemblyget_ena_err123456_case.md`
 - Notes: Repository-managed case note for the mocked ENA manifest-intent route used in Rust service coverage and the acceptance-anchor comparison.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ This method is implemented and exposed through `emboss-rs assemblyget`. Rust ser
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS assemblyget application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/assemblyget.acd`)
 

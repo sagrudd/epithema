@@ -9,7 +9,7 @@ derive an exact shared local block across two or more sequences as a bounded loc
 ## Document Metadata
 
 - Document ID: `edialign-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `edialign`
@@ -22,7 +22,7 @@ derive an exact shared local block across two or more sequences as a bounded loc
 
 ## Overview
 
-`edialign` derives a bounded local multiple alignment from the longest exact block shared by every sequence in one input file. EMBOSS-RS v1 is intentionally conservative: it emits only the shared exact block as a Stockholm alignment and does not attempt the broader historical dynamic-programming surface.
+`edialign` derives a bounded local multiple alignment from the longest exact block shared by every sequence in one input file. Epithema v1 is intentionally conservative: it emits only the shared exact block as a Stockholm alignment and does not attempt the broader historical dynamic-programming surface.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable Stockholm alignment whose rows contain the exact shared b
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs edialign`. Validation currently covers one committed three-record nucleotide fixture that shares an exact four-residue block.
+This method is implemented and exposed through `epithema edialign`. Validation currently covers one committed three-record nucleotide fixture that shares an exact four-residue block.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 method is an exact shared-block aligner, not a full historical replacemen
 - Artifact ID: `edialign_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/edialign_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/edialign_records.fasta`
 - Notes: Repository-managed three-record FASTA fixture with one exact shared local block across all records.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 method is an exact shared-block aligner, not a full historical replacemen
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS edialign application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/edialign.acd`)
 

@@ -9,7 +9,7 @@ Report deterministic metadata for one canonical amino-acid residue
 ## Document Metadata
 
 - Document ID: `inforesidue-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `inforesidue`
@@ -22,7 +22,7 @@ Report deterministic metadata for one canonical amino-acid residue
 
 ## Overview
 
-`inforesidue` reports one deterministic metadata row for a single canonical amino-acid residue. The EMBOSS-RS v1 implementation focuses on stable naming, mass, hydropathy, and coarse biochemical classes rather than reproducing multiple historical report styles.
+`inforesidue` reports one deterministic metadata row for a single canonical amino-acid residue. The Epithema v1 implementation focuses on stable naming, mass, hydropathy, and coarse biochemical classes rather than reproducing multiple historical report styles.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Average mass uses the same residue-mass table used by `pepstats`. Hydropathy use
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs inforesidue`. Validation currently covers canonical-residue lookup, stable one-row table emission, and rejection of unsupported residue symbols.
+This method is implemented and exposed through `epithema inforesidue`. Validation currently covers canonical-residue lookup, stable one-row table emission, and rejection of unsupported residue symbols.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not expose the broader historical biochemical or structur
 - Artifact ID: `lysine_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/inforesidue_lookup_lysine_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/inforesidue_lookup_lysine_case.md`
 - Notes: Repository-managed case note describing the canonical lysine lookup example.
 
 ## Declared Examples

@@ -1,10 +1,10 @@
 # Shipped Cohort Validation Report
 
-This page is generated from the governed EMBOSS-RS tool registry plus checked-in autodoc and validation artefacts. It reports evidence maturity and visible gaps across the shipped method cohort.
+This page is generated from the governed Epithema tool registry plus checked-in autodoc and validation artefacts. It reports evidence maturity and visible gaps across the shipped method cohort.
 
 ## Summary
 
-- Registry source: `emboss_tools::governed_tool_descriptors`
+- Registry source: `epithema_tools::governed_tool_descriptors`
 - Methods in cohort: `115`
 - Documentation-complete methods: `115`
 - Methods with validation stubs: `115`

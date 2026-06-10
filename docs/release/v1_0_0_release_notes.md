@@ -1,9 +1,9 @@
-# Draft Release Notes: EMBOSS-RS 1.0.0
+# Draft Release Notes: Epithema 1.0.0
 
 ## Overview
 
-`emboss-rs` `1.0.0` is the first stable coordinated release of the EMBOSS
-reboot in Rust, paired with `emboss-r` `1.0.0`.
+`epithema` `1.0.0` is the first stable coordinated release of the EMBOSS
+reboot in Rust, paired with `epithemaR` `1.0.0`.
 
 This release establishes a governed Linux-first CLI and platform, typed shared
 core and IO layers, provider-backed retrieval seams, a formal plot contract,
@@ -25,7 +25,7 @@ For the current evidence posture, see:
 
 ### Rust-first CLI reboot
 
-The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
+The shipped `epithema <tool>` surface now covers a practical governed cohort
 of `115` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
@@ -128,10 +128,10 @@ evidence.
 
 ### First-class R story
 
-Plot rendering remains R-owned through the sister `emboss-r` package. The Rust
+Plot rendering remains R-owned through the sister `epithemaR` package. The Rust
 release includes:
 
-- the typed `emboss-plot-contract` crate
+- the typed `epithema-plot-contract` crate
 - the Rust-to-R bridge
 - the `charge`, `pepwindow`, and governed `wordcount` analytical paths
   emitting real plot contracts for R rendering
@@ -151,5 +151,5 @@ This release does not claim:
 
 ## Compatibility Statement
 
-`emboss-rs` `1.0.0` is the intended coordinated stable partner for
-`emboss-r` `1.0.0`.
+`epithema` `1.0.0` is the intended coordinated stable partner for
+`epithemaR` `1.0.0`.

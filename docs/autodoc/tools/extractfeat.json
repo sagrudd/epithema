@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "extractfeat-v1",
   "tool": {
     "name": "extractfeat",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`extractfeat` extracts sequence regions defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and extraction foundations. Each selected simple feature span becomes one output record, and the copied feature is rebased onto the local extracted coordinate system."
+      "content": "`extractfeat` extracts sequence regions defined by selected annotated features from EMBL or GenBank inputs using the shared Epithema feature-selection and extraction foundations. Each selected simple feature span becomes one output record, and the copied feature is rebased onto the local extracted coordinate system."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `extractfeat` gene extraction example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is intentionally limited to the governed simple-feature path rather than broader historical location semantics."
+      "content": "This acceptance anchor keeps one historical-style `extractfeat` gene extraction example in view and compares the Epithema FASTA payload against a committed expected output. The comparison is intentionally limited to the governed simple-feature path rather than broader historical location semantics."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractfeat`. Validation currently covers gene extraction from a committed annotated GenBank fixture. Rust service and core tests also cover qualifier-based selection, no-match handling, coordinate rebasing, and reverse-strand nucleotide extraction through the shared feature-extraction layer."
+      "content": "This method is implemented and exposed through `epithema extractfeat`. Validation currently covers gene extraction from a committed annotated GenBank fixture. Rust service and core tests also cover qualifier-based selection, no-match handling, coordinate rebasing, and reverse-strand nucleotide extraction through the shared feature-extraction layer."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+        "asset_id": "crates/epithema-tools/tests/fixtures/annotated_feature.gbk"
       },
       "description": "Repository-managed annotated GenBank fixture used for deterministic extractfeat validation."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS extractfeat application",

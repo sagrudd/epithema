@@ -1,24 +1,24 @@
-ARG EMBOSS_RS_VERSION=dev
+ARG EPITHEMA_VERSION=dev
 
 FROM rust:1.85-bookworm AS builder
 
-ARG EMBOSS_RS_VERSION
+ARG EPITHEMA_VERSION
 
 WORKDIR /workspace
 
 COPY Cargo.toml Cargo.lock ./
 COPY crates ./crates
 
-RUN cargo build --release --locked -p emboss-cli
+RUN cargo build --release --locked -p epithema-cli
 
 FROM debian:bookworm-slim AS runtime
 
-ARG EMBOSS_RS_VERSION
+ARG EPITHEMA_VERSION
 
-LABEL org.opencontainers.image.title="emboss-rs" \
-      org.opencontainers.image.description="Linux-first EMBOSS-RS single-binary container image" \
-      org.opencontainers.image.version="${EMBOSS_RS_VERSION}" \
-      org.opencontainers.image.source="https://github.com/sagrudd/emboss-rs" \
+LABEL org.opencontainers.image.title="epithema" \
+      org.opencontainers.image.description="Linux-first Epithema single-binary container image" \
+      org.opencontainers.image.version="${EPITHEMA_VERSION}" \
+      org.opencontainers.image.source="https://github.com/sagrudd/epithema" \
       org.opencontainers.image.licenses="MPL-2.0"
 
 RUN apt-get update \
@@ -27,11 +27,11 @@ RUN apt-get update \
     && useradd --system --gid emboss --create-home emboss \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /workspace/target/release/emboss-rs /usr/local/bin/emboss-rs
+COPY --from=builder /workspace/target/release/epithema /usr/local/bin/epithema
 
-ENV EMBOSS_RS_VERSION=${EMBOSS_RS_VERSION}
+ENV EPITHEMA_VERSION=${EPITHEMA_VERSION}
 
 USER emboss
 
-ENTRYPOINT ["/usr/local/bin/emboss-rs"]
+ENTRYPOINT ["/usr/local/bin/epithema"]
 CMD ["--help"]

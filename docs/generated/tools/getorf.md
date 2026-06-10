@@ -9,7 +9,7 @@ Extract stop-bounded forward ORFs from nucleotide records
 ## Document Metadata
 
 - Document ID: `getorf-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `getorf`
@@ -22,7 +22,7 @@ Extract stop-bounded forward ORFs from nucleotide records
 
 ## Overview
 
-`getorf` extracts stop-bounded open reading frames from nucleotide input using the shared EMBOSS-RS translation foundations. The current v1 policy searches only forward frames 1-3, starts ORFs at `ATG`, and ends each ORF at the first in-frame stop codon, including the stop codon in the extracted nucleotide output.
+`getorf` extracts stop-bounded open reading frames from nucleotide input using the shared Epithema translation foundations. The current v1 policy searches only forward frames 1-3, starts ORFs at `ATG`, and ends each ORF at the first in-frame stop codon, including the stop codon in the extracted nucleotide output.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The tool emits one nucleotide FASTA record per detected ORF in stable record and
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `getorf` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates the first-release stop-bounded forward-ORF policy on the committed nucleotide fixture.
+This acceptance anchor keeps one historical-style `getorf` invocation in view and compares the Epithema FASTA payload against a committed expected output. The governed comparison validates the first-release stop-bounded forward-ORF policy on the committed nucleotide fixture.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs getorf`. Current validation covers ORF extraction from the committed stop-bounded fixture, stable coordinate encoding in identifiers, and clear rejection of non-nucleotide input.
+This method is implemented and exposed through `epithema getorf`. Current validation covers ORF extraction from the committed stop-bounded fixture, stable coordinate encoding in identifiers, and clear rejection of non-nucleotide input.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release supports forward frames only, requires `ATG` starts, and stops
 - Artifact ID: `getorf_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/getorf_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/getorf_records.fasta`
 - Notes: Repository-managed nucleotide fixture containing two forward stop-bounded ORFs for deterministic ORF extraction validation.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The first release supports forward frames only, requires `ATG` starts, and stops
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS getorf application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/getorf.acd`)
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "pepwindow-v1",
   "tool": {
     "name": "pepwindow",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`pepwindow` is the next governed plot-family method after `charge`. The EMBOSS-RS v1 surface computes one deterministic Kyte-Doolittle sliding-window hydropathy profile for exactly one protein sequence and emits both a stable analytical table and a typed line-plot contract."
+      "content": "`pepwindow` is the next governed plot-family method after `charge`. The Epithema v1 surface computes one deterministic Kyte-Doolittle sliding-window hydropathy profile for exactly one protein sequence and emits both a stable analytical table and a typed line-plot contract."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "plotting",
       "kind": "notes",
       "title": "Plotting Integration",
-      "content": "Rust does not render figures. The formal contract emitted by `pepwindow` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering for plot-capable families. In this prompt the Rust-side contract is implemented and validated; method-specific R rendering remains a follow-on task in `emboss-r`."
+      "content": "Rust does not render figures. The formal contract emitted by `pepwindow` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering for plot-capable families. In this prompt the Rust-side contract is implemented and validated; method-specific R rendering remains a follow-on task in `epithemaR`."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs pepwindow`. Validation now covers stable analytical window rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, alongside unsupported-residue rejection."
+      "content": "This method is implemented and exposed through `epithema pepwindow`. Validation now covers stable analytical window rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, alongside unsupported-residue rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pepwindow_protein.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pepwindow_protein.fasta"
       },
       "description": "Repository-managed protein fixture used for deterministic pepwindow hydropathy validation."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pepwindow_plot_contract.json"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pepwindow_plot_contract.json"
       },
       "description": "Repository-managed canonical line-plot contract fixture emitted by the governed pepwindow implementation."
     }
@@ -114,7 +114,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS pepwindow application",

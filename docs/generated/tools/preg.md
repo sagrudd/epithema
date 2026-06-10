@@ -9,7 +9,7 @@ scan protein sequences with deterministic bounded regular expressions
 ## Document Metadata
 
 - Document ID: `preg-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `preg`
@@ -22,7 +22,7 @@ scan protein sequences with deterministic bounded regular expressions
 
 ## Overview
 
-`preg` searches protein sequence records with a bounded regular-expression model and reports overlapping forward hits in a stable table. EMBOSS-RS v1 uses Rust-regex-compatible ASCII expressions rather than the full historical EMBOSS search language.
+`preg` searches protein sequence records with a bounded regular-expression model and reports overlapping forward hits in a stable table. Epithema v1 uses Rust-regex-compatible ASCII expressions rather than the full historical EMBOSS search language.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable table with one row per hit. Each row reports the source r
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs preg`. Validation currently covers overlapping regex hits through the Rust tool and service layers.
+This method is implemented and exposed through `epithema preg`. Validation currently covers overlapping regex hits through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is protein-only, forward-only, and bounded to Rust-regex-compa
 - Artifact ID: `preg_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/preg_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/preg_records.fasta`
 - Notes: Repository-managed protein FASTA fixture used for bounded regex searching.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ The first release is protein-only, forward-only, and bounded to Rust-regex-compa
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS preg application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/preg.acd`)
 

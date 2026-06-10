@@ -9,7 +9,7 @@ Create deterministic protein sequence records from a bounded random generator
 ## Document Metadata
 
 - Document ID: `makeprotseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `makeprotseq`
@@ -34,7 +34,7 @@ The tool emits one or more FASTA protein records through the shared sequence out
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs makeprotseq`. Validation currently covers deterministic seed behavior, identifier-prefix behavior, and protein output typing in the Rust tool and service layers.
+This method is implemented and exposed through `epithema makeprotseq`. Validation currently covers deterministic seed behavior, identifier-prefix behavior, and protein output typing in the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 surface supports only canonical amino-acid generation with exact-length o
 - Artifact ID: `makeprotseq_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/makeprotseq_create_protein_record_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/makeprotseq_create_protein_record_case.md`
 - Notes: Repository-managed note describing the deterministic protein generation case used for the governed `makeprotseq` surface.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The v1 surface supports only canonical amino-acid generation with exact-length o
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

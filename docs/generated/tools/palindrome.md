@@ -9,7 +9,7 @@ report exact reverse-complement palindromic regions in nucleotide sequences
 ## Document Metadata
 
 - Document ID: `palindrome-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `palindrome`
@@ -22,7 +22,7 @@ report exact reverse-complement palindromic regions in nucleotide sequences
 
 ## Overview
 
-`palindrome` reports exact reverse-complement palindromic windows in nucleotide sequence records. EMBOSS-RS v1 searches the forward source sequence only and emits every exact palindrome within the configured inclusive length range.
+`palindrome` reports exact reverse-complement palindromic windows in nucleotide sequence records. Epithema v1 searches the forward source sequence only and emits every exact palindrome within the configured inclusive length range.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The result is a stable table with record identifier, 1-based inclusive start and
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs palindrome`. Validation currently covers exact 6-residue palindrome reporting against a committed nucleotide FASTA fixture through the Rust tool and service layers.
+This method is implemented and exposed through `epithema palindrome`. Validation currently covers exact 6-residue palindrome reporting against a committed nucleotide FASTA fixture through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not collapse nested palindromes, does not score imperfect
 - Artifact ID: `palindrome_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/palindrome_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/palindrome_records.fasta`
 - Notes: Repository-managed nucleotide FASTA fixture containing exact 6-residue palindromic windows.
 
 ## Declared Examples
@@ -68,7 +68,7 @@ The first release does not collapse nested palindromes, does not score imperfect
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS palindrome application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/palindrome.acd`)
 

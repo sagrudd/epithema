@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "whichdb-v1",
   "tool": {
     "name": "whichdb",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`whichdb` reports deterministic provider-discovery rows for one provider-qualified accession or identifier. The EMBOSS-RS v1 surface normalizes the provider prefix and provider-local query, then reports the governed retrieval or metadata methods that can be used next. The method is a route-reporting seam: it tells the caller which shipped method family can handle a bounded provider route, rather than retrieving data itself."
+      "content": "`whichdb` reports deterministic provider-discovery rows for one provider-qualified accession or identifier. The Epithema v1 surface normalizes the provider prefix and provider-local query, then reports the governed retrieval or metadata methods that can be used next. The method is a route-reporting seam: it tells the caller which shipped method family can handle a bounded provider route, rather than retrieving data itself."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs whichdb`. Rust service coverage exercises the governed service route for a supported ENA query and verifies that unsupported providers are reported without fallback."
+      "content": "This method is implemented and exposed through `epithema whichdb`. Rust service coverage exercises the governed service route for a supported ENA query and verifies that unsupported providers are reported without fallback."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/whichdb_ena_ab000263_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/whichdb_ena_ab000263_case.md"
       },
       "description": "Repository-managed case note for the bounded ENA provider-discovery route exercised by Rust service coverage."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/whichdb_ncbi_nested_reference_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/whichdb_ncbi_nested_reference_case.md"
       },
       "description": "Repository-managed case note for preserving nested NCBI provider-local database qualifiers in bounded route reporting."
     },
@@ -83,7 +83,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/whichdb_unsupported_provider_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/whichdb_unsupported_provider_case.md"
       },
       "description": "Repository-managed case note for explicit unsupported-provider reporting without fallback expansion."
     }
@@ -170,7 +170,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS whichdb application",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "consambig-v1",
   "tool": {
     "name": "consambig",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`consambig` derives an ambiguity-aware consensus sequence from a single aligned FASTA or Stockholm alignment. The current EMBOSS-RS implementation ignores gaps when tallying a column, emits IUPAC nucleotide ambiguity symbols when multiple exact nucleotide bases remain, and uses `X` for ambiguous protein columns."
+      "content": "`consambig` derives an ambiguity-aware consensus sequence from a single aligned FASTA or Stockholm alignment. The current Epithema implementation ignores gaps when tallying a column, emits IUPAC nucleotide ambiguity symbols when multiple exact nucleotide bases remain, and uses `X` for ambiguous protein columns."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs consambig`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the ambiguity-aware consensus sequence `ACYGT`."
+      "content": "This method is implemented and exposed through `epithema consambig`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the ambiguity-aware consensus sequence `ACYGT`."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/multiple_alignment.sto"
       },
       "description": "Repository-managed Stockholm alignment fixture used to validate ambiguity-aware consensus derivation."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

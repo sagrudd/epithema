@@ -9,7 +9,7 @@ Reverse sequence content and reverse-complement nucleotide records
 ## Document Metadata
 
 - Document ID: `revseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `revseq`
@@ -22,7 +22,7 @@ Reverse sequence content and reverse-complement nucleotide records
 
 ## Overview
 
-`revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared EMBOSS-RS sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative.
+`revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared Epithema sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ Output is a normalized sequence collection rendered through the shared result an
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs revseq`. Validation currently covers DNA auto reverse-complement behavior and reverse-only output against a committed FASTA fixture. Records with attached features are rejected in v1 because feature-coordinate remapping is not yet implemented, and conservative FASTA molecule inference means some residue-only records remain `unknown` unless a richer source format carries molecule metadata.
+This method is implemented and exposed through `epithema revseq`. Validation currently covers DNA auto reverse-complement behavior and reverse-only output against a committed FASTA fixture. Records with attached features are rejected in v1 because feature-coordinate remapping is not yet implemented, and conservative FASTA molecule inference means some residue-only records remain `unknown` unless a richer source format carries molecule metadata.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ Explicit reverse-complement requests fail for protein or unknown-molecule record
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic revseq validation.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ Explicit reverse-complement requests fail for protein or unknown-molecule record
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

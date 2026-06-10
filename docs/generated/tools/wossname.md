@@ -9,7 +9,7 @@ Report deterministic bounded keyword matches against governed local tool metadat
 ## Document Metadata
 
 - Document ID: `wossname-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `command_tools`
 - Legacy names: `wossname`
@@ -22,7 +22,7 @@ Report deterministic bounded keyword matches against governed local tool metadat
 
 ## Overview
 
-`wossname` is the bounded command-discovery member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface searches governed local tool metadata with deterministic normalized keyword matching and returns a stable table-first report rather than a semantic-ranking or ontology-driven discovery workflow.
+`wossname` is the bounded command-discovery member of the active command discovery and help-navigation rework program. The Epithema v1 surface searches governed local tool metadata with deterministic normalized keyword matching and returns a stable table-first report rather than a semantic-ranking or ontology-driven discovery workflow.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `wossname` user need in scope while mo
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs wossname`. The governed surface ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local keyword-lookup path. The shipped evidence posture is currently executable-only until the canonical compared keyword-match fixture lands.
+This method is implemented and exposed through `epithema wossname`. The governed surface ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local keyword-lookup path. The shipped evidence posture is currently executable-only until the canonical compared keyword-match fixture lands.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `wossname` seam is intentionally narrow. It does not perform broad semant
 - Artifact ID: `wossname_query_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wossname_query.txt`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wossname_query.txt`
 - Notes: Repository-managed keyword query fixture used to anchor deterministic bounded wossname validation.
 
 ## Declared Examples
@@ -71,7 +71,7 @@ The v1 `wossname` seam is intentionally narrow. It does not perform broad semant
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS wossname application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wossname.acd`)
 

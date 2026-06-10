@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "dan-v1",
   "tool": {
     "name": "dan",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`dan` reports conservative nucleic-acid melting estimates for one or more nucleotide records. The EMBOSS-RS v1 surface keeps the model intentionally narrow: one whole-record row by default, optional sliding windows through `--window` and `--step`, canonical residues only, and one simple deterministic melting-temperature estimate."
+      "content": "`dan` reports conservative nucleic-acid melting estimates for one or more nucleotide records. The Epithema v1 surface keeps the model intentionally narrow: one whole-record row by default, optional sliding windows through `--window` and `--step`, canonical residues only, and one simple deterministic melting-temperature estimate."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs dan`. Validation currently covers whole-record reporting, sliding-window reporting, RNA acceptance, canonical-residue enforcement, and deterministic service-level table output."
+      "content": "This method is implemented and exposed through `epithema dan`. Validation currently covers whole-record reporting, sliding-window reporting, RNA acceptance, canonical-residue enforcement, and deterministic service-level table output."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed canonical DNA fixture used to validate deterministic whole-record and sliding-window melting estimates."
     }

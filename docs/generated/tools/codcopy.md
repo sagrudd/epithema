@@ -9,7 +9,7 @@ Normalize coding-sequence or codon-profile input into a reusable codon profile
 ## Document Metadata
 
 - Document ID: `codcopy-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `codon_tools`
 - Legacy names: `codcopy`
@@ -34,7 +34,7 @@ The result is a normalized codon-usage profile. When `--profile-out` is supplied
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs codcopy`. Rust service coverage writes a temporary codon-profile TSV from a committed coding fixture and then proves downstream interoperability by reusing that profile successfully in a `cai` invocation.
+This method is implemented and exposed through `epithema codcopy`. Rust service coverage writes a temporary codon-profile TSV from a committed coding fixture and then proves downstream interoperability by reusing that profile successfully in a `cai` invocation.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is local-only and strict. Coding inputs are validated in the s
 - Artifact ID: `codon_reference_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed coding-reference FASTA fixture used to validate normalized profile generation.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release is local-only and strict. Coding inputs are validated in the s
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

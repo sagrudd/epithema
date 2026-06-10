@@ -4,7 +4,7 @@ Status date: 2026-05-18
 
 ## Recommendation
 
-`emboss-rs` is **ready for a `v1.0.0` release-candidate tag (`RC1`) with known
+`epithema` is **ready for a `v1.0.0` release-candidate tag (`RC1`) with known
 limitations**.
 
 This audit still finds no repository-level blocker in the Rust workspace, docs
@@ -15,7 +15,7 @@ closure, or broken packaging mechanics.
 ## Audited Shipped Cohort
 
 The release-candidate audit uses the governed tool registry
-`emboss_tools::governed_tool_descriptors()` as the source of truth. The current
+`epithema_tools::governed_tool_descriptors()` as the source of truth. The current
 shipped cohort is:
 
 - `aligncopy`
@@ -290,7 +290,7 @@ Current generated release-truth markers:
 ### R-first-class posture in docs
 
 - Status: `complete`
-- Basis: the root README and release docs continue to describe `emboss-r` as a
+- Basis: the root README and release docs continue to describe `epithemaR` as a
   real peer user surface and keep plotting ownership in R.
 
 ## Concrete Gap Report
@@ -323,7 +323,7 @@ Current generated release-truth markers:
 
 ### R surface limitations
 
-- `emboss-r` remains a real first-class surface, but broader parity still
+- `epithemaR` remains a real first-class surface, but broader parity still
   remains deferred to future sweeps.
 - This remains aligned with the current cross-repo posture and is not a blocker
   for the Rust-side `1.0.0` candidate.
@@ -334,7 +334,7 @@ Current generated release-truth markers:
 - Perform final review of the changelog and release notes.
 - Create the `v1.0.0` tag.
 - Publish the GitHub release after the tag workflow completes.
-- Confirm the coordinated `emboss-r` release decision separately.
+- Confirm the coordinated `epithemaR` release decision separately.
 
 ## Current Generated Count Markers
 
@@ -351,8 +351,8 @@ candidate hardening and roadmap-governance phase:
 
 - `cargo build`
 - `cargo test --workspace --all-features`
-- `cargo test -p emboss-testkit`
-- `cargo test -p emboss-docgen --test doc_coverage`
+- `cargo test -p epithema-testkit`
+- `cargo test -p epithema-docgen --test doc_coverage`
 - `PYTHON=.venv-docs/bin/python make docs`
 
 The broad generated-refresh target was also re-audited and normalized later:

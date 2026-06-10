@@ -85,7 +85,7 @@ jobs:
       - name: Upload release artefacts
         uses: actions/upload-artifact@v4
         with:
-          name: emboss-rs-release-${{ steps.version.outputs.release_version }}
+          name: epithema-release-${{ steps.version.outputs.release_version }}
           path: dist/release/${{ steps.version.outputs.release_version }}/*
 
       - name: Prepare container tags
@@ -145,7 +145,7 @@ jobs:
       - name: Download release artefacts
         uses: actions/download-artifact@v4
         with:
-          name: emboss-rs-release-${{ needs.release-build.outputs.release_version }}
+          name: epithema-release-${{ needs.release-build.outputs.release_version }}
           path: release-artifacts
 
       - name: Create GitHub release

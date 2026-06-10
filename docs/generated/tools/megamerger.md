@@ -9,7 +9,7 @@ Merge two overlapping DNA sequences by longest exact suffix/prefix overlap
 ## Document Metadata
 
 - Document ID: `megamerger-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `megamerger`
@@ -22,7 +22,7 @@ Merge two overlapping DNA sequences by longest exact suffix/prefix overlap
 
 ## Overview
 
-`megamerger` performs a DNA-only exact overlap merge between one left record and one right record. The first EMBOSS-RS release keeps the method intentionally narrow: it searches only for the longest positive exact overlap between the left suffix and right prefix and emits one merged DNA sequence record.
+`megamerger` performs a DNA-only exact overlap merge between one left record and one right record. The first Epithema release keeps the method intentionally narrow: it searches only for the longest positive exact overlap between the left suffix and right prefix and emits one merged DNA sequence record.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one merged DNA FASTA sequence record. CLI summaries report the le
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs megamerger`. Validation currently covers a deterministic one-record DNA overlap merge against committed FASTA fixtures, and Rust tool tests also exercise explicit non-DNA rejection.
+This method is implemented and exposed through `epithema megamerger`. Validation currently covers a deterministic one-record DNA overlap merge against committed FASTA fixtures, and Rust tool tests also exercise explicit non-DNA rejection.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not implement approximate overlap finding, ambiguity-tole
 - Artifact ID: `megamerger_left_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/merger_left.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/merger_left.fasta`
 - Notes: Repository-managed left DNA input fixture ending with the exact overlap used for deterministic megamerger validation.
 
 ### Right DNA overlap FASTA fixture
@@ -55,7 +55,7 @@ The first release does not implement approximate overlap finding, ambiguity-tole
 - Artifact ID: `megamerger_right_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/merger_right.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/merger_right.fasta`
 - Notes: Repository-managed right DNA input fixture beginning with the exact overlap used for deterministic megamerger validation.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The first release does not implement approximate overlap finding, ambiguity-tole
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

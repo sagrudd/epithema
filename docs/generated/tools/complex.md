@@ -9,7 +9,7 @@ Report whole-sequence and sliding-window nucleotide linguistic complexity
 ## Document Metadata
 
 - Document ID: `complex-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `complex`
@@ -22,7 +22,7 @@ Report whole-sequence and sliding-window nucleotide linguistic complexity
 
 ## Overview
 
-`complex` reports nucleotide linguistic complexity over an inclusive k-mer range using the shared EMBOSS-RS complexity core. The first release computes one whole-sequence complexity row per input record and can additionally emit sliding-window rows when `--window` and `--step` are supplied together.
+`complex` reports nucleotide linguistic complexity over an inclusive k-mer range using the shared Epithema complexity core. The first release computes one whole-sequence complexity row per input record and can additionally emit sliding-window rows when `--window` and `--step` are supplied together.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a stable table report. Whole-sequence rows use `scope=record`, wh
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs complex`. Validation currently covers deterministic whole-sequence complexity reporting on a committed nucleotide fixture, and Rust tool and service tests also exercise sliding-window output and unsupported-symbol rejection.
+This method is implemented and exposed through `epithema complex`. Validation currently covers deterministic whole-sequence complexity reporting on a committed nucleotide fixture, and Rust tool and service tests also exercise sliding-window output and unsupported-symbol rejection.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The retained exception `complex` remains intentionally narrow in v1. It does not
 - Artifact ID: `complex_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/complex_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/complex_records.fasta`
 - Notes: Repository-managed FASTA fixture with low- and high-complexity nucleotide examples for deterministic complexity reporting.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The retained exception `complex` remains intentionally narrow in v1. It does not
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

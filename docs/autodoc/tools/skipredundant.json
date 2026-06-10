@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "skipredundant-v1",
   "tool": {
     "name": "skipredundant",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`skipredundant` collapses an input sequence stream to exact non-redundant representatives. EMBOSS-RS v1 defines redundancy conservatively as identical molecule kind plus identical normalized residue content, and it retains the first representative encountered for each exact sequence."
+      "content": "`skipredundant` collapses an input sequence stream to exact non-redundant representatives. Epithema v1 defines redundancy conservatively as identical molecule kind plus identical normalized residue content, and it retains the first representative encountered for each exact sequence."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local sequence input path containing one or more sequence records. All records are loaded through the shared EMBOSS-RS sequence IO layer before redundancy filtering is applied."
+      "content": "The current interface accepts one local sequence input path containing one or more sequence records. All records are loaded through the shared Epithema sequence IO layer before redundancy filtering is applied."
     },
     {
       "id": "outputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs skipredundant`. Validation currently covers deterministic removal of exact duplicate records against a committed FASTA fixture, including service-level summary checks."
+      "content": "This method is implemented and exposed through `epithema skipredundant`. Validation currently covers deterministic removal of exact duplicate records against a committed FASTA fixture, including service-level summary checks."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/skipredundant_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/skipredundant_records.fasta"
       },
       "description": "Repository-managed FASTA fixture containing two exact duplicate pairs for deterministic first-representative retention."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

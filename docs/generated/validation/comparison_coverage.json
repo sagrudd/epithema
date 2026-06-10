@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "report_id": "family-comparison-coverage",
-  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "registry_source": "epithema_tools::governed_tool_descriptors",
   "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
   "summary": {
     "total_method_count": 115,

@@ -9,7 +9,7 @@ Retrieve one provider-qualified reference sequence accession through the governe
 ## Document Metadata
 
 - Document ID: `refseqget-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `retrieval_tools`
 - Legacy names: `refseqget`
@@ -34,7 +34,7 @@ The result is one normalized sequence record with retrieval provenance attached 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs refseqget`. The accession-backed retrieval seam is covered in Rust service tests with a mocked NCBI FASTA response, and local-file rejection is also tested explicitly.
+This method is implemented and exposed through `epithema refseqget`. The accession-backed retrieval seam is covered in Rust service tests with a mocked NCBI FASTA response, and local-file rejection is also tested explicitly.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The current curated evidence is seam-oriented rather than live-network acceptanc
 - Artifact ID: `refseqget_mocked_provider_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/refseqget_ncbi_np_000537_3_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/refseqget_ncbi_np_000537_3_case.md`
 - Notes: Repository-managed case note for the mocked NCBI provider-qualified retrieval used in Rust service coverage.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The current curated evidence is seam-oriented rather than live-network acceptanc
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

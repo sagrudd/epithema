@@ -9,7 +9,7 @@ Merge two overlapping sequences by longest exact suffix/prefix overlap
 ## Document Metadata
 
 - Document ID: `merger-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `merger`
@@ -22,7 +22,7 @@ Merge two overlapping sequences by longest exact suffix/prefix overlap
 
 ## Overview
 
-`merger` combines exactly one sequence record from a left input and one sequence record from a right input by taking the longest positive exact overlap between the left suffix and right prefix. The EMBOSS-RS v1 implementation is intentionally conservative and emits one merged sequence record rather than attempting assembly graph or consensus behavior.
+`merger` combines exactly one sequence record from a left input and one sequence record from a right input by taking the longest positive exact overlap between the left suffix and right prefix. The Epithema v1 implementation is intentionally conservative and emits one merged sequence record rather than attempting assembly graph or consensus behavior.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one merged FASTA sequence record through the shared result path. 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs merger`. Validation currently covers a deterministic one-record overlap merge against committed FASTA fixtures, as well as no-overlap failure behavior in the Rust tool layer.
+This method is implemented and exposed through `epithema merger`. Validation currently covers a deterministic one-record overlap merge against committed FASTA fixtures, as well as no-overlap failure behavior in the Rust tool layer.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not attempt approximate overlap detection, reverse-comple
 - Artifact ID: `merger_left_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/merger_left.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/merger_left.fasta`
 - Notes: Repository-managed left input fixture ending with the exact overlap used for deterministic merger validation.
 
 ### Right overlap FASTA fixture
@@ -55,7 +55,7 @@ The first release does not attempt approximate overlap detection, reverse-comple
 - Artifact ID: `merger_right_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/merger_right.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/merger_right.fasta`
 - Notes: Repository-managed right input fixture beginning with the exact overlap used for deterministic merger validation.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The first release does not attempt approximate overlap detection, reverse-comple
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

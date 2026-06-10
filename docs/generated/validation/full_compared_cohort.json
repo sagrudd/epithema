@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "report_id": "full-compared-cohort-release-gate",
-  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "registry_source": "epithema_tools::governed_tool_descriptors",
   "summary": {
     "total_method_count": 115,
     "compared_evidence_count": 115,

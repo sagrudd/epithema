@@ -1,18 +1,18 @@
-# EMBOSS-RS Codex Commit and Push Policy
+# Epithema Codex Commit and Push Policy
 
 **Status:** Formal development policy  
 **Date:** 2026-04-15  
-**Applies to:** `emboss-rs`, `emboss-r`, and any directly related repository used in the EMBOSS-RS programme of work
+**Applies to:** `epithema`, `epithemaR`, and any directly related repository used in the Epithema programme of work
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 ## 1. Purpose
 
 This policy defines the minimum source-control discipline required for development work performed through Codex prompts.
 
 Codex can change repository contents directly, so commit and push discipline is a
-necessary part of reproducible development governance for EMBOSS-RS.
+necessary part of reproducible development governance for Epithema.
 
 ## 2. Policy Statement
 
@@ -88,7 +88,7 @@ The resulting commit must be pushed promptly to the appropriate remote branch so
 This rule complements, and does not replace, the existing requirements that:
 
 - documentation be maintained through Sphinx using the Read the Docs template
-- `emboss-rs autodoc` generate and maintain credible documentation inputs and outputs
+- `epithema autodoc` generate and maintain credible documentation inputs and outputs
 - GitHub Pages be provisioned from project start
 - validation and documentation be grounded in historical EMBOSS artefacts and reproducible runs
 

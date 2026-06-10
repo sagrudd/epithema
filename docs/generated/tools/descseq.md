@@ -9,7 +9,7 @@ Report stable sequence-record descriptions and metadata summaries in tabular for
 ## Document Metadata
 
 - Document ID: `descseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `descseq`
@@ -22,7 +22,7 @@ Report stable sequence-record descriptions and metadata summaries in tabular for
 
 ## Overview
 
-`descseq` reports stable per-record sequence descriptions and metadata using the shared EMBOSS-RS sequence and annotated-record models. It is useful for plain FASTA inputs and richer EMBL or GenBank inputs because it summarizes the typed metadata already carried by the core record representation instead of reparsing format-specific text ad hoc.
+`descseq` reports stable per-record sequence descriptions and metadata using the shared Epithema sequence and annotated-record models. It is useful for plain FASTA inputs and richer EMBL or GenBank inputs because it summarizes the typed metadata already carried by the core record representation instead of reparsing format-specific text ad hoc.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable tabular report with one row per input record. The current
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs descseq`. Validation currently covers both plain multi-record FASTA input and annotated GenBank input so the reported schema is locked down for both unannotated and annotation-aware records.
+This method is implemented and exposed through `epithema descseq`. Validation currently covers both plain multi-record FASTA input and annotated GenBank input so the reported schema is locked down for both unannotated and annotation-aware records.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 output is intentionally conservative and metadata-driven. It reports only
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed plain FASTA fixture used to validate source-order summary reporting.
 
 ### Annotated GenBank fixture
@@ -55,7 +55,7 @@ The v1 output is intentionally conservative and metadata-driven. It reports only
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used to validate annotation-aware summary reporting.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The v1 output is intentionally conservative and metadata-driven. It reports only
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

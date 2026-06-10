@@ -1,19 +1,19 @@
 # Cross-Surface Validation
 
-`emboss-rs` is the computational source of truth for the first-class sister
-package `emboss-r`. Cross-surface validation exists to prove that the public R
+`epithema` is the computational source of truth for the first-class sister
+package `epithemaR`. Cross-surface validation exists to prove that the public R
 wrappers are a peer client of the same analytical core rather than a divergent
 reimplementation.
 
 ## Current strategy
 
-- `emboss-rs` owns the canonical fixture catalogue.
+- `epithema` owns the canonical fixture catalogue.
 - The catalogue is stored at
-  `crates/emboss-testkit/tests/fixtures/cross_surface/curated_methods.json`.
+  `crates/epithema-testkit/tests/fixtures/cross_surface/curated_methods.json`.
 - Each fixture case contains:
   - a typed bridge request payload
   - a semantic expected output at the nearest useful comparison layer
-- `emboss-r` reads that catalogue, runs its public wrappers from the same
+- `epithemaR` reads that catalogue, runs its public wrappers from the same
   inputs, normalizes its returned objects, and compares them to the canonical
   expected outputs.
 
@@ -55,7 +55,7 @@ The current fixture-driven coverage spans:
 - `charge_profile`
 
 These fixtures are intentionally a curated semantic subset. The broader
-shipped Rust cohort is now callable from the first-class `emboss-r` package
+shipped Rust cohort is now callable from the first-class `epithemaR` package
 through typed bridge wrappers, while this catalogue remains the durable
 cross-surface contract for the methods that currently have checked-in semantic
 equivalence cases.

@@ -9,7 +9,7 @@ Normalize ENA or SRA archive metadata for one accession-backed archive object
 ## Document Metadata
 
 - Document ID: `runinfo-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `archive_tools`
 - Legacy names: `runinfo`
@@ -34,7 +34,7 @@ The result is a stable table report plus provider-summary lines. ENA-backed runs
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs runinfo`. Rust service coverage includes mocked ENA run metadata normalization and mocked SRA run metadata lookup. Those tests prove the current provider seams without claiming that harvested live-provider evidence has been checked in yet.
+This method is implemented and exposed through `epithema runinfo`. Rust service coverage includes mocked ENA run metadata normalization and mocked SRA run metadata lookup. Those tests prove the current provider seams without claiming that harvested live-provider evidence has been checked in yet.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 surface is intentionally conservative. `runinfo` does not accept local fi
 - Artifact ID: `runinfo_mocked_ena_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/runinfo_ena_err123456_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/runinfo_ena_err123456_case.md`
 - Notes: Repository-managed case note for the mocked ENA metadata normalization path used in Rust service coverage.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The v1 surface is intentionally conservative. `runinfo` does not accept local fi
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

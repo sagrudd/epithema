@@ -9,7 +9,7 @@ Report a normalized public-run manifest for one accession-backed archive run
 ## Document Metadata
 
 - Document ID: `runget-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `archive_tools`
 - Legacy names: `runget`
@@ -34,7 +34,7 @@ The result is a stable table report describing the normalized manifest rows for 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs runget`. Rust service coverage includes a mocked ENA manifest success path, explicit rejection of `--download`, and an explicit not-supported path for SRA manifest retrieval.
+This method is implemented and exposed through `epithema runget`. Rust service coverage includes a mocked ENA manifest success path, explicit rejection of `--download`, and an explicit not-supported path for SRA manifest retrieval.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is intentionally narrower than the historical EMBOSS name migh
 - Artifact ID: `runget_mocked_ena_manifest_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/runget_ena_err123456_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/runget_ena_err123456_case.md`
 - Notes: Repository-managed case note for the mocked ENA manifest-report path used in Rust service coverage.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release is intentionally narrower than the historical EMBOSS name migh
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

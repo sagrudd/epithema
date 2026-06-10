@@ -9,7 +9,7 @@ Report deterministic bounded siRNA-candidate rows against one local nucleotide i
 ## Document Metadata
 
 - Document ID: `sirna-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `primer_tools`
 - Legacy names: `sirna`
@@ -22,7 +22,7 @@ Report deterministic bounded siRNA-candidate rows against one local nucleotide i
 
 ## Overview
 
-`sirna` is the bounded siRNA-candidate discovery member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized RNAi-efficacy or off-target ranking workflow.
+`sirna` is the bounded siRNA-candidate discovery member of the active primer and assay-oriented rework program. The Epithema v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized RNAi-efficacy or off-target ranking workflow.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `sirna` user need in scope while moder
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs sirna`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized siRNA-candidate rows.
+This method is implemented and exposed through `epithema sirna`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized siRNA-candidate rows.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `sirna` seam is intentionally narrow. It does not perform generalized RNA
 - Artifact ID: `sirna_targets_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/sirna_targets.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/sirna_targets.fasta`
 - Notes: Repository-managed nucleotide targets used for deterministic bounded sirna validation.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The v1 `sirna` seam is intentionally narrow. It does not perform generalized RNA
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS sirna application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/sirna.acd`)
 

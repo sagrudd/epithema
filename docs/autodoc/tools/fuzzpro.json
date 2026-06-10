@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "fuzzpro-v1",
   "tool": {
     "name": "fuzzpro",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`fuzzpro` searches protein sequence records for one linear motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact amino-acid symbols plus `X` as a one-residue wildcard, no gaps, no indels, and no full historical EMBOSS fuzzy-expression language."
+      "content": "`fuzzpro` searches protein sequence records for one linear motif and reports all matches in stable input order. The Epithema v1 surface keeps the pattern model intentionally narrow: exact amino-acid symbols plus `X` as a one-residue wildcard, no gaps, no indels, and no full historical EMBOSS fuzzy-expression language."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current v1 interface accepts one local protein sequence input path and one motif string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as nucleotide are rejected."
+      "content": "The current v1 interface accepts one local protein sequence input path and one motif string. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as nucleotide are rejected."
     },
     {
       "id": "pattern_model",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs fuzzpro`. Validation currently covers exact and wildcard matching, overlapping matches, no-hit behavior, invalid-pattern failure, and nucleotide-input rejection."
+      "content": "This method is implemented and exposed through `epithema fuzzpro`. Validation currently covers exact and wildcard matching, overlapping matches, no-hit behavior, invalid-pattern failure, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/protein_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/protein_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic protein motif validation."
     }
@@ -90,7 +90,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

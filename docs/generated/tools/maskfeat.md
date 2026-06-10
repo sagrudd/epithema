@@ -9,7 +9,7 @@ Mask selected simple annotated feature spans in-place while preserving record an
 ## Document Metadata
 
 - Document ID: `maskfeat-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `maskfeat`
@@ -22,7 +22,7 @@ Mask selected simple annotated feature spans in-place while preserving record an
 
 ## Overview
 
-`maskfeat` masks sequence spans defined by selected annotated features from EMBL or GenBank inputs using the shared EMBOSS-RS feature-selection and interval-masking path. The original record is retained, matching simple feature spans are masked in place, and feature annotations remain attached to the resulting payload.
+`maskfeat` masks sequence spans defined by selected annotated features from EMBL or GenBank inputs using the shared Epithema feature-selection and interval-masking path. The original record is retained, matching simple feature spans are masked in place, and feature annotations remain attached to the resulting payload.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ The default mask symbol is `N` for nucleotide and unknown-molecule records and `
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs maskfeat`. Validation currently covers masking a selected gene feature from a committed annotated GenBank fixture. Rust service and core tests also cover masking all selected spans in one record, no-match handling, invalid mask-symbol handling, and conservative failure on unsupported complex feature locations.
+This method is implemented and exposed through `epithema maskfeat`. Validation currently covers masking a selected gene feature from a committed annotated GenBank fixture. Rust service and core tests also cover masking all selected spans in one record, no-match handling, invalid mask-symbol handling, and conservative failure on unsupported complex feature locations.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used for deterministic maskfeat validation.
 
 ## Declared Examples
@@ -71,7 +71,7 @@ The v1 scope supports only simple single-span feature locations. Joined, compoun
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ Render selected features as normalized feature-table text
 ## Document Metadata
 
 - Document ID: `feattext-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `feattext`
@@ -22,7 +22,7 @@ Render selected features as normalized feature-table text
 
 ## Overview
 
-`feattext` renders selected features from annotated EMBL or GenBank records as normalized feature-table text. It reuses the shared EMBOSS-RS feature-selection model and emits a deterministic textual view of the current structured feature representation.
+`feattext` renders selected features from annotated EMBL or GenBank records as normalized feature-table text. It reuses the shared Epithema feature-selection model and emits a deterministic textual view of the current structured feature representation.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The output is a text report grouped by source record, with an `ID` header, a nor
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs feattext`. Rust tests currently cover normalized rendering, service invocation, and selector-driven no-match handling against committed annotated fixtures.
+This method is implemented and exposed through `epithema feattext`. Rust tests currently cover normalized rendering, service invocation, and selector-driven no-match handling against committed annotated fixtures.
 
 ## Caveats
 
-The v1 output is intentionally a governed normalized rendering, not a byte-for-byte recovery of the original source flatfile text. Feature names are rendered through the EMBOSS-RS structured model, and qualifiers are emitted in stable key order.
+The v1 output is intentionally a governed normalized rendering, not a byte-for-byte recovery of the original source flatfile text. Feature names are rendered through the Epithema structured model, and qualifiers are emitted in stable key order.
 
 ## Declared Artifacts
 
@@ -47,7 +47,7 @@ The v1 output is intentionally a governed normalized rendering, not a byte-for-b
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used for deterministic feattext validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 output is intentionally a governed normalized rendering, not a byte-for-b
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS feattext application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/feattext.acd`)
 

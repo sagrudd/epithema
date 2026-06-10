@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "extractalign-v1",
   "tool": {
     "name": "extractalign",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs extractalign`. Current Rust service coverage exercises mixed row-identifier and row-ordinal selection plus 1-based inclusive column slicing against the committed multiple-alignment fixture."
+      "content": "This method is implemented and exposed through `epithema extractalign`. Current Rust service coverage exercises mixed row-identifier and row-ordinal selection plus 1-based inclusive column slicing against the committed multiple-alignment fixture."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/multiple_alignment.sto"
       },
       "description": "Repository-managed Stockholm alignment fixture used to validate row and column extraction behavior."
     }
@@ -96,7 +96,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

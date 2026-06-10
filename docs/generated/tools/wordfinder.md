@@ -9,7 +9,7 @@ report maximal exact shared regions between one query and multiple targets
 ## Document Metadata
 
 - Document ID: `wordfinder-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `wordfinder`
@@ -22,7 +22,7 @@ report maximal exact shared regions between one query and multiple targets
 
 ## Overview
 
-`wordfinder` extends the exact-region model of `wordmatch` to one query sequence against a target set. EMBOSS-RS v1 preserves target-record order and reports maximal exact ungapped regions in a stable table.
+`wordfinder` extends the exact-region model of `wordmatch` to one query sequence against a target set. Epithema v1 preserves target-record order and reports maximal exact ungapped regions in a stable table.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable table with one row per maximal exact shared region across
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs wordfinder`. Validation currently covers one committed query fixture and one committed two-record target set through the Rust tool and service layers.
+This method is implemented and exposed through `epithema wordfinder`. Validation currently covers one committed query fixture and one committed two-record target set through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is an exact multi-target region reporter. It does not implemen
 - Artifact ID: `wordfinder_query_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wordmatch_query.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wordmatch_query.fasta`
 - Notes: Repository-managed one-record query FASTA fixture used for multi-target exact-region reporting.
 
 ### Wordfinder targets FASTA fixture
@@ -55,7 +55,7 @@ The first release is an exact multi-target region reporter. It does not implemen
 - Artifact ID: `wordfinder_targets_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wordfinder_targets.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wordfinder_targets.fasta`
 - Notes: Repository-managed two-record target FASTA fixture whose first record shares one exact region with the query.
 
 ## Declared Examples
@@ -75,7 +75,7 @@ The first release is an exact multi-target region reporter. It does not implemen
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS wordfinder application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/wordfinder.acd`)
 

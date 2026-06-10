@@ -9,7 +9,7 @@ Report deterministic protein summary statistics for sequence records
 ## Document Metadata
 
 - Document ID: `pepstats-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `pepstats`
@@ -22,11 +22,11 @@ Report deterministic protein summary statistics for sequence records
 
 ## Overview
 
-`pepstats` reports a conservative first-release set of protein statistics for each input record. The EMBOSS-RS v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate.
+`pepstats` reports a conservative first-release set of protein statistics for each input record. The Epithema v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate.
 
 ## Inputs
 
-The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected.
+The current interface accepts one local protein input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected.
 
 ## Outputs
 
@@ -34,15 +34,15 @@ The tool emits a stable table report with columns `section`, `record`, `metric_o
 
 ## Metric Model
 
-Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared EMBOSS-RS average residue masses with one water molecule added once per chain.
+Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared Epithema average residue masses with one water molecule added once per chain.
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `pepstats` reporting example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed first-release metric set rather than the broader historical EMBOSS biochemical-report surface.
+This acceptance anchor keeps one historical-style `pepstats` reporting example in view and compares the Epithema tabular payload against a committed expected output. The comparison validates the governed first-release metric set rather than the broader historical EMBOSS biochemical-report surface.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pepstats`. Validation currently covers protein summary rows, composition frequencies, stop-symbol handling, unsupported ambiguous-residue failure for mass estimation, and nucleotide-input rejection.
+This method is implemented and exposed through `epithema pepstats`. Validation currently covers protein summary rows, composition frequencies, stop-symbol handling, unsupported ambiguous-residue failure for mass estimation, and nucleotide-input rejection.
 
 ## Caveats
 
@@ -55,7 +55,7 @@ The first release does not estimate isoelectric point, extinction coefficient, o
 - Artifact ID: `protein_stats_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/protein_stats_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/protein_stats_records.fasta`
 - Notes: Repository-managed protein fixture used for deterministic pepstats validation.
 
 ## Declared Examples

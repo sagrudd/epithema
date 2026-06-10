@@ -9,7 +9,7 @@ Back-translate protein records into deterministic representative DNA codons
 ## Document Metadata
 
 - Document ID: `backtranseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `backtranseq`
@@ -22,7 +22,7 @@ Back-translate protein records into deterministic representative DNA codons
 
 ## Overview
 
-`backtranseq` back-translates protein sequence records into one deterministic representative DNA coding sequence per residue using the shared EMBOSS-RS standard-code back-translation core. The v1 behavior is intentionally narrow and reproducible rather than biologically expansive.
+`backtranseq` back-translates protein sequence records into one deterministic representative DNA coding sequence per residue using the shared Epithema standard-code back-translation core. The v1 behavior is intentionally narrow and reproducible rather than biologically expansive.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The tool emits one DNA FASTA record per input protein record in stable order. Ou
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `backtranseq` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison is intentionally scoped to deterministic representative codons under the standard genetic code.
+This acceptance anchor keeps one historical-style `backtranseq` invocation in view and compares the Epithema FASTA payload against a committed expected output. The comparison is intentionally scoped to deterministic representative codons under the standard genetic code.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs backtranseq`. Current validation covers the deterministic codon policy, stop-symbol handling with `* -> TAA`, and stable FASTA emission from committed protein fixtures.
+This method is implemented and exposed through `epithema backtranseq`. Current validation covers the deterministic codon policy, stop-symbol handling with `* -> TAA`, and stable FASTA emission from committed protein fixtures.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release uses one fixed representative DNA codon per residue and does n
 - Artifact ID: `protein_stats_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/protein_stats_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/protein_stats_records.fasta`
 - Notes: Repository-managed protein fixture used for deterministic representative back-translation validation.
 
 ## Declared Examples
@@ -59,7 +59,7 @@ The first release uses one fixed representative DNA codon per residue and does n
 ### Back-translate protein records into deterministic representative DNA
 
 - Example ID: `representative_backtranslation`
-- Description: Back-translates the committed protein fixture into one representative DNA coding sequence per residue using the governed EMBOSS-RS standard-code policy.
+- Description: Back-translates the committed protein fixture into one representative DNA coding sequence per residue using the governed Epithema standard-code policy.
 - Referenced artifacts: `protein_stats_fixture`
 - Expected outputs:
   - `representative_dna_sequences`: Representative DNA FASTA output (A stable FASTA rendering of the deterministic representative DNA sequences.)
@@ -69,7 +69,7 @@ The first release uses one fixed representative DNA codon per residue and does n
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS backtranseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranseq.acd`)
 

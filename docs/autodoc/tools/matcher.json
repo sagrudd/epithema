@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "matcher-v1",
   "tool": {
     "name": "matcher",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`matcher` currently provides a conservative direct-comparison summary between exactly one query record and one target record. EMBOSS-RS v1 compares the shared positional overlap without introducing gaps and reports identities, mismatches, compared length, identity percentage, and any input-length difference in a stable table form."
+      "content": "`matcher` currently provides a conservative direct-comparison summary between exactly one query record and one target record. Epithema v1 compares the shared positional overlap without introducing gaps and reports identities, mismatches, compared length, identity percentage, and any input-length difference in a stable table form."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs matcher`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the expected direct-comparison counts for the overlap between `ACGT` and `ACT`."
+      "content": "This method is implemented and exposed through `epithema matcher`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the expected direct-comparison counts for the overlap between `ACGT` and `ACT`."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "The historical EMBOSS name suggests richer local-alignment behavior, but the current EMBOSS-RS v1 implementation is deliberately narrower. It does not perform Waterman-Eggert local alignment yet; it performs ungapped positional comparison only."
+      "content": "The historical EMBOSS name suggests richer local-alignment behavior, but the current Epithema v1 implementation is deliberately narrower. It does not perform Waterman-Eggert local alignment yet; it performs ungapped positional comparison only."
     }
   ],
   "artifacts": [
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needle_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needle_query.fasta"
       },
       "description": "Repository-managed singleton FASTA fixture used as the query input."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needle_target.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needle_target.fasta"
       },
       "description": "Repository-managed singleton FASTA fixture used as the target input."
     }
@@ -95,7 +95,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

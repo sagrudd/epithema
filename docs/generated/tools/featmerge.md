@@ -9,7 +9,7 @@ Merge selected right-hand features into identifier-matched annotated records
 ## Document Metadata
 
 - Document ID: `featmerge-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `featmerge`
@@ -22,7 +22,7 @@ Merge selected right-hand features into identifier-matched annotated records
 
 ## Overview
 
-`featmerge` merges selected features from a right-hand annotated input into identifier-matched left-hand annotated records using the shared EMBOSS-RS feature-copy and annotated-record seams. The left-hand residues and metadata are preserved, and exact duplicate features are skipped deterministically.
+`featmerge` merges selected features from a right-hand annotated input into identifier-matched left-hand annotated records using the shared Epithema feature-copy and annotated-record seams. The left-hand residues and metadata are preserved, and exact duplicate features are skipped deterministically.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ One output FASTA record is emitted per left-hand record in stable input order. L
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs featmerge`. Rust tests currently cover successful merges, deterministic duplicate skipping, no-merge failure when a selector admits only duplicates, and service invocation against committed annotated fixtures.
+This method is implemented and exposed through `epithema featmerge`. Rust tests currently cover successful merges, deterministic duplicate skipping, no-merge failure when a selector admits only duplicates, and service invocation against committed annotated fixtures.
 
 ## Caveats
 
-The v1 merge is structural rather than source-textual: it preserves the normalized EMBOSS-RS feature model, not original flatfile formatting. Record pairing is strict, duplicate identifiers are rejected, and more elaborate overlap reconciliation is intentionally deferred.
+The v1 merge is structural rather than source-textual: it preserves the normalized Epithema feature model, not original flatfile formatting. Record pairing is strict, duplicate identifiers are rejected, and more elaborate overlap reconciliation is intentionally deferred.
 
 ## Declared Artifacts
 
@@ -47,7 +47,7 @@ The v1 merge is structural rather than source-textual: it preserves the normaliz
 - Artifact ID: `annotated_merge_left`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed left-hand annotated fixture used for feature-merge validation.
 
 ### Right-hand annotated GenBank fixture
@@ -55,7 +55,7 @@ The v1 merge is structural rather than source-textual: it preserves the normaliz
 - Artifact ID: `annotated_merge_right`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_merge_right.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_merge_right.gbk`
 - Notes: Repository-managed right-hand annotated fixture containing one duplicate feature and one mergeable feature.
 
 ## Declared Examples
@@ -73,7 +73,7 @@ The v1 merge is structural rather than source-textual: it preserves the normaliz
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS featmerge application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featmerge.acd`)
 

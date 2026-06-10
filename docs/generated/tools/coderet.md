@@ -9,7 +9,7 @@ Extract selected simple coding features and optionally translate them
 ## Document Metadata
 
 - Document ID: `coderet-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `coderet`
@@ -22,7 +22,7 @@ Extract selected simple coding features and optionally translate them
 
 ## Overview
 
-`coderet` extracts simple coding-feature regions from annotated EMBL or GenBank records using the shared EMBOSS-RS feature-selection and extraction seam. In v1 it defaults to CDS selection when no selector flags are supplied, and can optionally translate each extracted region with the standard genetic code.
+`coderet` extracts simple coding-feature regions from annotated EMBL or GenBank records using the shared Epithema feature-selection and extraction seam. In v1 it defaults to CDS selection when no selector flags are supplied, and can optionally translate each extracted region with the standard genetic code.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ Without `--translate`, one nucleotide FASTA record is emitted per selected simpl
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs coderet`. Rust tests currently cover default CDS extraction, strict translation, no-match handling through the shared feature-extraction seam, and service-layer invocation against committed annotated fixtures.
+This method is implemented and exposed through `epithema coderet`. Rust tests currently cover default CDS extraction, strict translation, no-match handling through the shared feature-extraction seam, and service-layer invocation against committed annotated fixtures.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 scope supports only simple single-span feature locations. Joined or other
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used for deterministic coderet validation.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ The v1 scope supports only simple single-span feature locations. Joined or other
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS coderet application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/coderet.acd`)
 

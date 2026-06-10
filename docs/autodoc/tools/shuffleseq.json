@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "shuffleseq-v1",
   "tool": {
     "name": "shuffleseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`shuffleseq` permutes the residues within each input record while preserving exact per-record composition. The EMBOSS-RS v1 implementation is deterministic by design: when `--seed` is omitted it uses a fixed documented base seed, and each record derives its own deterministic stream from that base seed and input order."
+      "content": "`shuffleseq` permutes the residues within each input record while preserving exact per-record composition. The Epithema v1 implementation is deterministic by design: when `--seed` is omitted it uses a fixed documented base seed, and each record derives its own deterministic stream from that base seed and input order."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs shuffleseq`. Validation currently covers deterministic seeded shuffling and composition preservation against a committed multi-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
+      "content": "This method is implemented and exposed through `epithema shuffleseq`. Validation currently covers deterministic seeded shuffling and composition preservation against a committed multi-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed three-record FASTA fixture used for deterministic shuffleseq validation."
     }
@@ -84,7 +84,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

@@ -9,7 +9,7 @@ report exact inverted-repeat arms with bounded spacer length in nucleotide seque
 ## Document Metadata
 
 - Document ID: `einverted-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `einverted`
@@ -22,7 +22,7 @@ report exact inverted-repeat arms with bounded spacer length in nucleotide seque
 
 ## Overview
 
-`einverted` reports exact inverted-repeat arms in nucleotide sequence records. EMBOSS-RS v1 searches for exact reverse-complement arm pairs with a bounded spacer and reports overlapping hits deterministically.
+`einverted` reports exact inverted-repeat arms in nucleotide sequence records. Epithema v1 searches for exact reverse-complement arm pairs with a bounded spacer and reports overlapping hits deterministically.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The result is a deterministic table with record identifier, left and right arm c
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs einverted`. Validation currently covers exact 4-residue inverted-repeat arm detection with bounded spacer length against a committed nucleotide FASTA fixture.
+This method is implemented and exposed through `epithema einverted`. Validation currently covers exact 4-residue inverted-repeat arm detection with bounded spacer length against a committed nucleotide FASTA fixture.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not score mismatches, bulges, or thermodynamic stability.
 - Artifact ID: `einverted_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/einverted_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/einverted_records.fasta`
 - Notes: Repository-managed nucleotide FASTA fixture containing exact inverted-repeat arms with bounded spacer length.
 
 ## Declared Examples
@@ -68,7 +68,7 @@ The first release does not score mismatches, bulges, or thermodynamic stability.
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS einverted application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/einverted.acd`)
 

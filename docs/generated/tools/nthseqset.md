@@ -9,7 +9,7 @@ Select one alignment set by 1-based ordinal position from a multi-alignment inpu
 ## Document Metadata
 
 - Document ID: `nthseqset-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `nthseqset`
@@ -22,7 +22,7 @@ Select one alignment set by 1-based ordinal position from a multi-alignment inpu
 
 ## Overview
 
-`nthseqset` selects one alignment set from an input that may contain more than one multiple alignment. EMBOSS-RS v1 supports deterministic 1-based selection from Stockholm files containing multiple alignments and also accepts a single aligned FASTA or Stockholm input as set `1`.
+`nthseqset` selects one alignment set from an input that may contain more than one multiple alignment. Epithema v1 supports deterministic 1-based selection from Stockholm files containing multiple alignments and also accepts a single aligned FASTA or Stockholm input as set `1`.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits the selected alignment through the shared alignment result path. 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs nthseqset`. Validation currently covers deterministic selection of the second alignment from a committed multi-Stockholm fixture, single-alignment passthrough as set `1`, and out-of-range failure behavior.
+This method is implemented and exposed through `epithema nthseqset`. Validation currently covers deterministic selection of the second alignment from a committed multi-Stockholm fixture, single-alignment passthrough as set `1`, and out-of-range failure behavior.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports ordinal set selection only. It does not support ident
 - Artifact ID: `nthseqset_stockholm_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/nthseqset_alignments.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/nthseqset_alignments.sto`
 - Notes: Repository-managed Stockholm fixture containing two distinct alignment sets for deterministic ordinal selection.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release supports ordinal set selection only. It does not support ident
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

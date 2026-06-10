@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "maskseq-v1",
   "tool": {
     "name": "maskseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`maskseq` masks explicit sequence intervals in each input record using the shared EMBOSS-RS interval and sequence-edit foundations. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval model before applying in-place masking through the shared `mask_intervals` helper."
+      "content": "`maskseq` masks explicit sequence intervals in each input record using the shared Epithema interval and sequence-edit foundations. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval model before applying in-place masking through the shared `mask_intervals` helper."
     },
     {
       "id": "inputs",
@@ -32,19 +32,19 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `maskseq` interval-masking example in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The comparison validates the governed 1-based inclusive masking rule and default nucleotide mask symbol."
+      "content": "This acceptance anchor keeps one historical-style `maskseq` interval-masking example in view and compares the Epithema FASTA payload against a committed expected output. The comparison validates the governed 1-based inclusive masking rule and default nucleotide mask symbol."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs maskseq`. Validation currently covers deterministic masking of an interior interval against a committed three-record FASTA fixture. Rust tests also cover whole-sequence masking, protein default masking with `X`, and rejection of biologically invalid explicit mask symbols."
+      "content": "This method is implemented and exposed through `epithema maskseq`. Validation currently covers deterministic masking of an interior interval against a committed three-record FASTA fixture. Rust tests also cover whole-sequence masking, protein default masking with `X`, and rejection of biologically invalid explicit mask symbols."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "Intervals must be valid for every input record; EMBOSS-RS does not clip partial overlaps silently. Empty intervals are not representable because coordinates are 1-based inclusive with `start <= end`. Custom mask characters are conservative: they must be compatible with the record alphabet, so a protein mask cannot use `N` and a DNA mask cannot use protein-only symbols."
+      "content": "Intervals must be valid for every input record; Epithema does not clip partial overlaps silently. Empty intervals are not representable because coordinates are 1-based inclusive with `start <= end`. Custom mask characters are conservative: they must be compatible with the record alphabet, so a protein mask cannot use `N` and a DNA mask cannot use protein-only symbols."
     }
   ],
   "artifacts": [
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic maskseq validation."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS maskseq application",

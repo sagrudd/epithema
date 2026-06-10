@@ -9,7 +9,7 @@ Strictly compare frame-1 coding-sequence translations against expected protein r
 ## Document Metadata
 
 - Document ID: `checktrans-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `checktrans`
@@ -22,7 +22,7 @@ Strictly compare frame-1 coding-sequence translations against expected protein r
 
 ## Overview
 
-`checktrans` strictly translates DNA coding-sequence records in frame 1 under the standard genetic code and compares them against paired expected protein records. EMBOSS-RS v1 keeps the pairing rule simple and deterministic: inputs must contain the same number of records and are compared by input order.
+`checktrans` strictly translates DNA coding-sequence records in frame 1 under the standard genetic code and compares them against paired expected protein records. Epithema v1 keeps the pairing rule simple and deterministic: inputs must contain the same number of records and are compared by input order.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The tool emits a stable table report with one row per paired comparison. Report 
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `checktrans` invocation in view and compares the EMBOSS-RS table payload against a committed expected output. The governed comparison validates strict frame-1 translation, terminal-stop normalization, and deterministic row ordering.
+This acceptance anchor keeps one historical-style `checktrans` invocation in view and compares the Epithema table payload against a committed expected output. The governed comparison validates strict frame-1 translation, terminal-stop normalization, and deterministic row ordering.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs checktrans`. Current validation covers the matching committed fixture pair, mismatch reporting, unequal record-count failure, and invalid-codon rejection.
+This method is implemented and exposed through `epithema checktrans`. Current validation covers the matching committed fixture pair, mismatch reporting, unequal record-count failure, and invalid-codon rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not search alternative frames or infer record pairing by 
 - Artifact ID: `checktrans_nucleotide_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta`
 - Notes: Repository-managed coding-sequence fixture used for strict translation checking.
 
 ### Translation-check protein fixture
@@ -59,7 +59,7 @@ The first release does not search alternative frames or infer record pairing by 
 - Artifact ID: `checktrans_protein_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_protein.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/checktrans_protein.fasta`
 - Notes: Repository-managed expected protein fixture paired by input order with the committed coding sequences.
 
 ## Declared Examples
@@ -77,7 +77,7 @@ The first release does not search alternative frames or infer record pairing by 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS checktrans application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/checktrans.acd`)
 

@@ -9,7 +9,7 @@ Simple majority consensus from an alignment
 ## Document Metadata
 
 - Document ID: `cons-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_analysis`
 - Legacy names: `cons`
@@ -22,7 +22,7 @@ Simple majority consensus from an alignment
 
 ## Overview
 
-`cons` derives one simple consensus sequence from a single aligned FASTA or Stockholm alignment. The current EMBOSS-RS implementation ignores gaps when tallying a column, chooses the unique majority non-gap residue when one exists, and falls back conservatively to `N` for nucleotide ambiguity or `X` for protein ambiguity when no unique winner remains.
+`cons` derives one simple consensus sequence from a single aligned FASTA or Stockholm alignment. The current Epithema implementation ignores gaps when tallying a column, chooses the unique majority non-gap residue when one exists, and falls back conservatively to `N` for nucleotide ambiguity or `X` for protein ambiguity when no unique winner remains.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The result is one consensus sequence record emitted through the shared sequence 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs cons`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the simple consensus sequence `ACNGT`.
+This method is implemented and exposed through `epithema cons`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the simple consensus sequence `ACNGT`.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release keeps the consensus policy deliberately simple. It does not ex
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed Stockholm alignment fixture used to validate simple consensus derivation.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release keeps the consensus policy deliberately simple. It does not ex
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

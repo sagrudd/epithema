@@ -4,7 +4,7 @@ This page is generated from the shipped cohort validation report. It exists to m
 
 ## Summary
 
-- Registry source: `emboss_tools::governed_tool_descriptors`
+- Registry source: `epithema_tools::governed_tool_descriptors`
 - Shipped methods: `115`
 - Compared-evidence methods: `115`
 - Executable-evidence methods: `0`

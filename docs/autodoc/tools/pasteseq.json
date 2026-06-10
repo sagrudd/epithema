@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "pasteseq-v1",
   "tool": {
     "name": "pasteseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`pasteseq` inserts exactly one sequence record into exactly one main sequence record after a user-supplied position. The EMBOSS-RS v1 implementation is intentionally conservative: it performs a direct insertion only, does not attempt feature-coordinate remapping, and emits one merged sequence record."
+      "content": "`pasteseq` inserts exactly one sequence record into exactly one main sequence record after a user-supplied position. The Epithema v1 implementation is intentionally conservative: it performs a direct insertion only, does not attempt feature-coordinate remapping, and emits one merged sequence record."
     },
     {
       "id": "inputs",
@@ -26,13 +26,13 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits one merged FASTA sequence record through the shared result path. EMBOSS-RS v1 preserves the identifier and metadata of the main sequence input but drops feature annotations instead of emitting incorrect shifted coordinates."
+      "content": "The tool emits one merged FASTA sequence record through the shared result path. Epithema v1 preserves the identifier and metadata of the main sequence input but drops feature annotations instead of emitting incorrect shifted coordinates."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs pasteseq`. Validation currently covers deterministic insertion against committed one-record FASTA fixtures and molecule-mismatch rejection in the Rust tool layer."
+      "content": "This method is implemented and exposed through `epithema pasteseq`. Validation currently covers deterministic insertion against committed one-record FASTA fixtures and molecule-mismatch rejection in the Rust tool layer."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pasteseq_main.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pasteseq_main.fasta"
       },
       "description": "Repository-managed main FASTA fixture used as the insertion target for deterministic pasteseq validation."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pasteseq_insert.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pasteseq_insert.fasta"
       },
       "description": "Repository-managed one-record FASTA fixture inserted into the main sequence during deterministic pasteseq validation."
     }
@@ -100,7 +100,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

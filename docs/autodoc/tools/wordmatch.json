@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "wordmatch-v1",
   "tool": {
     "name": "wordmatch",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`wordmatch` finds maximal exact ungapped shared regions between exactly one query sequence and one target sequence. EMBOSS-RS v1 reports a stable table of exact identity regions instead of producing a dotplot or an exploratory visual summary."
+      "content": "`wordmatch` finds maximal exact ungapped shared regions between exactly one query sequence and one target sequence. Epithema v1 reports a stable table of exact identity regions instead of producing a dotplot or an exploratory visual summary."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs wordmatch`. Validation currently covers one committed exact-region pair through the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema wordmatch`. Validation currently covers one committed exact-region pair through the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -49,7 +49,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wordmatch_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wordmatch_query.fasta"
       },
       "description": "Repository-managed one-record query FASTA fixture used for exact shared-region reporting."
     },
@@ -60,7 +60,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wordmatch_target.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wordmatch_target.fasta"
       },
       "description": "Repository-managed one-record target FASTA fixture sharing one exact region with the query."
     }
@@ -96,7 +96,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS wordmatch application",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "cutseq-v1",
   "tool": {
     "name": "cutseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared EMBOSS-RS interval and subsequence primitives instead of ad hoc string slicing."
+      "content": "`cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared Epithema interval and subsequence primitives instead of ad hoc string slicing."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs cutseq`. Validation currently covers a committed three-record FASTA fixture with a representative interior cut, while Rust unit and service tests cover first-boundary cuts, invalid positions, deterministic naming, and multi-record output ordering."
+      "content": "This method is implemented and exposed through `epithema cutseq`. Validation currently covers a committed three-record FASTA fixture with a representative interior cut, while Rust unit and service tests cover first-boundary cuts, invalid positions, deterministic naming, and multi-record output ordering."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic cutseq validation."
     }
@@ -84,7 +84,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

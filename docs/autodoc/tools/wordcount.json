@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "wordcount-v1",
   "tool": {
     "name": "wordcount",
@@ -14,19 +14,19 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`wordcount` counts overlapping normalized sequence words across one or more input records. The EMBOSS-RS v1 surface deliberately keeps the model exact and deterministic: words are raw normalized substrings of a fixed width, windows overlap, and counts are reported both per record and in one aggregate summary."
+      "content": "`wordcount` counts overlapping normalized sequence words across one or more input records. The Epithema v1 surface deliberately keeps the model exact and deterministic: words are raw normalized substrings of a fixed width, windows overlap, and counts are reported both per record and in one aggregate summary."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local sequence input path plus a required word size. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank and may contain nucleotide, protein, or mixed record sets."
+      "content": "The current interface accepts one local sequence input path plus a required word size. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank and may contain nucleotide, protein, or mixed record sets."
     },
     {
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`. When the filtered aggregate is nonempty, EMBOSS-RS also emits a governed categorical bar-plot contract for the aggregate counts."
+      "content": "The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`. When the filtered aggregate is nonempty, Epithema also emits a governed categorical bar-plot contract for the aggregate counts."
     },
     {
       "id": "counting_model",
@@ -38,13 +38,13 @@
       "id": "plotting",
       "kind": "notes",
       "title": "Governed Plotting",
-      "content": "Rust does not render figures. For `wordcount`, the governed v1 plotting surface is an aggregate-only categorical bar-contract keyed by exact words and counts after `min_count` filtering. Rendering remains owned by the sister `emboss-r` package."
+      "content": "Rust does not render figures. For `wordcount`, the governed v1 plotting surface is an aggregate-only categorical bar-contract keyed by exact words and counts after `min_count` filtering. Rendering remains owned by the sister `epithemaR` package."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs wordcount`. Validation now covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and compared acceptance evidence for the canonical aggregate bar-plot contract emission path."
+      "content": "This method is implemented and exposed through `epithema wordcount`. Validation now covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and compared acceptance evidence for the canonical aggregate bar-plot contract emission path."
     },
     {
       "id": "caveats",
@@ -65,7 +65,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used to validate deterministic overlapping word counts."
     },
@@ -80,7 +80,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wordcount_plot_contract.json"
       },
       "description": "Repository-managed canonical categorical bar-contract emitted by the governed `wordcount` plotting surface."
     }

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "sizeseq-v1",
   "tool": {
     "name": "sizeseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`sizeseq` reorders a sequence stream by record length. The EMBOSS-RS v1 behavior is explicit and deterministic: sort records by descending size and preserve original input order for ties."
+      "content": "`sizeseq` reorders a sequence stream by record length. The Epithema v1 behavior is explicit and deterministic: sort records by descending size and preserve original input order for ties."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs sizeseq`. Validation currently covers deterministic descending size ordering with stable ties against a committed four-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
+      "content": "This method is implemented and exposed through `epithema sizeseq`. Validation currently covers deterministic descending size ordering with stable ties against a committed four-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/sizeseq_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/sizeseq_records.fasta"
       },
       "description": "Repository-managed FASTA fixture containing four records with distinct and tied lengths for deterministic sizeseq validation."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

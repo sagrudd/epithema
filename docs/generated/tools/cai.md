@@ -9,7 +9,7 @@ Report deterministic codon adaptation index values against a reference profile
 ## Document Metadata
 
 - Document ID: `cai-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `codon_tools`
 - Legacy names: `cai`
@@ -34,7 +34,7 @@ The result is a stable table report with one row per query record. It includes t
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs cai`. Rust service coverage exercises CAI scoring directly against committed coding fixtures, and `codcopy` interoperability is also tested by writing a temporary normalized profile and reusing it as the CAI reference input.
+This method is implemented and exposed through `epithema cai`. Rust service coverage exercises CAI scoring directly against committed coding fixtures, and `codcopy` interoperability is also tested by writing a temporary normalized profile and reusing it as the CAI reference input.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 method is intentionally strict. Protein inputs are rejected. Query sequen
 - Artifact ID: `codon_query_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_query.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_query.fasta`
 - Notes: Repository-managed coding-query FASTA fixture with one preferred-codon example and one rare-codon example.
 
 ### Codon-reference FASTA fixture
@@ -55,7 +55,7 @@ The v1 method is intentionally strict. Protein inputs are rejected. Query sequen
 - Artifact ID: `codon_reference_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed coding-reference FASTA fixture used to derive deterministic synonymous codon weights.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The v1 method is intentionally strict. Protein inputs are rejected. Query sequen
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

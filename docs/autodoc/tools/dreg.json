@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "dreg-v1",
   "tool": {
     "name": "dreg",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`dreg` searches nucleotide sequence records with a bounded regular expression. EMBOSS-RS v1 applies a Rust regular expression case-insensitively to normalized nucleotide residues and reports overlapping forward-strand matches only."
+      "content": "`dreg` searches nucleotide sequence records with a bounded regular expression. Epithema v1 applies a Rust regular expression case-insensitively to normalized nucleotide residues and reports overlapping forward-strand matches only."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs dreg`. Validation currently covers overlapping regex hits against a committed nucleotide FASTA fixture through the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema dreg`. Validation currently covers overlapping regex hits against a committed nucleotide FASTA fixture through the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/dreg_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/dreg_records.fasta"
       },
       "description": "Repository-managed nucleotide FASTA fixture containing one record with overlapping `ATA` matches."
     }
@@ -88,7 +88,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS dreg application",

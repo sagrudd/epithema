@@ -9,7 +9,7 @@ Report one governed built-in amino-acid property table
 ## Document Metadata
 
 - Document ID: `aaindexextract-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `aaindexextract`
@@ -22,7 +22,7 @@ Report one governed built-in amino-acid property table
 
 ## Overview
 
-`aaindexextract` exposes a governed built-in subset of amino-acid property indices. The EMBOSS-RS v1 implementation is intentionally narrower than historical EMBOSS and does not claim full AAINDEX database coverage. It emits one deterministic residue table for a requested built-in index.
+`aaindexextract` exposes a governed built-in subset of amino-acid property indices. The Epithema v1 implementation is intentionally narrower than historical EMBOSS and does not claim full AAINDEX database coverage. It emits one deterministic residue table for a requested built-in index.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Hydropathy scores use the same Kyte-Doolittle table used by `pepwindow`. Average
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs aaindexextract`. Validation currently covers supported built-in index parsing, stable residue-table emission, and service-level reporting through the shared statistics path.
+This method is implemented and exposed through `epithema aaindexextract`. Validation currently covers supported built-in index parsing, stable residue-table emission, and service-level reporting through the shared statistics path.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not ingest external AAINDEX files or expose the broader h
 - Artifact ID: `hydropathy_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/aaindexextract_hydropathy_subset_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/aaindexextract_hydropathy_subset_case.md`
 - Notes: Repository-managed case note describing the governed built-in hydropathy subset example.
 
 ## Declared Examples

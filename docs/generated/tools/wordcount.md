@@ -9,7 +9,7 @@ Count overlapping normalized sequence words with stable per-record and aggregate
 ## Document Metadata
 
 - Document ID: `wordcount-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `wordcount`
@@ -22,15 +22,15 @@ Count overlapping normalized sequence words with stable per-record and aggregate
 
 ## Overview
 
-`wordcount` counts overlapping normalized sequence words across one or more input records. The EMBOSS-RS v1 surface deliberately keeps the model exact and deterministic: words are raw normalized substrings of a fixed width, windows overlap, and counts are reported both per record and in one aggregate summary.
+`wordcount` counts overlapping normalized sequence words across one or more input records. The Epithema v1 surface deliberately keeps the model exact and deterministic: words are raw normalized substrings of a fixed width, windows overlap, and counts are reported both per record and in one aggregate summary.
 
 ## Inputs
 
-The current interface accepts one local sequence input path plus a required word size. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank and may contain nucleotide, protein, or mixed record sets.
+The current interface accepts one local sequence input path plus a required word size. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank and may contain nucleotide, protein, or mixed record sets.
 
 ## Outputs
 
-The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`. When the filtered aggregate is nonempty, EMBOSS-RS also emits a governed categorical bar-plot contract for the aggregate counts.
+The tool emits a stable table report with columns `scope`, `record`, `molecule`, `word_size`, `word`, `count`, `frequency`, and `skipped_gap_windows`. `scope` is either `record` or `aggregate`. Aggregate rows use `record=ALL` and `molecule=mixed`. When the filtered aggregate is nonempty, Epithema also emits a governed categorical bar-plot contract for the aggregate counts.
 
 ## Counting Model
 
@@ -38,11 +38,11 @@ Words are counted from overlapping windows of length `word_size` in the normaliz
 
 ## Governed Plotting
 
-Rust does not render figures. For `wordcount`, the governed v1 plotting surface is an aggregate-only categorical bar-contract keyed by exact words and counts after `min_count` filtering. Rendering remains owned by the sister `emboss-r` package.
+Rust does not render figures. For `wordcount`, the governed v1 plotting surface is an aggregate-only categorical bar-contract keyed by exact words and counts after `min_count` filtering. Rendering remains owned by the sister `epithemaR` package.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs wordcount`. Validation now covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and compared acceptance evidence for the canonical aggregate bar-plot contract emission path.
+This method is implemented and exposed through `epithema wordcount`. Validation now covers overlapping word counts, aggregate counting across multiple records, skipped gap-window handling, stable service-level table emission, and compared acceptance evidence for the canonical aggregate bar-plot contract emission path.
 
 ## Caveats
 
@@ -55,7 +55,7 @@ The first release does not implement richer residue-class or mismatch-aware word
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate deterministic overlapping word counts.
 
 ### Canonical aggregate wordcount bar-plot contract fixture
@@ -63,7 +63,7 @@ The first release does not implement richer residue-class or mismatch-aware word
 - Artifact ID: `wordcount_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/wordcount_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/wordcount_plot_contract.json`
 - Notes: Repository-managed canonical categorical bar-contract emitted by the governed `wordcount` plotting surface.
 
 ## Declared Examples

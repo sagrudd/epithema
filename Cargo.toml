@@ -1,18 +1,18 @@
 [workspace]
 members = [
-    "crates/emboss-cli",
-    "crates/emboss-config",
-    "crates/emboss-core",
-    "crates/emboss-diagnostics",
-    "crates/emboss-docgen",
-    "crates/emboss-fixtures",
-    "crates/emboss-io",
-    "crates/emboss-plot-contract",
-    "crates/emboss-providers",
-    "crates/emboss-r-bridge",
-    "crates/emboss-service",
-    "crates/emboss-testkit",
-    "crates/emboss-tools",
+    "crates/epithema-cli",
+    "crates/epithema-config",
+    "crates/epithema-core",
+    "crates/epithema-diagnostics",
+    "crates/epithema-docgen",
+    "crates/epithema-fixtures",
+    "crates/epithema-io",
+    "crates/epithema-plot-contract",
+    "crates/epithema-providers",
+    "crates/epithema-r-bridge",
+    "crates/epithema-service",
+    "crates/epithema-testkit",
+    "crates/epithema-tools",
 ]
 resolver = "3"
 
@@ -20,23 +20,23 @@ resolver = "3"
 version = "1.0.0"
 edition = "2024"
 license = "MPL-2.0"
-repository = "https://github.com/sagrudd/emboss-rs"
+repository = "https://github.com/sagrudd/epithema"
 authors = ["Mnemosyne Biosciences Ltd"]
 rust-version = "1.85"
 
 [workspace.dependencies]
-emboss-config = { path = "crates/emboss-config", version = "1.0.0" }
-emboss-core = { path = "crates/emboss-core", version = "1.0.0" }
-emboss-diagnostics = { path = "crates/emboss-diagnostics", version = "1.0.0" }
-emboss-docgen = { path = "crates/emboss-docgen", version = "1.0.0" }
-emboss-fixtures = { path = "crates/emboss-fixtures", version = "1.0.0" }
-emboss-io = { path = "crates/emboss-io", version = "1.0.0" }
-emboss-plot-contract = { path = "crates/emboss-plot-contract", version = "1.0.0" }
-emboss-providers = { path = "crates/emboss-providers", version = "1.0.0" }
-emboss-r-bridge = { path = "crates/emboss-r-bridge", version = "1.0.0" }
-emboss-service = { path = "crates/emboss-service", version = "1.0.0" }
-emboss-testkit = { path = "crates/emboss-testkit", version = "1.0.0" }
-emboss-tools = { path = "crates/emboss-tools", version = "1.0.0" }
+epithema-config = { path = "crates/epithema-config", version = "1.0.0" }
+epithema-core = { path = "crates/epithema-core", version = "1.0.0" }
+epithema-diagnostics = { path = "crates/epithema-diagnostics", version = "1.0.0" }
+epithema-docgen = { path = "crates/epithema-docgen", version = "1.0.0" }
+epithema-fixtures = { path = "crates/epithema-fixtures", version = "1.0.0" }
+epithema-io = { path = "crates/epithema-io", version = "1.0.0" }
+epithema-plot-contract = { path = "crates/epithema-plot-contract", version = "1.0.0" }
+epithema-providers = { path = "crates/epithema-providers", version = "1.0.0" }
+epithema-r-bridge = { path = "crates/epithema-r-bridge", version = "1.0.0" }
+epithema-service = { path = "crates/epithema-service", version = "1.0.0" }
+epithema-testkit = { path = "crates/epithema-testkit", version = "1.0.0" }
+epithema-tools = { path = "crates/epithema-tools", version = "1.0.0" }
 regex = "1.12.2"
 
 [workspace.lints.rust]

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "vectorstrip-v1",
   "tool": {
     "name": "vectorstrip",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`vectorstrip` removes an exact vector sequence from the left and right ends of each nucleotide input record. The EMBOSS-RS v1 implementation is intentionally conservative and strips only full-length exact terminal matches from one committed vector record."
+      "content": "`vectorstrip` removes an exact vector sequence from the left and right ends of each nucleotide input record. The Epithema v1 implementation is intentionally conservative and strips only full-length exact terminal matches from one committed vector record."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs vectorstrip`. Validation currently covers deterministic left-end, right-end, and unchanged-record behavior against committed FASTA fixtures in the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema vectorstrip`. Validation currently covers deterministic left-end, right-end, and unchanged-record behavior against committed FASTA fixtures in the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/vectorstrip_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/vectorstrip_records.fasta"
       },
       "description": "Repository-managed FASTA input fixture containing records with left, right, and absent exact vector matches."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/vectorstrip_vector.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/vectorstrip_vector.fasta"
       },
       "description": "Repository-managed single-record vector FASTA fixture used for deterministic exact terminal stripping validation."
     }
@@ -99,7 +99,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

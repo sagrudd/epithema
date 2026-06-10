@@ -192,63 +192,63 @@ dependencies = [
 ]
 
 [[package]]
-name = "emboss-cli"
+name = "epithema-cli"
 version = "1.0.0"
 dependencies = [
  "clap",
- "emboss-core",
- "emboss-diagnostics",
- "emboss-docgen",
- "emboss-io",
- "emboss-service",
- "emboss-testkit",
- "emboss-tools",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-docgen",
+ "epithema-io",
+ "epithema-service",
+ "epithema-testkit",
+ "epithema-tools",
 ]
 
 [[package]]
-name = "emboss-config"
+name = "epithema-config"
 version = "1.0.0"
 dependencies = [
- "emboss-providers",
+ "epithema-providers",
 ]
 
 [[package]]
-name = "emboss-core"
+name = "epithema-core"
 version = "1.0.0"
 dependencies = [
- "emboss-diagnostics",
+ "epithema-diagnostics",
 ]
 
 [[package]]
-name = "emboss-diagnostics"
+name = "epithema-diagnostics"
 version = "1.0.0"
 
 [[package]]
-name = "emboss-docgen"
+name = "epithema-docgen"
 version = "1.0.0"
 dependencies = [
- "emboss-config",
- "emboss-diagnostics",
- "emboss-fixtures",
- "emboss-providers",
- "emboss-tools",
+ "epithema-config",
+ "epithema-diagnostics",
+ "epithema-fixtures",
+ "epithema-providers",
+ "epithema-tools",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "emboss-fixtures"
+name = "epithema-fixtures"
 version = "1.0.0"
 
 [[package]]
-name = "emboss-io"
+name = "epithema-io"
 version = "1.0.0"
 dependencies = [
- "emboss-core",
+ "epithema-core",
 ]
 
 [[package]]
-name = "emboss-plot-contract"
+name = "epithema-plot-contract"
 version = "1.0.0"
 dependencies = [
  "serde",
@@ -256,67 +256,67 @@ dependencies = [
 ]
 
 [[package]]
-name = "emboss-providers"
+name = "epithema-providers"
 version = "1.0.0"
 dependencies = [
  "csv",
- "emboss-core",
- "emboss-diagnostics",
- "emboss-io",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-io",
  "reqwest",
 ]
 
 [[package]]
-name = "emboss-r-bridge"
+name = "epithema-r-bridge"
 version = "1.0.0"
 dependencies = [
- "emboss-core",
- "emboss-diagnostics",
- "emboss-plot-contract",
- "emboss-service",
- "emboss-tools",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-plot-contract",
+ "epithema-service",
+ "epithema-tools",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "emboss-service"
+name = "epithema-service"
 version = "1.0.0"
 dependencies = [
- "emboss-config",
- "emboss-core",
- "emboss-diagnostics",
- "emboss-plot-contract",
- "emboss-providers",
- "emboss-tools",
+ "epithema-config",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-plot-contract",
+ "epithema-providers",
+ "epithema-tools",
 ]
 
 [[package]]
-name = "emboss-testkit"
+name = "epithema-testkit"
 version = "1.0.0"
 dependencies = [
- "emboss-core",
- "emboss-diagnostics",
- "emboss-docgen",
- "emboss-fixtures",
- "emboss-io",
- "emboss-plot-contract",
- "emboss-providers",
- "emboss-r-bridge",
- "emboss-service",
- "emboss-tools",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-docgen",
+ "epithema-fixtures",
+ "epithema-io",
+ "epithema-plot-contract",
+ "epithema-providers",
+ "epithema-r-bridge",
+ "epithema-service",
+ "epithema-tools",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "emboss-tools"
+name = "epithema-tools"
 version = "1.0.0"
 dependencies = [
- "emboss-core",
- "emboss-diagnostics",
- "emboss-io",
- "emboss-plot-contract",
+ "epithema-core",
+ "epithema-diagnostics",
+ "epithema-io",
+ "epithema-plot-contract",
  "regex",
 ]
 

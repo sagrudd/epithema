@@ -1,15 +1,15 @@
 # Release Process
 
-This page defines the coordinated release process for `emboss-rs` and the
-sister `emboss-r` package.
+This page defines the coordinated release process for `epithema` and the
+sister `epithemaR` package.
 
 ## Versioning policy
 
-- `emboss-rs` and `emboss-r` use coordinated semantic versions for stable
+- `epithema` and `epithemaR` use coordinated semantic versions for stable
   paired releases.
 - The intended first coordinated public release is:
-  - `emboss-rs` `1.0.0`
-  - `emboss-r` `1.0.0`
+  - `epithema` `1.0.0`
+  - `epithemaR` `1.0.0`
 - Development versions may differ before cutover, but the coordinated stable
   release requires exact version alignment at tag time.
 - For the final stabilization pass, both repositories now carry `1.0.0` as the
@@ -25,22 +25,22 @@ sister `emboss-r` package.
 
 For `v1.0.0`, “release compatible” means:
 
-- the Rust CLI and service surface are built from the `emboss-rs` `1.0.0` tag
-- the public R package surface is built from the `emboss-r` `1.0.0` tag
+- the Rust CLI and service surface are built from the `epithema` `1.0.0` tag
+- the public R package surface is built from the `epithemaR` `1.0.0` tag
 - cross-surface validation passes for the curated shared method subset
 - plot-contract rendering and charge-profile flow remain aligned
 
 ## Preferred release order
 
-1. Finalize and validate `emboss-rs`.
-2. Finalize and validate `emboss-r`.
+1. Finalize and validate `epithema`.
+2. Finalize and validate `epithemaR`.
 3. Tag and publish the two releases in close succession.
-4. State explicitly in both release notes that `emboss-rs` `1.0.0` and
-   `emboss-r` `1.0.0` are the supported coordinated pair.
+4. State explicitly in both release notes that `epithema` `1.0.0` and
+   `epithemaR` `1.0.0` are the supported coordinated pair.
 
 ## Automated paths
 
-### `emboss-rs`
+### `epithema`
 
 - `make release-version-check`
 - `make release-generated-check`
@@ -62,7 +62,7 @@ For `v1.0.0`, “release compatible” means:
     hosted release checks must be replaced by local execution of the matching
     `make` targets
 
-### `emboss-r`
+### `epithemaR`
 
 - `make test`
 - `make build-package`
@@ -76,9 +76,9 @@ For `v1.0.0`, “release compatible” means:
 
 ## Release artefacts
 
-### `emboss-rs`
+### `epithema`
 
-- target-platform `emboss-rs` binary tarball
+- target-platform `epithema` binary tarball
 - SHA256 checksum for the target-platform tarball
 - built documentation archive
 - validation-report archive containing the cohort-level evidence outputs
@@ -86,7 +86,7 @@ For `v1.0.0`, “release compatible” means:
 - source archive from GitHub
 - GHCR container image
 
-### `emboss-r`
+### `epithemaR`
 
 - source package tarball produced by `R CMD build`
 - package check outputs in CI/release logs
@@ -96,12 +96,12 @@ For `v1.0.0`, “release compatible” means:
 
 - GitHub Pages publication is provisioned automatically by the docs workflow
   when repository policy allows it and the workflow is enabled. The
-  `emboss-rs` workflows are intentionally disabled manually as of 2026-06-10,
+  `epithema` workflows are intentionally disabled manually as of 2026-06-10,
   so Pages publication is suspended until the docs workflow is re-enabled. If
   repository or organization policy blocks automatic enablement after that,
-  Pages must be set manually to deploy from GitHub Actions for `emboss-rs`.
+  Pages must be set manually to deploy from GitHub Actions for `epithema`.
 - GHCR publication requires GitHub Actions package write permission on the
-  `emboss-rs` repository and an enabled release workflow. No extra secret is
+  `epithema` repository and an enabled release workflow. No extra secret is
   required when publishing with the repository `GITHUB_TOKEN`.
 - GitHub Releases must remain enabled in both repositories.
 
@@ -174,7 +174,7 @@ cutover.
 
 ## Local CI-parity while GitHub Actions are suspended
 
-The `emboss-rs` GitHub Actions workflows are intentionally disabled manually as
+The `epithema` GitHub Actions workflows are intentionally disabled manually as
 of 2026-06-10. While they remain disabled, do not claim hosted CI, hosted Pages,
 hosted release, or hosted container coverage. Use this local command set as the
 minimum replacement for the repository-owned parts of those checks:
@@ -202,7 +202,7 @@ Environment prerequisites:
 - Rust toolchain and Cargo must be available for formatting, builds, Clippy,
   and workspace tests.
 - The selected Python/Sphinx environment must provide the docs requirements.
-- `../emboss-r` should be present when cross-repository awareness is part of
+- `../epithemaR` should be present when cross-repository awareness is part of
   the local validation claim; otherwise `make check-sister-repo` can only
   report that the sibling repository is unavailable.
 - Docker must be available before claiming Linux container smoke validation

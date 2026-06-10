@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "psiphi-v1",
   "tool": {
     "name": "psiphi",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`psiphi` is the bounded protein-coordinate member of the active protein-property rework program. The EMBOSS-RS v1 surface computes deterministic per-residue phi and psi torsion-angle rows from one local PDB-like coordinate input and returns them as a stable table-first report."
+      "content": "`psiphi` is the bounded protein-coordinate member of the active protein-property rework program. The Epithema v1 surface computes deterministic per-residue phi and psi torsion-angle rows from one local PDB-like coordinate input and returns them as a stable table-first report."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path."
+      "content": "This method is implemented and exposed through `epithema psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/psiphi_backbone.txt"
+        "asset_id": "crates/epithema-tools/tests/fixtures/psiphi_backbone.txt"
       },
       "description": "Repository-managed backbone coordinate fixture used for deterministic bounded psiphi validation."
     }
@@ -89,7 +89,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS psiphi application",

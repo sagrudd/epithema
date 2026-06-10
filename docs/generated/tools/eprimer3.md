@@ -9,7 +9,7 @@ Report deterministic bounded primer-and-oligo design candidates against one loca
 ## Document Metadata
 
 - Document ID: `eprimer3-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `primer_tools`
 - Legacy names: `eprimer3`
@@ -22,7 +22,7 @@ Report deterministic bounded primer-and-oligo design candidates against one loca
 
 ## Overview
 
-`eprimer3` is the bounded primer-and-oligo design member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized assay-ranking workflow.
+`eprimer3` is the bounded primer-and-oligo design member of the active primer and assay-oriented rework program. The Epithema v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized assay-ranking workflow.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `eprimer3` user need in scope while mo
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows.
+This method is implemented and exposed through `epithema eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `eprimer3` seam is intentionally narrow. It does not perform generalized 
 - Artifact ID: `eprimer3_targets_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/eprimer3_targets.fasta`
 - Notes: Repository-managed nucleotide targets used for deterministic bounded eprimer3 validation.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The v1 `eprimer3` seam is intentionally narrow. It does not perform generalized 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS eprimer3 application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/eprimer3.acd`)
 

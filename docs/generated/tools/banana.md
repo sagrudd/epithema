@@ -9,7 +9,7 @@ Report a bounded B-DNA bendability profile and emit a line-plot contract
 ## Document Metadata
 
 - Document ID: `banana-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `nucleotide_plots`
 - Legacy names: `banana`
@@ -22,7 +22,7 @@ Report a bounded B-DNA bendability profile and emit a line-plot contract
 
 ## Overview
 
-`banana` is the next bounded plotting continuation after the shipped `isochore` slice. The EMBOSS-RS v1 surface computes one deterministic per-base B-DNA bendability and curvature profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract.
+`banana` is the next bounded plotting continuation after the shipped `isochore` slice. The Epithema v1 surface computes one deterministic per-base B-DNA bendability and curvature profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The implementation emits a stable analytical table with `sequence_id`, `position
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `banana` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `banana` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes both local bend and curvature signals.
+Rust does not render figures. The formal contract emitted by `banana` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering. This shipped `banana` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes both local bend and curvature signals.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs banana`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in curvature line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
+This method is implemented and exposed through `epithema banana`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in curvature line-plot contract emission path, while keeping rendering in the sister `epithemaR` package.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports only the single-record bounded default-angle banana profile and does
 - Artifact ID: `banana_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/banana_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/banana_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic banana validation.
 
 ### Canonical banana line-plot contract fixture
@@ -59,7 +59,7 @@ v1 supports only the single-record bounded default-angle banana profile and does
 - Artifact ID: `banana_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/banana_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/banana_plot_contract.json`
 - Notes: Repository-managed canonical curvature line-plot contract fixture emitted by the governed banana implementation.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ v1 supports only the single-record bounded default-angle banana profile and does
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS banana application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/banana.acd`)
 

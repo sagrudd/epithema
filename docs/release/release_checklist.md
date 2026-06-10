@@ -4,13 +4,13 @@ Use this checklist before cutting a coordinated stable tag.
 
 ## Coordinated gates
 
-- [ ] `emboss-rs` and `emboss-r` are both set to the coordinated target
+- [ ] `epithema` and `epithemaR` are both set to the coordinated target
       version `1.0.0`.
 - [ ] Stable compatibility statement for the paired versions is prepared.
 - [ ] Changelogs in both repos have been reviewed and updated.
 - [ ] Release notes in both repos are drafted and reviewed.
 
-## `emboss-rs`
+## `epithema`
 
 - [ ] `cargo build` succeeds.
 - [ ] `cargo test` succeeds.
@@ -26,7 +26,7 @@ Use this checklist before cutting a coordinated stable tag.
 - [ ] Linux container build has been smoke-tested.
 - [ ] GHCR publication settings remain valid.
 
-## `emboss-r`
+## `epithemaR`
 
 - [ ] package tests succeed.
 - [ ] release-oriented package build/check workflow is green.
@@ -39,7 +39,7 @@ Use this checklist before cutting a coordinated stable tag.
 
 - [ ] cross-surface validation fixtures are current.
 - [ ] charge-profile analytical path remains aligned between Rust and R.
-- [ ] docs published by GitHub Pages are current for `emboss-rs`.
+- [ ] docs published by GitHub Pages are current for `epithema`.
 - [ ] release-process docs still match repository automation.
 - [ ] release manifest JSON and cohort validation outputs are present in the
       local bundle.

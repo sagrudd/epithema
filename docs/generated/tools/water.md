@@ -9,7 +9,7 @@ Compute deterministic local pairwise alignment between exactly one query and one
 ## Document Metadata
 
 - Document ID: `water-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pairwise_alignment`
 - Legacy names: `water`
@@ -22,11 +22,11 @@ Compute deterministic local pairwise alignment between exactly one query and one
 
 ## Overview
 
-`water` computes one deterministic Smith-Waterman-style local pairwise alignment between exactly one query record and one target record. EMBOSS-RS v1 reports only the highest-scoring local region and renders the primary payload as Stockholm.
+`water` computes one deterministic Smith-Waterman-style local pairwise alignment between exactly one query record and one target record. Epithema v1 reports only the highest-scoring local region and renders the primary payload as Stockholm.
 
 ## Inputs
 
-The current interface accepts two singleton sequence inputs plus optional gap penalties. Multi-record query or target inputs are rejected clearly. Default scoring mirrors the governed EMBOSS-RS pairwise defaults: nucleotide mode uses match=1 mismatch=-1 gap_open=5 gap_extend=1, while protein mode uses match=2 mismatch=-1 gap_open=8 gap_extend=1.
+The current interface accepts two singleton sequence inputs plus optional gap penalties. Multi-record query or target inputs are rejected clearly. Default scoring mirrors the governed Epithema pairwise defaults: nucleotide mode uses match=1 mismatch=-1 gap_open=5 gap_extend=1, while protein mode uses match=2 mismatch=-1 gap_open=8 gap_extend=1.
 
 ## Outputs
 
@@ -34,11 +34,11 @@ The result payload is a pairwise local alignment with stable row order `query` t
 
 ## Legacy Context
 
-This first governed `water` contract keeps one historical-style local alignment invocation in view and exercises the EMBOSS-RS v1 local-alignment core against committed fixtures with internal matching regions. It does not claim surface parity with the broader historical EMBOSS parameter set.
+This first governed `water` contract keeps one historical-style local alignment invocation in view and exercises the Epithema v1 local-alignment core against committed fixtures with internal matching regions. It does not claim surface parity with the broader historical EMBOSS parameter set.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs water`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the highest-scoring local match plus the reported query and target spans.
+This method is implemented and exposed through `epithema water`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the highest-scoring local match plus the reported query and target spans.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is intentionally narrow. `water` requires exactly one query an
 - Artifact ID: `water_query_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/water_query.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/water_query.fasta`
 - Notes: Repository-managed singleton query fixture containing a local internal nucleotide match.
 
 ### Water target FASTA fixture
@@ -59,7 +59,7 @@ The first release is intentionally narrow. `water` requires exactly one query an
 - Artifact ID: `water_target_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/water_target.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/water_target.fasta`
 - Notes: Repository-managed singleton target fixture containing the corresponding highest-scoring local nucleotide region.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ The first release is intentionally narrow. `water` requires exactly one query an
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS water application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/water.acd`)
 

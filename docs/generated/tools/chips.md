@@ -9,7 +9,7 @@ Report per-record and aggregate codon usage counts and frequencies
 ## Document Metadata
 
 - Document ID: `chips-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `codon_tools`
 - Legacy names: `chips`
@@ -34,7 +34,7 @@ The result is a stable table report with per-record and aggregate codon rows. Ea
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs chips`. Rust service coverage exercises the committed reference coding fixture and checks that the aggregate table rows preserve the expected codon counts.
+This method is implemented and exposed through `epithema chips`. Rust service coverage exercises the committed reference coding fixture and checks that the aggregate table rows preserve the expected codon counts.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 method is strict and local-only. Protein inputs are rejected. Internal st
 - Artifact ID: `codon_reference_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed coding-reference FASTA fixture used to validate per-record and aggregate codon-profile output.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The v1 method is strict and local-only. Protein inputs are rejected. Internal st
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

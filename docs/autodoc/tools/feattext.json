@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "feattext-v1",
   "tool": {
     "name": "feattext",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`feattext` renders selected features from annotated EMBL or GenBank records as normalized feature-table text. It reuses the shared EMBOSS-RS feature-selection model and emits a deterministic textual view of the current structured feature representation."
+      "content": "`feattext` renders selected features from annotated EMBL or GenBank records as normalized feature-table text. It reuses the shared Epithema feature-selection model and emits a deterministic textual view of the current structured feature representation."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs feattext`. Rust tests currently cover normalized rendering, service invocation, and selector-driven no-match handling against committed annotated fixtures."
+      "content": "This method is implemented and exposed through `epithema feattext`. Rust tests currently cover normalized rendering, service invocation, and selector-driven no-match handling against committed annotated fixtures."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "The v1 output is intentionally a governed normalized rendering, not a byte-for-byte recovery of the original source flatfile text. Feature names are rendered through the EMBOSS-RS structured model, and qualifiers are emitted in stable key order."
+      "content": "The v1 output is intentionally a governed normalized rendering, not a byte-for-byte recovery of the original source flatfile text. Feature names are rendered through the Epithema structured model, and qualifiers are emitted in stable key order."
     }
   ],
   "artifacts": [
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+        "asset_id": "crates/epithema-tools/tests/fixtures/annotated_feature.gbk"
       },
       "description": "Repository-managed annotated GenBank fixture used for deterministic feattext validation."
     }
@@ -83,7 +83,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS feattext application",

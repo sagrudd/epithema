@@ -9,7 +9,7 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 ## Document Metadata
 
 - Document ID: `charge-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `protein_plots`
 - Legacy names: `charge`
@@ -22,7 +22,7 @@ Report a sliding-window protein charge profile and emit a line-plot contract
 
 ## Overview
 
-`charge` is the first production plotting vertical slice in EMBOSS-RS. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis.
+`charge` is the first production plotting vertical slice in Epithema. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis.
 
 ## Inputs
 
@@ -30,15 +30,15 @@ This tool accepts exactly one protein sequence record. v1 uses a fixed residue-c
 
 ## Outputs
 
-The implementation emits two coordinated outputs: a structured analytical table of window starts, ends, lengths, and mean charges, plus a typed line-plot contract payload. The plot contract is consumed by the sister `emboss-r` package, which owns rendering.
+The implementation emits two coordinated outputs: a structured analytical table of window starts, ends, lengths, and mean charges, plus a typed line-plot contract payload. The plot contract is consumed by the sister `epithemaR` package, which owns rendering.
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `charge` is the canonical handoff to R. In `emboss-r`, `charge_profile()` returns a structured result object carrying both the analytical data frame and the parsed plot contract, and `plot()` or `render_charge_plot()` renders the governed line plot with `ggplot2`.
+Rust does not render figures. The formal contract emitted by `charge` is the canonical handoff to R. In `epithemaR`, `charge_profile()` returns a structured result object carrying both the analytical data frame and the parsed plot contract, and `plot()` or `render_charge_plot()` renders the governed line plot with `ggplot2`.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path.
+This method is implemented and exposed through `epithema charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports the charge profile only for one protein record at a time. Rendering 
 - Artifact ID: `charge_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/charge_protein.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/charge_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic charge-profile validation.
 
 ### Canonical charge line-plot contract fixture
@@ -59,7 +59,7 @@ v1 supports the charge profile only for one protein record at a time. Rendering 
 - Artifact ID: `charge_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/charge_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/charge_plot_contract.json`
 - Notes: Repository-managed canonical line-plot contract fixture emitted by the governed charge implementation.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ v1 supports the charge profile only for one protein record at a time. Rendering 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS charge application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/charge.acd`)
 

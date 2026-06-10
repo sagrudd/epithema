@@ -9,7 +9,7 @@ Report deterministic bounded related-program rows from governed local tool metad
 ## Document Metadata
 
 - Document ID: `seealso-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `command_tools`
 - Legacy names: `seealso`
@@ -22,7 +22,7 @@ Report deterministic bounded related-program rows from governed local tool metad
 
 ## Overview
 
-`seealso` is the bounded related-program member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface resolves one governed local tool and reports deterministic related-program rows derived from governed family metadata and bounded short-description term overlap.
+`seealso` is the bounded related-program member of the active command discovery and help-navigation rework program. The Epithema v1 surface resolves one governed local tool and reports deterministic related-program rows derived from governed family metadata and bounded short-description term overlap.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `seealso` user need in scope while mod
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seealso`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local related-program lookup path, and canonical compared evidence for deterministic related-program rows.
+This method is implemented and exposed through `epithema seealso`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local related-program lookup path, and canonical compared evidence for deterministic related-program rows.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `seealso` seam is intentionally narrow. It does not perform broad semanti
 - Artifact ID: `seealso_query_tool_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/seealso_query_tool.txt`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/seealso_query_tool.txt`
 - Notes: Repository-managed query-tool fixture used to anchor deterministic bounded seealso validation.
 
 ## Declared Examples
@@ -71,7 +71,7 @@ The v1 `seealso` seam is intentionally narrow. It does not perform broad semanti
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS seealso application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seealso.acd`)
 

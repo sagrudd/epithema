@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "aaindexextract-v1",
   "tool": {
     "name": "aaindexextract",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`aaindexextract` exposes a governed built-in subset of amino-acid property indices. The EMBOSS-RS v1 implementation is intentionally narrower than historical EMBOSS and does not claim full AAINDEX database coverage. It emits one deterministic residue table for a requested built-in index."
+      "content": "`aaindexextract` exposes a governed built-in subset of amino-acid property indices. The Epithema v1 implementation is intentionally narrower than historical EMBOSS and does not claim full AAINDEX database coverage. It emits one deterministic residue table for a requested built-in index."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs aaindexextract`. Validation currently covers supported built-in index parsing, stable residue-table emission, and service-level reporting through the shared statistics path."
+      "content": "This method is implemented and exposed through `epithema aaindexextract`. Validation currently covers supported built-in index parsing, stable residue-table emission, and service-level reporting through the shared statistics path."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/aaindexextract_hydropathy_subset_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/aaindexextract_hydropathy_subset_case.md"
       },
       "description": "Repository-managed case note describing the governed built-in hydropathy subset example."
     }

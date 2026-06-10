@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "edialign-v1",
   "tool": {
     "name": "edialign",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`edialign` derives a bounded local multiple alignment from the longest exact block shared by every sequence in one input file. EMBOSS-RS v1 is intentionally conservative: it emits only the shared exact block as a Stockholm alignment and does not attempt the broader historical dynamic-programming surface."
+      "content": "`edialign` derives a bounded local multiple alignment from the longest exact block shared by every sequence in one input file. Epithema v1 is intentionally conservative: it emits only the shared exact block as a Stockholm alignment and does not attempt the broader historical dynamic-programming surface."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs edialign`. Validation currently covers one committed three-record nucleotide fixture that shares an exact four-residue block."
+      "content": "This method is implemented and exposed through `epithema edialign`. Validation currently covers one committed three-record nucleotide fixture that shares an exact four-residue block."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/edialign_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/edialign_records.fasta"
       },
       "description": "Repository-managed three-record FASTA fixture with one exact shared local block across all records."
     }
@@ -83,7 +83,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS edialign application",

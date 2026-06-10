@@ -9,7 +9,7 @@ Report deterministic metadata for one nucleotide base or ambiguity symbol
 ## Document Metadata
 
 - Document ID: `infobase-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `infobase`
@@ -22,7 +22,7 @@ Report deterministic metadata for one nucleotide base or ambiguity symbol
 
 ## Overview
 
-`infobase` reports one deterministic metadata row for a single nucleotide symbol. The EMBOSS-RS v1 implementation supports canonical DNA/RNA bases plus the standard IUPAC ambiguity symbols and reports a governed classification rather than exposing multiple historical output layouts.
+`infobase` reports one deterministic metadata row for a single nucleotide symbol. The Epithema v1 implementation supports canonical DNA/RNA bases plus the standard IUPAC ambiguity symbols and reports a governed classification rather than exposing multiple historical output layouts.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Canonical expansion is reported as the set of underlying canonical A/C/G/T/U bas
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs infobase`. Validation currently covers ambiguity-symbol lookup, stable one-row table emission, and rejection of unsupported symbols.
+This method is implemented and exposed through `epithema infobase`. Validation currently covers ambiguity-symbol lookup, stable one-row table emission, and rejection of unsupported symbols.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is a symbol-information lookup only. It does not model modifie
 - Artifact ID: `ambiguity_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/infobase_lookup_ambiguity_symbol_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/infobase_lookup_ambiguity_symbol_case.md`
 - Notes: Repository-managed case note describing the ambiguity-symbol lookup example.
 
 ## Declared Examples

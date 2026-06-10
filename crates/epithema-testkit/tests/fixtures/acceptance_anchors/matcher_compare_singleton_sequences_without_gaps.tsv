@@ -1,0 +1,2 @@
+query	target	mode	query_length	target_length	compared_length	identity_count	mismatch_count	identity_percent	length_difference
+crates/epithema-tools/tests/fixtures/needle_query.fasta	crates/epithema-tools/tests/fixtures/needle_target.fasta	nucleotide	4	3	3	2	1	66	-1

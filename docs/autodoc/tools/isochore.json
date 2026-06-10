@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "isochore-v1",
   "tool": {
     "name": "isochore",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`isochore` is the next bounded plotting continuation after the shipped `wobble` slice. The EMBOSS-RS v1 surface computes one deterministic sliding-window bounded isochore profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
+      "content": "`isochore` is the next bounded plotting continuation after the shipped `wobble` slice. The Epithema v1 surface computes one deterministic sliding-window bounded isochore profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "plotting",
       "kind": "notes",
       "title": "Plotting Integration",
-      "content": "Rust does not render figures. The formal contract emitted by `isochore` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `isochore` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes richer bounded nucleotide-composition detail."
+      "content": "Rust does not render figures. The formal contract emitted by `isochore` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering. This shipped `isochore` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes richer bounded nucleotide-composition detail."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs isochore`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-percent line-plot contract emission path, while keeping rendering in the sister `emboss-r` package."
+      "content": "This method is implemented and exposed through `epithema isochore`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-percent line-plot contract emission path, while keeping rendering in the sister `epithemaR` package."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/isochore_nucleotide.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/isochore_nucleotide.fasta"
       },
       "description": "Repository-managed nucleotide fixture used for deterministic isochore validation."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/isochore_plot_contract.json"
+        "asset_id": "crates/epithema-tools/tests/fixtures/isochore_plot_contract.json"
       },
       "description": "Repository-managed canonical GC-percent line-plot contract fixture emitted by the governed isochore implementation."
     }
@@ -114,7 +114,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS isochore application",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "water-v1",
   "tool": {
     "name": "water",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`water` computes one deterministic Smith-Waterman-style local pairwise alignment between exactly one query record and one target record. EMBOSS-RS v1 reports only the highest-scoring local region and renders the primary payload as Stockholm."
+      "content": "`water` computes one deterministic Smith-Waterman-style local pairwise alignment between exactly one query record and one target record. Epithema v1 reports only the highest-scoring local region and renders the primary payload as Stockholm."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts two singleton sequence inputs plus optional gap penalties. Multi-record query or target inputs are rejected clearly. Default scoring mirrors the governed EMBOSS-RS pairwise defaults: nucleotide mode uses match=1 mismatch=-1 gap_open=5 gap_extend=1, while protein mode uses match=2 mismatch=-1 gap_open=8 gap_extend=1."
+      "content": "The current interface accepts two singleton sequence inputs plus optional gap penalties. Multi-record query or target inputs are rejected clearly. Default scoring mirrors the governed Epithema pairwise defaults: nucleotide mode uses match=1 mismatch=-1 gap_open=5 gap_extend=1, while protein mode uses match=2 mismatch=-1 gap_open=8 gap_extend=1."
     },
     {
       "id": "outputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This first governed `water` contract keeps one historical-style local alignment invocation in view and exercises the EMBOSS-RS v1 local-alignment core against committed fixtures with internal matching regions. It does not claim surface parity with the broader historical EMBOSS parameter set."
+      "content": "This first governed `water` contract keeps one historical-style local alignment invocation in view and exercises the Epithema v1 local-alignment core against committed fixtures with internal matching regions. It does not claim surface parity with the broader historical EMBOSS parameter set."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs water`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the highest-scoring local match plus the reported query and target spans."
+      "content": "This method is implemented and exposed through `epithema water`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the highest-scoring local match plus the reported query and target spans."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/water_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/water_query.fasta"
       },
       "description": "Repository-managed singleton query fixture containing a local internal nucleotide match."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/water_target.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/water_target.fasta"
       },
       "description": "Repository-managed singleton target fixture containing the corresponding highest-scoring local nucleotide region."
     }
@@ -110,7 +110,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS water application",

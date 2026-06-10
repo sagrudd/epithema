@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "wossname-v1",
   "tool": {
     "name": "wossname",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`wossname` is the bounded command-discovery member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface searches governed local tool metadata with deterministic normalized keyword matching and returns a stable table-first report rather than a semantic-ranking or ontology-driven discovery workflow."
+      "content": "`wossname` is the bounded command-discovery member of the active command discovery and help-navigation rework program. The Epithema v1 surface searches governed local tool metadata with deterministic normalized keyword matching and returns a stable table-first report rather than a semantic-ranking or ontology-driven discovery workflow."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs wossname`. The governed surface ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local keyword-lookup path. The shipped evidence posture is currently executable-only until the canonical compared keyword-match fixture lands."
+      "content": "This method is implemented and exposed through `epithema wossname`. The governed surface ships with a checked-in validation stub, curated legacy provenance, and Rust coverage for the bounded local keyword-lookup path. The shipped evidence posture is currently executable-only until the canonical compared keyword-match fixture lands."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/wossname_query.txt"
+        "asset_id": "crates/epithema-tools/tests/fixtures/wossname_query.txt"
       },
       "description": "Repository-managed keyword query fixture used to anchor deterministic bounded wossname validation."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS wossname application",

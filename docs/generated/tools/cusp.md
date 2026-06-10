@@ -9,7 +9,7 @@ Create complete per-record and aggregate codon usage tables from coding sequence
 ## Document Metadata
 
 - Document ID: `cusp-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `codon_tools`
 - Legacy names: `cusp`
@@ -22,7 +22,7 @@ Create complete per-record and aggregate codon usage tables from coding sequence
 
 ## Overview
 
-`cusp` creates codon-usage tables from coding nucleotide sequences. The EMBOSS-RS v1 surface uses the shared strict coding-sequence validation already established for the codon-analysis family and emits one complete 61-sense-codon table per record plus one aggregate table across all records.
+`cusp` creates codon-usage tables from coding nucleotide sequences. The Epithema v1 surface uses the shared strict coding-sequence validation already established for the codon-analysis family and emits one complete 61-sense-codon table per record plus one aggregate table across all records.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Codons are normalized to DNA space before counting. Frequencies are reported ove
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs cusp`. Validation currently covers strict coding-sequence acceptance, complete per-record and aggregate 61-codon table emission, and stable service-level reporting against committed coding fixtures.
+This method is implemented and exposed through `epithema cusp`. Validation currently covers strict coding-sequence acceptance, complete per-record and aggregate 61-codon table emission, and stable service-level reporting against committed coding fixtures.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not implement alternative genetic codes or richer codon-b
 - Artifact ID: `codon_reference_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed coding-sequence fixture used to validate deterministic codon-table generation.
 
 ## Declared Examples

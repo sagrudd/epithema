@@ -9,7 +9,7 @@ Report stable basic metadata and length summaries for sequence records
 ## Document Metadata
 
 - Document ID: `infoseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `infoseq`
@@ -22,11 +22,11 @@ Report stable basic metadata and length summaries for sequence records
 
 ## Overview
 
-`infoseq` reports one stable summary row per input record. The EMBOSS-RS v1 surface is intentionally narrower than historical EMBOSS formatting switches: it keeps one governed table shape with identifier, optional display name, length, molecule, alphabet, optional GC percentage for nucleotide-like inputs, feature count, and selected descriptive metadata.
+`infoseq` reports one stable summary row per input record. The Epithema v1 surface is intentionally narrower than historical EMBOSS formatting switches: it keeps one governed table shape with identifier, optional display name, length, molecule, alphabet, optional GC percentage for nucleotide-like inputs, feature count, and selected descriptive metadata.
 
 ## Inputs
 
-The current interface accepts one local sequence input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Plain sequence records and richer annotated records are both supported.
+The current interface accepts one local sequence input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Plain sequence records and richer annotated records are both supported.
 
 ## Outputs
 
@@ -38,7 +38,7 @@ Rows preserve source record order. Length is the normalized residue length after
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs infoseq`. Validation currently covers plain FASTA metadata reporting, annotation-aware feature counts and organism metadata, and stable per-record table emission through the shared service layer.
+This method is implemented and exposed through `epithema infoseq`. Validation currently covers plain FASTA metadata reporting, annotation-aware feature counts and organism metadata, and stable per-record table emission through the shared service layer.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not reproduce the large historical EMBOSS column-selectio
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate stable basic metadata reporting.
 
 ## Declared Examples

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "newseq-v1",
   "tool": {
     "name": "newseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`newseq` constructs one new sequence record from user-supplied inline residues and shared EMBOSS-RS metadata fields. The record is validated through the core sequence model and emitted through the standard FASTA output path instead of being assembled as ad hoc text."
+      "content": "`newseq` constructs one new sequence record from user-supplied inline residues and shared Epithema metadata fields. The record is validated through the core sequence model and emitted through the standard FASTA output path instead of being assembled as ad hoc text."
     },
     {
       "id": "inputs",
@@ -26,19 +26,19 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits one validated sequence record through the shared sequence output layer. CLI output is FASTA plus the standard EMBOSS-RS method summary lines reporting identifier, length, molecule, alphabet, and description state."
+      "content": "The tool emits one validated sequence record through the shared sequence output layer. CLI output is FASTA plus the standard Epithema method summary lines reporting identifier, length, molecule, alphabet, and description state."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs newseq`. Validation currently covers explicit DNA creation, explicit protein creation, whitespace normalization, and invalid residue rejection for declared molecule kinds."
+      "content": "This method is implemented and exposed through `epithema newseq`. Validation currently covers explicit DNA creation, explicit protein creation, whitespace normalization, and invalid residue rejection for declared molecule kinds."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "The v1 molecule policy is intentionally conservative. When `--molecule` is omitted, EMBOSS-RS infers DNA or RNA only from unambiguous nucleotide residue sets and otherwise falls back to `unknown` rather than guessing protein. Identifier omission is not supported in v1."
+      "content": "The v1 molecule policy is intentionally conservative. When `--molecule` is omitted, Epithema infers DNA or RNA only from unambiguous nucleotide residue sets and otherwise falls back to `unknown` rather than guessing protein. Identifier omission is not supported in v1."
     }
   ],
   "artifacts": [
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/newseq_create_dna_record_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/newseq_create_dna_record_case.md"
       },
       "description": "Repository-managed case note for the inline DNA creation example used to validate the governed `newseq` surface."
     }
@@ -96,7 +96,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

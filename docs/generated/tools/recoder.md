@@ -9,7 +9,7 @@ Report synonymous single-codon edits that remove exact forward-strand restrictio
 ## Document Metadata
 
 - Document ID: `recoder-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `restriction_tools`
 - Legacy names: `recoder`
@@ -22,7 +22,7 @@ Report synonymous single-codon edits that remove exact forward-strand restrictio
 
 ## Overview
 
-`recoder` reports conservative synonymous single-codon edits that remove an exact canonical DNA restriction site from a coding sequence while preserving translation. EMBOSS-RS v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system.
+`recoder` reports conservative synonymous single-codon edits that remove an exact canonical DNA restriction site from a coding sequence while preserving translation. Epithema v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This first release considers only exact forward-strand site matches and only sin
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs recoder`. Validation currently covers deterministic synonymous removal candidates against a committed coding-DNA fixture and non-coding-input rejection.
+This method is implemented and exposed through `epithema recoder`. Validation currently covers deterministic synonymous removal candidates against a committed coding-DNA fixture and non-coding-input rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not model enzyme databases, reverse-complement matching, 
 - Artifact ID: `recoder_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/recoder_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/recoder_records.fasta`
 - Notes: Repository-managed coding-DNA fixture containing one exact EcoRI site in-frame.
 
 ## Declared Examples

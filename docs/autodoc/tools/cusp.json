@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "cusp-v1",
   "tool": {
     "name": "cusp",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`cusp` creates codon-usage tables from coding nucleotide sequences. The EMBOSS-RS v1 surface uses the shared strict coding-sequence validation already established for the codon-analysis family and emits one complete 61-sense-codon table per record plus one aggregate table across all records."
+      "content": "`cusp` creates codon-usage tables from coding nucleotide sequences. The Epithema v1 surface uses the shared strict coding-sequence validation already established for the codon-analysis family and emits one complete 61-sense-codon table per record plus one aggregate table across all records."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs cusp`. Validation currently covers strict coding-sequence acceptance, complete per-record and aggregate 61-codon table emission, and stable service-level reporting against committed coding fixtures."
+      "content": "This method is implemented and exposed through `epithema cusp`. Validation currently covers strict coding-sequence acceptance, complete per-record and aggregate 61-codon table emission, and stable service-level reporting against committed coding fixtures."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/codon_reference.fasta"
       },
       "description": "Repository-managed coding-sequence fixture used to validate deterministic codon-table generation."
     }

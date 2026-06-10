@@ -9,7 +9,7 @@ report all-against-all maximal exact shared regions across a sequence set
 ## Document Metadata
 
 - Document ID: `seqmatchall-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `seqmatchall`
@@ -22,7 +22,7 @@ report all-against-all maximal exact shared regions across a sequence set
 
 ## Overview
 
-`seqmatchall` reports maximal exact ungapped shared regions for every record pair in one sequence set. EMBOSS-RS v1 compares each pair once in input order and emits every exact region meeting the minimum word size.
+`seqmatchall` reports maximal exact ungapped shared regions for every record pair in one sequence set. Epithema v1 compares each pair once in input order and emits every exact region meeting the minimum word size.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a deterministic table with left and right record identifiers, 1-ba
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqmatchall`. Validation currently covers one committed three-record FASTA fixture whose three pairings each yield the same maximal 4-residue exact region.
+This method is implemented and exposed through `epithema seqmatchall`. Validation currently covers one committed three-record FASTA fixture whose three pairings each yield the same maximal 4-residue exact region.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release reports exact ungapped regions only. It does not perform heuri
 - Artifact ID: `seqmatchall_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/seqmatchall_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/seqmatchall_records.fasta`
 - Notes: Repository-managed three-record FASTA fixture used for deterministic all-against-all exact-region reporting.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ The first release reports exact ungapped regions only. It does not perform heuri
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS seqmatchall application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqmatchall.acd`)
 

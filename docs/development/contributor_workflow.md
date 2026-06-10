@@ -2,26 +2,26 @@
 
 ## Purpose
 
-This document explains the practical contributor workflow for `emboss-rs`. It is
+This document explains the practical contributor workflow for `epithema`. It is
 operational guidance for human contributors and Codex-assisted sessions. It does
 not replace the normative governance documents; where there is any conflict, the
-[EMBOSS-RS Governance Manual](../governance/emboss_rs_governance_manual.md) and
+[Epithema Governance Manual](../governance/epithema_governance_manual.md) and
 the linked governance policies govern.
 
 ## Working Model
 
-`emboss-rs` is developed as a governed, auditable reboot of EMBOSS. Changes are
+`epithema` is developed as a governed, auditable reboot of EMBOSS. Changes are
 expected to be small, explicit, and reviewable. Contributors should prefer a
 single coherent task per change set rather than accumulating unrelated work in
 one branch or pull request.
 
 The project has two first-class surfaces:
 
-- the Rust and CLI surface in `emboss-rs`
-- the R surface in the sister repository `emboss-r`
+- the Rust and CLI surface in `epithema`
+- the R surface in the sister repository `epithemaR`
 
 Unless a prompt or task explicitly authorizes cross-repository work, this
-repository should be changed independently and references to `emboss-r` should
+repository should be changed independently and references to `epithemaR` should
 remain documentary or compatibility-oriented only.
 
 ## Standard Change Flow
@@ -77,7 +77,7 @@ material change set rather than a follow-up task.
 
 For exposed bioinformatics methods, the canonical documentation-preparation path
 is the committed autodoc contract set under `docs/autodoc/tools/` plus
-generation through `emboss-rs autodoc`. Adding or exposing a tool without a
+generation through `epithema autodoc`. Adding or exposing a tool without a
 matching autodoc contract, generated page, and generated index entry is treated
 as a repository error and should fail the completeness checks.
 
@@ -95,7 +95,7 @@ A pull request should make it easy for a reviewer to confirm:
 - what task or prompt the change addresses
 - which checks were run
 - whether documentation was updated
-- whether the change touched only `emboss-rs`
+- whether the change touched only `epithema`
 - whether any deferred work remains
 
 The PR template is intended to keep that review surface consistent, not to add

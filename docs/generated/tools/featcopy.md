@@ -9,7 +9,7 @@ Copy selected feature annotations from annotated source records onto compatible 
 ## Document Metadata
 
 - Document ID: `featcopy-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `featcopy`
@@ -22,7 +22,7 @@ Copy selected feature annotations from annotated source records onto compatible 
 
 ## Overview
 
-`featcopy` copies selected features from annotated source records onto matching target records using the shared EMBOSS-RS feature-selection and feature-copy helpers. In the current v1 behavior the underlying target sequence is preserved, existing target features are retained, and copied source features are appended in stable source order.
+`featcopy` copies selected features from annotated source records onto matching target records using the shared Epithema feature-selection and feature-copy helpers. In the current v1 behavior the underlying target sequence is preserved, existing target features are retained, and copied source features are appended in stable source order.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Selected source features are cloned with their names, notes, qualifiers, and loc
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs featcopy`. Validation currently covers copying a selected gene feature from a committed annotated GenBank fixture onto a matching plain FASTA target. Rust service tests also cover qualifier-based copying with qualifier preservation and explicit identifier mismatch or no-match failures.
+This method is implemented and exposed through `epithema featcopy`. Validation currently covers copying a selected gene feature from a committed annotated GenBank fixture onto a matching plain FASTA target. Rust service tests also cover qualifier-based copying with qualifier preservation and explicit identifier mismatch or no-match failures.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The current v1 output mode is conservative: copy selected features onto otherwis
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used as the deterministic source for featcopy validation.
 
 ### Matching FASTA target fixture
@@ -59,7 +59,7 @@ The current v1 output mode is conservative: copy selected features onto otherwis
 - Artifact ID: `featcopy_target_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/featcopy_target.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/featcopy_target.fasta`
 - Notes: Repository-managed FASTA target fixture with the same accession and length as the annotated source.
 
 ## Declared Examples
@@ -76,7 +76,7 @@ The current v1 output mode is conservative: copy selected features onto otherwis
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

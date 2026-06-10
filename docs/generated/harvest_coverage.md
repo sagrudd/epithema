@@ -4,7 +4,7 @@ This page is generated from the shipped cohort validation report. It exists to s
 
 ## Summary
 
-- Registry source: `emboss_tools::governed_tool_descriptors`
+- Registry source: `epithema_tools::governed_tool_descriptors`
 - Shipped methods: `115`
 - Methods with harvested legacy provenance recorded: `115`
 - Harvest exceptions: `0`

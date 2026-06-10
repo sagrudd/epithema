@@ -9,7 +9,7 @@ Report deterministic exact protein word-composition counts for query words
 ## Document Metadata
 
 - Document ID: `oddcomp-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `oddcomp`
@@ -22,11 +22,11 @@ Report deterministic exact protein word-composition counts for query words
 
 ## Overview
 
-`oddcomp` identifies proteins by exact query-word composition. The EMBOSS-RS v1 implementation keeps the model deliberately simple and typed: one protein input, one or more exact query words, overlapping literal counting, and one stable table row per record per query word.
+`oddcomp` identifies proteins by exact query-word composition. The Epithema v1 implementation keeps the model deliberately simple and typed: one protein input, one or more exact query words, overlapping literal counting, and one stable table row per record per query word.
 
 ## Inputs
 
-The current interface accepts one local protein input path plus one or more `--word` arguments. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected.
+The current interface accepts one local protein input path plus one or more `--word` arguments. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected.
 
 ## Outputs
 
@@ -38,7 +38,7 @@ Query words are normalized case-insensitively and validated as literal protein w
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs oddcomp`. Validation currently covers exact overlapping protein-word counting, stable per-record reporting, and rejection of nucleotide inputs and invalid query words.
+This method is implemented and exposed through `epithema oddcomp`. Validation currently covers exact overlapping protein-word counting, stable per-record reporting, and rejection of nucleotide inputs and invalid query words.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not implement broader statistical enrichment models, mism
 - Artifact ID: `oddcomp_protein_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/oddcomp_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/oddcomp_records.fasta`
 - Notes: Repository-managed protein fixture used to validate exact word-composition counting.
 
 ## Declared Examples

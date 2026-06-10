@@ -9,7 +9,7 @@ Sort sequence records by size in deterministic order
 ## Document Metadata
 
 - Document ID: `sizeseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `sizeseq`
@@ -22,7 +22,7 @@ Sort sequence records by size in deterministic order
 
 ## Overview
 
-`sizeseq` reorders a sequence stream by record length. The EMBOSS-RS v1 behavior is explicit and deterministic: sort records by descending size and preserve original input order for ties.
+`sizeseq` reorders a sequence stream by record length. The Epithema v1 behavior is explicit and deterministic: sort records by descending size and preserve original input order for ties.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one reordered FASTA sequence collection. CLI summaries report the
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs sizeseq`. Validation currently covers deterministic descending size ordering with stable ties against a committed four-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
+This method is implemented and exposed through `epithema sizeseq`. Validation currently covers deterministic descending size ordering with stable ties against a committed four-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not expose ascending sort mode or secondary sort keys bey
 - Artifact ID: `sizeseq_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/sizeseq_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/sizeseq_records.fasta`
 - Notes: Repository-managed FASTA fixture containing four records with distinct and tied lengths for deterministic sizeseq validation.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release does not expose ascending sort mode or secondary sort keys bey
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

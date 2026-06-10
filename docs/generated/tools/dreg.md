@@ -9,7 +9,7 @@ scan nucleotide sequences with deterministic bounded regular expressions
 ## Document Metadata
 
 - Document ID: `dreg-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `dreg`
@@ -22,7 +22,7 @@ scan nucleotide sequences with deterministic bounded regular expressions
 
 ## Overview
 
-`dreg` searches nucleotide sequence records with a bounded regular expression. EMBOSS-RS v1 applies a Rust regular expression case-insensitively to normalized nucleotide residues and reports overlapping forward-strand matches only.
+`dreg` searches nucleotide sequence records with a bounded regular expression. Epithema v1 applies a Rust regular expression case-insensitively to normalized nucleotide residues and reports overlapping forward-strand matches only.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a deterministic table with record identifier, pattern text, 1-base
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs dreg`. Validation currently covers overlapping regex hits against a committed nucleotide FASTA fixture through the Rust tool and service layers.
+This method is implemented and exposed through `epithema dreg`. Validation currently covers overlapping regex hits against a committed nucleotide FASTA fixture through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not search reverse complements, does not expose EMBOSS-er
 - Artifact ID: `dreg_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/dreg_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/dreg_records.fasta`
 - Notes: Repository-managed nucleotide FASTA fixture containing one record with overlapping `ATA` matches.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ The first release does not search reverse complements, does not expose EMBOSS-er
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS dreg application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/dreg.acd`)
 

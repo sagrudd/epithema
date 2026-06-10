@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "distmat-v1",
   "tool": {
     "name": "distmat",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`distmat` computes a deterministic p-distance matrix for one local sequence set. The current EMBOSS-RS implementation uses the shared sequence loader and reports mismatch fraction as `mismatches / sequence_length` for each pair in stable input order."
+      "content": "`distmat` computes a deterministic p-distance matrix for one local sequence set. The current Epithema implementation uses the shared sequence loader and reports mismatch fraction as `mismatches / sequence_length` for each pair in stable input order."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs distmat`. Current Rust service coverage exercises the committed equal-length three-record FASTA fixture and locks down the expected p-distance rows in stable source order."
+      "content": "This method is implemented and exposed through `epithema distmat`. Current Rust service coverage exercises the committed equal-length three-record FASTA fixture and locks down the expected p-distance rows in stable source order."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed three-record FASTA fixture with equal-length sequences used for deterministic p-distance validation."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

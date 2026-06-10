@@ -16,7 +16,7 @@
 - [ ] for Codex-driven work, this PR reflects a material prompt that ended with a commit and push
 - [ ] documentation was updated where behavior, policy, workflow, or structure changed
 - [ ] structure and naming rules were observed
-- [ ] no files in `../emboss-r` were modified
+- [ ] no files in `../epithemaR` were modified
 
 ## Notes
 

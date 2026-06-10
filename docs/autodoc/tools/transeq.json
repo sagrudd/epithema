@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "transeq-v1",
   "tool": {
     "name": "transeq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`transeq` translates nucleotide sequence records in forward reading frames using the shared EMBOSS-RS standard genetic code. The v1 surface supports frame `1`, `2`, `3`, or `all`, emits protein FASTA records deterministically, and ignores trailing partial codons."
+      "content": "`transeq` translates nucleotide sequence records in forward reading frames using the shared Epithema standard genetic code. The v1 surface supports frame `1`, `2`, `3`, or `all`, emits protein FASTA records deterministically, and ignores trailing partial codons."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `transeq` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates strict forward frame-1 translation for the committed coding fixture."
+      "content": "This acceptance anchor keeps one historical-style `transeq` invocation in view and compares the Epithema FASTA payload against a committed expected output. The governed comparison validates strict forward frame-1 translation for the committed coding fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs transeq`. Current validation covers forward frame selection, strict translation, trailing partial-codon truncation, and stable FASTA emission from the committed coding fixture."
+      "content": "This method is implemented and exposed through `epithema transeq`. Current validation covers forward frame selection, strict translation, trailing partial-codon truncation, and stable FASTA emission from the committed coding fixture."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta"
       },
       "description": "Repository-managed coding-sequence fixture used for deterministic forward translation validation."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS transeq application",

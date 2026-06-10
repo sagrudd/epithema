@@ -1,9 +1,9 @@
-# EMBOSS-RS Family-to-Tool Mapping Reference
+# Epithema Family-to-Tool Mapping Reference
 
 Status: governance appendix and maintained reference registry
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 This appendix ties the named tool families from the governance policy back to individual tools from the full scope matrix.
 
@@ -202,7 +202,7 @@ The program should preserve the existing cross-surface division of ownership:
 
 - Rust owns deterministic computation, table emission, and typed contract
   production
-- `emboss-r` owns graphical rendering, presentation tuning, and any
+- `epithemaR` owns graphical rendering, presentation tuning, and any
   user-facing figure ergonomics
 - Phase 1 should not widen the Rust surface into figure rendering, ad hoc image
   generation, or renderer-specific layout policy
@@ -405,7 +405,7 @@ should have explicit method-level acceptance criteria recorded as follows.
   - numerical series construction
   - axis/domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and figure
+- `epithemaR` should remain responsible for presentation choices and figure
   rendering
 
 ##### Fixture and evidence expectations
@@ -591,7 +591,7 @@ should have explicit method-level acceptance criteria recorded as follows.
   - numerical series construction
   - axis/domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and figure
+- `epithemaR` should remain responsible for presentation choices and figure
   rendering
 
 ##### Fixture and evidence expectations
@@ -784,7 +784,7 @@ should have explicit method-level acceptance criteria recorded as follows.
   - numerical series construction
   - axis or domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and figure
+- `epithemaR` should remain responsible for presentation choices and figure
   rendering
 
 ##### Fixture and evidence expectations
@@ -1424,7 +1424,7 @@ follows.
   - numerical series construction
   - domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and final
+- `epithemaR` should remain responsible for presentation choices and final
   figure rendering
 
 ##### Fixture and evidence expectations
@@ -1896,7 +1896,7 @@ follows.
   - numerical series construction
   - domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and final
+- `epithemaR` should remain responsible for presentation choices and final
   figure rendering
 
 ##### Fixture and evidence expectations
@@ -2283,7 +2283,7 @@ follows.
   - numerical series construction
   - domain metadata needed for faithful rendering
   - stable contract serialization
-- `emboss-r` should remain responsible for presentation choices and final
+- `epithemaR` should remain responsible for presentation choices and final
   figure rendering
 
 ##### Fixture and evidence expectations
@@ -5460,7 +5460,7 @@ Primer and assay workflows remain in scope, but legacy wrappers and dated assay-
 
 ## Modernize — Rework — Plotting and visualization tools
 
-Rendering moves to `emboss-r`; Rust emits plot-ready data only.
+Rendering moves to `epithemaR`; Rust emits plot-ready data only.
 
 **Mapped historical/core tools:** 28
 
@@ -5577,7 +5577,7 @@ Protein/biophysical summaries remain relevant; older molecular-weight niche comm
 
 ## Modernize — Rework — Command discovery and help-navigation
 
-Replace scattered discovery/help commands with a coherent `emboss-rs` discovery model.
+Replace scattered discovery/help commands with a coherent `epithema` discovery model.
 
 **Family note:** Mixed family: `embossupdate`, `embossversion`, and `tfm` are individually Omit.
 

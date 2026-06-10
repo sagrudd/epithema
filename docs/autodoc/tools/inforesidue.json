@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "inforesidue-v1",
   "tool": {
     "name": "inforesidue",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`inforesidue` reports one deterministic metadata row for a single canonical amino-acid residue. The EMBOSS-RS v1 implementation focuses on stable naming, mass, hydropathy, and coarse biochemical classes rather than reproducing multiple historical report styles."
+      "content": "`inforesidue` reports one deterministic metadata row for a single canonical amino-acid residue. The Epithema v1 implementation focuses on stable naming, mass, hydropathy, and coarse biochemical classes rather than reproducing multiple historical report styles."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs inforesidue`. Validation currently covers canonical-residue lookup, stable one-row table emission, and rejection of unsupported residue symbols."
+      "content": "This method is implemented and exposed through `epithema inforesidue`. Validation currently covers canonical-residue lookup, stable one-row table emission, and rejection of unsupported residue symbols."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/inforesidue_lookup_lysine_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/inforesidue_lookup_lysine_case.md"
       },
       "description": "Repository-managed case note describing the canonical lysine lookup example."
     }

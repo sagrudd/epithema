@@ -9,7 +9,7 @@ Report conservative whole-sequence or sliding-window melting estimates
 ## Document Metadata
 
 - Document ID: `dan-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `dan`
@@ -22,7 +22,7 @@ Report conservative whole-sequence or sliding-window melting estimates
 
 ## Overview
 
-`dan` reports conservative nucleic-acid melting estimates for one or more nucleotide records. The EMBOSS-RS v1 surface keeps the model intentionally narrow: one whole-record row by default, optional sliding windows through `--window` and `--step`, canonical residues only, and one simple deterministic melting-temperature estimate.
+`dan` reports conservative nucleic-acid melting estimates for one or more nucleotide records. The Epithema v1 surface keeps the model intentionally narrow: one whole-record row by default, optional sliding windows through `--window` and `--step`, canonical residues only, and one simple deterministic melting-temperature estimate.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ The first release uses a simple deterministic hybrid estimate: short windows bel
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs dan`. Validation currently covers whole-record reporting, sliding-window reporting, RNA acceptance, canonical-residue enforcement, and deterministic service-level table output.
+This method is implemented and exposed through `epithema dan`. Validation currently covers whole-record reporting, sliding-window reporting, RNA acceptance, canonical-residue enforcement, and deterministic service-level table output.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is intentionally much narrower than historical EMBOSS `dan`. I
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed canonical DNA fixture used to validate deterministic whole-record and sliding-window melting estimates.
 
 ## Declared Examples

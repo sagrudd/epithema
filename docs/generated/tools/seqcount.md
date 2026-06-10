@@ -9,7 +9,7 @@ Count sequence records in one local sequence input
 ## Document Metadata
 
 - Document ID: `seqcount-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `seqcount`
@@ -22,7 +22,7 @@ Count sequence records in one local sequence input
 
 ## Overview
 
-`seqcount` counts sequence records through the shared EMBOSS-RS sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs.
+`seqcount` counts sequence records through the shared Epithema sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current v1 interface accepts one local sequence input path. Input format is 
 
 ## Outputs
 
-The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard EMBOSS-RS result summary lines describing the input path, record count, and tabular output format.
+The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard Epithema result summary lines describing the input path, record count, and tabular output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior.
+This method is implemented and exposed through `epithema seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports one input path per invocation. Multiple-input aggrega
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate deterministic counting.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release supports one input path per invocation. Multiple-input aggrega
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -1,6 +1,6 @@
-# EMBOSS-RS Governance Documentation
+# Epithema Governance Documentation
 
-This section contains the project-governing documentation for `emboss-rs`.
+This section contains the project-governing documentation for `epithema`.
 It consolidates the architecture and policy material already produced for the
 EMBOSS reboot into a single maintained location that future Sphinx
 documentation can ingest without a disruptive content migration.
@@ -8,7 +8,7 @@ documentation can ingest without a disruptive content migration.
 ## Canonical Entry Point
 
 The canonical governance document is
-[EMBOSS-RS Governance Manual](./emboss_rs_governance_manual.md). That manual is
+[Epithema Governance Manual](./epithema_governance_manual.md). That manual is
 the authoritative entry point for project intent, scope, operating rules, and
 release-governing expectations.
 
@@ -16,7 +16,7 @@ release-governing expectations.
 
 The following documents are normative:
 
-- [EMBOSS-RS Governance Manual](./emboss_rs_governance_manual.md)
+- [Epithema Governance Manual](./epithema_governance_manual.md)
 - [Scope and Tool-Family Policy](./policies/scope_and_tool_family_policy.md)
 - [Documentation and Autodoc Policy](./policies/documentation_and_autodoc_policy.md)
 - [Codex Commit and Push Policy](./policies/codex_commit_and_push_policy.md)
@@ -54,7 +54,7 @@ supporting material belong in `appendices/`.
 ```{toctree}
 :maxdepth: 2
 
-emboss_rs_governance_manual
+epithema_governance_manual
 policies/scope_and_tool_family_policy
 policies/documentation_and_autodoc_policy
 policies/codex_commit_and_push_policy

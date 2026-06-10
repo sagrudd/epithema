@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "maskambignuc-v1",
   "tool": {
     "name": "maskambignuc",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`maskambignuc` rewrites conservative nucleotide ambiguity symbols to `N` through the shared sequence-record model. The EMBOSS-RS v1 implementation is deliberately narrow: it accepts nucleotide records only, preserves record order and annotations, and leaves canonical `A/C/G/T/U` residues unchanged."
+      "content": "`maskambignuc` rewrites conservative nucleotide ambiguity symbols to `N` through the shared sequence-record model. The Epithema v1 implementation is deliberately narrow: it accepts nucleotide records only, preserves record order and annotations, and leaves canonical `A/C/G/T/U` residues unchanged."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs maskambignuc`. Validation currently covers deterministic masking against a committed nucleotide FASTA fixture and explicit rejection of non-nucleotide inputs in the Rust tool layer."
+      "content": "This method is implemented and exposed through `epithema maskambignuc`. Validation currently covers deterministic masking against a committed nucleotide FASTA fixture and explicit rejection of non-nucleotide inputs in the Rust tool layer."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/ambiguous_nucleotide_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/ambiguous_nucleotide_records.fasta"
       },
       "description": "Repository-managed nucleotide FASTA fixture containing conservative ambiguity symbols for deterministic masking validation."
     }
@@ -83,7 +83,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

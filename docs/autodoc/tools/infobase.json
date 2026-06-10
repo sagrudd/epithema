@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "infobase-v1",
   "tool": {
     "name": "infobase",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`infobase` reports one deterministic metadata row for a single nucleotide symbol. The EMBOSS-RS v1 implementation supports canonical DNA/RNA bases plus the standard IUPAC ambiguity symbols and reports a governed classification rather than exposing multiple historical output layouts."
+      "content": "`infobase` reports one deterministic metadata row for a single nucleotide symbol. The Epithema v1 implementation supports canonical DNA/RNA bases plus the standard IUPAC ambiguity symbols and reports a governed classification rather than exposing multiple historical output layouts."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs infobase`. Validation currently covers ambiguity-symbol lookup, stable one-row table emission, and rejection of unsupported symbols."
+      "content": "This method is implemented and exposed through `epithema infobase`. Validation currently covers ambiguity-symbol lookup, stable one-row table emission, and rejection of unsupported symbols."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/infobase_lookup_ambiguity_symbol_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/infobase_lookup_ambiguity_symbol_case.md"
       },
       "description": "Repository-managed case note describing the ambiguity-symbol lookup example."
     }

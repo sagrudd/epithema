@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "splitsource-v1",
   "tool": {
     "name": "splitsource",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`splitsource` divides one annotated sequence record into multiple fragments using `source` features as the split plan. EMBOSS-RS v1 treats only simple single-span `source` features as eligible, requires at least two such features per record, and emits one unannotated fragment sequence per source interval in source order."
+      "content": "`splitsource` divides one annotated sequence record into multiple fragments using `source` features as the split plan. Epithema v1 treats only simple single-span `source` features as eligible, requires at least two such features per record, and emits one unannotated fragment sequence per source interval in source order."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs splitsource`. Validation currently covers deterministic splitting of a committed GenBank fixture containing two `source` features, along with rejection of records that do not contain multiple eligible source spans."
+      "content": "This method is implemented and exposed through `epithema splitsource`. Validation currently covers deterministic splitting of a committed GenBank fixture containing two `source` features, along with rejection of records that do not contain multiple eligible source spans."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/splitsource_annotated.gbk"
+        "asset_id": "crates/epithema-tools/tests/fixtures/splitsource_annotated.gbk"
       },
       "description": "Repository-managed annotated GenBank fixture containing two simple `source` features for deterministic fragment emission."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

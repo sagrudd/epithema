@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "degapseq-v1",
   "tool": {
     "name": "degapseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`degapseq` removes gap markers from sequence records and emits the normalized residue stream through the shared EMBOSS-RS sequence model. The v1 implementation is intentionally literal: only `-` and `.` are stripped, record ordering is preserved, and no alignment-aware coordinate bookkeeping is attempted."
+      "content": "`degapseq` removes gap markers from sequence records and emits the normalized residue stream through the shared Epithema sequence model. The v1 implementation is intentionally literal: only `-` and `.` are stripped, record ordering is preserved, and no alignment-aware coordinate bookkeeping is attempted."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs degapseq`. Validation currently covers deterministic gap removal against a committed two-record FASTA fixture, and the Rust service path is exercised against the same repository-managed input."
+      "content": "This method is implemented and exposed through `epithema degapseq`. Validation currently covers deterministic gap removal against a committed two-record FASTA fixture, and the Rust service path is exercised against the same repository-managed input."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/gapped_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/gapped_records.fasta"
       },
       "description": "Repository-managed FASTA fixture containing explicit `-` and `.` gap markers for deterministic degapseq validation."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

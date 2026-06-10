@@ -9,7 +9,7 @@ Search translated nucleotide frames for deterministic protein motifs
 ## Document Metadata
 
 - Document ID: `fuzztran-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `fuzztran`
@@ -22,15 +22,15 @@ Search translated nucleotide frames for deterministic protein motifs
 
 ## Overview
 
-`fuzztran` translates nucleotide sequence records in the three forward reading frames and searches those translated amino-acid strings for one deterministic protein-like motif. The EMBOSS-RS v1 surface keeps the translation model intentionally narrow: standard genetic code only, forward frames 1-3 only, and no reverse-complement frame search.
+`fuzztran` translates nucleotide sequence records in the three forward reading frames and searches those translated amino-acid strings for one deterministic protein-like motif. The Epithema v1 surface keeps the translation model intentionally narrow: standard genetic code only, forward frames 1-3 only, and no reverse-complement frame search.
 
 ## Inputs
 
-The current v1 interface accepts one local nucleotide sequence input path and one protein-pattern string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected.
+The current v1 interface accepts one local nucleotide sequence input path and one protein-pattern string. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected.
 
 ## Translation Model
 
-Translation uses the shared EMBOSS-RS standard-code DNA frame helper. Forward frames 1, 2, and 3 are scanned. Trailing partial codons are ignored. Stop codons are translated as `*` and remain searchable as ordinary translated symbols. Ambiguous or otherwise unsupported codons currently fail translation rather than being expanded conservatively.
+Translation uses the shared Epithema standard-code DNA frame helper. Forward frames 1, 2, and 3 are scanned. Trailing partial codons are ignored. Stop codons are translated as `*` and remain searchable as ordinary translated symbols. Ambiguous or otherwise unsupported codons currently fail translation rather than being expanded conservatively.
 
 ## Pattern Model
 
@@ -42,7 +42,7 @@ The tool emits a stable table report with one row per translated hit. Columns ar
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs fuzztran`. Validation currently covers a forward-frame match, overlapping translated hits, no-hit behavior, invalid-pattern failure, protein-input rejection, and translation failure on ambiguous codons.
+This method is implemented and exposed through `epithema fuzztran`. Validation currently covers a forward-frame match, overlapping translated hits, no-hit behavior, invalid-pattern failure, protein-input rejection, and translation failure on ambiguous codons.
 
 ## Caveats
 
@@ -55,7 +55,7 @@ The first release does not implement reverse-strand scanning, alternative geneti
 - Artifact ID: `coding_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic translated-pattern validation.
 
 ## Declared Examples
@@ -72,7 +72,7 @@ The first release does not implement reverse-strand scanning, alternative geneti
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "eprimer3-v1",
   "tool": {
     "name": "eprimer3",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`eprimer3` is the bounded primer-and-oligo design member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized assay-ranking workflow."
+      "content": "`eprimer3` is the bounded primer-and-oligo design member of the active primer and assay-oriented rework program. The Epithema v1 surface analyzes one local nucleotide sequence input and returns deterministic candidate rows as a stable table-first report rather than a generalized assay-ranking workflow."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows."
+      "content": "This method is implemented and exposed through `epithema eprimer3`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local nucleotide-input path, and a canonical compared analytical fixture covering stable normalized candidate rows."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/eprimer3_targets.fasta"
       },
       "description": "Repository-managed nucleotide targets used for deterministic bounded eprimer3 validation."
     }
@@ -89,7 +89,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS eprimer3 application",

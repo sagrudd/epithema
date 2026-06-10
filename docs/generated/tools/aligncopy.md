@@ -9,7 +9,7 @@ Copy a single alignment unchanged through the shared alignment IO path
 ## Document Metadata
 
 - Document ID: `aligncopy-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `aligncopy`
@@ -22,7 +22,7 @@ Copy a single alignment unchanged through the shared alignment IO path
 
 ## Overview
 
-`aligncopy` is the alignment-preserving equivalent of `seqret` for the current EMBOSS-RS alignment surface. It loads one aligned FASTA or Stockholm alignment through the shared alignment reader and writes the same alignment payload back through the governed alignment result path without modifying rows, columns, or metadata.
+`aligncopy` is the alignment-preserving equivalent of `seqret` for the current Epithema alignment surface. It loads one aligned FASTA or Stockholm alignment through the shared alignment reader and writes the same alignment payload back through the governed alignment result path without modifying rows, columns, or metadata.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current v1 interface accepts exactly one local alignment input path. Support
 
 ## Outputs
 
-The result is the normalized alignment payload itself. Through the CLI, EMBOSS-RS renders alignment outputs as Stockholm by default so the copied alignment remains structured and round-trippable.
+The result is the normalized alignment payload itself. Through the CLI, Epithema renders alignment outputs as Stockholm by default so the copied alignment remains structured and round-trippable.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs aligncopy`. The declared example below matches the existing Rust service test path that loads a committed multiple-alignment fixture and confirms row-count and alignment-identifier preservation.
+This method is implemented and exposed through `epithema aligncopy`. The declared example below matches the existing Rust service test path that loads a committed multiple-alignment fixture and confirms row-count and alignment-identifier preservation.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is intentionally narrow: `aligncopy` is a normalization and pa
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed Stockholm alignment fixture with three aligned rows and a stable alignment identifier.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release is intentionally narrow: `aligncopy` is a normalization and pa
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ Report a sliding-window nucleotide density profile and emit a line-plot contract
 ## Document Metadata
 
 - Document ID: `density-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `nucleotide_plots`
 - Legacy names: `density`
@@ -22,7 +22,7 @@ Report a sliding-window nucleotide density profile and emit a line-plot contract
 
 ## Overview
 
-`density` is the first shipped Phase 2 method in the bounded plotting rework continuation. The EMBOSS-RS v1 surface computes one deterministic sliding-window nucleotide density profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract.
+`density` is the first shipped Phase 2 method in the bounded plotting rework continuation. The Epithema v1 surface computes one deterministic sliding-window nucleotide density profile for exactly one nucleotide sequence and emits both a stable analytical table and a typed single-series line-plot contract.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The implementation emits a stable analytical table with `sequence_id`, `window_s
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `density` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `density` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes a richer bounded nucleotide-density surface.
+Rust does not render figures. The formal contract emitted by `density` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering. This shipped `density` slice intentionally stays single-series and renderer-agnostic even though the analytical table exposes a richer bounded nucleotide-density surface.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs density`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-density line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
+This method is implemented and exposed through `epithema density`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in GC-density line-plot contract emission path, while keeping rendering in the sister `epithemaR` package.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports only the single-record bounded density profile and does not add Rust
 - Artifact ID: `density_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/density_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/density_nucleotide.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic density validation.
 
 ### Canonical density line-plot contract fixture
@@ -59,7 +59,7 @@ v1 supports only the single-record bounded density profile and does not add Rust
 - Artifact ID: `density_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/density_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/density_plot_contract.json`
 - Notes: Repository-managed canonical GC-density line-plot contract fixture emitted by the governed density implementation.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ v1 supports only the single-record bounded density profile and does not add Rust
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS density application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/density.acd`)
 

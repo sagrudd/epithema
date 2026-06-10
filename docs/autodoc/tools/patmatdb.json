@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "patmatdb-v1",
   "tool": {
     "name": "patmatdb",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`patmatdb` searches protein sequence records against a local motif database and reports stable motif hits in a table. EMBOSS-RS v1 keeps the database contract deliberately narrow and local rather than recreating historical database plumbing."
+      "content": "`patmatdb` searches protein sequence records against a local motif database and reports stable motif hits in a table. Epithema v1 keeps the database contract deliberately narrow and local rather than recreating historical database plumbing."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs patmatdb`. Validation currently covers a committed two-motif TSV database and a committed protein FASTA fixture through the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema patmatdb`. Validation currently covers a committed two-motif TSV database and a committed protein FASTA fixture through the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -49,7 +49,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/patmatdb_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/patmatdb_records.fasta"
       },
       "description": "Repository-managed protein FASTA fixture used for motif-database searching."
     },
@@ -60,7 +60,7 @@
       "acquisition": { "mode": "fixture" },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/patmatdb_motifs.tsv"
+        "asset_id": "crates/epithema-tools/tests/fixtures/patmatdb_motifs.tsv"
       },
       "description": "Repository-managed TSV motif database fixture containing two simple protein motifs."
     }
@@ -91,7 +91,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS patmatdb application",

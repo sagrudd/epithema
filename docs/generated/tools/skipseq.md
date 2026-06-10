@@ -9,7 +9,7 @@ Skip the first N sequence records and return the remainder
 ## Document Metadata
 
 - Document ID: `skipseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `skipseq`
@@ -22,7 +22,7 @@ Skip the first N sequence records and return the remainder
 
 ## Overview
 
-`skipseq` removes a non-negative number of leading sequence records from a local input stream and returns the remaining records in stable source order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path rather than embedding format-specific stream handling.
+`skipseq` removes a non-negative number of leading sequence records from a local input stream and returns the remaining records in stable source order. The tool reuses the shared Epithema sequence loader and sequence-collection result path rather than embedding format-specific stream handling.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current v1 interface accepts one local sequence input path plus one non-nega
 
 ## Outputs
 
-The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, effective skipped count, total input count, returned record count, and FASTA output format.
+The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard Epithema method summary lines reporting the input path, effective skipped count, total input count, returned record count, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs skipseq`. Validation currently covers zero-skip behavior, single-record skipping, interior skip counts, skip-all, skip-beyond-end, and malformed or empty-input failure behavior.
+This method is implemented and exposed through `epithema skipseq`. Validation currently covers zero-skip behavior, single-record skipping, interior skip counts, skip-all, skip-beyond-end, and malformed or empty-input failure behavior.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports one input path and one skip count per invocation. Neg
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used to validate stable skip behavior.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release supports one input path and one skip count per invocation. Neg
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

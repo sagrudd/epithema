@@ -9,7 +9,7 @@ Remove exact duplicate sequence records while preserving first-seen representati
 ## Document Metadata
 
 - Document ID: `skipredundant-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `skipredundant`
@@ -22,11 +22,11 @@ Remove exact duplicate sequence records while preserving first-seen representati
 
 ## Overview
 
-`skipredundant` collapses an input sequence stream to exact non-redundant representatives. EMBOSS-RS v1 defines redundancy conservatively as identical molecule kind plus identical normalized residue content, and it retains the first representative encountered for each exact sequence.
+`skipredundant` collapses an input sequence stream to exact non-redundant representatives. Epithema v1 defines redundancy conservatively as identical molecule kind plus identical normalized residue content, and it retains the first representative encountered for each exact sequence.
 
 ## Inputs
 
-The current interface accepts one local sequence input path containing one or more sequence records. All records are loaded through the shared EMBOSS-RS sequence IO layer before redundancy filtering is applied.
+The current interface accepts one local sequence input path containing one or more sequence records. All records are loaded through the shared Epithema sequence IO layer before redundancy filtering is applied.
 
 ## Outputs
 
@@ -34,7 +34,7 @@ The tool emits a non-redundant FASTA sequence collection through the shared resu
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs skipredundant`. Validation currently covers deterministic removal of exact duplicate records against a committed FASTA fixture, including service-level summary checks.
+This method is implemented and exposed through `epithema skipredundant`. Validation currently covers deterministic removal of exact duplicate records against a committed FASTA fixture, including service-level summary checks.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not support historical similarity-threshold redundancy, a
 - Artifact ID: `skipredundant_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/skipredundant_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/skipredundant_records.fasta`
 - Notes: Repository-managed FASTA fixture containing two exact duplicate pairs for deterministic first-representative retention.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release does not support historical similarity-threshold redundancy, a
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ Normalize one local or provider-backed sequence input into deterministic per-rec
 ## Document Metadata
 
 - Document ID: `seqretsplit-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `retrieval_tools`
 - Legacy names: `seqretsplit`
@@ -38,7 +38,7 @@ This bounded release keeps one historical `seqretsplit` user need in scope while
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqretsplit`. The bounded local split-output path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises an explicit-provider mocked path through the same governed retrieval seam. That proves the shipped retrieval surface without claiming harvested live-provider acceptance evidence or broad filename-policy parity.
+This method is implemented and exposed through `epithema seqretsplit`. The bounded local split-output path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises an explicit-provider mocked path through the same governed retrieval seam. That proves the shipped retrieval surface without claiming harvested live-provider acceptance evidence or broad filename-policy parity.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is intentionally narrow. `seqretsplit` is not yet a generic di
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed three-record FASTA fixture used for the bounded local split-output example.
 
 ### Mocked provider split-output case
@@ -59,7 +59,7 @@ The first release is intentionally narrow. `seqretsplit` is not yet a generic di
 - Artifact ID: `seqretsplit_mocked_provider_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/seqretsplit_mixed_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/seqretsplit_mixed_case.md`
 - Notes: Repository-managed case note for the bounded provider-qualified split-output path exercised through the Rust service seam.
 
 ## Declared Examples
@@ -77,7 +77,7 @@ The first release is intentionally narrow. `seqretsplit` is not yet a generic di
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS seqretsplit application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsplit.acd`)
 

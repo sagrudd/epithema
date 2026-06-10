@@ -9,7 +9,7 @@ Report synonymous single-codon edits that create exact forward-strand restrictio
 ## Document Metadata
 
 - Document ID: `silent-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `restriction_tools`
 - Legacy names: `silent`
@@ -22,7 +22,7 @@ Report synonymous single-codon edits that create exact forward-strand restrictio
 
 ## Overview
 
-`silent` reports conservative synonymous single-codon edits that create an exact canonical DNA restriction site in a coding sequence while preserving translation. EMBOSS-RS v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system.
+`silent` reports conservative synonymous single-codon edits that create an exact canonical DNA restriction site in a coding sequence while preserving translation. Epithema v1 treats this as a bounded analytical design aid rather than an enzyme-database or sequence-optimization system.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This first release considers only exact forward-strand site matches and only sin
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs silent`. Validation currently covers deterministic synonymous creation candidates against a committed coding-DNA fixture and non-coding-input rejection.
+This method is implemented and exposed through `epithema silent`. Validation currently covers deterministic synonymous creation candidates against a committed coding-DNA fixture and non-coding-input rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not model enzyme databases, reverse-complement matching, 
 - Artifact ID: `silent_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/silent_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/silent_records.fasta`
 - Notes: Repository-managed coding-DNA fixture that is one synonymous codon edit away from an exact EcoRI site.
 
 ## Declared Examples

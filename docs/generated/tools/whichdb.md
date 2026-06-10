@@ -9,7 +9,7 @@ Report bounded provider-discovery routes for one provider-qualified query
 ## Document Metadata
 
 - Document ID: `whichdb-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `retrieval_tools`
 - Legacy names: `whichdb`
@@ -22,7 +22,7 @@ Report bounded provider-discovery routes for one provider-qualified query
 
 ## Overview
 
-`whichdb` reports deterministic provider-discovery rows for one provider-qualified accession or identifier. The EMBOSS-RS v1 surface normalizes the provider prefix and provider-local query, then reports the governed retrieval or metadata methods that can be used next. The method is a route-reporting seam: it tells the caller which shipped method family can handle a bounded provider route, rather than retrieving data itself.
+`whichdb` reports deterministic provider-discovery rows for one provider-qualified accession or identifier. The Epithema v1 surface normalizes the provider prefix and provider-local query, then reports the governed retrieval or metadata methods that can be used next. The method is a route-reporting seam: it tells the caller which shipped method family can handle a bounded provider route, rather than retrieving data itself.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The result is a stable table report with provider, normalized query, route label
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs whichdb`. Rust service coverage exercises the governed service route for a supported ENA query and verifies that unsupported providers are reported without fallback.
+This method is implemented and exposed through `epithema whichdb`. Rust service coverage exercises the governed service route for a supported ENA query and verifies that unsupported providers are reported without fallback.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 `whichdb` seam is intentionally bounded. It does not perform live provide
 - Artifact ID: `whichdb_bounded_ena_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/whichdb_ena_ab000263_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/whichdb_ena_ab000263_case.md`
 - Notes: Repository-managed case note for the bounded ENA provider-discovery route exercised by Rust service coverage.
 
 ### Bounded NCBI whichdb route fixture
@@ -55,7 +55,7 @@ The v1 `whichdb` seam is intentionally bounded. It does not perform live provide
 - Artifact ID: `whichdb_bounded_ncbi_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/whichdb_ncbi_nested_reference_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/whichdb_ncbi_nested_reference_case.md`
 - Notes: Repository-managed case note for preserving nested NCBI provider-local database qualifiers in bounded route reporting.
 
 ### Unsupported-provider whichdb route fixture
@@ -63,7 +63,7 @@ The v1 `whichdb` seam is intentionally bounded. It does not perform live provide
 - Artifact ID: `whichdb_unsupported_provider_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/whichdb_unsupported_provider_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/whichdb_unsupported_provider_case.md`
 - Notes: Repository-managed case note for explicit unsupported-provider reporting without fallback expansion.
 
 ## Declared Examples
@@ -109,7 +109,7 @@ The v1 `whichdb` seam is intentionally bounded. It does not perform live provide
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS whichdb application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/whichdb.acd`)
 

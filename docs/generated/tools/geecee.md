@@ -9,7 +9,7 @@ Report deterministic GC counts and GC percentages for nucleotide sequence record
 ## Document Metadata
 
 - Document ID: `geecee-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `geecee`
@@ -22,11 +22,11 @@ Report deterministic GC counts and GC percentages for nucleotide sequence record
 
 ## Overview
 
-`geecee` reports GC statistics for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 implementation keeps the model deliberately conservative: only canonical A/C/G/T/U symbols contribute to the GC denominator, while ambiguous non-gap symbols are counted separately and excluded from the percentage.
+`geecee` reports GC statistics for each input record plus one aggregate summary across all records. The Epithema v1 implementation keeps the model deliberately conservative: only canonical A/C/G/T/U symbols contribute to the GC denominator, while ambiguous non-gap symbols are counted separately and excluded from the percentage.
 
 ## Inputs
 
-The current interface accepts one local nucleotide input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. DNA and RNA records are supported; non-nucleotide records are rejected.
+The current interface accepts one local nucleotide input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. DNA and RNA records are supported; non-nucleotide records are rejected.
 
 ## Outputs
 
@@ -38,11 +38,11 @@ Input residues are normalized case-insensitively before counting. Gap symbols `-
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs geecee`. Validation currently covers DNA input, RNA input, ambiguity exclusion from the denominator, aggregate reporting, and non-nucleotide failure.
+This method is implemented and exposed through `epithema geecee`. Validation currently covers DNA input, RNA input, ambiguity exclusion from the denominator, aggregate reporting, and non-nucleotide failure.
 
 ## Caveats
 
-The first release does not attempt probabilistic treatment of ambiguous nucleotide codes. Ambiguous symbols are tracked separately rather than fractionally contributing to GC. Mixed inputs containing non-nucleotide records are rejected. Empty FASTA records are also rejected by the shared EMBOSS-RS sequence parser before GC calculation begins.
+The first release does not attempt probabilistic treatment of ambiguous nucleotide codes. Ambiguous symbols are tracked separately rather than fractionally contributing to GC. Mixed inputs containing non-nucleotide records are rejected. Empty FASTA records are also rejected by the shared Epithema sequence parser before GC calculation begins.
 
 ## Declared Artifacts
 
@@ -51,7 +51,7 @@ The first release does not attempt probabilistic treatment of ambiguous nucleoti
 - Artifact ID: `nucleotide_pattern_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/nucleotide_pattern_records.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic GC reporting validation.
 
 ## Declared Examples

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "report_id": "governance-registry-alignment",
   "governance_source": "docs/governance/appendices/family_to_tool_mapping_reference.md",
-  "registry_source": "emboss_tools::governed_tool_descriptors",
+  "registry_source": "epithema_tools::governed_tool_descriptors",
   "summary": {
     "governed_tool_count": 265,
     "retained_tool_count": 90,

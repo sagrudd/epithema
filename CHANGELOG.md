@@ -1,9 +1,9 @@
 # Changelog
 
-All notable changes to `emboss-rs` will be documented in this file.
+All notable changes to `epithema` will be documented in this file.
 
 The project uses a human-maintained changelog with coordinated release notes.
-`v1.0.0` will be the first coordinated release with the sister `emboss-r`
+`v1.0.0` will be the first coordinated release with the sister `epithemaR`
 package. Until that cutover, changes accumulate under `Unreleased`.
 
 ## [Unreleased]
@@ -35,7 +35,7 @@ than implying biological acceptance from shipped-method count alone.
 ## [1.0.0] - Planned
 
 ### Added
-- Governed single-binary `emboss-rs` CLI with the practical shipped EMBOSS-RS
+- Governed single-binary `epithema` CLI with the practical shipped Epithema
   v1 tool cohort.
 - First-class documentation, autodoc generation, validation stubs, provider
   seams, plot contract, R bridge support, and cross-surface validation.
@@ -59,7 +59,7 @@ than implying biological acceptance from shipped-method count alone.
   validation.
 
 ### Notes
-- `1.0.0` is reserved for the coordinated release with `emboss-r` `1.0.0`.
+- `1.0.0` is reserved for the coordinated release with `epithemaR` `1.0.0`.
 - The release remains governed by the RC readiness and evidence reports under
   `docs/release/` and `docs/generated/`; shipped-method count alone is not used
   as a proxy for biological acceptance completeness.

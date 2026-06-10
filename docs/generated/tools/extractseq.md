@@ -9,7 +9,7 @@ Extract one contiguous 1-based inclusive region from each input sequence record
 ## Document Metadata
 
 - Document ID: `extractseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `extractseq`
@@ -22,7 +22,7 @@ Extract one contiguous 1-based inclusive region from each input sequence record
 
 ## Overview
 
-`extractseq` extracts the same contiguous region from every input sequence record using the shared EMBOSS-RS interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content.
+`extractseq` extracts the same contiguous region from every input sequence record using the shared Epithema interval model. User-facing coordinates are 1-based inclusive, while the implementation converts them into the core zero-based half-open interval type before slicing sequence content.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one extracted sequence record per input record, preserving input 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs extractseq`. Validation currently covers interior extraction against a committed multi-record FASTA fixture. Boundary cases, full-length extraction, and invalid coordinate handling are covered by Rust tests in the tool and service layers.
+This method is implemented and exposed through `epithema extractseq`. Validation currently covers interior extraction against a committed multi-record FASTA fixture. Boundary cases, full-length extraction, and invalid coordinate handling are covered by Rust tests in the tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 scope extracts a single contiguous interval only. Coordinates must be sup
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic extractseq validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 scope extracts a single contiguous interval only. Coordinates must be sup
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

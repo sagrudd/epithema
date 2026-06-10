@@ -9,7 +9,7 @@ Search nucleotide sequences for deterministic exact or IUPAC-ambiguous motifs
 ## Document Metadata
 
 - Document ID: `fuzznuc-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `fuzznuc`
@@ -22,11 +22,11 @@ Search nucleotide sequences for deterministic exact or IUPAC-ambiguous motifs
 
 ## Overview
 
-`fuzznuc` searches nucleotide sequence records for one forward-strand motif and reports all matches in stable input order. The EMBOSS-RS v1 surface keeps the pattern model intentionally narrow: exact nucleotide symbols plus IUPAC ambiguity codes, no gaps, no indels, and no reverse-strand search.
+`fuzznuc` searches nucleotide sequence records for one forward-strand motif and reports all matches in stable input order. The Epithema v1 surface keeps the pattern model intentionally narrow: exact nucleotide symbols plus IUPAC ambiguity codes, no gaps, no indels, and no reverse-strand search.
 
 ## Inputs
 
-The current v1 interface accepts one local nucleotide sequence input path and one motif string. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected.
+The current v1 interface accepts one local nucleotide sequence input path and one motif string. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Records classified as protein are rejected.
 
 ## Pattern Model
 
@@ -38,7 +38,7 @@ The tool emits a stable table report with one row per hit. Columns are `record`,
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs fuzznuc`. Validation currently covers exact and ambiguity-aware matching, overlapping matches, no-hit behavior, invalid-pattern failure, and protein-input rejection.
+This method is implemented and exposed through `epithema fuzznuc`. Validation currently covers exact and ambiguity-aware matching, overlapping matches, no-hit behavior, invalid-pattern failure, and protein-input rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not implement the historical EMBOSS fuzzy-expression lang
 - Artifact ID: `nucleotide_pattern_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/nucleotide_pattern_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic nucleotide motif validation.
 
 ## Declared Examples

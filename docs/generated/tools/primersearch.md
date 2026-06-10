@@ -9,7 +9,7 @@ Report deterministic complete primer-pair hits against local nucleotide sequence
 ## Document Metadata
 
 - Document ID: `primersearch-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `primer_tools`
 - Legacy names: `primersearch`
@@ -22,7 +22,7 @@ Report deterministic complete primer-pair hits against local nucleotide sequence
 
 ## Overview
 
-`primersearch` is the bounded primer-pair search member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface searches one local nucleotide sequence input against one local tab-delimited primer-pair file and returns deterministic complete-pair hit rows as a stable table-first report.
+`primersearch` is the bounded primer-pair search member of the active primer and assay-oriented rework program. The Epithema v1 surface searches one local nucleotide sequence input against one local tab-delimited primer-pair file and returns deterministic complete-pair hit rows as a stable table-first report.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `primersearch` user need in scope whil
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs primersearch`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local target-plus-primer-file path, and a canonical compared analytical fixture covering stable normalized primer-hit rows.
+This method is implemented and exposed through `epithema primersearch`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local target-plus-primer-file path, and a canonical compared analytical fixture covering stable normalized primer-hit rows.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `primersearch` seam is intentionally narrow. It does not perform primer-d
 - Artifact ID: `primersearch_targets_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/primersearch_targets.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/primersearch_targets.fasta`
 - Notes: Repository-managed nucleotide targets used for deterministic bounded primersearch validation.
 
 ### Primersearch primer-pair fixture
@@ -59,7 +59,7 @@ The v1 `primersearch` seam is intentionally narrow. It does not perform primer-d
 - Artifact ID: `primersearch_pairs_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/primersearch_pairs.tsv`
 - Notes: Repository-managed primer-pair rows used for deterministic bounded primersearch validation.
 
 ## Declared Examples
@@ -77,7 +77,7 @@ The v1 `primersearch` seam is intentionally narrow. It does not perform primer-d
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS primersearch application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/primersearch.acd`)
 

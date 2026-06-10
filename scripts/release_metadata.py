@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Release metadata helpers for emboss-rs."""
+"""Release metadata helpers for epithema."""
 
 from __future__ import annotations
 
@@ -439,18 +439,18 @@ def check_release_truth_surface() -> int:
 
 def write_manifest(output: Path, container_image: str | None, binary_platform: str) -> int:
     version = load_workspace_version()
-    binary_archive = f"emboss-rs-{version}-{binary_platform}.tar.gz"
+    binary_archive = f"epithema-{version}-{binary_platform}.tar.gz"
     manifest = {
         "schema_version": 1,
-        "project": "emboss-rs",
+        "project": "epithema",
         "version": version,
-        "binary_name": "emboss-rs",
+        "binary_name": "epithema",
         "binary_platform": binary_platform,
         "artifacts": {
             "binary_archive": binary_archive,
             "binary_checksum": f"{binary_archive}.sha256",
-            "docs_archive": f"emboss-rs-docs-{version}.tar.gz",
-            "validation_archive": f"emboss-rs-validation-{version}.tar.gz",
+            "docs_archive": f"epithema-docs-{version}.tar.gz",
+            "validation_archive": f"epithema-validation-{version}.tar.gz",
         },
         "validation_report": {
             "json": "docs/generated/validation/shipped_cohort.validation.json",

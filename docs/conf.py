@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-project = "EMBOSS-RS"
+project = "Epithema"
 author = "Mnemosyne Biosciences Ltd"
 copyright = "2026, Mnemosyne Biosciences Ltd"
 release = "1.0.0"
@@ -28,5 +28,5 @@ show_warning_types = True
 myst_heading_anchors = 3
 
 html_theme = "sphinx_rtd_theme"
-html_title = "EMBOSS-RS Documentation"
+html_title = "Epithema Documentation"
 html_static_path = []

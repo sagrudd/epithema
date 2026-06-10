@@ -3,7 +3,7 @@
 ## Purpose
 
 This document explains how Codex-driven development work should be conducted in
-`emboss-rs` in practical terms. The normative policy source is the
+`epithema` in practical terms. The normative policy source is the
 [Codex Commit and Push Policy](../governance/policies/codex_commit_and_push_policy.md).
 This document translates that policy into an operating workflow.
 
@@ -52,7 +52,7 @@ Before committing a Codex-driven change:
 - remove accidental or unrelated edits
 - confirm file locations and names follow repository structure expectations
 - confirm documentation updates are included where required
-- confirm the sister repository `../emboss-r` was not modified unless the prompt
+- confirm the sister repository `../epithemaR` was not modified unless the prompt
   explicitly authorized that work
 
 ## Validation Expectations

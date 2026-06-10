@@ -1,18 +1,18 @@
-# EMBOSS-RS Tool-Family Governance Policy
+# Epithema Tool-Family Governance Policy
 
-**Project:** EMBOSS-RS reboot  
+**Project:** Epithema reboot  
 **Sponsor:** Mnemosyne Biosciences Ltd  
 **Date:** 2026-04-15  
 **Status:** Governance policy derived from the raw scope matrix
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 ---
 
 ## 1. Purpose
 
-This document converts the per-tool EMBOSS scope matrix into a governance policy that can be applied consistently across the `emboss-rs` and `emboss-r` projects.
+This document converts the per-tool EMBOSS scope matrix into a governance policy that can be applied consistently across the `epithema` and `epithemaR` projects.
 
 It defines named scope buckets, the criteria for placing a tool family into each bucket, default family assignments, exception handling, and promotion rules for future releases.
 
@@ -33,7 +33,7 @@ A fifth bucket, **Strategic Add**, is included because some high-value capabilit
 
 **Definition**
 
-Capabilities that remain directly useful to day-to-day bioinformatics work and can be carried forward as first-class parts of `emboss-rs` without requiring conceptual reinvention.
+Capabilities that remain directly useful to day-to-day bioinformatics work and can be carried forward as first-class parts of `epithema` without requiring conceptual reinvention.
 
 **Typical characteristics**
 
@@ -46,7 +46,7 @@ Capabilities that remain directly useful to day-to-day bioinformatics work and c
 **Default implementation expectation**
 
 - included in the reboot roadmap
-- exposed as ordinary commands in `emboss-rs`
+- exposed as ordinary commands in `epithema`
 - exposed through the R package over time
 - covered by fixture-driven validation
 
@@ -185,12 +185,12 @@ The following assignments are the default policy for tool families. Individual t
 | ORF and translation-adjacent utilities | Core Retain | Keep practical sequence interpretation utilities where the biological need remains stable. |
 | Restriction-enzyme design and analysis | Modernize / Rework | Keep the user need, but modernize databases, reporting, and visualization; avoid old wrapper and data-prep assumptions. |
 | Primer and assay-oriented search | Modernize / Rework | Preserve the problem domain, but redesign around current expectations for primer validation, reporting, and scale. |
-| Plotting and visualization tools | Modernize / Rework | Retain graphical capability where useful, but move rendering to `emboss-r`; Rust emits plot-ready data only. |
+| Plotting and visualization tools | Modernize / Rework | Retain graphical capability where useful, but move rendering to `epithemaR`; Rust emits plot-ready data only. |
 | Remote retrieval and archive acquisition | Modernize / Rework | Retain accession-driven biological retrieval, but replace EMBOSS-era server/database plumbing with provider integrations such as ENA and SRA. |
 | External database preparation helpers | Modernize / Rework | Keep only where an enduring user need exists; redesign around modern resource preparation rather than EMBOSS-specific preprocessors. |
 | Legacy prediction methods with enduring scientific value | Modernize / Rework | Preserve domains such as motif/profile scanning or region prediction where user need remains, but upgrade algorithms and reference data aggressively. |
 | Protein property and structural-summary utilities | Modernize / Rework | Keep where still useful, but modernize methods, outputs, and any graphics. |
-| Command discovery and help/navigation | Modernize / Rework | Replace historic per-command discovery helpers with modern unified `emboss-rs` discovery, docs, and search. |
+| Command discovery and help/navigation | Modernize / Rework | Replace historic per-command discovery helpers with modern unified `epithema` discovery, docs, and search. |
 | HMM and probabilistic homology workflows | Strategic Add | Reintroduce as a modern capability domain rather than preserving old wrapper semantics. |
 | Modern archive-scale raw data ingestion | Strategic Add | Add ENA/SRA run and study acquisition, including NGS-oriented workflows absent from the original EMBOSS worldview. |
 | Ontology command group | Defer | Omit as a user-facing group initially, but do not classify ontology support itself as obsolete. |
@@ -359,7 +359,7 @@ All overrides should be recorded in the planning registry.
 
 ---
 
-## 9. Immediate Policy Decisions for EMBOSS-RS
+## 9. Immediate Policy Decisions for Epithema
 
 The following immediate decisions are established under this policy:
 
@@ -368,7 +368,7 @@ The following immediate decisions are established under this policy:
 - EMBOSS-era remote server, cache, and registry plumbing is Exclude Permanently
 - ACD developer tooling is Exclude Permanently
 - sequence and archive retrieval is Modernize / Rework
-- plot-producing capabilities are Modernize / Rework, with rendering in `emboss-r`
+- plot-producing capabilities are Modernize / Rework, with rendering in `epithemaR`
 - modern ENA/SRA raw-data ingestion is Strategic Add
 - HMM capability is Strategic Add as a rebooted modern domain
 
@@ -383,4 +383,4 @@ What users still need but now need differently should be reworked.
 What is merely old plumbing should be left behind.
 What modern bioinformatics now requires should be added deliberately.
 
-That is the governance boundary for the EMBOSS-RS reboot.
+That is the governance boundary for the Epithema reboot.

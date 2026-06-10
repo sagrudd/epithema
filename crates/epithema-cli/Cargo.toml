@@ -1,0 +1,26 @@
+[package]
+name = "epithema-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Single-binary command-line entry point for Epithema."
+
+[dependencies]
+clap = { version = "4.5.38", features = ["derive"] }
+epithema-core.workspace = true
+epithema-diagnostics.workspace = true
+epithema-docgen.workspace = true
+epithema-io.workspace = true
+epithema-service.workspace = true
+epithema-testkit.workspace = true
+epithema-tools.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "epithema"
+path = "src/main.rs"

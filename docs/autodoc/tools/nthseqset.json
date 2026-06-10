@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "nthseqset-v1",
   "tool": {
     "name": "nthseqset",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`nthseqset` selects one alignment set from an input that may contain more than one multiple alignment. EMBOSS-RS v1 supports deterministic 1-based selection from Stockholm files containing multiple alignments and also accepts a single aligned FASTA or Stockholm input as set `1`."
+      "content": "`nthseqset` selects one alignment set from an input that may contain more than one multiple alignment. Epithema v1 supports deterministic 1-based selection from Stockholm files containing multiple alignments and also accepts a single aligned FASTA or Stockholm input as set `1`."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs nthseqset`. Validation currently covers deterministic selection of the second alignment from a committed multi-Stockholm fixture, single-alignment passthrough as set `1`, and out-of-range failure behavior."
+      "content": "This method is implemented and exposed through `epithema nthseqset`. Validation currently covers deterministic selection of the second alignment from a committed multi-Stockholm fixture, single-alignment passthrough as set `1`, and out-of-range failure behavior."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/nthseqset_alignments.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/nthseqset_alignments.sto"
       },
       "description": "Repository-managed Stockholm fixture containing two distinct alignment sets for deterministic ordinal selection."
     }
@@ -84,7 +84,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

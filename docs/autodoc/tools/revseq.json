@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "revseq-v1",
   "tool": {
     "name": "revseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared EMBOSS-RS sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative."
+      "content": "`revseq` reverses each input record and can reverse-complement nucleotide sequences through the shared Epithema sequence model. The v1 implementation uses molecule-aware behavior instead of raw string munging so DNA and RNA are complemented correctly while protein records remain biologically conservative."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs revseq`. Validation currently covers DNA auto reverse-complement behavior and reverse-only output against a committed FASTA fixture. Records with attached features are rejected in v1 because feature-coordinate remapping is not yet implemented, and conservative FASTA molecule inference means some residue-only records remain `unknown` unless a richer source format carries molecule metadata."
+      "content": "This method is implemented and exposed through `epithema revseq`. Validation currently covers DNA auto reverse-complement behavior and reverse-only output against a committed FASTA fixture. Records with attached features are rejected in v1 because feature-coordinate remapping is not yet implemented, and conservative FASTA molecule inference means some residue-only records remain `unknown` unless a richer source format carries molecule metadata."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic revseq validation."
     }
@@ -88,7 +88,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

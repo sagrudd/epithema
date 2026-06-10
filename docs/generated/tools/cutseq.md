@@ -9,7 +9,7 @@ Split each input sequence record into left and right fragments at one 1-based cu
 ## Document Metadata
 
 - Document ID: `cutseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `cutseq`
@@ -22,7 +22,7 @@ Split each input sequence record into left and right fragments at one 1-based cu
 
 ## Overview
 
-`cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared EMBOSS-RS interval and subsequence primitives instead of ad hoc string slicing.
+`cutseq` applies the same interior cut point to every input sequence record and emits the resulting left and right fragments in deterministic order. The v1 implementation is intentionally narrow: it models a single cut position rather than arbitrary interval removal, and it reuses the shared Epithema interval and subsequence primitives instead of ad hoc string slicing.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits exactly two non-empty fragments per input record, preserving inpu
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs cutseq`. Validation currently covers a committed three-record FASTA fixture with a representative interior cut, while Rust unit and service tests cover first-boundary cuts, invalid positions, deterministic naming, and multi-record output ordering.
+This method is implemented and exposed through `epithema cutseq`. Validation currently covers a committed three-record FASTA fixture with a representative interior cut, while Rust unit and service tests cover first-boundary cuts, invalid positions, deterministic naming, and multi-record output ordering.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 scope supports only one cut position and always emits both remaining frag
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic cutseq validation.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The v1 scope supports only one cut position and always emits both remaining frag
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

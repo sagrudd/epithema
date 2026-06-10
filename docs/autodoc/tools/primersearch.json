@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "primersearch-v1",
   "tool": {
     "name": "primersearch",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`primersearch` is the bounded primer-pair search member of the active primer and assay-oriented rework program. The EMBOSS-RS v1 surface searches one local nucleotide sequence input against one local tab-delimited primer-pair file and returns deterministic complete-pair hit rows as a stable table-first report."
+      "content": "`primersearch` is the bounded primer-pair search member of the active primer and assay-oriented rework program. The Epithema v1 surface searches one local nucleotide sequence input against one local tab-delimited primer-pair file and returns deterministic complete-pair hit rows as a stable table-first report."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs primersearch`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local target-plus-primer-file path, and a canonical compared analytical fixture covering stable normalized primer-hit rows."
+      "content": "This method is implemented and exposed through `epithema primersearch`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local target-plus-primer-file path, and a canonical compared analytical fixture covering stable normalized primer-hit rows."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/primersearch_targets.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/primersearch_targets.fasta"
       },
       "description": "Repository-managed nucleotide targets used for deterministic bounded primersearch validation."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/primersearch_pairs.tsv"
+        "asset_id": "crates/epithema-tools/tests/fixtures/primersearch_pairs.tsv"
       },
       "description": "Repository-managed primer-pair rows used for deterministic bounded primersearch validation."
     }
@@ -105,7 +105,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS primersearch application",

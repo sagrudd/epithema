@@ -9,7 +9,7 @@ Trim explicit residue counts from the left and right ends of sequence records
 ## Document Metadata
 
 - Document ID: `trimseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `trimseq`
@@ -22,7 +22,7 @@ Trim explicit residue counts from the left and right ends of sequence records
 
 ## Overview
 
-`trimseq` removes an explicit number of residues from the left and right ends of each input record. The EMBOSS-RS v1 implementation keeps the model narrow and deterministic: trimming is by residue count, applied uniformly to every record, and rejected if the requested total would exhaust a sequence.
+`trimseq` removes an explicit number of residues from the left and right ends of each input record. The Epithema v1 implementation keeps the model narrow and deterministic: trimming is by residue count, applied uniformly to every record, and rejected if the requested total would exhaust a sequence.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ Output is a normalized sequence collection rendered through the shared result an
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs trimseq`. Validation currently covers representative left-and-right trimming against a committed FASTA fixture, while Rust service tests cover deterministic output ordering and exhaustion rejection.
+This method is implemented and exposed through `epithema trimseq`. Validation currently covers representative left-and-right trimming against a committed FASTA fixture, while Rust service tests cover deterministic output ordering and exhaustion rejection.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 scope trims only fixed residue counts and does not implement motif-based 
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic trimseq validation.
 
 ## Declared Examples
@@ -68,7 +68,7 @@ The v1 scope trims only fixed residue counts and does not implement motif-based 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

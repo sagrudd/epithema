@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "seqretsetall-v1",
   "tool": {
     "name": "seqretsetall",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one bounded historical-style `seqretsetall` normalization example in view and compares the EMBOSS-RS partitioned output against a committed expected payload. The comparison is deliberately narrow and local-fixture based; it does not claim broad provider or filesystem-policy parity."
+      "content": "This acceptance anchor keeps one bounded historical-style `seqretsetall` normalization example in view and compares the Epithema partitioned output against a committed expected payload. The comparison is deliberately narrow and local-fixture based; it does not claim broad provider or filesystem-policy parity."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seqretsetall`. The bounded local many-set path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises a mixed local plus mocked-provider path through the explicit provider seam. That proves the governed retrieval surface without claiming harvested live-provider acceptance evidence yet."
+      "content": "This method is implemented and exposed through `epithema seqretsetall`. The bounded local many-set path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises a mixed local plus mocked-provider path through the explicit provider seam. That proves the governed retrieval surface without claiming harvested live-provider acceptance evidence yet."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used as the first ordered input set in the bounded local many-set retrieval example."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/two_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/two_records.fasta"
       },
       "description": "Repository-managed two-record FASTA fixture used as the second ordered input set in the bounded local many-set retrieval example."
     },
@@ -89,7 +89,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/seqretsetall_mixed_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/seqretsetall_mixed_case.md"
       },
       "description": "Repository-managed case note for the bounded mixed local plus provider-qualified many-set retrieval path used in Rust service coverage."
     }
@@ -120,7 +120,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS seqretsetall application",

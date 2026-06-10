@@ -9,7 +9,7 @@ scan protein sequences with a local deterministic motif database
 ## Document Metadata
 
 - Document ID: `patmatdb-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pattern_tools`
 - Legacy names: `patmatdb`
@@ -22,7 +22,7 @@ scan protein sequences with a local deterministic motif database
 
 ## Overview
 
-`patmatdb` searches protein sequence records against a local motif database and reports stable motif hits in a table. EMBOSS-RS v1 keeps the database contract deliberately narrow and local rather than recreating historical database plumbing.
+`patmatdb` searches protein sequence records against a local motif database and reports stable motif hits in a table. Epithema v1 keeps the database contract deliberately narrow and local rather than recreating historical database plumbing.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable hit table with one row per motif match. Each row reports 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs patmatdb`. Validation currently covers a committed two-motif TSV database and a committed protein FASTA fixture through the Rust tool and service layers.
+This method is implemented and exposed through `epithema patmatdb`. Validation currently covers a committed two-motif TSV database and a committed protein FASTA fixture through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports only local TSV motif databases and the bounded `fuzzp
 - Artifact ID: `patmatdb_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/patmatdb_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/patmatdb_records.fasta`
 - Notes: Repository-managed protein FASTA fixture used for motif-database searching.
 
 ### Patmatdb motif TSV fixture
@@ -55,7 +55,7 @@ The first release supports only local TSV motif databases and the bounded `fuzzp
 - Artifact ID: `patmatdb_motif_tsv`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/patmatdb_motifs.tsv`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/patmatdb_motifs.tsv`
 - Notes: Repository-managed TSV motif database fixture containing two simple protein motifs.
 
 ## Declared Examples
@@ -73,7 +73,7 @@ The first release supports only local TSV motif databases and the bounded `fuzzp
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS patmatdb application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/patmatdb.acd`)
 

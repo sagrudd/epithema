@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "notseq-v1",
   "tool": {
     "name": "notseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared EMBOSS-RS sequence loader and sequence-collection result path instead of embedding format-specific stream logic."
+      "content": "`notseq` removes exactly one selected sequence record from a local sequence stream and returns the remaining records in their original order. The tool reuses the shared Epithema sequence loader and sequence-collection result path instead of embedding format-specific stream logic."
     },
     {
       "id": "inputs",
@@ -26,13 +26,13 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format."
+      "content": "The tool emits the remaining sequence records through the shared FASTA output path. CLI output also includes the standard Epithema method summary lines reporting the input path, excluded index, total input count, returned record count, and FASTA output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases."
+      "content": "This method is implemented and exposed through `epithema notseq`. Validation currently covers interior exclusion, first-record exclusion, single-record all-excluded behavior, and malformed or out-of-range failure cases."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used to validate deterministic exclusion order."
     }
@@ -84,7 +84,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

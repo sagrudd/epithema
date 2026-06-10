@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "infoseq-v1",
   "tool": {
     "name": "infoseq",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`infoseq` reports one stable summary row per input record. The EMBOSS-RS v1 surface is intentionally narrower than historical EMBOSS formatting switches: it keeps one governed table shape with identifier, optional display name, length, molecule, alphabet, optional GC percentage for nucleotide-like inputs, feature count, and selected descriptive metadata."
+      "content": "`infoseq` reports one stable summary row per input record. The Epithema v1 surface is intentionally narrower than historical EMBOSS formatting switches: it keeps one governed table shape with identifier, optional display name, length, molecule, alphabet, optional GC percentage for nucleotide-like inputs, feature count, and selected descriptive metadata."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local sequence input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Plain sequence records and richer annotated records are both supported."
+      "content": "The current interface accepts one local sequence input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Plain sequence records and richer annotated records are both supported."
     },
     {
       "id": "outputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs infoseq`. Validation currently covers plain FASTA metadata reporting, annotation-aware feature counts and organism metadata, and stable per-record table emission through the shared service layer."
+      "content": "This method is implemented and exposed through `epithema infoseq`. Validation currently covers plain FASTA metadata reporting, annotation-aware feature counts and organism metadata, and stable per-record table emission through the shared service layer."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used to validate stable basic metadata reporting."
     }

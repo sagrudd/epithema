@@ -9,7 +9,7 @@ Report deterministic per-residue phi and psi torsion angles from bounded protein
 ## Document Metadata
 
 - Document ID: `psiphi-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `protein_coordinates`
 - Legacy names: `psiphi`
@@ -22,7 +22,7 @@ Report deterministic per-residue phi and psi torsion angles from bounded protein
 
 ## Overview
 
-`psiphi` is the bounded protein-coordinate member of the active protein-property rework program. The EMBOSS-RS v1 surface computes deterministic per-residue phi and psi torsion-angle rows from one local PDB-like coordinate input and returns them as a stable table-first report.
+`psiphi` is the bounded protein-coordinate member of the active protein-property rework program. The Epithema v1 surface computes deterministic per-residue phi and psi torsion-angle rows from one local PDB-like coordinate input and returns them as a stable table-first report.
 
 ## Inputs
 
@@ -38,7 +38,7 @@ This bounded release keeps one historical `psiphi` user need in scope while mode
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path.
+This method is implemented and exposed through `epithema psiphi`. The governed surface now includes canonical checked-in compared evidence for stable per-residue torsion-angle rows, alongside harvested legacy provenance and Rust coverage that exercises the bounded local coordinate path plus rejection of provider-backed and backbone-free inputs through the same computation path.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 `psiphi` seam is intentionally narrow. It does not render Ramachandran pl
 - Artifact ID: `psiphi_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/psiphi_backbone.txt`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/psiphi_backbone.txt`
 - Notes: Repository-managed backbone coordinate fixture used for deterministic bounded psiphi validation.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The v1 `psiphi` seam is intentionally narrow. It does not render Ramachandran pl
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS psiphi application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/psiphi.acd`)
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "featmerge-v1",
   "tool": {
     "name": "featmerge",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`featmerge` merges selected features from a right-hand annotated input into identifier-matched left-hand annotated records using the shared EMBOSS-RS feature-copy and annotated-record seams. The left-hand residues and metadata are preserved, and exact duplicate features are skipped deterministically."
+      "content": "`featmerge` merges selected features from a right-hand annotated input into identifier-matched left-hand annotated records using the shared Epithema feature-copy and annotated-record seams. The left-hand residues and metadata are preserved, and exact duplicate features are skipped deterministically."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs featmerge`. Rust tests currently cover successful merges, deterministic duplicate skipping, no-merge failure when a selector admits only duplicates, and service invocation against committed annotated fixtures."
+      "content": "This method is implemented and exposed through `epithema featmerge`. Rust tests currently cover successful merges, deterministic duplicate skipping, no-merge failure when a selector admits only duplicates, and service invocation against committed annotated fixtures."
     },
     {
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "The v1 merge is structural rather than source-textual: it preserves the normalized EMBOSS-RS feature model, not original flatfile formatting. Record pairing is strict, duplicate identifiers are rejected, and more elaborate overlap reconciliation is intentionally deferred."
+      "content": "The v1 merge is structural rather than source-textual: it preserves the normalized Epithema feature model, not original flatfile formatting. Record pairing is strict, duplicate identifiers are rejected, and more elaborate overlap reconciliation is intentionally deferred."
     }
   ],
   "artifacts": [
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_feature.gbk"
+        "asset_id": "crates/epithema-tools/tests/fixtures/annotated_feature.gbk"
       },
       "description": "Repository-managed left-hand annotated fixture used for feature-merge validation."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/annotated_merge_right.gbk"
+        "asset_id": "crates/epithema-tools/tests/fixtures/annotated_merge_right.gbk"
       },
       "description": "Repository-managed right-hand annotated fixture containing one duplicate feature and one mergeable feature."
     }
@@ -99,7 +99,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS featmerge application",

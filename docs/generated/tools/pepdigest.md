@@ -9,7 +9,7 @@ Report deterministic full-digest peptide fragments for a small typed protease se
 ## Document Metadata
 
 - Document ID: `pepdigest-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `pepdigest`
@@ -22,11 +22,11 @@ Report deterministic full-digest peptide fragments for a small typed protease se
 
 ## Overview
 
-`pepdigest` reports full-digest peptide fragments for each protein record. The EMBOSS-RS v1 implementation is intentionally narrow: it supports a small typed protease set, uses exact deterministic cleavage rules, and emits one stable row per resulting peptide.
+`pepdigest` reports full-digest peptide fragments for each protein record. The Epithema v1 implementation is intentionally narrow: it supports a small typed protease set, uses exact deterministic cleavage rules, and emits one stable row per resulting peptide.
 
 ## Inputs
 
-The current interface accepts one local protein input path plus an optional protease selector. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Unsupported ambiguous protein residues are rejected.
+The current interface accepts one local protein input path plus an optional protease selector. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Unsupported ambiguous protein residues are rejected.
 
 ## Outputs
 
@@ -38,7 +38,7 @@ The first release supports `trypsin`, `lys-c`, `arg-c`, and `cnbr`. Trypsin clea
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pepdigest`. Validation currently covers tryptic digestion, CNBr reagent mode, stable per-peptide coordinate reporting, and nucleotide-input rejection.
+This method is implemented and exposed through `epithema pepdigest`. Validation currently covers tryptic digestion, CNBr reagent mode, stable per-peptide coordinate reporting, and nucleotide-input rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release does not model missed cleavages, semi-specific digestion, post
 - Artifact ID: `pepdigest_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pepdigest_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pepdigest_records.fasta`
 - Notes: Repository-managed protein fixture used to validate deterministic full-digest peptide reporting.
 
 ## Declared Examples

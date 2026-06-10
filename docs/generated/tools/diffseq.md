@@ -9,7 +9,7 @@ compare two similar sequences and report contiguous difference blocks from a det
 ## Document Metadata
 
 - Document ID: `diffseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `diffseq`
@@ -22,7 +22,7 @@ compare two similar sequences and report contiguous difference blocks from a det
 
 ## Overview
 
-`diffseq` compares exactly one sequence from each input, computes a deterministic global alignment, and reports contiguous mismatch or indel blocks in a governed table. EMBOSS-RS v1 treats the alignment as the comparison substrate and emits typed block coordinates instead of a prose-only narrative.
+`diffseq` compares exactly one sequence from each input, computes a deterministic global alignment, and reports contiguous mismatch or indel blocks in a governed table. Epithema v1 treats the alignment as the comparison substrate and emits typed block coordinates instead of a prose-only narrative.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable table with one row per contiguous difference block. Each 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs diffseq`. Validation currently covers one committed substitution case through the Rust tool and service layers.
+This method is implemented and exposed through `epithema diffseq`. Validation currently covers one committed substitution case through the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is a deterministic block report, not a full recreation of hist
 - Artifact ID: `diffseq_left_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/diffseq_left.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/diffseq_left.fasta`
 - Notes: Repository-managed one-record FASTA fixture used as the left-hand diffseq input.
 
 ### Diffseq right FASTA fixture
@@ -55,7 +55,7 @@ The first release is a deterministic block report, not a full recreation of hist
 - Artifact ID: `diffseq_right_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/diffseq_right.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/diffseq_right.fasta`
 - Notes: Repository-managed one-record FASTA fixture used as the right-hand diffseq input.
 
 ## Declared Examples
@@ -73,7 +73,7 @@ The first release is a deterministic block report, not a full recreation of hist
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS diffseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/diffseq.acd`)
 

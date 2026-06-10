@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "listor-v1",
   "tool": {
     "name": "listor",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`listor` performs a bounded logical set operation across two local sequence inputs. EMBOSS-RS v1 treats sequence sets as exact normalized sequence-content sets keyed by molecule kind and uppercase residues, removes duplicates within each input before the operator is applied, and preserves first-seen representatives in deterministic output order."
+      "content": "`listor` performs a bounded logical set operation across two local sequence inputs. Epithema v1 treats sequence sets as exact normalized sequence-content sets keyed by molecule kind and uppercase residues, removes duplicates within each input before the operator is applied, and preserves first-seen representatives in deterministic output order."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs listor`. Validation currently covers deterministic `OR`, `NOT`, and duplicate-elimination behavior in the Rust tool layer, plus a governed service example for `XOR` against committed fixtures."
+      "content": "This method is implemented and exposed through `epithema listor`. Validation currently covers deterministic `OR`, `NOT`, and duplicate-elimination behavior in the Rust tool layer, plus a governed service example for `XOR` against committed fixtures."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/listor_first.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/listor_first.fasta"
       },
       "description": "Repository-managed first input fixture containing two records for deterministic logical set validation."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/listor_second.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/listor_second.fasta"
       },
       "description": "Repository-managed second input fixture sharing one exact sequence with the first fixture and contributing one unique sequence."
     }
@@ -100,7 +100,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

@@ -9,7 +9,7 @@ Remove '-' and '.' gap characters from sequence records
 ## Document Metadata
 
 - Document ID: `degapseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `degapseq`
@@ -22,7 +22,7 @@ Remove '-' and '.' gap characters from sequence records
 
 ## Overview
 
-`degapseq` removes gap markers from sequence records and emits the normalized residue stream through the shared EMBOSS-RS sequence model. The v1 implementation is intentionally literal: only `-` and `.` are stripped, record ordering is preserved, and no alignment-aware coordinate bookkeeping is attempted.
+`degapseq` removes gap markers from sequence records and emits the normalized residue stream through the shared Epithema sequence model. The v1 implementation is intentionally literal: only `-` and `.` are stripped, record ordering is preserved, and no alignment-aware coordinate bookkeeping is attempted.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ Output is a normalized sequence collection rendered through the shared result an
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs degapseq`. Validation currently covers deterministic gap removal against a committed two-record FASTA fixture, and the Rust service path is exercised against the same repository-managed input.
+This method is implemented and exposed through `epithema degapseq`. Validation currently covers deterministic gap removal against a committed two-record FASTA fixture, and the Rust service path is exercised against the same repository-managed input.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release strips only the explicit gap characters `-` and `.`. It does n
 - Artifact ID: `gapped_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/gapped_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/gapped_records.fasta`
 - Notes: Repository-managed FASTA fixture containing explicit `-` and `.` gap markers for deterministic degapseq validation.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release strips only the explicit gap characters `-` and `.`. It does n
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

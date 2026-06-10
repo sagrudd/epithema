@@ -1,6 +1,6 @@
 # Release
 
-Release engineering for `emboss-rs` is intentionally explicit and Linux-first.
+Release engineering for `epithema` is intentionally explicit and Linux-first.
 
 ```{toctree}
 :maxdepth: 1

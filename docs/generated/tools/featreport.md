@@ -9,7 +9,7 @@ Report selected features as a stable tabular summary
 ## Document Metadata
 
 - Document ID: `featreport-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `featreport`
@@ -22,7 +22,7 @@ Report selected features as a stable tabular summary
 
 ## Overview
 
-`featreport` summarizes selected features from annotated EMBL or GenBank records into a stable, machine-friendly table. It reuses the shared EMBOSS-RS feature-selection seam and preserves source-record order followed by feature order.
+`featreport` summarizes selected features from annotated EMBL or GenBank records into a stable, machine-friendly table. It reuses the shared Epithema feature-selection seam and preserves source-record order followed by feature order.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The output is a stable table report with one row per selected feature. v1 expose
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs featreport`. Rust tests currently cover stable ordering, service invocation, and no-match handling through the shared feature-selection and reporting path.
+This method is implemented and exposed through `epithema featreport`. Rust tests currently cover stable ordering, service invocation, and no-match handling through the shared feature-selection and reporting path.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 table is intentionally summary-oriented rather than a full lossless featu
 - Artifact ID: `annotated_feature_genbank`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/annotated_feature.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/annotated_feature.gbk`
 - Notes: Repository-managed annotated GenBank fixture used for deterministic featreport validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 table is intentionally summary-oriented rather than a full lossless featu
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS featreport application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/featreport.acd`)
 

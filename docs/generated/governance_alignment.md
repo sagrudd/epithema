@@ -1,11 +1,11 @@
 # Governance and Registry Alignment Report
 
-This page is generated from the maintained governance family-to-tool appendix, the shipped EMBOSS-RS Rust registry, and the cohort validation report. It exists to keep backlog truth, shipped scope, curated autodoc coverage, and evidence depth aligned.
+This page is generated from the maintained governance family-to-tool appendix, the shipped Epithema Rust registry, and the cohort validation report. It exists to keep backlog truth, shipped scope, curated autodoc coverage, and evidence depth aligned.
 
 ## Summary
 
 - Governance source: `docs/governance/appendices/family_to_tool_mapping_reference.md`
-- Registry source: `emboss_tools::governed_tool_descriptors`
+- Registry source: `epithema_tools::governed_tool_descriptors`
 - Governed mapped tools: `265`
 - Governed retained tools: `90`
 - Shipped tools: `115`

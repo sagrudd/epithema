@@ -9,7 +9,7 @@ Mask conservative protein ambiguity residues with X while preserving record orde
 ## Document Metadata
 
 - Document ID: `maskambigprot-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `maskambigprot`
@@ -22,7 +22,7 @@ Mask conservative protein ambiguity residues with X while preserving record orde
 
 ## Overview
 
-`maskambigprot` rewrites a conservative set of protein ambiguity symbols to `X` using the shared sequence-record model. EMBOSS-RS v1 keeps the scope explicit: only protein records are accepted, record order is preserved, and canonical amino-acid symbols remain unchanged.
+`maskambigprot` rewrites a conservative set of protein ambiguity symbols to `X` using the shared sequence-record model. Epithema v1 keeps the scope explicit: only protein records are accepted, record order is preserved, and canonical amino-acid symbols remain unchanged.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a FASTA sequence collection through the shared result path. Ident
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs maskambigprot`. Validation currently covers deterministic masking of an ambiguous protein FASTA fixture and explicit rejection of nucleotide input in the Rust tool layer.
+This method is implemented and exposed through `epithema maskambigprot`. Validation currently covers deterministic masking of an ambiguous protein FASTA fixture and explicit rejection of nucleotide input in the Rust tool layer.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release masks only `B`, `J`, `X`, and `Z`. It does not treat `O` or `U
 - Artifact ID: `ambiguous_protein_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/ambiguous_protein_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/ambiguous_protein_records.fasta`
 - Notes: Repository-managed protein FASTA fixture containing conservative ambiguity residues for deterministic masking validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The first release masks only `B`, `J`, `X`, and `Z`. It does not treat `O` or `U
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

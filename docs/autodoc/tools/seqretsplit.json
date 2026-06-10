@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "seqretsplit-v1",
   "tool": {
     "name": "seqretsplit",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seqretsplit`. The bounded local split-output path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises an explicit-provider mocked path through the same governed retrieval seam. That proves the shipped retrieval surface without claiming harvested live-provider acceptance evidence or broad filename-policy parity."
+      "content": "This method is implemented and exposed through `epithema seqretsplit`. The bounded local split-output path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises an explicit-provider mocked path through the same governed retrieval seam. That proves the shipped retrieval surface without claiming harvested live-provider acceptance evidence or broad filename-policy parity."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed three-record FASTA fixture used for the bounded local split-output example."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/seqretsplit_mixed_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/seqretsplit_mixed_case.md"
       },
       "description": "Repository-managed case note for the bounded provider-qualified split-output path exercised through the Rust service seam."
     }
@@ -104,7 +104,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS seqretsplit application",

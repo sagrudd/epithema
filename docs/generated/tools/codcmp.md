@@ -9,7 +9,7 @@ Compare codon usage between two coding-sequence or codon-profile sources
 ## Document Metadata
 
 - Document ID: `codcmp-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `codon_tools`
 - Legacy names: `codcmp`
@@ -34,7 +34,7 @@ The result is a stable table report over the 61 sense codons. Each row records t
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs codcmp`. Rust service coverage compares two committed coding fixtures and verifies representative codon count differences in the emitted table.
+This method is implemented and exposed through `epithema codcmp`. Rust service coverage compares two committed coding fixtures and verifies representative codon count differences in the emitted table.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release is intentionally narrow and local-only. Coding inputs are subj
 - Artifact ID: `codon_reference_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed left-hand coding fixture with preferred leucine codons.
 
 ### Right codon-compare FASTA fixture
@@ -55,7 +55,7 @@ The first release is intentionally narrow and local-only. Coding inputs are subj
 - Artifact ID: `codon_compare_right_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_compare_right.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_compare_right.fasta`
 - Notes: Repository-managed right-hand coding fixture with rarer leucine codon usage for comparison.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The first release is intentionally narrow and local-only. Coding inputs are subj
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

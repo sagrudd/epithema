@@ -9,7 +9,7 @@ Back-translate protein records into deterministic IUPAC-ambiguous DNA codons
 ## Document Metadata
 
 - Document ID: `backtranambig-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `backtranambig`
@@ -22,7 +22,7 @@ Back-translate protein records into deterministic IUPAC-ambiguous DNA codons
 
 ## Overview
 
-`backtranambig` back-translates protein sequence records into deterministic IUPAC-ambiguous DNA codons under the shared EMBOSS-RS standard genetic code. The v1 surface preserves ambiguity explicitly instead of selecting a single representative codon.
+`backtranambig` back-translates protein sequence records into deterministic IUPAC-ambiguous DNA codons under the shared Epithema standard genetic code. The v1 surface preserves ambiguity explicitly instead of selecting a single representative codon.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The tool emits one DNA FASTA record per input protein record in stable order. Ou
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `backtranambig` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison focuses on deterministic IUPAC ambiguity encoding rather than broad codon-table configurability.
+This acceptance anchor keeps one historical-style `backtranambig` invocation in view and compares the Epithema FASTA payload against a committed expected output. The governed comparison focuses on deterministic IUPAC ambiguity encoding rather than broad codon-table configurability.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs backtranambig`. Current validation covers the deterministic ambiguous-codon policy, stop-symbol handling with `* -> TAR`, and stable FASTA output from the committed protein fixture.
+This method is implemented and exposed through `epithema backtranambig`. Current validation covers the deterministic ambiguous-codon policy, stop-symbol handling with `* -> TAR`, and stable FASTA output from the committed protein fixture.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release exposes only the standard genetic code and one fixed ambiguity
 - Artifact ID: `protein_stats_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/protein_stats_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/protein_stats_records.fasta`
 - Notes: Repository-managed protein fixture used for deterministic ambiguous back-translation validation.
 
 ## Declared Examples
@@ -59,7 +59,7 @@ The first release exposes only the standard genetic code and one fixed ambiguity
 ### Back-translate protein records into ambiguous DNA codons
 
 - Example ID: `ambiguous_backtranslation`
-- Description: Back-translates the committed protein fixture into IUPAC-ambiguous DNA codons using the governed EMBOSS-RS standard-code ambiguity policy.
+- Description: Back-translates the committed protein fixture into IUPAC-ambiguous DNA codons using the governed Epithema standard-code ambiguity policy.
 - Referenced artifacts: `protein_stats_fixture`
 - Expected outputs:
   - `ambiguous_dna_sequences`: Ambiguous DNA FASTA output (A stable FASTA rendering of the deterministic ambiguous DNA back-translations.)
@@ -69,7 +69,7 @@ The first release exposes only the standard genetic code and one fixed ambiguity
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS backtranambig application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/backtranambig.acd`)
 

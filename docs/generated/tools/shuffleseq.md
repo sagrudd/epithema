@@ -9,7 +9,7 @@ Shuffle sequence residues deterministically while preserving composition
 ## Document Metadata
 
 - Document ID: `shuffleseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `shuffleseq`
@@ -22,7 +22,7 @@ Shuffle sequence residues deterministically while preserving composition
 
 ## Overview
 
-`shuffleseq` permutes the residues within each input record while preserving exact per-record composition. The EMBOSS-RS v1 implementation is deterministic by design: when `--seed` is omitted it uses a fixed documented base seed, and each record derives its own deterministic stream from that base seed and input order.
+`shuffleseq` permutes the residues within each input record while preserving exact per-record composition. The Epithema v1 implementation is deterministic by design: when `--seed` is omitted it uses a fixed documented base seed, and each record derives its own deterministic stream from that base seed and input order.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one shuffled FASTA sequence collection. CLI summaries report the 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs shuffleseq`. Validation currently covers deterministic seeded shuffling and composition preservation against a committed multi-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
+This method is implemented and exposed through `epithema shuffleseq`. Validation currently covers deterministic seeded shuffling and composition preservation against a committed multi-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not offer cryptographic randomness, cross-record shufflin
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed three-record FASTA fixture used for deterministic shuffleseq validation.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release does not offer cryptographic randomness, cross-record shufflin
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

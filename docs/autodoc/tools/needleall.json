@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "needleall-v1",
   "tool": {
     "name": "needleall",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`needleall` performs deterministic many-vs-many global pairwise alignment between every query record and every target record in two local sequence sets. EMBOSS-RS v1 keeps the surface deliberately structured: comparisons run in query-major then target-major order and the CLI reports one summary row per pair instead of rendering every alignment body."
+      "content": "`needleall` performs deterministic many-vs-many global pairwise alignment between every query record and every target record in two local sequence sets. Epithema v1 keeps the surface deliberately structured: comparisons run in query-major then target-major order and the CLI reports one summary row per pair instead of rendering every alignment body."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs needleall`. Current Rust service coverage exercises committed multi-record FASTA fixtures and locks down the query-major, target-major ordering of the four pairwise comparisons."
+      "content": "This method is implemented and exposed through `epithema needleall`. Current Rust service coverage exercises committed multi-record FASTA fixtures and locks down the query-major, target-major ordering of the four pairwise comparisons."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needleall_queries.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needleall_queries.fasta"
       },
       "description": "Repository-managed two-record FASTA fixture used as the query set."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needleall_targets.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needleall_targets.fasta"
       },
       "description": "Repository-managed two-record FASTA fixture used as the target set."
     }
@@ -95,7 +95,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

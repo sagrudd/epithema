@@ -9,7 +9,7 @@ Report a sliding-window White-Wimley interface-minus-octanol profile and emit a 
 ## Document Metadata
 
 - Document ID: `octanol-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `protein_plots`
 - Legacy names: `octanol`
@@ -22,7 +22,7 @@ Report a sliding-window White-Wimley interface-minus-octanol profile and emit a 
 
 ## Overview
 
-`octanol` is the second shipped method in the bounded plotting rework program. The EMBOSS-RS v1 surface computes one deterministic sliding-window White-Wimley interface-minus-octanol profile for exactly one protein sequence and emits both a stable analytical table and a typed single-series line-plot contract.
+`octanol` is the second shipped method in the bounded plotting rework program. The Epithema v1 surface computes one deterministic sliding-window White-Wimley interface-minus-octanol profile for exactly one protein sequence and emits both a stable analytical table and a typed single-series line-plot contract.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The implementation emits a stable table with `sequence_id`, `window_start`, `win
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `octanol` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `octanol` slice intentionally stays inside the existing single-series line-contract seam already proven by `charge`, `pepwindow`, and `hmoment`.
+Rust does not render figures. The formal contract emitted by `octanol` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering. This shipped `octanol` slice intentionally stays inside the existing single-series line-contract seam already proven by `charge`, `pepwindow`, and `hmoment`.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs octanol`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, while keeping rendering in the sister `emboss-r` package.
+This method is implemented and exposed through `epithema octanol`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, while keeping rendering in the sister `epithemaR` package.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports only the single-record White-Wimley difference profile and does not 
 - Artifact ID: `octanol_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/octanol_protein.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/octanol_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic octanol validation.
 
 ### Canonical octanol line-plot contract fixture
@@ -59,7 +59,7 @@ v1 supports only the single-record White-Wimley difference profile and does not 
 - Artifact ID: `octanol_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/octanol_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/octanol_plot_contract.json`
 - Notes: Repository-managed canonical line-plot contract fixture emitted by the governed octanol implementation.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ v1 supports only the single-record White-Wimley difference profile and does not 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS octanol application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/octanol.acd`)
 

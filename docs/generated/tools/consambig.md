@@ -9,7 +9,7 @@ Ambiguity-aware consensus from an alignment
 ## Document Metadata
 
 - Document ID: `consambig-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_analysis`
 - Legacy names: `consambig`
@@ -22,7 +22,7 @@ Ambiguity-aware consensus from an alignment
 
 ## Overview
 
-`consambig` derives an ambiguity-aware consensus sequence from a single aligned FASTA or Stockholm alignment. The current EMBOSS-RS implementation ignores gaps when tallying a column, emits IUPAC nucleotide ambiguity symbols when multiple exact nucleotide bases remain, and uses `X` for ambiguous protein columns.
+`consambig` derives an ambiguity-aware consensus sequence from a single aligned FASTA or Stockholm alignment. The current Epithema implementation ignores gaps when tallying a column, emits IUPAC nucleotide ambiguity symbols when multiple exact nucleotide bases remain, and uses `X` for ambiguous protein columns.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The result is one ambiguity-aware consensus sequence record emitted through the 
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs consambig`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the ambiguity-aware consensus sequence `ACYGT`.
+This method is implemented and exposed through `epithema consambig`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the ambiguity-aware consensus sequence `ACYGT`.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release only covers the current built-in ambiguity policy. It does not
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed Stockholm alignment fixture used to validate ambiguity-aware consensus derivation.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release only covers the current built-in ambiguity policy. It does not
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

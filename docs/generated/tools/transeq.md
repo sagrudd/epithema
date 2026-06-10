@@ -9,7 +9,7 @@ Translate nucleotide sequences in forward reading frames
 ## Document Metadata
 
 - Document ID: `transeq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `transeq`
@@ -22,7 +22,7 @@ Translate nucleotide sequences in forward reading frames
 
 ## Overview
 
-`transeq` translates nucleotide sequence records in forward reading frames using the shared EMBOSS-RS standard genetic code. The v1 surface supports frame `1`, `2`, `3`, or `all`, emits protein FASTA records deterministically, and ignores trailing partial codons.
+`transeq` translates nucleotide sequence records in forward reading frames using the shared Epithema standard genetic code. The v1 surface supports frame `1`, `2`, `3`, or `all`, emits protein FASTA records deterministically, and ignores trailing partial codons.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The tool emits one protein FASTA record per translated frame in stable source or
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `transeq` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates strict forward frame-1 translation for the committed coding fixture.
+This acceptance anchor keeps one historical-style `transeq` invocation in view and compares the Epithema FASTA payload against a committed expected output. The governed comparison validates strict forward frame-1 translation for the committed coding fixture.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs transeq`. Current validation covers forward frame selection, strict translation, trailing partial-codon truncation, and stable FASTA emission from the committed coding fixture.
+This method is implemented and exposed through `epithema transeq`. Current validation covers forward frame selection, strict translation, trailing partial-codon truncation, and stable FASTA emission from the committed coding fixture.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release supports forward frames only and the standard genetic code onl
 - Artifact ID: `checktrans_nucleotide_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta`
 - Notes: Repository-managed coding-sequence fixture used for deterministic forward translation validation.
 
 ## Declared Examples
@@ -71,7 +71,7 @@ The first release supports forward frames only and the standard genetic code onl
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS transeq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/transeq.acd`)
 

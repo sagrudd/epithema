@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "chips-v1",
   "tool": {
     "name": "chips",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs chips`. Rust service coverage exercises the committed reference coding fixture and checks that the aggregate table rows preserve the expected codon counts."
+      "content": "This method is implemented and exposed through `epithema chips`. Rust service coverage exercises the committed reference coding fixture and checks that the aggregate table rows preserve the expected codon counts."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/codon_reference.fasta"
       },
       "description": "Repository-managed coding-reference FASTA fixture used to validate per-record and aggregate codon-profile output."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

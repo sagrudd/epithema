@@ -9,7 +9,7 @@ Insert one sequence into another at a deterministic 1-based position
 ## Document Metadata
 
 - Document ID: `pasteseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `pasteseq`
@@ -22,7 +22,7 @@ Insert one sequence into another at a deterministic 1-based position
 
 ## Overview
 
-`pasteseq` inserts exactly one sequence record into exactly one main sequence record after a user-supplied position. The EMBOSS-RS v1 implementation is intentionally conservative: it performs a direct insertion only, does not attempt feature-coordinate remapping, and emits one merged sequence record.
+`pasteseq` inserts exactly one sequence record into exactly one main sequence record after a user-supplied position. The Epithema v1 implementation is intentionally conservative: it performs a direct insertion only, does not attempt feature-coordinate remapping, and emits one merged sequence record.
 
 ## Inputs
 
@@ -30,11 +30,11 @@ The current interface accepts two local sequence inputs, each containing exactly
 
 ## Outputs
 
-The tool emits one merged FASTA sequence record through the shared result path. EMBOSS-RS v1 preserves the identifier and metadata of the main sequence input but drops feature annotations instead of emitting incorrect shifted coordinates.
+The tool emits one merged FASTA sequence record through the shared result path. Epithema v1 preserves the identifier and metadata of the main sequence input but drops feature annotations instead of emitting incorrect shifted coordinates.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pasteseq`. Validation currently covers deterministic insertion against committed one-record FASTA fixtures and molecule-mismatch rejection in the Rust tool layer.
+This method is implemented and exposed through `epithema pasteseq`. Validation currently covers deterministic insertion against committed one-record FASTA fixtures and molecule-mismatch rejection in the Rust tool layer.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release supports only single-record inputs and exact in-memory inserti
 - Artifact ID: `pasteseq_main_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pasteseq_main.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pasteseq_main.fasta`
 - Notes: Repository-managed main FASTA fixture used as the insertion target for deterministic pasteseq validation.
 
 ### Pasteseq inserted FASTA fixture
@@ -55,7 +55,7 @@ The first release supports only single-record inputs and exact in-memory inserti
 - Artifact ID: `pasteseq_insert_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pasteseq_insert.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pasteseq_insert.fasta`
 - Notes: Repository-managed one-record FASTA fixture inserted into the main sequence during deterministic pasteseq validation.
 
 ## Declared Examples
@@ -72,7 +72,7 @@ The first release supports only single-record inputs and exact in-memory inserti
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

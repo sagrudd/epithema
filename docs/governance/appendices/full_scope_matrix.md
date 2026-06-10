@@ -1,15 +1,15 @@
-# EMBOSS tool scope matrix for `emboss-rs`
+# EMBOSS tool scope matrix for `epithema`
 
 Status: governance appendix and detailed planning inventory
 
 Canonical governance context:
-[EMBOSS-RS Governance Manual](../emboss_rs_governance_manual.md)
+[Epithema Governance Manual](../epithema_governance_manual.md)
 
 This matrix classifies the **256 core EMBOSS applications** listed in the official EMBOSS applications index, plus **`complex`** as an explicit extra row because you have already said it must be retained.
 
 Decision meanings:
 
-- **Retain** — keep as a first-class capability in `emboss-rs`
+- **Retain** — keep as a first-class capability in `epithema`
 - **Rework** — keep the user need, but redesign substantially because methods, data sources, UX, or rendering should change
 - **Omit** — do not carry this forward as a user-facing command in the initial reboot
 - **Add** — new capability proposed beyond the historical core catalog
@@ -110,8 +110,8 @@ Scope notes:
 | `edialign` | Local multiple alignment of sequences | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
 | `einverted` | Find inverted repeats in nucleotide sequences | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `embossdata` | Find and retrieve EMBOSS data files | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
-| `embossupdate` | Checks for more recent updates to EMBOSS | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `emboss-rs` binary. |
-| `embossversion` | Report the current EMBOSS version number | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `emboss-rs` binary. |
+| `embossupdate` | Checks for more recent updates to EMBOSS | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `epithema` binary. |
+| `embossversion` | Report the current EMBOSS version number | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `epithema` binary. |
 | `emma` | Multiple sequence alignment (ClustalW wrapper) | **Rework** | Retain the capability, but modernize the wrapper/database model and decouple from EMBOSS-era external tool assumptions. |
 | `emowse` | Search protein sequences by digest fragment molecular weight | **Omit** | Niche/dated workflow with limited modern demand relative to maintenance cost. |
 | `entret` | Retrieve sequence entries from flatfile databases and files | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
@@ -222,7 +222,7 @@ Scope notes:
 | `restover` | Find restriction enzymes producing a specific overhang | **Rework** | Keep the biological task, but refresh algorithms/data sources/output models and route any graphics through R. |
 | `restrict` | Report restriction enzyme cleavage sites in a nucleotide sequence | **Rework** | Keep the biological task, but refresh algorithms/data sources/output models and route any graphics through R. |
 | `revseq` | Reverse and complement a nucleotide sequence | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
-| `seealso` | Find programs with similar function to a specified program | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `seealso` | Find programs with similar function to a specified program | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `seqcount` | Read and count sequences | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
 | `seqmatchall` | All-against-all word comparison of a sequence set | **Retain** | Core search/comparison utility worth preserving as part of a broad EMBOSS-style toolkit. |
 | `seqret` | Read and write (return) sequences | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
@@ -231,26 +231,26 @@ Scope notes:
 | `seqxref` | Retrieve all database cross-references for a sequence entry | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
 | `seqxrefget` | Retrieve all cross-referenced data for a sequence entry | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
 | `servertell` | Display information about a public server | **Omit** | Old public-server discovery/inspection model should be retired in favor of explicit modern provider integrations. |
-| `showalign` | Display a multiple sequence alignment in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `showalign` | Display a multiple sequence alignment in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `showdb` | Display information on configured databases | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
-| `showfeat` | Display features of a sequence in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
-| `showorf` | Display a nucleotide sequence and translation in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
-| `showpep` | Display protein sequences with features in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
-| `showseq` | Display sequences with features in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `showfeat` | Display features of a sequence in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
+| `showorf` | Display a nucleotide sequence and translation in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
+| `showpep` | Display protein sequences with features in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
+| `showseq` | Display sequences with features in pretty format | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `showserver` | Display information on configured servers | **Omit** | Old public-server discovery/inspection model should be retired in favor of explicit modern provider integrations. |
 | `shuffleseq` | Shuffle a set of sequences maintaining composition | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `sigcleave` | Report on signal cleavage sites in a protein sequence | **Rework** | Underlying biological need remains, but methods and datasets have advanced enough that a substantial modernization is justified. |
 | `silent` | Find restriction sites to insert (mutate) with no translation change | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `sirna` | Find siRNA duplexes in mRNA | **Rework** | Underlying biological need remains, but methods and datasets have advanced enough that a substantial modernization is justified. |
-| `sixpack` | Display a DNA sequence with 6-frame translation and ORFs | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `sixpack` | Display a DNA sequence with 6-frame translation and ORFs | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `sizeseq` | Sort sequences by size | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `skipredundant` | Remove redundant sequences from an input set | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
 | `skipseq` | Read and write (return) sequences, skipping first few | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `splitsource` | Split sequence(s) into original source sequences | **Retain** | Recommended to retain as a core EMBOSS-style analytical or transformation command in the reboot. |
 | `splitter` | Split sequence(s) into smaller sequences | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
-| `stretcher` | Needleman-Wunsch rapid global alignment of two sequences | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `stretcher` | Needleman-Wunsch rapid global alignment of two sequences | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `stssearch` | Search a DNA database for matches with a set of STS primers | **Omit** | Niche/dated workflow with limited modern demand relative to maintenance cost. |
-| `supermatcher` | Calculate approximate local pair-wise alignments of larger sequences | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `supermatcher` | Calculate approximate local pair-wise alignments of larger sequences | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `syco` | Draw synonymous codon usage statistic plot for a nucleotide sequence | **Rework** | Plotting/visualization should move to the R companion package, with Rust emitting plot-ready data and R handling rendering. |
 | `taxget` | Get taxon(s) | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
 | `taxgetdown` | Get descendants of taxon(s) | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
@@ -261,7 +261,7 @@ Scope notes:
 | `textget` | Get text data entries | **Rework** | Retain the user need, but redesign around modern accession/provider-aware retrieval and metadata services (ENA/SRA/RefSeq/taxonomy/variation). |
 | `textsearch` | Search the textual description of sequence(s) | **Rework** | Retain the problem domain, but rework heavily because the user need persists while implementation, data sources, or UX should change substantially. |
 | `tfextract` | Process TRANSFAC transcription factor database for use by tfscan | **Rework** | Retain the capability, but modernize the wrapper/database model and decouple from EMBOSS-era external tool assumptions. |
-| `tfm` | Display full documentation for an application | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `emboss-rs` binary. |
+| `tfm` | Display full documentation for an application | **Omit** | Superseded by built-in CLI help/version/update mechanics in a unified `epithema` binary. |
 | `tfscan` | Identify transcription factor binding sites in DNA sequences | **Rework** | Retain the capability, but modernize the wrapper/database model and decouple from EMBOSS-era external tool assumptions. |
 | `tmap` | Predict and plot transmembrane segments in protein sequences | **Rework** | Plotting/visualization should move to the R companion package, with Rust emitting plot-ready data and R handling rendering. |
 | `tranalign` | Generate an alignment of nucleic coding regions from aligned proteins | **Retain** | Core sequence/alignment/transformation capability that still has clear day-to-day value with no need to omit conceptually. |
@@ -282,7 +282,7 @@ Scope notes:
 | `wordmatch` | Find regions of identity (exact matches) of two sequences | **Retain** | Core search/comparison utility worth preserving as part of a broad EMBOSS-style toolkit. |
 | `wossdata` | Find programs by EDAM data | **Omit** | Ontology-driven user command group deferred from initial scope; keep extension path internally but omit user-facing commands for now. |
 | `wossinput` | Find programs by EDAM input data | **Omit** | Ontology-driven user command group deferred from initial scope; keep extension path internally but omit user-facing commands for now. |
-| `wossname` | Find programs by keywords in their short description | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `emboss-rs` interface and modern documentation/search. |
+| `wossname` | Find programs by keywords in their short description | **Rework** | Useful capability remains, but the user experience should be redesigned for a single `epithema` interface and modern documentation/search. |
 | `wossoperation` | Find programs by EDAM operation | **Omit** | Ontology-driven user command group deferred from initial scope; keep extension path internally but omit user-facing commands for now. |
 | `wossoutput` | Find programs by EDAM output data | **Omit** | Ontology-driven user command group deferred from initial scope; keep extension path internally but omit user-facing commands for now. |
 | `wossparam` | Find programs by EDAM parameter | **Omit** | Ontology-driven user command group deferred from initial scope; keep extension path internally but omit user-facing commands for now. |

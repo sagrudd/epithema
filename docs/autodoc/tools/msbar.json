@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "msbar-v1",
   "tool": {
     "name": "msbar",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`msbar` applies one or more explicit point substitutions to every sequence record in one local input. The EMBOSS-RS v1 surface is bounded to deterministic substitution-only editing using `position:residue` syntax."
+      "content": "`msbar` applies one or more explicit point substitutions to every sequence record in one local input. The Epithema v1 surface is bounded to deterministic substitution-only editing using `position:residue` syntax."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs msbar`. Validation currently covers deterministic substitution behavior against committed FASTA fixtures in the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema msbar`. Validation currently covers deterministic substitution behavior against committed FASTA fixtures in the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/msbar_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/msbar_records.fasta"
       },
       "description": "Repository-managed FASTA input fixture used for deterministic point-mutation validation."
     }
@@ -83,7 +83,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "pepdigest-v1",
   "tool": {
     "name": "pepdigest",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`pepdigest` reports full-digest peptide fragments for each protein record. The EMBOSS-RS v1 implementation is intentionally narrow: it supports a small typed protease set, uses exact deterministic cleavage rules, and emits one stable row per resulting peptide."
+      "content": "`pepdigest` reports full-digest peptide fragments for each protein record. The Epithema v1 implementation is intentionally narrow: it supports a small typed protease set, uses exact deterministic cleavage rules, and emits one stable row per resulting peptide."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local protein input path plus an optional protease selector. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Unsupported ambiguous protein residues are rejected."
+      "content": "The current interface accepts one local protein input path plus an optional protease selector. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Unsupported ambiguous protein residues are rejected."
     },
     {
       "id": "outputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs pepdigest`. Validation currently covers tryptic digestion, CNBr reagent mode, stable per-peptide coordinate reporting, and nucleotide-input rejection."
+      "content": "This method is implemented and exposed through `epithema pepdigest`. Validation currently covers tryptic digestion, CNBr reagent mode, stable per-peptide coordinate reporting, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pepdigest_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pepdigest_records.fasta"
       },
       "description": "Repository-managed protein fixture used to validate deterministic full-digest peptide reporting."
     }

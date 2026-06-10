@@ -1,11 +1,11 @@
-# EMBOSS-RS Documentation
+# Epithema Documentation
 
 This documentation site provides the maintained project-governing documentation
-for `emboss-rs`, the Rust-based reboot of EMBOSS with first-class R support via
-`emboss-r`.
+for `epithema`, the Rust-based reboot of EMBOSS with first-class R support via
+`epithemaR`.
 
 The canonical normative entry point is the
-[EMBOSS-RS Governance Manual](./governance/emboss_rs_governance_manual.md).
+[Epithema Governance Manual](./governance/epithema_governance_manual.md).
 
 ## Contents
 

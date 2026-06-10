@@ -9,7 +9,7 @@ Apply deterministic exact set operations to two sequence inputs
 ## Document Metadata
 
 - Document ID: `listor-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `listor`
@@ -22,7 +22,7 @@ Apply deterministic exact set operations to two sequence inputs
 
 ## Overview
 
-`listor` performs a bounded logical set operation across two local sequence inputs. EMBOSS-RS v1 treats sequence sets as exact normalized sequence-content sets keyed by molecule kind and uppercase residues, removes duplicates within each input before the operator is applied, and preserves first-seen representatives in deterministic output order.
+`listor` performs a bounded logical set operation across two local sequence inputs. Epithema v1 treats sequence sets as exact normalized sequence-content sets keyed by molecule kind and uppercase residues, removes duplicates within each input before the operator is applied, and preserves first-seen representatives in deterministic output order.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a sequence collection through the shared FASTA output path rather
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs listor`. Validation currently covers deterministic `OR`, `NOT`, and duplicate-elimination behavior in the Rust tool layer, plus a governed service example for `XOR` against committed fixtures.
+This method is implemented and exposed through `epithema listor`. Validation currently covers deterministic `OR`, `NOT`, and duplicate-elimination behavior in the Rust tool layer, plus a governed service example for `XOR` against committed fixtures.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not implement identifier-based set logic, fuzzy sequence 
 - Artifact ID: `listor_first_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/listor_first.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/listor_first.fasta`
 - Notes: Repository-managed first input fixture containing two records for deterministic logical set validation.
 
 ### Second set FASTA fixture
@@ -55,7 +55,7 @@ The first release does not implement identifier-based set logic, fuzzy sequence 
 - Artifact ID: `listor_second_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/listor_second.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/listor_second.fasta`
 - Notes: Repository-managed second input fixture sharing one exact sequence with the first fixture and contributing one unique sequence.
 
 ## Declared Examples
@@ -72,7 +72,7 @@ The first release does not implement identifier-based set logic, fuzzy sequence 
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

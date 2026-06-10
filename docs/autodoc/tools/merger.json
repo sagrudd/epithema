@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "merger-v1",
   "tool": {
     "name": "merger",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`merger` combines exactly one sequence record from a left input and one sequence record from a right input by taking the longest positive exact overlap between the left suffix and right prefix. The EMBOSS-RS v1 implementation is intentionally conservative and emits one merged sequence record rather than attempting assembly graph or consensus behavior."
+      "content": "`merger` combines exactly one sequence record from a left input and one sequence record from a right input by taking the longest positive exact overlap between the left suffix and right prefix. The Epithema v1 implementation is intentionally conservative and emits one merged sequence record rather than attempting assembly graph or consensus behavior."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs merger`. Validation currently covers a deterministic one-record overlap merge against committed FASTA fixtures, as well as no-overlap failure behavior in the Rust tool layer."
+      "content": "This method is implemented and exposed through `epithema merger`. Validation currently covers a deterministic one-record overlap merge against committed FASTA fixtures, as well as no-overlap failure behavior in the Rust tool layer."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/merger_left.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/merger_left.fasta"
       },
       "description": "Repository-managed left input fixture ending with the exact overlap used for deterministic merger validation."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/merger_right.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/merger_right.fasta"
       },
       "description": "Repository-managed right input fixture beginning with the exact overlap used for deterministic merger validation."
     }
@@ -95,7 +95,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

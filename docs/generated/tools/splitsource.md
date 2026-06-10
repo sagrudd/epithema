@@ -9,7 +9,7 @@ Split annotated records into one fragment per simple source feature
 ## Document Metadata
 
 - Document ID: `splitsource-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `feature_tools`
 - Legacy names: `splitsource`
@@ -22,7 +22,7 @@ Split annotated records into one fragment per simple source feature
 
 ## Overview
 
-`splitsource` divides one annotated sequence record into multiple fragments using `source` features as the split plan. EMBOSS-RS v1 treats only simple single-span `source` features as eligible, requires at least two such features per record, and emits one unannotated fragment sequence per source interval in source order.
+`splitsource` divides one annotated sequence record into multiple fragments using `source` features as the split plan. Epithema v1 treats only simple single-span `source` features as eligible, requires at least two such features per record, and emits one unannotated fragment sequence per source interval in source order.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits a sequence collection through the shared FASTA output path. Fragm
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs splitsource`. Validation currently covers deterministic splitting of a committed GenBank fixture containing two `source` features, along with rejection of records that do not contain multiple eligible source spans.
+This method is implemented and exposed through `epithema splitsource`. Validation currently covers deterministic splitting of a committed GenBank fixture containing two `source` features, along with rejection of records that do not contain multiple eligible source spans.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not preserve annotation on emitted fragments, does not su
 - Artifact ID: `splitsource_gbk_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/splitsource_annotated.gbk`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/splitsource_annotated.gbk`
 - Notes: Repository-managed annotated GenBank fixture containing two simple `source` features for deterministic fragment emission.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release does not preserve annotation on emitted fragments, does not su
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ Pairwise p-distance matrix for equal-length sequence sets
 ## Document Metadata
 
 - Document ID: `distmat-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_analysis`
 - Legacy names: `distmat`
@@ -22,7 +22,7 @@ Pairwise p-distance matrix for equal-length sequence sets
 
 ## Overview
 
-`distmat` computes a deterministic p-distance matrix for one local sequence set. The current EMBOSS-RS implementation uses the shared sequence loader and reports mismatch fraction as `mismatches / sequence_length` for each pair in stable input order.
+`distmat` computes a deterministic p-distance matrix for one local sequence set. The current Epithema implementation uses the shared sequence loader and reports mismatch fraction as `mismatches / sequence_length` for each pair in stable input order.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ CLI and service output is a stable square table with one row per input record an
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs distmat`. Current Rust service coverage exercises the committed equal-length three-record FASTA fixture and locks down the expected p-distance rows in stable source order.
+This method is implemented and exposed through `epithema distmat`. Current Rust service coverage exercises the committed equal-length three-record FASTA fixture and locks down the expected p-distance rows in stable source order.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ Mixed-length inputs fail validation instead of being padded, aligned, or compare
 - Artifact ID: `equal_length_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed three-record FASTA fixture with equal-length sequences used for deterministic p-distance validation.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ Mixed-length inputs fail validation instead of being padded, aligned, or compare
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

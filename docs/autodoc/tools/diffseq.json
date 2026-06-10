@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "diffseq-v1",
   "tool": {
     "name": "diffseq",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`diffseq` compares exactly one sequence from each input, computes a deterministic global alignment, and reports contiguous mismatch or indel blocks in a governed table. EMBOSS-RS v1 treats the alignment as the comparison substrate and emits typed block coordinates instead of a prose-only narrative."
+      "content": "`diffseq` compares exactly one sequence from each input, computes a deterministic global alignment, and reports contiguous mismatch or indel blocks in a governed table. Epithema v1 treats the alignment as the comparison substrate and emits typed block coordinates instead of a prose-only narrative."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs diffseq`. Validation currently covers one committed substitution case through the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema diffseq`. Validation currently covers one committed substitution case through the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/diffseq_left.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/diffseq_left.fasta"
       },
       "description": "Repository-managed one-record FASTA fixture used as the left-hand diffseq input."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/diffseq_right.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/diffseq_right.fasta"
       },
       "description": "Repository-managed one-record FASTA fixture used as the right-hand diffseq input."
     }
@@ -99,7 +99,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS diffseq application",

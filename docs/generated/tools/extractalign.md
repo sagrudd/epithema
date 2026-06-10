@@ -9,7 +9,7 @@ Extract rows and an optional 1-based inclusive column range from an alignment
 ## Document Metadata
 
 - Document ID: `extractalign-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `extractalign`
@@ -34,7 +34,7 @@ The result is an extracted alignment payload with preserved row ordering from th
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs extractalign`. Current Rust service coverage exercises mixed row-identifier and row-ordinal selection plus 1-based inclusive column slicing against the committed multiple-alignment fixture.
+This method is implemented and exposed through `epithema extractalign`. Current Rust service coverage exercises mixed row-identifier and row-ordinal selection plus 1-based inclusive column slicing against the committed multiple-alignment fixture.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ Both `--start` and `--end` must be provided together. Out-of-range ordinals, unk
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed Stockholm alignment fixture used to validate row and column extraction behavior.
 
 ## Declared Examples
@@ -67,7 +67,7 @@ Both `--start` and `--end` must be provided together. Out-of-range ordinals, unk
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

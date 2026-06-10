@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "getorf-v1",
   "tool": {
     "name": "getorf",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`getorf` extracts stop-bounded open reading frames from nucleotide input using the shared EMBOSS-RS translation foundations. The current v1 policy searches only forward frames 1-3, starts ORFs at `ATG`, and ends each ORF at the first in-frame stop codon, including the stop codon in the extracted nucleotide output."
+      "content": "`getorf` extracts stop-bounded open reading frames from nucleotide input using the shared Epithema translation foundations. The current v1 policy searches only forward frames 1-3, starts ORFs at `ATG`, and ends each ORF at the first in-frame stop codon, including the stop codon in the extracted nucleotide output."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `getorf` invocation in view and compares the EMBOSS-RS FASTA payload against a committed expected output. The governed comparison validates the first-release stop-bounded forward-ORF policy on the committed nucleotide fixture."
+      "content": "This acceptance anchor keeps one historical-style `getorf` invocation in view and compares the Epithema FASTA payload against a committed expected output. The governed comparison validates the first-release stop-bounded forward-ORF policy on the committed nucleotide fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs getorf`. Current validation covers ORF extraction from the committed stop-bounded fixture, stable coordinate encoding in identifiers, and clear rejection of non-nucleotide input."
+      "content": "This method is implemented and exposed through `epithema getorf`. Current validation covers ORF extraction from the committed stop-bounded fixture, stable coordinate encoding in identifiers, and clear rejection of non-nucleotide input."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/getorf_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/getorf_records.fasta"
       },
       "description": "Repository-managed nucleotide fixture containing two forward stop-bounded ORFs for deterministic ORF extraction validation."
     }
@@ -89,7 +89,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS getorf application",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "makeprotseq-v1",
   "tool": {
     "name": "makeprotseq",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs makeprotseq`. Validation currently covers deterministic seed behavior, identifier-prefix behavior, and protein output typing in the Rust tool and service layers."
+      "content": "This method is implemented and exposed through `epithema makeprotseq`. Validation currently covers deterministic seed behavior, identifier-prefix behavior, and protein output typing in the Rust tool and service layers."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-testkit/tests/fixtures/autodoc/makeprotseq_create_protein_record_case.md"
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/makeprotseq_create_protein_record_case.md"
       },
       "description": "Repository-managed note describing the deterministic protein generation case used for the governed `makeprotseq` surface."
     }
@@ -96,7 +96,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

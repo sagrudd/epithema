@@ -1,6 +1,6 @@
 # ROADMAP
 
-This roadmap converts the current EMBOSS-RS appraisal into a discrete task map.
+This roadmap converts the current Epithema appraisal into a discrete task map.
 The ordering is intentional: earlier items improve truthfulness and confidence
 in the platform, while later items expand method coverage in governed sweeps.
 
@@ -129,7 +129,7 @@ in the platform, while later items expand method coverage in governed sweeps.
       - `pepwindow`
       - `plotorf`
       - `freak`
-    - Define plot contracts in Rust and render them only in `emboss-r`.
+    - Define plot contracts in Rust and render them only in `epithemaR`.
 
 12. Reduce the “documented only” cohort count family by family.
     - Use the cohort validation report as the source of truth.
@@ -290,7 +290,7 @@ Current baseline for this next tier:
       - `plotorf`
       - a governed visualization for `dan`
       - a governed visualization for `wordcount`
-    - Rendering must remain R-owned in `emboss-r`.
+    - Rendering must remain R-owned in `epithemaR`.
 
 28. Begin historical evidence harvesting for the compared-anchor cohort.
     - The current framework can distinguish harvested evidence, but that count
@@ -790,7 +790,7 @@ next tier should therefore move from evidence creation to:
     - Program guardrails now recorded:
       - plot-contract evidence remains table-first and contract-validated
       - Rust continues to own computation and typed contract emission only
-      - `emboss-r` continues to own rendering and presentation ergonomics
+      - `epithemaR` continues to own rendering and presentation ergonomics
       - broad plotting rollout should not begin until that bounded Phase 1
         path is accepted as the first rework program
 
@@ -1151,8 +1151,8 @@ implementation-program cycle. The near-term priorities are:
 
 91. Implemented the bounded analytical core for `hmoment`.
     - Landed in:
-      - `crates/emboss-core/src/protein_hydrophobic_moment.rs`
-      - `crates/emboss-core/src/lib.rs`
+      - `crates/epithema-core/src/protein_hydrophobic_moment.rs`
+      - `crates/epithema-core/src/lib.rs`
     - Result:
       - method-associated Rust computation only
       - deterministic sliding-window hydrophobic-moment profile output
@@ -1165,9 +1165,9 @@ implementation-program cycle. The near-term priorities are:
 92. Add the typed `hmoment` plot-contract path and minimal narrow helper
     support.
     - Landed in:
-      - `crates/emboss-tools/src/protein_plots/hmoment.rs`
-      - `crates/emboss-tools/src/protein_plots/mod.rs`
-      - `crates/emboss-tools/tests/fixtures/hmoment_protein.fasta`
+      - `crates/epithema-tools/src/protein_plots/hmoment.rs`
+      - `crates/epithema-tools/src/protein_plots/mod.rs`
+      - `crates/epithema-tools/tests/fixtures/hmoment_protein.fasta`
     - Result:
       - typed single-series line-plot contract for the staged `hmoment` path
       - minimal narrow support kept inside the method-associated module
@@ -1179,10 +1179,10 @@ implementation-program cycle. The near-term priorities are:
 
 93. Expose `hmoment` through the governed shipped surface.
     - Implemented:
-      - `crates/emboss-tools/src/protein_plots/mod.rs`
-      - `crates/emboss-tools/src/lib.rs`
-      - `crates/emboss-service/src/service.rs`
-      - `crates/emboss-cli/src/app.rs`
+      - `crates/epithema-tools/src/protein_plots/mod.rs`
+      - `crates/epithema-tools/src/lib.rs`
+      - `crates/epithema-service/src/service.rs`
+      - `crates/epithema-cli/src/app.rs`
       - `docs/autodoc/tools/hmoment.json`
       - `docs/generated/tools/hmoment.md`
       - `docs/generated/validation/hmoment.validation.json`
@@ -1207,13 +1207,13 @@ implementation-program cycle. The near-term priorities are:
     - Complete.
     - Landed:
       - committed analytical-output fixture:
-        - `crates/emboss-testkit/tests/fixtures/acceptance_anchors/hmoment_hmoment_profile_example.tsv`
+        - `crates/epithema-testkit/tests/fixtures/acceptance_anchors/hmoment_hmoment_profile_example.tsv`
       - committed canonical plot-contract fixture:
-        - `crates/emboss-tools/tests/fixtures/hmoment_plot_contract.json`
+        - `crates/epithema-tools/tests/fixtures/hmoment_plot_contract.json`
       - governed autodoc update:
         - `docs/autodoc/tools/hmoment.json`
       - acceptance-anchor closure:
-        - `crates/emboss-testkit/src/anchor.rs`
+        - `crates/epithema-testkit/src/anchor.rs`
     - Outcome:
       - `hmoment` now carries compared evidence for both analytical-table and
         typed plot-contract outputs
@@ -1315,7 +1315,7 @@ implementation-program cycle. The near-term priorities are:
 
 99. Implement the bounded analytical core for `octanol`.
     - Complete.
-    - Landed as a method-associated core module in `emboss-core`:
+    - Landed as a method-associated core module in `epithema-core`:
       - deterministic sliding-window White-Wimley interface-minus-octanol
         profile computation
       - explicit bounded error types for non-protein input, invalid window,
@@ -1329,7 +1329,7 @@ implementation-program cycle. The near-term priorities are:
 
 100. Add the typed `octanol` plot-contract emission path.
     - Complete.
-    - Landed as a staged private `octanol` tool path in `emboss-tools`:
+    - Landed as a staged private `octanol` tool path in `epithema-tools`:
       - typed single-series line-plot contract emitted from the same bounded
         White-Wimley analytical computation path
       - focused staged tests for one-record execution, invalid record count,
@@ -1586,7 +1586,7 @@ implementation-program cycle. The near-term priorities are:
 
 111. Implement the bounded analytical core.
     - Complete.
-    - The bounded `pepinfo` analytical core now exists in `emboss-core` as a
+    - The bounded `pepinfo` analytical core now exists in `epithema-core` as a
       method-associated sliding-window multi-property protein profile.
     - Implemented bounded analytical surface:
       - one stable window row per emitted window
@@ -1609,7 +1609,7 @@ implementation-program cycle. The near-term priorities are:
 112. Add the typed plot-contract emission path.
     - Complete.
     - The staged typed `pepinfo` plot-contract path now exists in
-      `emboss-tools` as a private method-associated plotting module.
+      `epithema-tools` as a private method-associated plotting module.
     - Implemented staged surface:
       - one-record-only staged execution path over the Task `111` analytical
         core
@@ -2104,7 +2104,7 @@ implementation-program cycle. The near-term priorities are:
 
 137. Implement the bounded analytical core for `density`.
     - Complete.
-    - Added the bounded analytical core in `crates/emboss-core` as a
+    - Added the bounded analytical core in `crates/epithema-core` as a
       method-associated sliding-window nucleotide-density profile.
     - The core remains table-first and bounded:
       - nucleotide-sequence input only
@@ -2128,7 +2128,7 @@ implementation-program cycle. The near-term priorities are:
 
 138. Add the typed plot-contract emission path for `density`.
     - Complete.
-    - Added the staged typed plot-contract path in `crates/emboss-tools` as a
+    - Added the staged typed plot-contract path in `crates/epithema-tools` as a
       separate nucleotide plotting module over the bounded core.
     - The staged `density` path remains bounded:
       - exactly one nucleotide record
@@ -2671,7 +2671,7 @@ implementation-program cycle. The near-term priorities are:
       informal widening beyond the bounded plotting seam.
 
 175. Implement the bounded analytical core for the selected next plotting candidate.
-    - Added the bounded `isochore` analytical core in `emboss-core`.
+    - Added the bounded `isochore` analytical core in `epithema-core`.
     - Kept the implementation table-first, method-associated, and renderer-
       agnostic with explicit GC/AT window rows and bounded isochore-band
       classification.
@@ -2887,7 +2887,7 @@ implementation-program cycle. The near-term priorities are:
         itself proves otherwise
       - canonical fixture and compared-evidence obligations
       - explicit method-local non-goals preserving renderer ownership in
-        `emboss-r` and blocking generic plotting-framework widening
+        `epithemaR` and blocking generic plotting-framework widening
 
 189. Capture the exact start conditions for the first implementation patch of the selected next bounded continuation candidate.
     - Captured the explicit `banana` patch-start gate in the governance
@@ -2922,7 +2922,7 @@ implementation-program cycle. The near-term priorities are:
 
 192. Implement the bounded analytical core for the selected next bounded continuation candidate.
     - Implemented the bounded analytical core for `banana` in
-      `crates/emboss-core`.
+      `crates/epithema-core`.
     - Recorded the bounded core shape:
       - per-base analytical rows
       - local bend and curvature columns
@@ -2934,7 +2934,7 @@ implementation-program cycle. The near-term priorities are:
 
 193. Add the typed plot-contract emission path for the selected next bounded continuation candidate.
     - Added the staged typed `banana` plot-contract path in
-      `crates/emboss-tools/src/nucleotide_plots`.
+      `crates/epithema-tools/src/nucleotide_plots`.
     - Kept the emitted contract method-associated and deterministic:
       - tool: `banana`
       - method: `nucleotide_banana_profile`
@@ -3206,7 +3206,7 @@ implementation-program cycle. The near-term priorities are:
       bounded plotting seam is not stretched informally.
 
 208. Implement the bounded analytical core for the final bounded plotting continuation candidate.
-    - Added the bounded `syco` analytical core in `emboss-core` and exported
+    - Added the bounded `syco` analytical core in `epithema-core` and exported
       it through the crate root.
     - Landed a method-associated coding-sequence profile over codon windows
       using a bounded reference-profile synonymous preference score.
@@ -3214,7 +3214,7 @@ implementation-program cycle. The near-term priorities are:
       renderer-agnostic.
 
 209. Add the typed plot-contract emission path for the final bounded plotting continuation candidate.
-    - Added the staged typed `syco` plot-contract path in `emboss-tools`,
+    - Added the staged typed `syco` plot-contract path in `epithema-tools`,
       wired it through the nucleotide plotting module, and added a focused
       coding-sequence fixture.
     - Landed a deterministic single-series `syco_score` line contract derived
@@ -3496,10 +3496,10 @@ implementation-program cycle. The near-term priorities are:
 223. Implement the bounded provider-aware orchestration and normalized many-set return core for `seqretsetall`.
     - Complete.
     - Added the bounded `seqretsetall` execution core in
-      `crates/emboss-tools/src/retrieval_tools/seqretsetall.rs` and exported
-      it through `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+      `crates/epithema-tools/src/retrieval_tools/seqretsetall.rs` and exported
+      it through `crates/epithema-tools/src/retrieval_tools/mod.rs`.
     - Added the private multi-input service seam in
-      `crates/emboss-service/src/service.rs` so the bounded retrieval lead can
+      `crates/epithema-service/src/service.rs` so the bounded retrieval lead can
       resolve ordered local and provider-backed inputs through the same
       governed substrate already used by `seqret`.
     - What landed in the core:
@@ -3521,8 +3521,8 @@ implementation-program cycle. The near-term priorities are:
 224. Expose the governed output surface for deterministic many-set retrieval/write behavior.
     - Complete.
     - Added the front-end-neutral `seqretsetall` result surface in
-      `crates/emboss-service/src/service.rs` and the bounded descriptor entry
-      in `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+      `crates/epithema-service/src/service.rs` and the bounded descriptor entry
+      in `crates/epithema-tools/src/retrieval_tools/mod.rs`.
     - What landed in the governed surface:
       - a bounded `invoke_seqretsetall_with_client(...)` service path
       - `MethodResult`/`InvocationResponse` emission through
@@ -3545,7 +3545,7 @@ implementation-program cycle. The near-term priorities are:
     - What landed:
       - registry exposure through the governed tool-descriptor list
       - shipped service dispatch through `Service::invoke(...)`
-      - CLI routing coverage for `emboss-rs seqretsetall`
+      - CLI routing coverage for `epithema seqretsetall`
       - governed autodoc, generated docs, and generated validation stub for
         the bounded many-set retrieval surface
     - Current governed state at this task boundary is intentionally interim:
@@ -3770,7 +3770,7 @@ implementation-program cycle. The near-term priorities are:
 238. Complete. Implement the bounded provider-aware split-output orchestration
     and normalized return core for `seqretsplit`.
     - Added a method-associated `seqretsplit` core in
-      `crates/emboss-tools/src/retrieval_tools/seqretsplit.rs`.
+      `crates/epithema-tools/src/retrieval_tools/seqretsplit.rs`.
     - The landed bounded core now provides:
       - deterministic per-record split-output projections over one resolved
         `SeqretSource`
@@ -3790,9 +3790,9 @@ implementation-program cycle. The near-term priorities are:
 239. Complete. Expose the governed output surface for deterministic
     split-output retrieval behavior.
     - Added the bounded `seqretsplit` descriptor entry in
-      `crates/emboss-tools/src/retrieval_tools/mod.rs`.
+      `crates/epithema-tools/src/retrieval_tools/mod.rs`.
     - Added a bounded `invoke_seqretsplit_with_client(...)` service path in
-      `crates/emboss-service/src/service.rs`.
+      `crates/epithema-service/src/service.rs`.
     - The governed result surface now emits:
       - `ResultPayload::SequencePartitions` with one normalized record per
         deterministic split-output partition
@@ -4069,10 +4069,10 @@ implementation-program cycle. The near-term priorities are:
 
 253. Complete. Implement the bounded `infoassembly` core.
     - Added the bounded `infoassembly` analytical core in
-      `crates/emboss-tools/src/archive_tools/infoassembly.rs` and exported it
-      through `crates/emboss-tools/src/archive_tools/mod.rs`.
+      `crates/epithema-tools/src/archive_tools/infoassembly.rs` and exported it
+      through `crates/epithema-tools/src/archive_tools/mod.rs`.
     - Added the private `infoassembly` service seam in
-      `crates/emboss-service/src/service.rs`.
+      `crates/epithema-service/src/service.rs`.
     - What landed in the bounded core:
       - a method-associated `run_infoassembly(...)` path
       - deterministic assembly-first projection over normalized archive
@@ -4094,9 +4094,9 @@ implementation-program cycle. The near-term priorities are:
 
 254. Complete. Expose the bounded `infoassembly` result surface.
     - Added the bounded `infoassembly` descriptor entry in
-      `crates/emboss-tools/src/archive_tools/mod.rs`.
+      `crates/epithema-tools/src/archive_tools/mod.rs`.
     - Added the bounded `invoke_infoassembly_with_client(...)` service path in
-      `crates/emboss-service/src/service.rs`.
+      `crates/epithema-service/src/service.rs`.
     - What landed in the governed surface:
       - deterministic `ResultPayload::TableReport` emission for bounded
         assembly-first metadata rows
@@ -4117,13 +4117,13 @@ implementation-program cycle. The near-term priorities are:
       `docs/autodoc/tools/infoassembly.json`.
     - Added a managed-asset mocked-provider autodoc case for the bounded
       shipment example in
-      `crates/emboss-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md`.
+      `crates/epithema-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md`.
     - Refreshed the generated docs and validation/report surface to the honest
       interim executable-only state.
     - What landed in this shipment step:
       - governed registry exposure for `infoassembly`
-      - governed service dispatch exposure for `emboss-rs infoassembly`
-      - CLI routing coverage for `emboss-rs infoassembly`
+      - governed service dispatch exposure for `epithema infoassembly`
+      - CLI routing coverage for `epithema infoassembly`
       - generated tool page and validation stub for `infoassembly`
     - Interim governed state after this task:
       - shipped methods `107`
@@ -4143,9 +4143,9 @@ implementation-program cycle. The near-term priorities are:
 
 256. Complete. Close the `infoassembly` compared-evidence and harvested-provenance slice.
     - Added the bounded `infoassembly` acceptance-anchor fixture in
-      `crates/emboss-testkit/tests/fixtures/acceptance_anchors/infoassembly_normalize_ena_assembly_metadata.tsv`.
+      `crates/epithema-testkit/tests/fixtures/acceptance_anchors/infoassembly_normalize_ena_assembly_metadata.tsv`.
     - Wired `infoassembly` into the acceptance-anchor harness through the
-      mocked-provider execution path in `crates/emboss-testkit/src/anchor.rs`.
+      mocked-provider execution path in `crates/epithema-testkit/src/anchor.rs`.
     - Updated the governed autodoc contract in
       `docs/autodoc/tools/infoassembly.json` to record the bounded
       compared-and-harvested example honestly.
@@ -4372,7 +4372,7 @@ implementation-program cycle. The near-term priorities are:
 
 268. Complete. Implement the bounded `psiphi` analytical core.
     - Added the bounded method-associated `psiphi` analytical core in
-      `emboss-core` and exported it through the core library surface.
+      `epithema-core` and exported it through the core library surface.
     - What landed in the bounded core:
       - a deterministic `protein_psiphi_profile(...)` computation path over
         PDB `ATOM` coordinate text
@@ -5000,7 +5000,7 @@ implementation-program cycle. The near-term priorities are:
       - `release_truth_current: true`
 
 292. Implement the bounded primer-pair matching analytical core for `primersearch`.
-    - Added the bounded `primersearch` analytical core in `emboss-core` and
+    - Added the bounded `primersearch` analytical core in `epithema-core` and
       exported it through the crate root.
     - Landed a method-associated deterministic profile over one nucleotide
       target record plus a stable ordered primer-pair set.
@@ -5020,9 +5020,9 @@ implementation-program cycle. The near-term priorities are:
       - invalid primer-pattern symbols
 
 293. Expose the deterministic typed result surface for normalized `primersearch` hit reporting.
-    - Added the bounded `primersearch` result surface in `emboss-tools` and
-      a direct public `EmbossService::invoke_primersearch(...)` seam in
-      `emboss-service`.
+    - Added the bounded `primersearch` result surface in `epithema-tools` and
+      a direct public `EpithemaService::invoke_primersearch(...)` seam in
+      `epithema-service`.
     - Landed a method-local local-input wrapper for:
       - one nucleotide target input
       - one tab-delimited primer-pair file
@@ -5297,8 +5297,8 @@ implementation-program cycle. The near-term priorities are:
          to the method
 
 307. Implement the bounded primer-and-oligo design analytical core for `eprimer3`.
-    - Added the bounded `eprimer3` analytical core in `crates/emboss-core/src/eprimer3.rs`
-      and exported it through `crates/emboss-core/src/lib.rs`.
+    - Added the bounded `eprimer3` analytical core in `crates/epithema-core/src/eprimer3.rs`
+      and exported it through `crates/epithema-core/src/lib.rs`.
     - Landed a deterministic local candidate-generation path over one
       nucleotide sequence with:
       - explicit bounded design parameters for oligo length, step size, GC
@@ -5316,10 +5316,10 @@ implementation-program cycle. The near-term priorities are:
 
 308. Expose the deterministic typed result surface for normalized `eprimer3` candidate reporting.
     - Added the bounded `eprimer3` result surface in:
-      - `crates/emboss-tools/src/primer_tools/eprimer3.rs`
-      - `crates/emboss-tools/src/primer_tools/mod.rs`
-      - `crates/emboss-service/src/service.rs`
-      - `crates/emboss-tools/tests/fixtures/eprimer3_targets.fasta`
+      - `crates/epithema-tools/src/primer_tools/eprimer3.rs`
+      - `crates/epithema-tools/src/primer_tools/mod.rs`
+      - `crates/epithema-service/src/service.rs`
+      - `crates/epithema-tools/tests/fixtures/eprimer3_targets.fasta`
     - Landed a method-local bounded tool path over the Task 307 analytical
       core with:
       - one local nucleotide input only
@@ -5328,7 +5328,7 @@ implementation-program cycle. The near-term priorities are:
       - stable table-first candidate rows for record, candidate identity,
         strand, interval, sequence, GC fraction, Tm, and 3'-terminal GC
         count
-      - a public direct `EmbossService::invoke_eprimer3(...)` seam that emits
+      - a public direct `EpithemaService::invoke_eprimer3(...)` seam that emits
         `ResultPayload::TableReport`
     - Intentionally stopped short of shipment:
       - no governed registry exposure yet
@@ -5572,8 +5572,8 @@ implementation-program cycle. The near-term priorities are:
 
 322. Implement the bounded siRNA-candidate discovery analytical core for `sirna`.
     - Added the bounded `sirna` analytical core in
-      `crates/emboss-core/src/sirna.rs` and exported it through
-      `crates/emboss-core/src/lib.rs`.
+      `crates/epithema-core/src/sirna.rs` and exported it through
+      `crates/epithema-core/src/lib.rs`.
     - Landed a deterministic local candidate-generation path over one
       nucleotide sequence with:
       - explicit bounded design parameters for duplex length, step size, GC
@@ -5590,10 +5590,10 @@ implementation-program cycle. The near-term priorities are:
 
 323. Expose the deterministic typed result surface for normalized `sirna` candidate reporting.
     - Added the bounded `sirna` result surface in:
-      - `crates/emboss-tools/src/primer_tools/sirna.rs`
-      - `crates/emboss-tools/src/primer_tools/mod.rs`
-      - `crates/emboss-service/src/service.rs`
-      - `crates/emboss-tools/tests/fixtures/sirna_targets.fasta`
+      - `crates/epithema-tools/src/primer_tools/sirna.rs`
+      - `crates/epithema-tools/src/primer_tools/mod.rs`
+      - `crates/epithema-service/src/service.rs`
+      - `crates/epithema-tools/tests/fixtures/sirna_targets.fasta`
     - Landed a method-local bounded tool path over the Task 322 analytical
       core with:
       - one local nucleotide input only
@@ -5602,7 +5602,7 @@ implementation-program cycle. The near-term priorities are:
       - stable table-first candidate rows for record, candidate identity,
         strand, target interval, duplex sequences, GC fraction, guide 5'
         base, guide-seed A/U count, and maximum homopolymer run
-      - a public direct `EmbossService::invoke_sirna(...)` seam that emits
+      - a public direct `EpithemaService::invoke_sirna(...)` seam that emits
         `ResultPayload::TableReport`
     - Intentionally stopped short of shipment:
       - no governed registry exposure yet
@@ -5891,8 +5891,8 @@ implementation-program cycle. The near-term priorities are:
 
 338. Implement the bounded keyword-discovery analytical core.
     - Complete.
-    - Added method-associated bounded `emboss-core` support for `wossname`
-      in `crates/emboss-core/src/wossname.rs`.
+    - Added method-associated bounded `epithema-core` support for `wossname`
+      in `crates/epithema-core/src/wossname.rs`.
     - Added typed domain support for:
       - bounded catalog rows
       - normalized query terms
@@ -5912,9 +5912,9 @@ implementation-program cycle. The near-term priorities are:
 
 339. Expose the deterministic typed result surface for normalized keyword-match reporting.
     - Complete.
-    - Added method-local `emboss-tools` support for bounded `wossname`
-      result reporting in `crates/emboss-tools/src/command_tools/wossname.rs`.
-    - Added a direct public non-shipped `EmbossService::invoke_wossname(...)`
+    - Added method-local `epithema-tools` support for bounded `wossname`
+      result reporting in `crates/epithema-tools/src/command_tools/wossname.rs`.
+    - Added a direct public non-shipped `EpithemaService::invoke_wossname(...)`
       seam for local testing without governed registry or CLI exposure.
     - Added typed normalized result rows for:
       - matched tool identity
@@ -5930,15 +5930,15 @@ implementation-program cycle. The near-term priorities are:
 340. Expose `wossname` through the governed shipped surface.
     - Complete.
     - Added `wossname` to the governed shipped registry in
-      `crates/emboss-tools/src/lib.rs`.
+      `crates/epithema-tools/src/lib.rs`.
     - Added shipped service dispatch and shipped help-text routing in
-      `crates/emboss-service/src/service.rs`.
-    - Added CLI routing coverage for `emboss-rs wossname` in
-      `crates/emboss-cli/src/app.rs`.
+      `crates/epithema-service/src/service.rs`.
+    - Added CLI routing coverage for `epithema wossname` in
+      `crates/epithema-cli/src/app.rs`.
     - Added the curated bounded autodoc contract in
       `docs/autodoc/tools/wossname.json`.
     - Added the committed query fixture
-      `crates/emboss-tools/tests/fixtures/wossname_query.txt` so the shipped
+      `crates/epithema-tools/tests/fixtures/wossname_query.txt` so the shipped
       validation case is runnable rather than declared-only.
     - Regenerated the shipped docs page and validation stub:
       - `docs/generated/tools/wossname.md`
@@ -5956,9 +5956,9 @@ implementation-program cycle. The near-term priorities are:
 341. Add canonical analytical fixtures plus compared evidence on normalized keyword-match rows.
     - Complete.
     - Added the canonical compared acceptance-anchor fixture in
-      `crates/emboss-testkit/tests/fixtures/acceptance_anchors/wossname_report_deterministic_keyword_matches_against_governed_local_tool_metadata.tsv`.
+      `crates/epithema-testkit/tests/fixtures/acceptance_anchors/wossname_report_deterministic_keyword_matches_against_governed_local_tool_metadata.tsv`.
     - Added `wossname` to the acceptance-anchor harness in
-      `crates/emboss-testkit/src/anchor.rs`.
+      `crates/epithema-testkit/src/anchor.rs`.
     - Wired the acceptance anchor to the committed keyword-query fixture so
       the bounded command-discovery slice executes through the governed local
       lookup path before comparison.
@@ -6179,8 +6179,8 @@ implementation-program cycle. The near-term priorities are:
 
 352. Implement the bounded related-program discovery analytical core.
     - Complete.
-    - Added method-associated bounded `emboss-core` support for `seealso`
-      in `crates/emboss-core/src/seealso.rs`.
+    - Added method-associated bounded `epithema-core` support for `seealso`
+      in `crates/epithema-core/src/seealso.rs`.
     - Added typed domain support for:
       - bounded catalog rows with governed family metadata
       - stable related-program rows
@@ -6203,13 +6203,13 @@ implementation-program cycle. The near-term priorities are:
 353. Expose the deterministic typed result surface for normalized related-program reporting.
     - Complete.
     - Added method-associated bounded `seealso` result-surface support in:
-      - `crates/emboss-tools/src/command_tools/seealso.rs`
-      - `crates/emboss-tools/src/command_tools/mod.rs`
-      - `crates/emboss-service/src/service.rs`
+      - `crates/epithema-tools/src/command_tools/seealso.rs`
+      - `crates/epithema-tools/src/command_tools/mod.rs`
+      - `crates/epithema-service/src/service.rs`
     - Added a typed tools-layer wrapper over the Task `352` analytical core
       that adapts governed local tool descriptors into normalized
       related-program rows.
-    - Added a direct public `EmbossService::invoke_seealso(...)` seam that
+    - Added a direct public `EpithemaService::invoke_seealso(...)` seam that
       reports deterministic table-first rows for:
       - query tool
       - related tool
@@ -6231,7 +6231,7 @@ implementation-program cycle. The near-term priorities are:
     - Added `seealso` to the governed descriptor registry and the shared
       service dispatch/help surfaces.
     - Kept CLI routing on the existing governed external-tool path and added a
-      focused parser regression for `emboss-rs seealso needle`.
+      focused parser regression for `epithema seealso needle`.
     - Added governed autodoc input plus generated docs and validation metadata
       for the bounded shipped surface.
     - Added the canonical analytical fixture and compared acceptance-anchor
@@ -6251,10 +6251,10 @@ implementation-program cycle. The near-term priorities are:
     - Re-ran the release-truth surface after the governed `seealso`
       shipment:
       - `make release-generated-check
-        PYTHON=/Users/stephen/Projects/emboss-rs/.venv-docs/bin/python`
+        PYTHON=/Users/stephen/Projects/epithema/.venv-docs/bin/python`
       - `python3 scripts/release_metadata.py truth-check`
       - `make lint-docs
-        PYTHON=/Users/stephen/Projects/emboss-rs/.venv-docs/bin/python`
+        PYTHON=/Users/stephen/Projects/epithema/.venv-docs/bin/python`
       - `make anchor-validation`
     - Confirmed the current generated truth state:
       - shipped methods: `113`
@@ -6380,7 +6380,7 @@ implementation-program cycle. The near-term priorities are:
       - broadening it to data-file delivery, provider lookup, acquisition, or
         indexing would exceed the command-discovery seam
     - Existing repository surfaces reinforce the routing decision:
-      - `crates/emboss-tools/src/command_tools/mod.rs` only contains the
+      - `crates/epithema-tools/src/command_tools/mod.rs` only contains the
         shipped bounded local-metadata helpers `wossname` and `seealso`
       - no `embossdata` autodoc, generated tool page, or generated validation
         report exists
@@ -6735,7 +6735,7 @@ Current baseline for this tier:
 375. Complete. Expose `whichdb` through the governed shipped surface.
     - Added the governed `whichdb` registry descriptor in the retrieval tools
       family.
-    - Added service dispatch for `emboss-rs whichdb` with a table-report
+    - Added service dispatch for `epithema whichdb` with a table-report
       payload derived from the bounded typed result surface.
     - The CLI external-subcommand route now accepts `whichdb` through the same
       governed service path as other shipped tools.
@@ -7049,7 +7049,7 @@ Current baseline for this tier:
     - Added an explicit service dispatch route for `assemblyget` that accepts
       one provider-qualified archive accession and resolves metadata through
       the existing governed archive provider seam.
-    - Added CLI parse coverage proving `emboss-rs assemblyget <query>` routes
+    - Added CLI parse coverage proving `epithema assemblyget <query>` routes
       through the shared governed tool path.
     - The shipped service adapter emits the stable typed `assemblyget` table
       report from Task `385` with `manifest_intent_only` mode and
@@ -7174,7 +7174,7 @@ Current baseline for the next milestone:
       - `make release-check`
       - `make release-artifacts`
     - Recorded environment prerequisites honestly, including Rust/Cargo,
-      Python/Sphinx docs requirements, optional sibling `emboss-r` availability,
+      Python/Sphinx docs requirements, optional sibling `epithemaR` availability,
       and Docker availability for `make release-container`.
     - Stated explicitly that hosted CI, Pages deployment, GHCR publication,
       release attachment, and repository-token permission behavior cannot be
@@ -7189,10 +7189,10 @@ Current baseline for the next milestone:
       GitHub Actions remained manually disabled.
     - Confirmed `release-generated-check` left `docs/generated` unchanged.
     - The first `make release-check` run exposed stale `114` expectations in
-      the `emboss-testkit` harvest/comparison/full-compared report tests after
+      the `epithema-testkit` harvest/comparison/full-compared report tests after
       the governed method surface increased to `115`; updated those assertions
       to match the generated truth.
-    - Re-ran `cargo test -p emboss-testkit --lib
+    - Re-ran `cargo test -p epithema-testkit --lib
       derives_report_for_current_repository_state` and `make release-check`;
       both passed.
     - Existing missing-documentation warning noise remains non-fatal and was
@@ -7224,18 +7224,18 @@ Current baseline for the next milestone:
       publication as passed validation.
     - Ran `make release-artifacts`; it completed and produced the ignored local
       bundle files under `dist/release/1.0.0/`:
-      `emboss-rs-1.0.0-linux-x86_64.tar.gz`,
-      `emboss-rs-1.0.0-linux-x86_64.tar.gz.sha256`,
-      `emboss-rs-docs-1.0.0.tar.gz`,
-      `emboss-rs-validation-1.0.0.tar.gz`, and
-      `emboss-rs-release-manifest.json`.
+      `epithema-1.0.0-linux-x86_64.tar.gz`,
+      `epithema-1.0.0-linux-x86_64.tar.gz.sha256`,
+      `epithema-docs-1.0.0.tar.gz`,
+      `epithema-validation-1.0.0.tar.gz`, and
+      `epithema-release-manifest.json`.
     - Verified the binary archive checksum with `sha256sum --check` and
       inspected the manifest and docs archive structure.
     - Docker was available locally (`docker version` reported server
       `29.3.1`), so `make release-container` was run and completed
       successfully.
-    - Ran `docker run --rm emboss-rs:1.0.0 --version`; it reported
-      `emboss-rs 1.0.0`.
+    - Ran `docker run --rm epithema:1.0.0 --version`; it reported
+      `epithema 1.0.0`.
     - Host and artifact platform readiness is not complete: this run occurred
       on Darwin arm64, the archive named `linux-x86_64` contains a Mach-O arm64
       binary, and the locally built Docker image reports `linux/arm64`. These
@@ -7248,7 +7248,7 @@ Current baseline for the next milestone:
     - Decide whether to keep workflows disabled, re-enable selected workflows,
       or defer release cutover until hosted validation is available again.
     - Current hosted workflow state was checked with `gh workflow list --repo
-      sagrudd/emboss-rs --all`; `CI`, `Docs Pages`, and `Release` remain
+      sagrudd/epithema --all`; `CI`, `Docs Pages`, and `Release` remain
       `disabled_manually`.
     - Local validation from Tasks `391` through `395` covered suspended-action
       documentation, local CI-parity command capture, release truth/version/
@@ -7322,7 +7322,7 @@ Current baseline for the next milestone:
 
 399. Validate the Linux x86_64 release binary smoke path.
     - Extract the Linux x86_64 archive produced by Task `398`.
-    - Run `emboss-rs --version` from the extracted binary on the Linux x86_64
+    - Run `epithema --version` from the extracted binary on the Linux x86_64
       host.
     - Run one low-risk CLI command that exercises governed method discovery or
       help output without requiring network access.
@@ -7354,4 +7354,4 @@ Current baseline for the next milestone:
       publication readiness, and any hosted workflow results.
     - Identify the remaining blockers before tagging `v1.0.0`.
     - Decide whether the project is ready for coordinated release cutover with
-      `emboss-r` or needs another bounded stabilization milestone.
+      `epithemaR` or needs another bounded stabilization milestone.

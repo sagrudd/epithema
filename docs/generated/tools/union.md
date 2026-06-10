@@ -9,7 +9,7 @@ Combine two or more sequence inputs into one deterministic output stream
 ## Document Metadata
 
 - Document ID: `union-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `union`
@@ -22,19 +22,19 @@ Combine two or more sequence inputs into one deterministic output stream
 
 ## Overview
 
-`union` combines two or more local sequence inputs into one output stream by stable concatenation. The first EMBOSS-RS release keeps the semantics intentionally simple: preserve input order, preserve per-input record order, and preserve duplicates exactly as they were read.
+`union` combines two or more local sequence inputs into one output stream by stable concatenation. The first Epithema release keeps the semantics intentionally simple: preserve input order, preserve per-input record order, and preserve duplicates exactly as they were read.
 
 ## Inputs
 
-The current v1 interface requires at least two local sequence input paths. Each input is loaded through the shared EMBOSS-RS sequence readers for FASTA, FASTQ, EMBL, and GenBank.
+The current v1 interface requires at least two local sequence input paths. Each input is loaded through the shared Epithema sequence readers for FASTA, FASTQ, EMBL, and GenBank.
 
 ## Outputs
 
-The tool emits one combined FASTA sequence collection through the shared output path. CLI output also includes the standard EMBOSS-RS method summary lines reporting input count, output record count, ordering policy, duplicate policy, and FASTA output format.
+The tool emits one combined FASTA sequence collection through the shared output path. CLI output also includes the standard Epithema method summary lines reporting input count, output record count, ordering policy, duplicate policy, and FASTA output format.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs union`. Validation currently covers two-input concatenation, duplicate-identifier preservation, too-few-input failure, and malformed or empty-input failure behavior.
+This method is implemented and exposed through `epithema union`. Validation currently covers two-input concatenation, duplicate-identifier preservation, too-few-input failure, and malformed or empty-input failure behavior.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not perform identifier-based or content-based deduplicati
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used as the leading input for deterministic union validation.
 
 ### Two-record FASTA fixture
@@ -55,7 +55,7 @@ The first release does not perform identifier-based or content-based deduplicati
 - Artifact ID: `two_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/two_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/two_records.fasta`
 - Notes: Repository-managed FASTA fixture appended after the three-record input during union validation.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The first release does not perform identifier-based or content-based deduplicati
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

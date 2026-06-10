@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "seealso-v1",
   "tool": {
     "name": "seealso",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`seealso` is the bounded related-program member of the active command discovery and help-navigation rework program. The EMBOSS-RS v1 surface resolves one governed local tool and reports deterministic related-program rows derived from governed family metadata and bounded short-description term overlap."
+      "content": "`seealso` is the bounded related-program member of the active command discovery and help-navigation rework program. The Epithema v1 surface resolves one governed local tool and reports deterministic related-program rows derived from governed family metadata and bounded short-description term overlap."
     },
     {
       "id": "inputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seealso`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local related-program lookup path, and canonical compared evidence for deterministic related-program rows."
+      "content": "This method is implemented and exposed through `epithema seealso`. The governed surface ships with a checked-in validation stub, curated legacy provenance, Rust coverage for the bounded local related-program lookup path, and canonical compared evidence for deterministic related-program rows."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/seealso_query_tool.txt"
+        "asset_id": "crates/epithema-tools/tests/fixtures/seealso_query_tool.txt"
       },
       "description": "Repository-managed query-tool fixture used to anchor deterministic bounded seealso validation."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS seealso application",

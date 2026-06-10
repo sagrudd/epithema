@@ -9,7 +9,7 @@ Perform deterministic many-vs-many global pairwise alignment and report comparis
 ## Document Metadata
 
 - Document ID: `needleall-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `pairwise_alignment`
 - Legacy names: `needleall`
@@ -22,7 +22,7 @@ Perform deterministic many-vs-many global pairwise alignment and report comparis
 
 ## Overview
 
-`needleall` performs deterministic many-vs-many global pairwise alignment between every query record and every target record in two local sequence sets. EMBOSS-RS v1 keeps the surface deliberately structured: comparisons run in query-major then target-major order and the CLI reports one summary row per pair instead of rendering every alignment body.
+`needleall` performs deterministic many-vs-many global pairwise alignment between every query record and every target record in two local sequence sets. Epithema v1 keeps the surface deliberately structured: comparisons run in query-major then target-major order and the CLI reports one summary row per pair instead of rendering every alignment body.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ CLI and service output is a deterministic summary table with one row per query/t
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs needleall`. Current Rust service coverage exercises committed multi-record FASTA fixtures and locks down the query-major, target-major ordering of the four pairwise comparisons.
+This method is implemented and exposed through `epithema needleall`. Current Rust service coverage exercises committed multi-record FASTA fixtures and locks down the query-major, target-major ordering of the four pairwise comparisons.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release reports a structured comparison table only. It does not emit e
 - Artifact ID: `needleall_queries_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/needleall_queries.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/needleall_queries.fasta`
 - Notes: Repository-managed two-record FASTA fixture used as the query set.
 
 ### Needleall target FASTA fixture
@@ -55,7 +55,7 @@ The first release reports a structured comparison table only. It does not emit e
 - Artifact ID: `needleall_targets_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/needleall_targets.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/needleall_targets.fasta`
 - Notes: Repository-managed two-record FASTA fixture used as the target set.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The first release reports a structured comparison table only. It does not emit e
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

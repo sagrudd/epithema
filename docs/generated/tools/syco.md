@@ -9,7 +9,7 @@ Report a bounded synonymous codon preference profile and emit a line-plot contra
 ## Document Metadata
 
 - Document ID: `syco-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `nucleotide_plots`
 - Legacy names: `syco`
@@ -22,7 +22,7 @@ Report a bounded synonymous codon preference profile and emit a line-plot contra
 
 ## Overview
 
-`syco` is the final bounded plotting continuation candidate after the shipped `banana` slice. The EMBOSS-RS v1 surface computes one deterministic coding-sequence synonymous codon preference profile for exactly one nucleotide record against a reference codon-usage source and emits both a stable analytical table and a typed single-series line-plot contract.
+`syco` is the final bounded plotting continuation candidate after the shipped `banana` slice. The Epithema v1 surface computes one deterministic coding-sequence synonymous codon preference profile for exactly one nucleotide record against a reference codon-usage source and emits both a stable analytical table and a typed single-series line-plot contract.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The implementation emits a stable analytical table with `sequence_id`, `window_s
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `syco` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering. This shipped `syco` slice intentionally stays single-series and renderer-agnostic even though the analytical surface is driven by coding-sequence and codon-usage inputs.
+Rust does not render figures. The formal contract emitted by `syco` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering. This shipped `syco` slice intentionally stays single-series and renderer-agnostic even though the analytical surface is driven by coding-sequence and codon-usage inputs.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs syco`. The governed surface now includes canonical checked-in compared evidence for both the analytical table and the typed line-plot contract, alongside the generated validation stub and harvested legacy provenance.
+This method is implemented and exposed through `epithema syco`. The governed surface now includes canonical checked-in compared evidence for both the analytical table and the typed line-plot contract, alongside the generated validation stub and harvested legacy provenance.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports only the single-record bounded `syco` profile against one supplied r
 - Artifact ID: `syco_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/syco_coding_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/syco_coding_nucleotide.fasta`
 - Notes: Repository-managed coding nucleotide fixture used for deterministic syco validation.
 
 ### Reference codon profile source fixture for governed syco validation
@@ -59,7 +59,7 @@ v1 supports only the single-record bounded `syco` profile against one supplied r
 - Artifact ID: `syco_reference_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/codon_reference.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/codon_reference.fasta`
 - Notes: Repository-managed coding reference fixture used to derive the bounded syco reference codon-usage profile.
 
 ## Declared Examples
@@ -81,7 +81,7 @@ v1 supports only the single-record bounded `syco` profile against one supplied r
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS syco application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/syco.acd`)
 

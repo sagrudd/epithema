@@ -9,7 +9,7 @@ Deterministic ungapped pairwise similarity summary
 ## Document Metadata
 
 - Document ID: `matcher-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_analysis`
 - Legacy names: `matcher`
@@ -22,7 +22,7 @@ Deterministic ungapped pairwise similarity summary
 
 ## Overview
 
-`matcher` currently provides a conservative direct-comparison summary between exactly one query record and one target record. EMBOSS-RS v1 compares the shared positional overlap without introducing gaps and reports identities, mismatches, compared length, identity percentage, and any input-length difference in a stable table form.
+`matcher` currently provides a conservative direct-comparison summary between exactly one query record and one target record. Epithema v1 compares the shared positional overlap without introducing gaps and reports identities, mismatches, compared length, identity percentage, and any input-length difference in a stable table form.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The output is a deterministic single-row summary table rather than a rendered lo
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs matcher`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the expected direct-comparison counts for the overlap between `ACGT` and `ACT`.
+This method is implemented and exposed through `epithema matcher`. Current Rust service coverage exercises committed singleton FASTA fixtures and locks down the expected direct-comparison counts for the overlap between `ACGT` and `ACT`.
 
 ## Caveats
 
-The historical EMBOSS name suggests richer local-alignment behavior, but the current EMBOSS-RS v1 implementation is deliberately narrower. It does not perform Waterman-Eggert local alignment yet; it performs ungapped positional comparison only.
+The historical EMBOSS name suggests richer local-alignment behavior, but the current Epithema v1 implementation is deliberately narrower. It does not perform Waterman-Eggert local alignment yet; it performs ungapped positional comparison only.
 
 ## Declared Artifacts
 
@@ -47,7 +47,7 @@ The historical EMBOSS name suggests richer local-alignment behavior, but the cur
 - Artifact ID: `matcher_query_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/needle_query.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/needle_query.fasta`
 - Notes: Repository-managed singleton FASTA fixture used as the query input.
 
 ### Matcher target FASTA fixture
@@ -55,7 +55,7 @@ The historical EMBOSS name suggests richer local-alignment behavior, but the cur
 - Artifact ID: `matcher_target_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/needle_target.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/needle_target.fasta`
 - Notes: Repository-managed singleton FASTA fixture used as the target input.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ The historical EMBOSS name suggests richer local-alignment behavior, but the cur
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -1,0 +1,21 @@
+[package]
+name = "epithema-r-bridge"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Rust-side bridge scaffolding for the sister epithemaR project."
+
+[dependencies]
+epithema-core.workspace = true
+epithema-diagnostics.workspace = true
+epithema-plot-contract.workspace = true
+epithema-service.workspace = true
+epithema-tools.workspace = true
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[lints]
+workspace = true

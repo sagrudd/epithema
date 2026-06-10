@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "aligncopypair-v1",
   "tool": {
     "name": "aligncopypair",
@@ -26,13 +26,13 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The result is the normalized pairwise alignment payload. CLI rendering follows the standard EMBOSS-RS alignment output path and emits Stockholm by default."
+      "content": "The result is the normalized pairwise alignment payload. CLI rendering follows the standard Epithema alignment output path and emits Stockholm by default."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs aligncopypair`. Current Rust service coverage exercises the committed pairwise fixture for the success path and a separate multiple-alignment fixture for the explicit rejection path."
+      "content": "This method is implemented and exposed through `epithema aligncopypair`. Current Rust service coverage exercises the committed pairwise fixture for the success path and a separate multiple-alignment fixture for the explicit rejection path."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/pairwise_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/pairwise_alignment.sto"
       },
       "description": "Repository-managed two-row Stockholm alignment fixture used for the success path."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/multiple_alignment.sto"
       },
       "description": "Repository-managed three-row Stockholm alignment fixture used to document the non-pairwise rejection boundary."
     }
@@ -94,7 +94,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

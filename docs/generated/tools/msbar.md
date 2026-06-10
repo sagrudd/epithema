@@ -9,7 +9,7 @@ Apply explicit point mutations to sequence records
 ## Document Metadata
 
 - Document ID: `msbar-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `msbar`
@@ -22,7 +22,7 @@ Apply explicit point mutations to sequence records
 
 ## Overview
 
-`msbar` applies one or more explicit point substitutions to every sequence record in one local input. The EMBOSS-RS v1 surface is bounded to deterministic substitution-only editing using `position:residue` syntax.
+`msbar` applies one or more explicit point substitutions to every sequence record in one local input. The Epithema v1 surface is bounded to deterministic substitution-only editing using `position:residue` syntax.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits mutated FASTA records in input order. CLI summaries report the so
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs msbar`. Validation currently covers deterministic substitution behavior against committed FASTA fixtures in the Rust tool and service layers.
+This method is implemented and exposed through `epithema msbar`. Validation currently covers deterministic substitution behavior against committed FASTA fixtures in the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 implementation supports substitutions only. It does not support insertion
 - Artifact ID: `msbar_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/msbar_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/msbar_records.fasta`
 - Notes: Repository-managed FASTA input fixture used for deterministic point-mutation validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 implementation supports substitutions only. It does not support insertion
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

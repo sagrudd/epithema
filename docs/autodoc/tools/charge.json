@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "charge-v1",
   "tool": {
     "name": "charge",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`charge` is the first production plotting vertical slice in EMBOSS-RS. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis."
+      "content": "`charge` is the first production plotting vertical slice in Epithema. It was chosen because the analytical output is narrow, deterministic, and plot-ready without hidden biological heuristics: one protein input produces a sliding-window numeric profile with a single numeric x axis and y axis."
     },
     {
       "id": "inputs",
@@ -26,19 +26,19 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The implementation emits two coordinated outputs: a structured analytical table of window starts, ends, lengths, and mean charges, plus a typed line-plot contract payload. The plot contract is consumed by the sister `emboss-r` package, which owns rendering."
+      "content": "The implementation emits two coordinated outputs: a structured analytical table of window starts, ends, lengths, and mean charges, plus a typed line-plot contract payload. The plot contract is consumed by the sister `epithemaR` package, which owns rendering."
     },
     {
       "id": "plotting",
       "kind": "notes",
       "title": "Plotting Integration",
-      "content": "Rust does not render figures. The formal contract emitted by `charge` is the canonical handoff to R. In `emboss-r`, `charge_profile()` returns a structured result object carrying both the analytical data frame and the parsed plot contract, and `plot()` or `render_charge_plot()` renders the governed line plot with `ggplot2`."
+      "content": "Rust does not render figures. The formal contract emitted by `charge` is the canonical handoff to R. In `epithemaR`, `charge_profile()` returns a structured result object carrying both the analytical data frame and the parsed plot contract, and `plot()` or `render_charge_plot()` renders the governed line plot with `ggplot2`."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path."
+      "content": "This method is implemented and exposed through `epithema charge`. Validation now covers stable analytical rows plus compared acceptance evidence for the canonical checked-in line-plot contract fixture, and the R package consumes the same contract for the first production end-to-end plotting path."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/charge_protein.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/charge_protein.fasta"
       },
       "description": "Repository-managed protein fixture used for deterministic charge-profile validation."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/charge_plot_contract.json"
+        "asset_id": "crates/epithema-tools/tests/fixtures/charge_plot_contract.json"
       },
       "description": "Repository-managed canonical line-plot contract fixture emitted by the governed charge implementation."
     }
@@ -114,7 +114,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS charge application",

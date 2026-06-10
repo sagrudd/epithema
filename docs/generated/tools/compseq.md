@@ -9,7 +9,7 @@ Report deterministic residue composition counts and frequencies for sequence rec
 ## Document Metadata
 
 - Document ID: `compseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stats`
 - Legacy names: `compseq`
@@ -22,11 +22,11 @@ Report deterministic residue composition counts and frequencies for sequence rec
 
 ## Overview
 
-`compseq` reports residue composition for each input record plus one aggregate summary across all records. The EMBOSS-RS v1 surface intentionally keeps the report deterministic and simple: count normalized non-gap symbols, preserve ambiguity or stop symbols as observed, and compute frequencies over the non-gap denominator only.
+`compseq` reports residue composition for each input record plus one aggregate summary across all records. The Epithema v1 surface intentionally keeps the report deterministic and simple: count normalized non-gap symbols, preserve ambiguity or stop symbols as observed, and compute frequencies over the non-gap denominator only.
 
 ## Inputs
 
-The current v1 interface accepts one local sequence input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank, and may contain nucleotide, protein, or mixed record sets.
+The current v1 interface accepts one local sequence input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank, and may contain nucleotide, protein, or mixed record sets.
 
 ## Outputs
 
@@ -38,11 +38,11 @@ Residues are normalized case-insensitively before counting. Gap symbols `-` are 
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `compseq` composition example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed symbol-counting and non-gap frequency rules for the committed nucleotide fixture.
+This acceptance anchor keeps one historical-style `compseq` composition example in view and compares the Epithema tabular payload against a committed expected output. The comparison validates the governed symbol-counting and non-gap frequency rules for the committed nucleotide fixture.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs compseq`. Validation currently covers nucleotide composition, protein composition, ambiguity and stop-symbol handling, per-record plus aggregate reporting, and empty-input failure.
+This method is implemented and exposed through `epithema compseq`. Validation currently covers nucleotide composition, protein composition, ambiguity and stop-symbol handling, per-record plus aggregate reporting, and empty-input failure.
 
 ## Caveats
 
@@ -55,7 +55,7 @@ The first release does not infer richer chemistry-aware residue classes or rejec
 - Artifact ID: `nucleotide_pattern_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/nucleotide_pattern_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/nucleotide_pattern_records.fasta`
 - Notes: Repository-managed nucleotide fixture used for deterministic composition validation.
 
 ## Declared Examples
@@ -73,7 +73,7 @@ The first release does not infer richer chemistry-aware residue classes or rejec
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS compseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/compseq.acd`)
 

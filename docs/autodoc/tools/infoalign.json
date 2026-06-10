@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "infoalign-v1",
   "tool": {
     "name": "infoalign",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`infoalign` reports stable alignment metadata rather than rewriting the alignment itself. The current EMBOSS-RS implementation summarizes one aligned FASTA or Stockholm input as a governed table containing the overall row and column counts plus per-row ungapped-length and gap-count statistics."
+      "content": "`infoalign` reports stable alignment metadata rather than rewriting the alignment itself. The current Epithema implementation summarizes one aligned FASTA or Stockholm input as a governed table containing the overall row and column counts plus per-row ungapped-length and gap-count statistics."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs infoalign`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the expected row count, column count, and row-level gap statistics."
+      "content": "This method is implemented and exposed through `epithema infoalign`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the expected row count, column count, and row-level gap statistics."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/multiple_alignment.sto"
       },
       "description": "Repository-managed Stockholm alignment fixture used to validate stable row-order metadata reporting."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

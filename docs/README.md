@@ -5,7 +5,7 @@ Contributor and Codex workflow guidance is maintained under
 [development/index.md](./development/index.md).
 
 The canonical governance document is
-[governance/emboss_rs_governance_manual.md](./governance/emboss_rs_governance_manual.md).
+[governance/epithema_governance_manual.md](./governance/epithema_governance_manual.md).
 Supporting policy modules and reference appendices are organized beneath the same
 tree for long-term maintenance and future Sphinx ingestion.
 
@@ -30,14 +30,14 @@ intended to be committed as deterministic Sphinx source artefacts and refreshed
 through the governed CLI path:
 
 ```bash
-cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-docs
+cargo run -p epithema-cli -- autodoc <path-to-autodoc.json> --emit-docs
 ```
 
 Structured validation-evidence stubs for tool examples can also be derived from
 the same autodoc inputs:
 
 ```bash
-cargo run -p emboss-cli -- autodoc <path-to-autodoc.json> --emit-validation-stub
+cargo run -p epithema-cli -- autodoc <path-to-autodoc.json> --emit-validation-stub
 ```
 
 The baseline validation stubs can then be upgraded for the committed
@@ -253,8 +253,8 @@ available. Tool execution, acquisition, and acceptance reporting remain
 deferred.
 
 Provider-backed documentation artefacts are enforced through the governed
-EMBOSS-RS acquisition seam. Until a real provider implementation exists,
-`emboss-rs autodoc` will reject such inputs rather than allowing ad hoc direct
+Epithema acquisition seam. Until a real provider implementation exists,
+`epithema autodoc` will reject such inputs rather than allowing ad hoc direct
 downloads inside docgen.
 
 The root `Makefile` is the canonical entry point for common repository tasks.
@@ -269,7 +269,7 @@ Additional documentation-oriented targets currently available are:
 - `make lint-docs` for strict Sphinx structure and cross-reference checks
 - `make lint-repo` for lightweight repository-structure and governance-entry checks
 - `make check-sister-repo` for a read-only compatibility-awareness check against
-  `../emboss-r` when that sibling repository is present locally
+  `../epithemaR` when that sibling repository is present locally
 - `make ci` to run the current local CI-equivalent validation set
 - `make docs-clean` to remove generated documentation output
 - `make docs-live` for a live-reloading preview when `sphinx-autobuild` is
@@ -288,7 +288,7 @@ Additional documentation-oriented targets currently available are:
 ## Baseline CI Validation
 
 The baseline CI workflow validates the current repository state without assuming
-future features such as `emboss-rs autodoc`.
+future features such as `epithema autodoc`.
 
 At present CI enforces:
 
@@ -298,14 +298,14 @@ At present CI enforces:
 - release-mode Rust build verification
 - release-generated docs and validation artefact freshness verification
 - repository-structure and governance entry-point checks
-- read-only awareness of the sister `emboss-r` repository when available
+- read-only awareness of the sister `epithemaR` repository when available
 - strict Sphinx validation
 - full Sphinx HTML build
 - Linux-first container smoke build verification
 
 ## GitHub Pages Publication
 
-GitHub Pages is the formal public publication path for the EMBOSS-RS
+GitHub Pages is the formal public publication path for the Epithema
 documentation site from project start.
 
 Publication is configured through the GitHub Actions workflow at

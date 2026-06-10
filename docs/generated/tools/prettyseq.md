@@ -9,7 +9,7 @@ Render nucleotide records with a paired translated text view
 ## Document Metadata
 
 - Document ID: `prettyseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `translation_tools`
 - Legacy names: `prettyseq`
@@ -22,7 +22,7 @@ Render nucleotide records with a paired translated text view
 
 ## Overview
 
-`prettyseq` renders a deterministic text report that shows nucleotide rows and their translated amino-acid rows together. The EMBOSS-RS v1 surface is intentionally small: one chosen forward frame, stable plain-text layout, and no attempt to reproduce the full historical pretty-printing parameter surface.
+`prettyseq` renders a deterministic text report that shows nucleotide rows and their translated amino-acid rows together. The Epithema v1 surface is intentionally small: one chosen forward frame, stable plain-text layout, and no attempt to reproduce the full historical pretty-printing parameter surface.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The primary payload is a stable text report. Each record is rendered with a head
 
 ## Legacy Context
 
-This acceptance anchor keeps one historical-style `prettyseq` invocation in view and compares the EMBOSS-RS text-report payload against a committed expected output. The governed comparison validates layout stability for the frame-1 committed coding fixture.
+This acceptance anchor keeps one historical-style `prettyseq` invocation in view and compares the Epithema text-report payload against a committed expected output. The governed comparison validates layout stability for the frame-1 committed coding fixture.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs prettyseq`. Current validation covers deterministic frame-1 rendering, stable line layout, and clear rejection of unsupported frame or input combinations.
+This method is implemented and exposed through `epithema prettyseq`. Current validation covers deterministic frame-1 rendering, stable line layout, and clear rejection of unsupported frame or input combinations.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release supports forward frames only and emits a governed plain-text l
 - Artifact ID: `checktrans_nucleotide_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta`
 - Notes: Repository-managed coding-sequence fixture used for deterministic prettyseq text rendering.
 
 ## Declared Examples
@@ -59,7 +59,7 @@ The first release supports forward frames only and emits a governed plain-text l
 ### Render a frame-1 nucleotide and amino-acid text report
 
 - Example ID: `render_forward_frame_report`
-- Description: Renders the committed coding-sequence fixture with forward frame-1 translation and the governed EMBOSS-RS plain-text layout.
+- Description: Renders the committed coding-sequence fixture with forward frame-1 translation and the governed Epithema plain-text layout.
 - Referenced artifacts: `checktrans_nucleotide_fixture`
 - Parameters:
   - `frame` = `1`
@@ -71,7 +71,7 @@ The first release supports forward frames only and emits a governed plain-text l
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS prettyseq application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/prettyseq.acd`)
 

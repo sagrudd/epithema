@@ -87,4 +87,4 @@ jobs:
           file: ./Dockerfile
           push: false
           build-args: |
-            EMBOSS_RS_VERSION=ci-smoke
+            EPITHEMA_VERSION=ci-smoke

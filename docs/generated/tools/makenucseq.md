@@ -9,7 +9,7 @@ Create deterministic nucleotide sequence records from a bounded random generator
 ## Document Metadata
 
 - Document ID: `makenucseq-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_stream`
 - Legacy names: `makenucseq`
@@ -22,7 +22,7 @@ Create deterministic nucleotide sequence records from a bounded random generator
 
 ## Overview
 
-`makenucseq` creates one or more deterministic nucleotide sequence records from a documented seed and a bounded canonical alphabet. The first EMBOSS-RS release intentionally treats this as governed synthetic sequence generation rather than a broad stochastic simulation surface.
+`makenucseq` creates one or more deterministic nucleotide sequence records from a documented seed and a bounded canonical alphabet. The first Epithema release intentionally treats this as governed synthetic sequence generation rather than a broad stochastic simulation surface.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits one or more FASTA sequence records through the shared output path
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs makenucseq`. Validation currently covers deterministic DNA and RNA generation, identifier-prefix behavior, and explicit molecule handling in the Rust tool and service layers.
+This method is implemented and exposed through `epithema makenucseq`. Validation currently covers deterministic DNA and RNA generation, identifier-prefix behavior, and explicit molecule handling in the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 surface supports only canonical DNA or RNA alphabets, exact-length genera
 - Artifact ID: `makenucseq_rna_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/makenucseq_create_rna_records_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/makenucseq_create_rna_records_case.md`
 - Notes: Repository-managed note describing the deterministic RNA generation case used for the governed `makenucseq` surface.
 
 ## Declared Examples
@@ -71,7 +71,7 @@ The v1 surface supports only canonical DNA or RNA alphabets, exact-length genera
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

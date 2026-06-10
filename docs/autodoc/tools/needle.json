@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "needle-v1",
   "tool": {
     "name": "needle",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`needle` computes a deterministic global pairwise alignment between exactly one query record and one target record. The EMBOSS-RS v1 implementation uses the shared global-alignment core and renders the primary payload as Stockholm."
+      "content": "`needle` computes a deterministic global pairwise alignment between exactly one query record and one target record. The Epithema v1 implementation uses the shared global-alignment core and renders the primary payload as Stockholm."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one simple historical-style `needle` invocation in view and compares the EMBOSS-RS alignment payload against a committed expected Stockholm rendering. The comparison is intentionally narrow: it validates the governed v1 scoring and rendering path for the committed fixture pair rather than claiming full parameter-surface parity with historical EMBOSS."
+      "content": "This acceptance anchor keeps one simple historical-style `needle` invocation in view and compares the Epithema alignment payload against a committed expected Stockholm rendering. The comparison is intentionally narrow: it validates the governed v1 scoring and rendering path for the committed fixture pair rather than claiming full parameter-surface parity with historical EMBOSS."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs needle`. Validation covers execution against committed singleton fixtures, rejection of multi-record query input, and one compared acceptance-anchor case against a committed expected Stockholm output."
+      "content": "This method is implemented and exposed through `epithema needle`. Validation covers execution against committed singleton fixtures, rejection of multi-record query input, and one compared acceptance-anchor case against a committed expected Stockholm output."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needle_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needle_query.fasta"
       },
       "description": "Repository-managed singleton query fixture for the governed needle acceptance case."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/needle_target.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/needle_target.fasta"
       },
       "description": "Repository-managed singleton target fixture for the governed needle acceptance case."
     }
@@ -105,7 +105,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS needle application",

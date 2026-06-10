@@ -2,6 +2,15 @@
 
 This file defines repository-local working rules for human and AI contributors.
 
+## Project Names
+
+- The Rust project, repository, workspace, and command-line binary are named
+  `epithema`.
+- The sister R package and repository are named `epithemaR`.
+- Historical references to the upstream EMBOSS tool suite should remain
+  `EMBOSS` when they describe legacy applications, source material, or method
+  provenance rather than this project's own brand.
+
 ## Operating Rules
 
 1. Keep changes scoped.

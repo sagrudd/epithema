@@ -1,6 +1,6 @@
 # Autodoc Inputs
 
-The committed autodoc contracts for the exposed EMBOSS-RS tool surface live
+The committed autodoc contracts for the exposed Epithema tool surface live
 under `docs/autodoc/tools/`.
 
 These JSON files are the canonical documentation-preparation inputs for
@@ -16,6 +16,6 @@ Rebuild the generated Markdown pages through the governed CLI path with:
 make autodoc-refresh
 ```
 
-This intentionally routes page generation through `emboss-rs autodoc` rather
+This intentionally routes page generation through `epithema autodoc` rather
 than a parallel ad hoc script. CI and repository tests treat these contracts as
 required coverage for every exposed tool.

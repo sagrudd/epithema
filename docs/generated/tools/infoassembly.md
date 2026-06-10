@@ -9,7 +9,7 @@ Normalize provider-backed archive metadata into a bounded assembly-first report
 ## Document Metadata
 
 - Document ID: `infoassembly-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `archive_tools`
 - Legacy names: `infoassembly`
@@ -38,7 +38,7 @@ This bounded release keeps one historical `infoassembly` user need in scope whil
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs infoassembly`. The bounded mocked ENA assembly-first path is compared against a committed expected table fixture through the acceptance-anchor harness, and Rust service coverage also exercises mocked ENA and mocked SRA metadata paths through the same governed archive-provider seam. That proves the shipped retrieval surface without claiming broad provider parity or hidden live-network validation.
+This method is implemented and exposed through `epithema infoassembly`. The bounded mocked ENA assembly-first path is compared against a committed expected table fixture through the acceptance-anchor harness, and Rust service coverage also exercises mocked ENA and mocked SRA metadata paths through the same governed archive-provider seam. That proves the shipped retrieval surface without claiming broad provider parity or hidden live-network validation.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The v1 surface is intentionally conservative. `infoassembly` does not accept loc
 - Artifact ID: `infoassembly_mocked_ena_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/infoassembly_ena_err123456_case.md`
 - Notes: Repository-managed case note for the mocked ENA assembly-first metadata path used in Rust service coverage.
 
 ## Declared Examples
@@ -69,7 +69,7 @@ The v1 surface is intentionally conservative. `infoassembly` does not accept loc
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS infoassembly application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/infoassembly.acd`)
 

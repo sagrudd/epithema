@@ -1,0 +1,20 @@
+[package]
+name = "epithema-service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Execution and service-layer scaffolding for Epithema."
+
+[dependencies]
+epithema-config.workspace = true
+epithema-core.workspace = true
+epithema-diagnostics.workspace = true
+epithema-plot-contract.workspace = true
+epithema-providers.workspace = true
+epithema-tools.workspace = true
+
+[lints]
+workspace = true

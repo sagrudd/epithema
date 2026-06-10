@@ -9,7 +9,7 @@ Copy a single pairwise alignment unchanged and reject non-pairwise inputs
 ## Document Metadata
 
 - Document ID: `aligncopypair-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `aligncopypair`
@@ -30,11 +30,11 @@ The current v1 interface accepts exactly one local aligned FASTA or Stockholm al
 
 ## Outputs
 
-The result is the normalized pairwise alignment payload. CLI rendering follows the standard EMBOSS-RS alignment output path and emits Stockholm by default.
+The result is the normalized pairwise alignment payload. CLI rendering follows the standard Epithema alignment output path and emits Stockholm by default.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs aligncopypair`. Current Rust service coverage exercises the committed pairwise fixture for the success path and a separate multiple-alignment fixture for the explicit rejection path.
+This method is implemented and exposed through `epithema aligncopypair`. Current Rust service coverage exercises the committed pairwise fixture for the success path and a separate multiple-alignment fixture for the explicit rejection path.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ Any input with fewer or more than two alignment rows fails validation instead of
 - Artifact ID: `pairwise_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pairwise_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pairwise_alignment.sto`
 - Notes: Repository-managed two-row Stockholm alignment fixture used for the success path.
 
 ### Multiple-alignment Stockholm fixture
@@ -55,7 +55,7 @@ Any input with fewer or more than two alignment rows fails validation instead of
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed three-row Stockholm alignment fixture used to document the non-pairwise rejection boundary.
 
 ## Declared Examples
@@ -70,7 +70,7 @@ Any input with fewer or more than two alignment rows fails validation instead of
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

@@ -9,7 +9,7 @@ Normalize multiple local or provider-backed sequence inputs into ordered output 
 ## Document Metadata
 
 - Document ID: `seqretsetall-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `retrieval_tools`
 - Legacy names: `seqretsetall`
@@ -34,11 +34,11 @@ The result is a partitioned normalized sequence collection rendered through the 
 
 ## Legacy Context
 
-This acceptance anchor keeps one bounded historical-style `seqretsetall` normalization example in view and compares the EMBOSS-RS partitioned output against a committed expected payload. The comparison is deliberately narrow and local-fixture based; it does not claim broad provider or filesystem-policy parity.
+This acceptance anchor keeps one bounded historical-style `seqretsetall` normalization example in view and compares the Epithema partitioned output against a committed expected payload. The comparison is deliberately narrow and local-fixture based; it does not claim broad provider or filesystem-policy parity.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs seqretsetall`. The bounded local many-set path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises a mixed local plus mocked-provider path through the explicit provider seam. That proves the governed retrieval surface without claiming harvested live-provider acceptance evidence yet.
+This method is implemented and exposed through `epithema seqretsetall`. The bounded local many-set path is compared against a committed partition fixture through the acceptance-anchor harness, and Rust service coverage also exercises a mixed local plus mocked-provider path through the explicit provider seam. That proves the governed retrieval surface without claiming harvested live-provider acceptance evidence yet.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed multi-record FASTA fixture used as the first ordered input set in the bounded local many-set retrieval example.
 
 ### Two-record FASTA fixture
@@ -59,7 +59,7 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 - Artifact ID: `two_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/two_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/two_records.fasta`
 - Notes: Repository-managed two-record FASTA fixture used as the second ordered input set in the bounded local many-set retrieval example.
 
 ### Mocked mixed many-set retrieval case
@@ -67,7 +67,7 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 - Artifact ID: `seqretsetall_mocked_mixed_case`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/seqretsetall_mixed_case.md`
+- Reference: managed asset `crates/epithema-testkit/tests/fixtures/autodoc/seqretsetall_mixed_case.md`
 - Notes: Repository-managed case note for the bounded mixed local plus provider-qualified many-set retrieval path used in Rust service coverage.
 
 ## Declared Examples
@@ -85,7 +85,7 @@ The first release is intentionally narrow. `seqretsetall` is not yet a generic b
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS seqretsetall application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/seqretsetall.acd`)
 

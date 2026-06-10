@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "pepstats-v1",
   "tool": {
     "name": "pepstats",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`pepstats` reports a conservative first-release set of protein statistics for each input record. The EMBOSS-RS v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate."
+      "content": "`pepstats` reports a conservative first-release set of protein statistics for each input record. The Epithema v1 implementation includes raw sequence length, residue length excluding stop symbols, stop-count, amino-acid composition counts and frequencies, and a deterministic average-residue molecular-weight estimate."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected."
+      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Nucleotide inputs are rejected."
     },
     {
       "id": "outputs",
@@ -32,19 +32,19 @@
       "id": "metric_model",
       "kind": "notes",
       "title": "Metric Model",
-      "content": "Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared EMBOSS-RS average residue masses with one water molecule added once per chain."
+      "content": "Input residues are normalized case-insensitively. Gap symbols are excluded from composition counts. Stop symbols `*` are counted in composition but excluded from `residue_length` and from molecular-weight estimation. Molecular weight uses the shared Epithema average residue masses with one water molecule added once per chain."
     },
     {
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `pepstats` reporting example in view and compares the EMBOSS-RS tabular payload against a committed expected output. The comparison validates the governed first-release metric set rather than the broader historical EMBOSS biochemical-report surface."
+      "content": "This acceptance anchor keeps one historical-style `pepstats` reporting example in view and compares the Epithema tabular payload against a committed expected output. The comparison validates the governed first-release metric set rather than the broader historical EMBOSS biochemical-report surface."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs pepstats`. Validation currently covers protein summary rows, composition frequencies, stop-symbol handling, unsupported ambiguous-residue failure for mass estimation, and nucleotide-input rejection."
+      "content": "This method is implemented and exposed through `epithema pepstats`. Validation currently covers protein summary rows, composition frequencies, stop-symbol handling, unsupported ambiguous-residue failure for mass estimation, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
@@ -65,7 +65,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/protein_stats_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/protein_stats_records.fasta"
       },
       "description": "Repository-managed protein fixture used for deterministic pepstats validation."
     }

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "iep-v1",
   "tool": {
     "name": "iep",
@@ -14,13 +14,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`iep` estimates one protein isoelectric point per input record. The EMBOSS-RS v1 implementation uses a fixed explicit pKa model for the N terminus, C terminus, and the D/E/C/Y/H/K/R side chains, and reports the same model's net charge at pH 7.0."
+      "content": "`iep` estimates one protein isoelectric point per input record. The Epithema v1 implementation uses a fixed explicit pKa model for the N terminus, C terminus, and the D/E/C/Y/H/K/R side chains, and reports the same model's net charge at pH 7.0."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared EMBOSS-RS readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Gap symbols are ignored; stop symbols are ignored before estimation; unsupported ambiguous protein residues are rejected."
+      "content": "The current interface accepts one local protein input path. Inputs are loaded through the shared Epithema readers for FASTA, FASTQ, EMBL, and GenBank. Explicit nucleotide inputs are rejected. Gap symbols are ignored; stop symbols are ignored before estimation; unsupported ambiguous protein residues are rejected."
     },
     {
       "id": "outputs",
@@ -38,7 +38,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs iep`. Validation currently covers basic versus mixed protein fixtures, stable per-record reporting, and nucleotide-input rejection."
+      "content": "This method is implemented and exposed through `epithema iep`. Validation currently covers basic versus mixed protein fixtures, stable per-record reporting, and nucleotide-input rejection."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/iep_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/iep_records.fasta"
       },
       "description": "Repository-managed protein fixture used to validate deterministic per-record pI estimation."
     }

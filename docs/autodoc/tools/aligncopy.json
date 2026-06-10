@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "aligncopy-v1",
   "tool": {
     "name": "aligncopy",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`aligncopy` is the alignment-preserving equivalent of `seqret` for the current EMBOSS-RS alignment surface. It loads one aligned FASTA or Stockholm alignment through the shared alignment reader and writes the same alignment payload back through the governed alignment result path without modifying rows, columns, or metadata."
+      "content": "`aligncopy` is the alignment-preserving equivalent of `seqret` for the current Epithema alignment surface. It loads one aligned FASTA or Stockholm alignment through the shared alignment reader and writes the same alignment payload back through the governed alignment result path without modifying rows, columns, or metadata."
     },
     {
       "id": "inputs",
@@ -26,13 +26,13 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The result is the normalized alignment payload itself. Through the CLI, EMBOSS-RS renders alignment outputs as Stockholm by default so the copied alignment remains structured and round-trippable."
+      "content": "The result is the normalized alignment payload itself. Through the CLI, Epithema renders alignment outputs as Stockholm by default so the copied alignment remains structured and round-trippable."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs aligncopy`. The declared example below matches the existing Rust service test path that loads a committed multiple-alignment fixture and confirms row-count and alignment-identifier preservation."
+      "content": "This method is implemented and exposed through `epithema aligncopy`. The declared example below matches the existing Rust service test path that loads a committed multiple-alignment fixture and confirms row-count and alignment-identifier preservation."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/multiple_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/multiple_alignment.sto"
       },
       "description": "Repository-managed Stockholm alignment fixture with three aligned rows and a stable alignment identifier."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "seqcount-v1",
   "tool": {
     "name": "seqcount",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`seqcount` counts sequence records through the shared EMBOSS-RS sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs."
+      "content": "`seqcount` counts sequence records through the shared Epithema sequence IO layer instead of embedding format-specific counting logic in the tool. The same code path supports the current primary sequence readers for FASTA, FASTQ, EMBL, and GenBank inputs."
     },
     {
       "id": "inputs",
@@ -26,13 +26,13 @@
       "id": "outputs",
       "kind": "outputs",
       "title": "Outputs",
-      "content": "The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard EMBOSS-RS result summary lines describing the input path, record count, and tabular output format."
+      "content": "The tool emits one stable two-column table report with `input` and `count`. CLI output also includes the standard Epithema result summary lines describing the input path, record count, and tabular output format."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior."
+      "content": "This method is implemented and exposed through `epithema seqcount`. Validation currently covers single-record and multi-record FASTA inputs plus malformed and empty-input failure behavior."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed multi-record FASTA fixture used to validate deterministic counting."
     }
@@ -79,7 +79,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

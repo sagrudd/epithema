@@ -9,7 +9,7 @@ Report row counts, column counts, and per-row gap statistics for an alignment
 ## Document Metadata
 
 - Document ID: `infoalign-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `alignment_tools`
 - Legacy names: `infoalign`
@@ -22,7 +22,7 @@ Report row counts, column counts, and per-row gap statistics for an alignment
 
 ## Overview
 
-`infoalign` reports stable alignment metadata rather than rewriting the alignment itself. The current EMBOSS-RS implementation summarizes one aligned FASTA or Stockholm input as a governed table containing the overall row and column counts plus per-row ungapped-length and gap-count statistics.
+`infoalign` reports stable alignment metadata rather than rewriting the alignment itself. The current Epithema implementation summarizes one aligned FASTA or Stockholm input as a governed table containing the overall row and column counts plus per-row ungapped-length and gap-count statistics.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ CLI and service output is a deterministic table report. The current row schema i
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs infoalign`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the expected row count, column count, and row-level gap statistics.
+This method is implemented and exposed through `epithema infoalign`. Current Rust service coverage exercises the committed three-row Stockholm fixture and locks down the expected row count, column count, and row-level gap statistics.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release reports a conservative metadata subset only. It does not attem
 - Artifact ID: `multiple_alignment_stockholm`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/multiple_alignment.sto`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/multiple_alignment.sto`
 - Notes: Repository-managed Stockholm alignment fixture used to validate stable row-order metadata reporting.
 
 ## Declared Examples
@@ -62,7 +62,7 @@ The first release reports a conservative metadata subset only. It does not attem
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

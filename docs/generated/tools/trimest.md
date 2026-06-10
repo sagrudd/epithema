@@ -9,7 +9,7 @@ Remove terminal poly-A tails from nucleotide sequence records
 ## Document Metadata
 
 - Document ID: `trimest-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_edit`
 - Legacy names: `trimest`
@@ -22,7 +22,7 @@ Remove terminal poly-A tails from nucleotide sequence records
 
 ## Overview
 
-`trimest` removes bounded terminal poly-A tails from nucleotide sequence records. The EMBOSS-RS v1 surface trims only trailing 3' runs of `A` when they meet a configured minimum length, keeping the behavior explicit and reproducible.
+`trimest` removes bounded terminal poly-A tails from nucleotide sequence records. The Epithema v1 surface trims only trailing 3' runs of `A` when they meet a configured minimum length, keeping the behavior explicit and reproducible.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The tool emits trimmed FASTA records in input order. CLI summaries report the so
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs trimest`. Validation currently covers deterministic terminal poly-A trimming against committed FASTA fixtures in the Rust tool and service layers.
+This method is implemented and exposed through `epithema trimest`. Validation currently covers deterministic terminal poly-A trimming against committed FASTA fixtures in the Rust tool and service layers.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The v1 implementation trims trailing `A` runs only. It does not attempt bidirect
 - Artifact ID: `trimest_records_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/trimest_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/trimest_records.fasta`
 - Notes: Repository-managed FASTA input fixture used for deterministic terminal poly-A trimming validation.
 
 ## Declared Examples
@@ -65,7 +65,7 @@ The v1 implementation trims trailing `A` runs only. It does not attempt bidirect
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

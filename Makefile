@@ -4,7 +4,7 @@ SPHINXBUILD ?= $(PYTHON) -m sphinx
 SPHINXOPTS ?= -n -W --keep-going
 CONTAINER_RUNTIME ?= docker
 RELEASE_VERSION ?= $(shell $(PYTHON) scripts/release_metadata.py workspace-version)
-CONTAINER_IMAGE ?= emboss-rs:$(RELEASE_VERSION)
+CONTAINER_IMAGE ?= epithema:$(RELEASE_VERSION)
 RELEASE_TARGET_OS ?= linux
 RELEASE_TARGET_ARCH ?= x86_64
 RELEASE_PLATFORM := $(RELEASE_TARGET_OS)-$(RELEASE_TARGET_ARCH)
@@ -15,10 +15,10 @@ DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DOCS_HTML_DIR := $(DOCS_BUILD_DIR)/html
 DOCS_LIVE_PORT ?= 8000
 RELEASE_DIST_DIR ?= dist/release/$(RELEASE_VERSION)
-RELEASE_BINARY_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-$(RELEASE_VERSION)-$(RELEASE_PLATFORM).tar.gz
-RELEASE_DOCS_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-docs-$(RELEASE_VERSION).tar.gz
-RELEASE_VALIDATION_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-validation-$(RELEASE_VERSION).tar.gz
-RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
+RELEASE_BINARY_ARCHIVE := $(RELEASE_DIST_DIR)/epithema-$(RELEASE_VERSION)-$(RELEASE_PLATFORM).tar.gz
+RELEASE_DOCS_ARCHIVE := $(RELEASE_DIST_DIR)/epithema-docs-$(RELEASE_VERSION).tar.gz
+RELEASE_VALIDATION_ARCHIVE := $(RELEASE_DIST_DIR)/epithema-validation-$(RELEASE_VERSION).tar.gz
+RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/epithema-release-manifest.json
 
 .DEFAULT_GOAL := help
 
@@ -26,7 +26,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 help:
 	@printf "%s\n" \
-		"EMBOSS-RS project tasks" \
+		"Epithema project tasks" \
 		"" \
 		"Documentation:" \
 		"  make docs        Build the Sphinx documentation site" \
@@ -42,7 +42,7 @@ help:
 		"  make retained-backlog-report Refresh the retained-backlog closure report" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
-		"  make check-sister-repo  Inspect ../emboss-r read-only when present" \
+		"  make check-sister-repo  Inspect ../epithemaR read-only when present" \
 		"  make docs-live   Start a live-reloading docs preview (requires sphinx-autobuild)" \
 		"  make docs-clean  Remove built documentation output" \
 		"" \
@@ -95,7 +95,7 @@ release-generated-check:
 	rm -rf docs/generated/tools docs/generated/index.md
 	@for doc in $$(find docs/autodoc/tools -name '*.json' | sort); do \
 		printf "%s\n" "Refreshing $$doc"; \
-		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs --emit-validation-stub >/dev/null; \
+		$(RUSTCARGO) run -p epithema-cli -- autodoc "$$doc" --emit-docs --emit-validation-stub >/dev/null; \
 	done
 	$(MAKE) generated-index-normalize PYTHON=$(PYTHON)
 	$(MAKE) cohort-report
@@ -128,7 +128,7 @@ release-artifact-platform-check:
 
 release-artifacts: release-version-check release-artifact-platform-check release-build release-docs cohort-report
 	mkdir -p $(RELEASE_DIST_DIR)
-	tar -C target/release -czf $(RELEASE_BINARY_ARCHIVE) emboss-rs
+	tar -C target/release -czf $(RELEASE_BINARY_ARCHIVE) epithema
 	sha256sum $(RELEASE_BINARY_ARCHIVE) > $(RELEASE_BINARY_ARCHIVE).sha256
 	tar -C $(DOCS_BUILD_DIR) -czf $(RELEASE_DOCS_ARCHIVE) html
 	tar -czf $(RELEASE_VALIDATION_ARCHIVE) \
@@ -141,7 +141,7 @@ release-artifacts: release-version-check release-artifact-platform-check release
 
 release-container:
 	$(CONTAINER_RUNTIME) build \
-		--build-arg EMBOSS_RS_VERSION=$(RELEASE_VERSION) \
+		--build-arg EPITHEMA_VERSION=$(RELEASE_VERSION) \
 		-t $(CONTAINER_IMAGE) \
 		.
 
@@ -151,13 +151,13 @@ docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)
 
 autodoc-stubs:
-	$(RUSTCARGO) run -p emboss-docgen --example write_registry_autodoc_stubs -- docs/autodoc/tools
+	$(RUSTCARGO) run -p epithema-docgen --example write_registry_autodoc_stubs -- docs/autodoc/tools
 
 autodoc-refresh: autodoc-stubs
 	rm -rf docs/generated/tools docs/generated/index.md
 	@for doc in $$(find docs/autodoc/tools -name '*.json' | sort); do \
 		printf "%s\n" "Refreshing $$doc"; \
-		$(RUSTCARGO) run -p emboss-cli -- autodoc "$$doc" --emit-docs >/dev/null; \
+		$(RUSTCARGO) run -p epithema-cli -- autodoc "$$doc" --emit-docs >/dev/null; \
 	done
 	$(MAKE) generated-index-normalize
 
@@ -166,42 +166,42 @@ generated-index-normalize:
 
 cohort-report:
 	$(MAKE) anchor-validation
-	$(RUSTCARGO) run -p emboss-testkit --example write_shipped_cohort_validation_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_shipped_cohort_validation_report -- \
 		--json docs/generated/validation/shipped_cohort.validation.json \
 		--markdown docs/generated/cohort_validation.md
 
 governance-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_governance_alignment_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_governance_alignment_report -- \
 		--json docs/generated/validation/governance_alignment.json \
 		--markdown docs/generated/governance_alignment.md
 
 cohort-health-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_cohort_health_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_cohort_health_report -- \
 		--json docs/generated/validation/cohort_health.json \
 		--markdown docs/generated/cohort_health.md
 
 comparison-coverage-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_comparison_coverage_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_comparison_coverage_report -- \
 		--json docs/generated/validation/comparison_coverage.json \
 		--markdown docs/generated/comparison_coverage.md
 
 full-compared-cohort-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_full_compared_cohort_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_full_compared_cohort_report -- \
 		--json docs/generated/validation/full_compared_cohort.json \
 		--markdown docs/generated/full_compared_cohort.md
 
 harvest-coverage-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_harvest_coverage_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_harvest_coverage_report -- \
 		--json docs/generated/validation/harvest_coverage.json \
 		--markdown docs/generated/harvest_coverage.md
 
 retained-backlog-report:
-	$(RUSTCARGO) run -p emboss-testkit --example write_retained_backlog_report -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_retained_backlog_report -- \
 		--json docs/generated/validation/retained_backlog_closure.json \
 		--markdown docs/generated/retained_backlog_closure.md
 
 anchor-validation:
-	$(RUSTCARGO) run -p emboss-testkit --example write_acceptance_anchor_reports -- \
+	$(RUSTCARGO) run -p epithema-testkit --example write_acceptance_anchor_reports -- \
 		--output-dir docs/generated/validation
 
 lint-docs:
@@ -216,21 +216,21 @@ lint-repo:
 	test -f docs/autodoc/README.md
 	test -f docs/generated/index.md
 	test -f docs/governance/index.md
-	test -f docs/governance/emboss_rs_governance_manual.md
+	test -f docs/governance/epithema_governance_manual.md
 	test -f .github/workflows/docs-pages.yml
-	test -f crates/emboss-cli/Cargo.toml
+	test -f crates/epithema-cli/Cargo.toml
 	grep -n "^governance/index$$" docs/index.md
-	grep -n "emboss_rs_governance_manual" docs/governance/index.md docs/README.md README.md
-	grep -n "emboss-r" README.md docs/governance/emboss_rs_governance_manual.md docs/governance/appendices/foundational_architecture_brief.md
+	grep -n "epithema_governance_manual" docs/governance/index.md docs/README.md README.md
+	grep -n "epithemaR" README.md docs/governance/epithema_governance_manual.md docs/governance/appendices/foundational_architecture_brief.md
 
 check-sister-repo:
-	@if [ -d ../emboss-r ]; then \
-		printf "%s\n" "Found sibling repository: ../emboss-r"; \
-		test -f ../emboss-r/README.md; \
-		grep -n "^# emboss-r$$" ../emboss-r/README.md; \
-		grep -n "plots\|methods available in R\|R" ../emboss-r/README.md; \
+	@if [ -d ../epithemaR ]; then \
+		printf "%s\n" "Found sibling repository: ../epithemaR"; \
+		test -f ../epithemaR/README.md; \
+		grep -n "^# epithemaR$$" ../epithemaR/README.md; \
+		grep -n "plots\|methods available in R\|R" ../epithemaR/README.md; \
 	else \
-		printf "%s\n" "../emboss-r is not present in this environment; skipping read-only compatibility awareness check."; \
+		printf "%s\n" "../epithemaR is not present in this environment; skipping read-only compatibility awareness check."; \
 	fi
 
 docs-live:

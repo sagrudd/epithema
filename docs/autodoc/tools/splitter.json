@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "splitter-v1",
   "tool": {
     "name": "splitter",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`splitter` partitions an input record stream into fixed-size groups while preserving input order. The EMBOSS-RS v1 implementation models this as deterministic sequence partitions rather than as side-effectful file fan-out, which keeps the method reusable through the shared service and bridge layers."
+      "content": "`splitter` partitions an input record stream into fixed-size groups while preserving input order. The Epithema v1 implementation models this as deterministic sequence partitions rather than as side-effectful file fan-out, which keeps the method reusable through the shared service and bridge layers."
     },
     {
       "id": "inputs",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs splitter`. Validation currently covers deterministic partition sizes against a committed three-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
+      "content": "This method is implemented and exposed through `epithema splitter`. Validation currently covers deterministic partition sizes against a committed three-record FASTA fixture, and Rust service tests exercise the same repository-managed case."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/three_records.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/three_records.fasta"
       },
       "description": "Repository-managed FASTA fixture used for deterministic splitter validation."
     }
@@ -84,7 +84,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

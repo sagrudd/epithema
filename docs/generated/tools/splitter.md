@@ -9,7 +9,7 @@ Partition an input sequence stream into deterministic fixed-size chunks
 ## Document Metadata
 
 - Document ID: `splitter-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `sequence_transform`
 - Legacy names: `splitter`
@@ -22,7 +22,7 @@ Partition an input sequence stream into deterministic fixed-size chunks
 
 ## Overview
 
-`splitter` partitions an input record stream into fixed-size groups while preserving input order. The EMBOSS-RS v1 implementation models this as deterministic sequence partitions rather than as side-effectful file fan-out, which keeps the method reusable through the shared service and bridge layers.
+`splitter` partitions an input record stream into fixed-size groups while preserving input order. The Epithema v1 implementation models this as deterministic sequence partitions rather than as side-effectful file fan-out, which keeps the method reusable through the shared service and bridge layers.
 
 ## Inputs
 
@@ -34,7 +34,7 @@ The service payload is a deterministic partitioned sequence result in which oute
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs splitter`. Validation currently covers deterministic partition sizes against a committed three-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
+This method is implemented and exposed through `epithema splitter`. Validation currently covers deterministic partition sizes against a committed three-record FASTA fixture, and Rust service tests exercise the same repository-managed case.
 
 ## Caveats
 
@@ -47,7 +47,7 @@ The first release does not create numbered output files or support multiple simu
 - Artifact ID: `three_record_fasta`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/three_records.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/three_records.fasta`
 - Notes: Repository-managed FASTA fixture used for deterministic splitter validation.
 
 ## Declared Examples
@@ -64,7 +64,7 @@ The first release does not create numbered output files or support multiple simu
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references: none declared
 
 ## Declared Validation Intent

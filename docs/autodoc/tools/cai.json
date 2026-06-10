@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "cai-v1",
   "tool": {
     "name": "cai",
@@ -32,7 +32,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs cai`. Rust service coverage exercises CAI scoring directly against committed coding fixtures, and `codcopy` interoperability is also tested by writing a temporary normalized profile and reusing it as the CAI reference input."
+      "content": "This method is implemented and exposed through `epithema cai`. Rust service coverage exercises CAI scoring directly against committed coding fixtures, and `codcopy` interoperability is also tested by writing a temporary normalized profile and reusing it as the CAI reference input."
     },
     {
       "id": "caveats",
@@ -53,7 +53,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/codon_query.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/codon_query.fasta"
       },
       "description": "Repository-managed coding-query FASTA fixture with one preferred-codon example and one rare-codon example."
     },
@@ -68,7 +68,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/codon_reference.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/codon_reference.fasta"
       },
       "description": "Repository-managed coding-reference FASTA fixture used to derive deterministic synonymous codon weights."
     }
@@ -95,7 +95,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": []
   },
   "validation": {

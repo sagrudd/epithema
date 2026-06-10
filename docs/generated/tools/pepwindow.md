@@ -9,7 +9,7 @@ Report a sliding-window protein hydropathy profile and emit a line-plot contract
 ## Document Metadata
 
 - Document ID: `pepwindow-v1`
-- Schema version: `emboss-rs.autodoc/v1`
+- Schema version: `epithema.autodoc/v1`
 - Source mode: `curated`
 - Tool family: `protein_plots`
 - Legacy names: `pepwindow`
@@ -22,7 +22,7 @@ Report a sliding-window protein hydropathy profile and emit a line-plot contract
 
 ## Overview
 
-`pepwindow` is the next governed plot-family method after `charge`. The EMBOSS-RS v1 surface computes one deterministic Kyte-Doolittle sliding-window hydropathy profile for exactly one protein sequence and emits both a stable analytical table and a typed line-plot contract.
+`pepwindow` is the next governed plot-family method after `charge`. The Epithema v1 surface computes one deterministic Kyte-Doolittle sliding-window hydropathy profile for exactly one protein sequence and emits both a stable analytical table and a typed line-plot contract.
 
 ## Inputs
 
@@ -34,11 +34,11 @@ The implementation emits a stable table with `sequence_id`, `window_start`, `win
 
 ## Plotting Integration
 
-Rust does not render figures. The formal contract emitted by `pepwindow` is the governed handoff to the sister `emboss-r` package, which owns graphical rendering for plot-capable families. In this prompt the Rust-side contract is implemented and validated; method-specific R rendering remains a follow-on task in `emboss-r`.
+Rust does not render figures. The formal contract emitted by `pepwindow` is the governed handoff to the sister `epithemaR` package, which owns graphical rendering for plot-capable families. In this prompt the Rust-side contract is implemented and validated; method-specific R rendering remains a follow-on task in `epithemaR`.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs pepwindow`. Validation now covers stable analytical window rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, alongside unsupported-residue rejection.
+This method is implemented and exposed through `epithema pepwindow`. Validation now covers stable analytical window rows plus compared acceptance evidence for the canonical checked-in line-plot contract emission path, alongside unsupported-residue rejection.
 
 ## Caveats
 
@@ -51,7 +51,7 @@ v1 supports only the single-record `pepwindow` profile and does not implement `p
 - Artifact ID: `pepwindow_fixture`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pepwindow_protein.fasta`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pepwindow_protein.fasta`
 - Notes: Repository-managed protein fixture used for deterministic pepwindow hydropathy validation.
 
 ### Canonical pepwindow line-plot contract fixture
@@ -59,7 +59,7 @@ v1 supports only the single-record `pepwindow` profile and does not implement `p
 - Artifact ID: `pepwindow_plot_contract`
 - Origin: fixture asset
 - Acquisition: fixture
-- Reference: managed asset `crates/emboss-tools/tests/fixtures/pepwindow_plot_contract.json`
+- Reference: managed asset `crates/epithema-tools/tests/fixtures/pepwindow_plot_contract.json`
 - Notes: Repository-managed canonical line-plot contract fixture emitted by the governed pepwindow implementation.
 
 ## Declared Examples
@@ -78,7 +78,7 @@ v1 supports only the single-record `pepwindow` profile and does not implement `p
 
 ## Provenance
 
-- Curated by: emboss-rs maintainers
+- Curated by: epithema maintainers
 - Source references:
   - EMBOSS pepwindow application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/pepwindow.acd`)
 

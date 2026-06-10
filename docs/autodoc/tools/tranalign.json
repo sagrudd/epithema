@@ -1,5 +1,5 @@
 {
-  "schema_version": "emboss-rs.autodoc/v1",
+  "schema_version": "epithema.autodoc/v1",
   "document_id": "tranalign-v1",
   "tool": {
     "name": "tranalign",
@@ -14,7 +14,7 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`tranalign` projects an aligned protein set onto matching nucleotide coding sequences to produce a codon alignment. EMBOSS-RS v1 keeps the compatibility rules strict: rows are paired to coding sequences by exact identifier, translation is checked in frame 1 under the standard genetic code, and protein gaps expand to triple-nucleotide gaps."
+      "content": "`tranalign` projects an aligned protein set onto matching nucleotide coding sequences to produce a codon alignment. Epithema v1 keeps the compatibility rules strict: rows are paired to coding sequences by exact identifier, translation is checked in frame 1 under the standard genetic code, and protein gaps expand to triple-nucleotide gaps."
     },
     {
       "id": "inputs",
@@ -32,13 +32,13 @@
       "id": "legacy_context",
       "kind": "legacy_context",
       "title": "Legacy Context",
-      "content": "This acceptance anchor keeps one historical-style `tranalign` invocation in view and compares the EMBOSS-RS Stockholm payload against a committed expected output. The governed comparison validates exact identifier pairing and codon-projection stability for the committed alignment fixture."
+      "content": "This acceptance anchor keeps one historical-style `tranalign` invocation in view and compares the Epithema Stockholm payload against a committed expected output. The governed comparison validates exact identifier pairing and codon-projection stability for the committed alignment fixture."
     },
     {
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "This method is implemented and exposed through `emboss-rs tranalign`. Current validation covers codon projection from the committed protein alignment and coding-sequence fixtures, exact identifier pairing, and strict translation compatibility."
+      "content": "This method is implemented and exposed through `epithema tranalign`. Current validation covers codon projection from the committed protein alignment and coding-sequence fixtures, exact identifier pairing, and strict translation compatibility."
     },
     {
       "id": "caveats",
@@ -59,7 +59,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/tranalign_protein_alignment.sto"
+        "asset_id": "crates/epithema-tools/tests/fixtures/tranalign_protein_alignment.sto"
       },
       "description": "Repository-managed protein Stockholm alignment used for deterministic codon projection validation."
     },
@@ -74,7 +74,7 @@
       },
       "reference": {
         "kind": "managed_asset",
-        "asset_id": "crates/emboss-tools/tests/fixtures/checktrans_nucleotide.fasta"
+        "asset_id": "crates/epithema-tools/tests/fixtures/checktrans_nucleotide.fasta"
       },
       "description": "Repository-managed coding-sequence fixture paired by exact identifier with the committed protein alignment rows."
     }
@@ -105,7 +105,7 @@
   ],
   "provenance": {
     "source_mode": "curated",
-    "curated_by": "emboss-rs maintainers",
+    "curated_by": "epithema maintainers",
     "source_references": [
       {
         "source": "EMBOSS tranalign application",
