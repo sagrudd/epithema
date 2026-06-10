@@ -437,16 +437,18 @@ def check_release_truth_surface() -> int:
     return 0
 
 
-def write_manifest(output: Path, container_image: str | None) -> int:
+def write_manifest(output: Path, container_image: str | None, binary_platform: str) -> int:
     version = load_workspace_version()
+    binary_archive = f"emboss-rs-{version}-{binary_platform}.tar.gz"
     manifest = {
         "schema_version": 1,
         "project": "emboss-rs",
         "version": version,
         "binary_name": "emboss-rs",
+        "binary_platform": binary_platform,
         "artifacts": {
-            "linux_binary_archive": f"emboss-rs-{version}-linux-x86_64.tar.gz",
-            "linux_binary_checksum": f"emboss-rs-{version}-linux-x86_64.tar.gz.sha256",
+            "binary_archive": binary_archive,
+            "binary_checksum": f"{binary_archive}.sha256",
             "docs_archive": f"emboss-rs-docs-{version}.tar.gz",
             "validation_archive": f"emboss-rs-validation-{version}.tar.gz",
         },
@@ -483,6 +485,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     manifest.add_argument("--output", required=True, type=Path)
     manifest.add_argument("--container-image", default=None)
+    manifest.add_argument("--binary-platform", default="linux-x86_64")
 
     return parser
 
@@ -499,7 +502,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "truth-check":
         return check_release_truth_surface()
     if args.command == "manifest":
-        return write_manifest(args.output, args.container_image)
+        return write_manifest(args.output, args.container_image, args.binary_platform)
 
     parser.error(f"unsupported command: {args.command}")
     return 2

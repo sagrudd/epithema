@@ -17,11 +17,12 @@ Use this checklist before cutting a coordinated stable tag.
 - [ ] `make release-version-check` succeeds.
 - [ ] `make release-generated-check` succeeds.
 - [ ] `make release-check` succeeds.
-- [ ] `make release-artifacts` succeeds and produces the expected bundle under
-      `dist/release/<version>/`.
+- [ ] `make release-artifacts` succeeds on the intended target platform and
+      produces the expected bundle under `dist/release/<version>/`.
 - [ ] autodoc-generated content and validation artefacts are current.
 - [ ] documentation builds cleanly.
-- [ ] release artefact packaging has been smoke-tested.
+- [ ] release artefact packaging has been smoke-tested on a host matching the
+      archive platform label.
 - [ ] Linux container build has been smoke-tested.
 - [ ] GHCR publication settings remain valid.
 

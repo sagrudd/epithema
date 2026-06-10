@@ -53,9 +53,12 @@ final cutover. The local pre-release path is intentionally explicit:
 - `make release-artifacts`
 - `make release-container`
 
-`make release-artifacts` produces the Linux tarball, checksum, docs archive,
-validation archive, and a release manifest JSON that records the exact checked-
-in version and artefact names for the candidate build.
+`make release-artifacts` produces the target-platform tarball, checksum, docs
+archive, validation archive, and a release manifest JSON that records the exact
+checked-in version, platform label, and artefact names for the candidate build.
+The default release target is `linux-x86_64`, and the Makefile fails fast if the
+local host does not match that target so a macOS or ARM binary is not mislabeled
+as a Linux x86_64 release artefact.
 
 The first shipped tool cohort now covers sequence-stream and sequence-selection
 operations through the governed single-binary surface:

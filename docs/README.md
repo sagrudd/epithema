@@ -282,7 +282,8 @@ Additional documentation-oriented targets currently available are:
 - `make release-generated-check` to refresh governed generated artefacts and
   require a clean diff
 - `make release-artifacts` to assemble the reproducible local release bundle
-  under `dist/release/<version>/`
+  under `dist/release/<version>/`; by default this requires a `linux-x86_64`
+  host so the binary archive label matches the bundled executable
 
 ## Baseline CI Validation
 

@@ -7265,7 +7265,7 @@ Current baseline for the next milestone:
       platform-labelled artifact gap and a deliberate hosted-validation pass is
       scheduled.
 
-397. Make release artifact packaging platform-safe before release cutover.
+397. Complete. Make release artifact packaging platform-safe before release cutover.
     - Prevent `make release-artifacts` from emitting an archive labelled
       `linux-x86_64` when the bundled binary was built for another host
       platform.
@@ -7273,3 +7273,21 @@ Current baseline for the next milestone:
       derive the archive platform label from the actual built binary.
     - Update release documentation to describe the validated artifact platform
       path honestly.
+    - Added explicit `RELEASE_TARGET_OS`, `RELEASE_TARGET_ARCH`, and
+      `RELEASE_PLATFORM` Makefile settings, with defaults of `linux`,
+      `x86_64`, and `linux-x86_64`.
+    - Added `release-artifact-platform-check` and made `make
+      release-artifacts` depend on it before building or packaging, so a host
+      mismatch fails before any binary archive is emitted.
+    - Updated the release manifest generator to record `binary_platform` and
+      derive binary archive/checksum names from the platform label passed by
+      the Makefile.
+    - Updated release documentation, the root README, the docs README, and the
+      release checklist so the default Linux x86_64 artifact requirement is
+      explicit.
+    - Validated on Darwin arm64 that `make release-artifacts` now fails fast
+      for the default `linux-x86_64` target, that an explicit
+      `RELEASE_TARGET_OS=darwin RELEASE_TARGET_ARCH=arm64` platform check
+      passes, that `scripts/release_metadata.py manifest --binary-platform
+      linux-x86_64` emits matching artifact names, and that `make lint-docs`
+      passes.

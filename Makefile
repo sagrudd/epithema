@@ -5,19 +5,24 @@ SPHINXOPTS ?= -n -W --keep-going
 CONTAINER_RUNTIME ?= docker
 RELEASE_VERSION ?= $(shell $(PYTHON) scripts/release_metadata.py workspace-version)
 CONTAINER_IMAGE ?= emboss-rs:$(RELEASE_VERSION)
+RELEASE_TARGET_OS ?= linux
+RELEASE_TARGET_ARCH ?= x86_64
+RELEASE_PLATFORM := $(RELEASE_TARGET_OS)-$(RELEASE_TARGET_ARCH)
+HOST_OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+HOST_ARCH := $(shell uname -m | sed -e 's/^amd64$$/x86_64/' -e 's/^aarch64$$/arm64/')
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DOCS_HTML_DIR := $(DOCS_BUILD_DIR)/html
 DOCS_LIVE_PORT ?= 8000
 RELEASE_DIST_DIR ?= dist/release/$(RELEASE_VERSION)
-RELEASE_BINARY_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-$(RELEASE_VERSION)-linux-x86_64.tar.gz
+RELEASE_BINARY_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-$(RELEASE_VERSION)-$(RELEASE_PLATFORM).tar.gz
 RELEASE_DOCS_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-docs-$(RELEASE_VERSION).tar.gz
 RELEASE_VALIDATION_ARCHIVE := $(RELEASE_DIST_DIR)/emboss-rs-validation-$(RELEASE_VERSION).tar.gz
 RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/emboss-rs-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report full-compared-cohort-report harvest-coverage-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report full-compared-cohort-report harvest-coverage-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifact-platform-check release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -55,7 +60,7 @@ help:
 		"  make release-build     Build release-mode Rust artefacts" \
 		"  make release-test      Run release-gating Rust checks" \
 		"  make release-docs      Build release-gating documentation output" \
-		"  make release-artifacts Assemble the local Linux/docs/validation release bundle" \
+		"  make release-artifacts Assemble the target-platform/docs/validation release bundle" \
 		"  make release-container Build the Linux-first container image" \
 		"  make release-check     Run the local release gate" \
 		"" \
@@ -112,7 +117,16 @@ release-docs:
 	$(MAKE) docs-clean
 	$(MAKE) docs PYTHON=$(PYTHON)
 
-release-artifacts: release-version-check release-build release-docs cohort-report
+release-artifact-platform-check:
+	@if [ "$(HOST_OS)" != "$(RELEASE_TARGET_OS)" ] || [ "$(HOST_ARCH)" != "$(RELEASE_TARGET_ARCH)" ]; then \
+		printf "%s\n" "release artifact platform mismatch:"; \
+		printf "%s\n" "  host: $(HOST_OS)-$(HOST_ARCH)"; \
+		printf "%s\n" "  target: $(RELEASE_PLATFORM)"; \
+		printf "%s\n" "Run this target on the requested release platform or override RELEASE_TARGET_OS/RELEASE_TARGET_ARCH intentionally."; \
+		exit 1; \
+	fi
+
+release-artifacts: release-version-check release-artifact-platform-check release-build release-docs cohort-report
 	mkdir -p $(RELEASE_DIST_DIR)
 	tar -C target/release -czf $(RELEASE_BINARY_ARCHIVE) emboss-rs
 	sha256sum $(RELEASE_BINARY_ARCHIVE) > $(RELEASE_BINARY_ARCHIVE).sha256
@@ -122,6 +136,7 @@ release-artifacts: release-version-check release-build release-docs cohort-repor
 		docs/generated/validation
 	$(PYTHON) scripts/release_metadata.py manifest \
 		--output $(RELEASE_MANIFEST) \
+		--binary-platform $(RELEASE_PLATFORM) \
 		--container-image $(CONTAINER_IMAGE)
 
 release-container:

@@ -55,7 +55,7 @@ For `v1.0.0`, “release compatible” means:
   - configured to support manual dispatch for release-candidate verification
   - verifies checked-in release metadata before packaging
   - runs the local release gate
-  - assembles the Linux/docs/validation artefact bundle through `make release-artifacts`
+  - assembles the target-platform/docs/validation artefact bundle through `make release-artifacts`
   - builds the container image and publishes to GHCR when configured
   - attaches artefacts to a GitHub release on tag builds
   - intentionally disabled manually as of 2026-06-10; until re-enabled, these
@@ -78,8 +78,8 @@ For `v1.0.0`, “release compatible” means:
 
 ### `emboss-rs`
 
-- Linux `emboss-rs` binary tarball
-- SHA256 checksum for the Linux tarball
+- target-platform `emboss-rs` binary tarball
+- SHA256 checksum for the target-platform tarball
 - built documentation archive
 - validation-report archive containing the cohort-level evidence outputs
 - release manifest JSON describing the checked-in version and artefact names
@@ -163,6 +163,15 @@ For a conservative local candidate build, run:
 The release bundle is written under `dist/release/<version>/`. It is intended
 for inspection and local smoke verification before a `v*` tag is created.
 
+By default, `make release-artifacts` targets `linux-x86_64` and now fails fast
+unless the local host reports `linux-x86_64`. This prevents a macOS or ARM
+binary from being packaged under a Linux x86_64 archive name. If a different
+platform bundle is intentionally being produced, set both
+`RELEASE_TARGET_OS=<os>` and `RELEASE_TARGET_ARCH=<arch>` explicitly and describe
+the resulting artefact platform honestly in the release evidence. The first
+public `1.0.0` release still requires a validated Linux x86_64 bundle before
+cutover.
+
 ## Local CI-parity while GitHub Actions are suspended
 
 The `emboss-rs` GitHub Actions workflows are intentionally disabled manually as
@@ -180,7 +189,8 @@ minimum replacement for the repository-owned parts of those checks:
 8. `make release-truth-check`
 9. `make release-generated-check`
 10. `make release-check`
-11. `make release-artifacts`
+11. `make release-artifacts` on a host matching the intended
+    `RELEASE_TARGET_OS` and `RELEASE_TARGET_ARCH`
 
 The broad `make ci` target remains useful for day-to-day local parity, but the
 explicit sequence above is preferred for release-candidate evidence while
@@ -197,6 +207,10 @@ Environment prerequisites:
   report that the sibling repository is unavailable.
 - Docker must be available before claiming Linux container smoke validation
   with `make release-container`.
+- The default `make release-artifacts` target requires a Linux x86_64 host.
+  On other hosts it is valid to run the earlier release checks and container
+  smoke checks, but do not claim a Linux x86_64 binary archive unless the
+  binary was built and packaged on that target platform.
 - GitHub Pages deployment, GHCR publication, release attachment, and
   repository-token permission behavior cannot be validated locally while the
   hosted workflows are disabled.
