@@ -147,8 +147,10 @@ Current generated release-truth markers:
 - Release tasks cover version checks, generated-artifact freshness, governance
   alignment, release builds, release docs, Linux bundle assembly, and container
   build wiring.
-- GitHub Actions continue to verify the release-oriented docs path and the
-  Linux-first container smoke path.
+- GitHub Actions workflows are configured for CI, release, docs publication,
+  and the Linux-first container smoke path, but they are intentionally disabled
+  manually as of 2026-06-10. Until they are re-enabled, release-candidate
+  validation depends on local execution of the equivalent checks.
 - The root docs and README continue to state the first-class R and R-owned
   plotting posture explicitly.
 
@@ -259,9 +261,11 @@ Current generated release-truth markers:
 
 ### Docs and publication path
 
-- Status: `complete`
-- Basis: the Sphinx build passes, the release docs build path is clean, and the
-  Pages workflow remains aligned to the release-oriented docs target.
+- Status: `locally complete; hosted publication suspended`
+- Basis: the Sphinx build passes locally and the release docs build path is
+  clean. The Pages workflow remains configured for the release-oriented docs
+  target, but it is manually disabled and therefore is not currently providing
+  hosted publication validation.
 
 ### Release task availability
 
@@ -278,8 +282,9 @@ Current generated release-truth markers:
 ### Container readiness
 
 - Status: `ready with known limitations`
-- Basis: the Dockerfile, `.dockerignore`, CI smoke build, and release workflow
-  container path are present. Local smoke execution still depends on an
+- Basis: the Dockerfile, `.dockerignore`, configured CI smoke build, and
+  release workflow container path are present. The hosted workflow is manually
+  disabled, so current validation must come from local smoke execution in an
   environment with Docker available.
 
 ### R-first-class posture in docs

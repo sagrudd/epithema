@@ -307,7 +307,7 @@ At present CI enforces:
 GitHub Pages is the formal public publication path for the EMBOSS-RS
 documentation site from project start.
 
-Publication is handled by the GitHub Actions workflow at
+Publication is configured through the GitHub Actions workflow at
 [`../.github/workflows/docs-pages.yml`](../.github/workflows/docs-pages.yml).
 The workflow:
 
@@ -321,11 +321,17 @@ The workflow:
 - uploads `docs/_build/html/` as the Pages artifact and deploys it through the
   standard GitHub Pages deployment actions
 
+The workflow is intentionally disabled manually as of 2026-06-10 along with the
+other repository workflows. Until it is re-enabled, publication validation is
+local only: build the Sphinx site with the documented docs targets and do not
+claim hosted Pages deployment coverage.
+
 ## Repository Setting Note
 
 The publication workflow now requests GitHub Pages enablement automatically via
-`actions/configure-pages`. If an organization policy or repository setting
-still blocks that change, the equivalent manual configuration is:
+`actions/configure-pages` when the workflow is enabled. If an organization
+policy or repository setting still blocks that change after re-enabling hosted
+automation, the equivalent manual configuration is:
 
 - **Source:** `GitHub Actions`
 

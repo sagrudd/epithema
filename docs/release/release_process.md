@@ -51,13 +51,16 @@ For `v1.0.0`, “release compatible” means:
 - `make release-container`
 - `make release-check`
 - GitHub Actions release workflow:
-  - runs on `v*` tags
-  - supports manual dispatch for release-candidate verification
+  - configured to run on `v*` tags
+  - configured to support manual dispatch for release-candidate verification
   - verifies checked-in release metadata before packaging
   - runs the local release gate
   - assembles the Linux/docs/validation artefact bundle through `make release-artifacts`
   - builds the container image and publishes to GHCR when configured
   - attaches artefacts to a GitHub release on tag builds
+  - intentionally disabled manually as of 2026-06-10; until re-enabled, these
+    hosted release checks must be replaced by local execution of the matching
+    `make` targets
 
 ### `emboss-r`
 
@@ -92,12 +95,14 @@ For `v1.0.0`, “release compatible” means:
 ## Manual settings still required
 
 - GitHub Pages publication is provisioned automatically by the docs workflow
-  when repository policy allows it. If repository or organization policy blocks
-  automatic enablement, Pages must be set manually to deploy from GitHub
-  Actions for `emboss-rs`.
+  when repository policy allows it and the workflow is enabled. The
+  `emboss-rs` workflows are intentionally disabled manually as of 2026-06-10,
+  so Pages publication is suspended until the docs workflow is re-enabled. If
+  repository or organization policy blocks automatic enablement after that,
+  Pages must be set manually to deploy from GitHub Actions for `emboss-rs`.
 - GHCR publication requires GitHub Actions package write permission on the
-  `emboss-rs` repository. No extra secret is required when publishing with the
-  repository `GITHUB_TOKEN`.
+  `emboss-rs` repository and an enabled release workflow. No extra secret is
+  required when publishing with the repository `GITHUB_TOKEN`.
 - GitHub Releases must remain enabled in both repositories.
 
 ## Manual release steps

@@ -7146,15 +7146,18 @@ Current baseline for the next milestone:
       expansion, `entret`, `embossdata`, external database preparation helpers,
       or broad provider acquisition work.
 
-391. Reconcile release documentation and automation truth after GitHub Actions suspension.
-    - Update release-readiness and release-process documentation that still
-      states or implies GitHub Actions are actively verifying CI, Pages, release,
-      or container paths.
-    - State honestly that workflows are disabled manually and that validation
-      must be local until Actions are re-enabled.
-    - Preserve the distinction between suspended automation and broken
-      repository checks.
-    - Regenerate Sphinx documentation if touched pages require generated output.
+391. Complete. Reconcile release documentation and automation truth after GitHub Actions suspension.
+    - Updated release-readiness documentation that still implied hosted
+      GitHub Actions were actively validating docs publication and the
+      Linux-first container smoke path.
+    - Updated release-process documentation so the release and Pages workflows
+      are described as configured but intentionally disabled manually as of
+      `2026-06-10`.
+    - Updated the docs publication README so Pages deployment is no longer
+      described as currently handled by an active workflow.
+    - Preserved the distinction between suspended hosted automation and broken
+      repository checks: local Sphinx/release checks remain the current source
+      of validation until Actions are re-enabled.
 
 392. Capture the local CI-parity command set required while GitHub Actions remain suspended.
     - Identify the smallest practical local commands that cover formatting,
