@@ -7291,3 +7291,60 @@ Current baseline for the next milestone:
       passes, that `scripts/release_metadata.py manifest --binary-platform
       linux-x86_64` emits matching artifact names, and that `make lint-docs`
       passes.
+
+Current baseline for the next milestone:
+
+- release-candidate operational hardening tasks `390` through `397` are
+  complete.
+- shipped methods audited: `115`
+- compared-evidence methods: `115`
+- release truth current: `true`
+- local Darwin arm64 validation is strong for source, docs, generated truth,
+  and container smoke checks, but it is not valid Linux x86_64 binary-release
+  evidence.
+- GitHub Actions status: intentionally suspended by manual workflow disablement
+  on `2026-06-10`.
+
+398. Validate release artifacts on a real Linux x86_64 release host.
+    - Run `make release-artifacts` on a host where `uname -s` maps to `linux`
+      and `uname -m` maps to `x86_64`.
+    - Verify the binary archive checksum and inspect the bundled binary type.
+    - Confirm the manifest `binary_platform` and archive names match
+      `linux-x86_64`.
+    - Record any host/toolchain blockers honestly.
+
+399. Validate the Linux x86_64 release binary smoke path.
+    - Extract the Linux x86_64 archive produced by Task `398`.
+    - Run `emboss-rs --version` from the extracted binary on the Linux x86_64
+      host.
+    - Run one low-risk CLI command that exercises governed method discovery or
+      help output without requiring network access.
+    - Record the exact binary, host, and smoke-command evidence.
+
+400. Refresh release readiness documents with the Linux x86_64 artifact result.
+    - Update release readiness/process documentation with the Task `398` and
+      Task `399` outcome.
+    - Keep the distinction between local source validation, hosted workflow
+      validation, and Linux x86_64 binary artifact validation explicit.
+    - Run the Sphinx/documentation checks required for the touched docs.
+
+401. Decide the controlled hosted-validation reactivation path.
+    - Reassess whether `CI`, `Docs Pages`, and `Release` should remain
+      disabled after Linux x86_64 artifact validation exists.
+    - If reactivation is appropriate, define the exact workflow or workflows to
+      re-enable and the order of validation.
+    - If reactivation remains deferred, record the blocker and next decision
+      point.
+
+402. If approved, re-enable the minimal hosted workflow set for validation.
+    - Re-enable only the workflow or workflows selected by Task `401`.
+    - Trigger or observe the smallest relevant hosted validation run.
+    - Do not claim hosted release, Pages, or GHCR readiness beyond the workflows
+      actually run and observed.
+
+403. Reconcile final release cutover readiness after Linux and hosted evidence.
+    - Summarize Linux x86_64 artifact evidence, local release truth, docs
+      publication readiness, and any hosted workflow results.
+    - Identify the remaining blockers before tagging `v1.0.0`.
+    - Decide whether the project is ready for coordinated release cutover with
+      `emboss-r` or needs another bounded stabilization milestone.
