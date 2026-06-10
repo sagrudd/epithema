@@ -6,13 +6,11 @@ This page is generated from the shipped cohort validation report. It exists to m
 
 - Registry source: `emboss_tools::governed_tool_descriptors`
 - Shipped methods: `115`
-- Compared-evidence methods: `114`
+- Compared-evidence methods: `115`
 - Executable-evidence methods: `0`
-- Methods below compared evidence: `1`
-- Full compared cohort: `no`
+- Methods below compared evidence: `0`
+- Full compared cohort: `yes`
 
 ## Below-Compared Exceptions
 
-| Tool | Family | Evidence level | Harvested legacy | Executable validation | Compared validation |
-|---|---|---|---|---|---|
-| `assemblyget` | `archive_tools` | `documented_only` | `no` | `no` | `no` |
+No shipped methods remain below compared evidence. The shipped cohort currently satisfies the full-compared release gate.

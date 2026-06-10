@@ -132,6 +132,15 @@ const ACCEPTANCE_ANCHORS: &[AcceptanceAnchorSpec] = &[
         legacy_invocation: "infoassembly -sequence ena:ERR123456 -stdout yes",
     },
     AcceptanceAnchorSpec {
+        tool_name: "assemblyget",
+        autodoc_contract: "docs/autodoc/tools/assemblyget.json",
+        example_id: "report_ena_assembly_manifest_intent",
+        expected_output: "crates/emboss-testkit/tests/fixtures/acceptance_anchors/assemblyget_report_ena_manifest_intent.tsv",
+        legacy_source: "EMBOSS assemblyget application",
+        legacy_locator: "https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/assemblyget.acd",
+        legacy_invocation: "assemblyget -sequence ena:ERR123456 -stdout yes",
+    },
+    AcceptanceAnchorSpec {
         tool_name: "psiphi",
         autodoc_contract: "docs/autodoc/tools/psiphi.json",
         example_id: "psiphi_profile_example",
@@ -1262,7 +1271,7 @@ fn execute_anchor_payload(
 ) -> Result<AnchorActualResult, PlatformError> {
     if matches!(
         spec.tool_name,
-        "refseqget" | "runinfo" | "runget" | "infoassembly"
+        "refseqget" | "runinfo" | "runget" | "infoassembly" | "assemblyget"
     ) {
         return execute_mocked_provider_anchor_payload(repo_root, spec);
     }
@@ -1352,6 +1361,7 @@ fn execute_mocked_provider_anchor_payload(
         "infoassembly" => {
             service.invoke_infoassembly_with_client(request, descriptor, Some(&client))
         }
+        "assemblyget" => service.invoke_assemblyget_with_client(request, descriptor, Some(&client)),
         other => {
             return Err(PlatformError::new(
                 ErrorCategory::Configuration,
@@ -2369,6 +2379,13 @@ fn mocked_provider_request(tool_name: &str) -> (InvocationRequest, AnchorMockHtt
             ),
         ),
         "infoassembly" => (
+            request.with_arguments(vec!["ena:ERR123456".to_owned()]),
+            AnchorMockHttpClient::default().with_response(
+                "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",
+                HttpResponse::new(200, "run_accession\tstudy_accession\texperiment_accession\tsample_accession\tinstrument_platform\tinstrument_model\tlibrary_layout\tlibrary_strategy\tlibrary_source\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\nERR123456\tERP000001\tERX000001\tERS000001\tILLUMINA\tNovaSeq 6000\tPAIRED\tWGS\tGENOMIC\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_2.fastq.gz\tmd51;md52\t10;12\t\t\t\t\t\t\n"),
+            ),
+        ),
+        "assemblyget" => (
             request.with_arguments(vec!["ena:ERR123456".to_owned()]),
             AnchorMockHttpClient::default().with_response(
                 "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=ERR123456&result=read_run&fields=run_accession%2Cstudy_accession%2Cexperiment_accession%2Csample_accession%2Cinstrument_platform%2Cinstrument_model%2Clibrary_layout%2Clibrary_strategy%2Clibrary_source%2Cfastq_ftp%2Cfastq_md5%2Cfastq_bytes%2Csubmitted_ftp%2Csubmitted_md5%2Csubmitted_bytes%2Csra_ftp%2Csra_md5%2Csra_bytes&format=tsv&download=false",

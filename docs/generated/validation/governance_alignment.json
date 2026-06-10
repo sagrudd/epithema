@@ -13,11 +13,11 @@
     "shipped_omit_count": 0,
     "shipped_add_count": 0,
     "retained_backlog_count": 0,
-    "shipped_curated_autodoc_count": 114,
-    "shipped_executable_or_better_count": 114,
-    "shipped_harvested_legacy_presence_count": 114,
-    "shipped_compared_count": 114,
-    "shipped_documented_only_count": 1
+    "shipped_curated_autodoc_count": 115,
+    "shipped_executable_or_better_count": 115,
+    "shipped_harvested_legacy_presence_count": 115,
+    "shipped_compared_count": 115,
+    "shipped_documented_only_count": 0
   },
   "shipped_methods": [
     {
@@ -89,8 +89,8 @@
       "shipped_summary": "report bounded assembly-level manifest intent for one provider-qualified archive accession",
       "governance_family": "Modernize — Rework — Remote retrieval and archive acquisition",
       "governance_decision": "rework",
-      "curated_autodoc_present": false,
-      "evidence_level": "documented_only"
+      "curated_autodoc_present": true,
+      "evidence_level": "compared_evidence"
     },
     {
       "tool_name": "infoassembly",
@@ -1260,9 +1260,9 @@
       "retained_total": 0,
       "retained_shipped": 0,
       "retained_backlog": 0,
-      "shipped_curated_autodoc": 8,
-      "shipped_executable_or_better": 8,
-      "shipped_compared": 8,
+      "shipped_curated_autodoc": 9,
+      "shipped_executable_or_better": 9,
+      "shipped_compared": 9,
       "recommendation": "family is aligned at the current governance and evidence threshold",
       "retained_backlog_tools": []
     },

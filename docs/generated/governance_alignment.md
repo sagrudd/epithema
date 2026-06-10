@@ -11,11 +11,11 @@ This page is generated from the maintained governance family-to-tool appendix, t
 - Shipped tools: `115`
 - Shipped tools with governance mapping: `115`
 - Retained backlog still unshipped: `0`
-- Shipped tools with curated autodoc: `114`
-- Shipped tools with executable or compared evidence: `114`
-- Shipped tools with harvested legacy provenance: `114`
-- Shipped tools with compared evidence: `114`
-- Shipped tools still documented-only: `1`
+- Shipped tools with curated autodoc: `115`
+- Shipped tools with executable or compared evidence: `115`
+- Shipped tools with harvested legacy provenance: `115`
+- Shipped tools with compared evidence: `115`
+- Shipped tools still documented-only: `0`
 
 ## Shipped Decision Split
 
@@ -46,7 +46,7 @@ This page is generated from the maintained governance family-to-tool appendix, t
 | Modernize — Rework — Plotting and visualization tools | 0 | 0 | 0 | 10 | 10 | 10 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Primer and assay-oriented search | 0 | 0 | 0 | 3 | 3 | 3 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Protein property and structural-summary utilities | 2 | 2 | 0 | 3 | 3 | 3 | family is aligned at the current governance and evidence threshold |
-| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 8 | 8 | 8 | family is aligned at the current governance and evidence threshold |
+| Modernize — Rework — Remote retrieval and archive acquisition | 0 | 0 | 0 | 9 | 9 | 9 | family is aligned at the current governance and evidence threshold |
 | Modernize — Rework — Restriction-enzyme design and analysis | 2 | 2 | 0 | 2 | 2 | 2 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — HMM and probabilistic homology workflows | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
 | Strategic Add — Modern archive-scale raw data ingestion | 0 | 0 | 0 | 0 | 0 | 0 | family is aligned at the current governance and evidence threshold |
@@ -73,7 +73,7 @@ All shipped methods are mapped in the governance appendix.
 | `infoalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `extractalign` | `alignment_tools` | Core Retain — Alignment read-write and post-processing | retain | yes | `compared_evidence` |
 | `nthseqset` | `alignment_tools` | Core Retain — Basic sequence IO and conversion | retain | yes | `compared_evidence` |
-| `assemblyget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | no | `documented_only` |
+| `assemblyget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `infoassembly` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `runinfo` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |
 | `runget` | `archive_tools` | Modernize — Rework — Remote retrieval and archive acquisition | rework | yes | `compared_evidence` |

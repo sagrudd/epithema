@@ -4,19 +4,10 @@
   "registry_source": "emboss_tools::governed_tool_descriptors",
   "summary": {
     "total_method_count": 115,
-    "compared_evidence_count": 114,
+    "compared_evidence_count": 115,
     "executable_evidence_count": 0,
-    "below_compared_method_count": 1,
-    "full_compared_cohort": false
+    "below_compared_method_count": 0,
+    "full_compared_cohort": true
   },
-  "below_compared_methods": [
-    {
-      "tool_name": "assemblyget",
-      "family": "archive_tools",
-      "evidence_level": "documented_only",
-      "harvested_legacy_evidence_present": false,
-      "executable_validation_present": false,
-      "compared_validation_present": false
-    }
-  ]
+  "below_compared_methods": []
 }

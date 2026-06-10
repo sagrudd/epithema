@@ -6,7 +6,7 @@
   "summary": {
     "total_method_count": 115,
     "family_count": 12,
-    "compared_count": 114,
+    "compared_count": 115,
     "executable_only_count": 0,
     "harvested_but_not_compared_count": 0
   },
@@ -84,7 +84,7 @@
     {
       "family": "Modernize — Rework — Remote retrieval and archive acquisition",
       "shipped_method_count": 9,
-      "compared_count": 8,
+      "compared_count": 9,
       "executable_only_count": 0,
       "harvested_but_not_compared_count": 0
     },

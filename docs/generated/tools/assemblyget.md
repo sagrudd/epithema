@@ -1,6 +1,6 @@
 # assemblyget
 
-> Generated from a registry-backed autodoc stub. Edit or replace the source autodoc document rather than this page.
+> Generated from validated autodoc input. Edit the source autodoc document rather than this page.
 
 ## Summary
 
@@ -8,47 +8,75 @@ Report bounded assembly-level manifest intent for one provider-qualified archive
 
 ## Document Metadata
 
-- Document ID: `assemblyget-stub-v1`
+- Document ID: `assemblyget-v1`
 - Schema version: `emboss-rs.autodoc/v1`
-- Source mode: `registry-stub`
+- Source mode: `curated`
 - Tool family: `archive_tools`
 - Legacy names: `assemblyget`
 
 ## Evidence Status
 
-- Declared evidence baseline: `documented_only`
+- Declared evidence baseline: `declared_evidence`
 - Machine-readable validation report: [`../validation/assemblyget.validation.json`](../validation/assemblyget.validation.json)
 - This page records declared documentation and evidence intent only. Runnable, executed, or compared validation evidence is tracked through the machine-readable validation report and the shipped cohort validation report.
 
 ## Overview
 
-`assemblyget` reports deterministic assembly-level manifest intent for one provider-qualified archive accession. The v1 surface resolves bounded ENA or SRA archive metadata through the governed provider route and projects a stable table report. It is not a downloader, local file writer, database preparer, or generic archive orchestration layer.
+`assemblyget` is the assembly-level manifest-intent companion to `infoassembly`. In v1 it resolves one provider-qualified archive accession through the governed archive-provider seam and projects the result into a deterministic table that describes what would be considered for acquisition without acquiring it.
 
 ## Inputs
 
-This archive-facing tool accepts exactly one provider-qualified archive accession such as `ena:ERR123456` or `sra:SRR123456`. The shipped governed service route rejects local file paths, inline literals, bare identifiers, unqualified database names, and multi-accession batches.
+The shipped governed route accepts exactly one provider-qualified archive accession such as `ena:ERR123456` or `sra:SRR123456`. Local file paths, inline literals, bare identifiers, unqualified database names, and multi-accession batches are rejected before any provider metadata is materialized.
 
 ## Outputs
 
-The implementation emits a table with provider, requested accession, normalized object class, selected assembly or study/project accession, linked run accession when available, route endpoint, manifest mode, file count, total known bytes when available, and explicit materialization status. The shipped route uses `manifest_intent_only` mode and `not_materialized` status; files are not downloaded, staged, unpacked, indexed, or written locally.
+The output is a stable table with provider, requested accession, normalized object class, selected assembly or study/project accession, linked run accession when present, route endpoint, manifest mode, file count, total known bytes, and materialization status. The shipped v1 mode is explicitly `manifest_intent_only` with `not_materialized` status.
+
+## Legacy Context
+
+The historical EMBOSS `assemblyget` name implies acquisition of assembly-associated data. This governed Rust surface deliberately keeps only the modern provider-aware manifest-intent user need in scope. The committed compared example proves the bounded report shape against a checked-in expected table payload rather than claiming historical download or assembly-materialization parity.
 
 ## Current Status
 
-This method is implemented and exposed through `emboss-rs assemblyget`. Rust service coverage exercises the governed mocked ENA route and asserts the explicit `not_materialized` no-download status. The generated tool page and machine-readable validation stub are current, but canonical compared fixture evidence remains a follow-on documentation task.
+This method is implemented and exposed through `emboss-rs assemblyget`. Rust service coverage exercises the governed mocked ENA route and local-file rejection, and the acceptance-anchor harness compares the mocked ENA manifest-intent table against a committed expected TSV fixture.
 
 ## Caveats
 
-The bounded v1 route does not claim broad provider parity, live provider search, archive download, local database indexing, external database preparation, or historical EMBOSS behaviour beyond the explicitly shipped manifest-intent report.
+`assemblyget` does not download, stage, unpack, index, write, or otherwise materialize archive files. It does not claim broad provider parity, live provider search, external database preparation, generic archive orchestration, or historical EMBOSS acquisition behaviour beyond the explicitly shipped manifest-intent report.
 
 ## Declared Artifacts
 
-No artifacts are declared for this autodoc document.
+### Mocked ENA assemblyget manifest-intent case fixture
+
+- Artifact ID: `assemblyget_mocked_ena_manifest_intent_case`
+- Origin: fixture asset
+- Acquisition: fixture
+- Reference: managed asset `crates/emboss-testkit/tests/fixtures/autodoc/assemblyget_ena_err123456_case.md`
+- Notes: Repository-managed case note for the mocked ENA manifest-intent route used in Rust service coverage and the acceptance-anchor comparison.
 
 ## Declared Examples
 
-No examples are declared for this autodoc document.
+### Report ENA assembly-level manifest intent without materializing files
+
+- Example ID: `report_ena_assembly_manifest_intent`
+- Description: Resolves a provider-qualified ENA archive accession and returns the bounded manifest-intent table through the governed archive reporting path.
+- Referenced artifacts: `assemblyget_mocked_ena_manifest_intent_case`
+- Expected outputs:
+  - `ena_assembly_manifest_intent_table`: Bounded ENA assembly manifest-intent table (A stable table report that includes the provider, requested accession, normalized object class, selected study/project accession, linked run accession, route endpoint, manifest-intent mode, file count, total known bytes, and explicit no-materialization status.)
+- Legacy reference: EMBOSS assemblyget application
+  - Locator: `https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/assemblyget.acd`
+  - Invocation: `assemblyget -sequence ena:ERR123456 -stdout yes`
 
 ## Provenance
 
-- Stub generated by: emboss-rs autodoc stub generator
-- Source references: none declared
+- Curated by: emboss-rs maintainers
+- Source references:
+  - EMBOSS assemblyget application (`https://github.com/kimrutherford/EMBOSS/blob/master/emboss/acd/assemblyget.acd`)
+
+## Declared Validation Intent
+
+This section describes what future governed validation should execute or compare. It is not evidence that those runs have already happened.
+
+- Declared required examples for future validation: `report_ena_assembly_manifest_intent`
+- Future legacy comparison requested: no
+- Future execution must capture provenance: yes

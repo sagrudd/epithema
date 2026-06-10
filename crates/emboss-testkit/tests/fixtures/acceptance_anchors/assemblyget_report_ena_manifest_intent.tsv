@@ -1,0 +1,2 @@
+provider	requested_accession	object_class	assembly_accession	run_accession	route_endpoint	manifest_mode	file_count	total_size_bytes	materialization_status
+ena	ERR123456	run	ERP000001	ERR123456	ena.portal.filereport	manifest_intent_only	2	22	not_materialized

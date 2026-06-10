@@ -7063,14 +7063,19 @@ Current baseline for this tier:
       narrative documentation and compared fixture evidence remain assigned to
       Task `387`.
 
-387. Add canonical `assemblyget` documentation and compared fixture evidence.
-    - Add curated autodoc source for the bounded manifest/routing report.
-    - Add managed fixture notes for the mocked or managed provider success
-      case and rejection/no-materialization cases.
-    - Refresh generated tool documentation and validation metadata.
-    - Add compared expected-output fixture coverage for the stable table
-      report.
-    - Documentation must state honestly that no files are downloaded,
+387. Complete. Add canonical `assemblyget` documentation and compared fixture evidence.
+    - Replaced the registry-backed `assemblyget` autodoc stub with a curated
+      contract for the bounded manifest-intent report.
+    - Added managed fixture notes for the mocked ENA success path and explicit
+      no-materialization policy.
+    - Added checked-in expected-output TSV coverage for the stable
+      `assemblyget` table report.
+    - Added `assemblyget` to the acceptance-anchor harness so the mocked ENA
+      manifest-intent table is executed and compared through the same governed
+      evidence path as adjacent archive tools.
+    - Refreshed generated tool documentation, validation metadata, and cohort
+      reports from the governed sources.
+    - Documentation states honestly that no files are downloaded,
       materialized, unpacked, indexed, or written.
 
 388. Re-run the full release-truth surface after shipping `assemblyget`.
