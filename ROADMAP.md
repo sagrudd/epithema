@@ -7305,13 +7305,20 @@ Current baseline for the next milestone:
 - GitHub Actions status: intentionally suspended by manual workflow disablement
   on `2026-06-10`.
 
-398. Validate release artifacts on a real Linux x86_64 release host.
+398. Blocked. Validate release artifacts on a real Linux x86_64 release host.
     - Run `make release-artifacts` on a host where `uname -s` maps to `linux`
       and `uname -m` maps to `x86_64`.
     - Verify the binary archive checksum and inspect the bundled binary type.
     - Confirm the manifest `binary_platform` and archive names match
       `linux-x86_64`.
     - Record any host/toolchain blockers honestly.
+    - This run was executed on `Darwin arm64`, not Linux x86_64.
+    - `make release-artifact-platform-check` correctly failed before packaging
+      with host `darwin-arm64` and target `linux-x86_64`.
+    - No Linux x86_64 archive, checksum, manifest, or bundled binary type can
+      be validated from this host without overclaiming release evidence.
+    - Required next action: run this task from a real Linux x86_64 host or
+      provide an explicitly approved Linux x86_64 release build environment.
 
 399. Validate the Linux x86_64 release binary smoke path.
     - Extract the Linux x86_64 archive produced by Task `398`.
