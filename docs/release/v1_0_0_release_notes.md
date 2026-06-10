@@ -26,7 +26,7 @@ For the current evidence posture, see:
 ### Rust-first CLI reboot
 
 The shipped `emboss-rs <tool>` surface now covers a practical governed cohort
-of `114` methods, including:
+of `115` methods, including:
 
 - sequence construction, counting, selection, extraction, partitioning,
   cleanup, and description editing
@@ -56,8 +56,8 @@ tools for:
 
 - single-sequence retrieval via ENA and NCBI-backed acquisition seams
 - modernized `seqret`, `seqretsetall`, `seqretsplit`, and `refseqget`
-- archive metadata and manifest-oriented `runinfo`, `runget`, and
-  `infoassembly`
+- archive metadata and manifest-oriented `runinfo`, `runget`,
+  `infoassembly`, and `assemblyget`
 
 ### Documentation and validation
 
@@ -72,9 +72,9 @@ tools for:
 
 Current evidence posture at the time of this draft:
 
-- `114` shipped methods carry compared evidence
+- `115` shipped methods carry compared evidence
 - `0` shipped methods carry executable evidence
-- `114` shipped methods record harvested legacy provenance
+- `115` shipped methods record harvested legacy provenance
 - full compared cohort: `yes`
 - non-blocking plotting legacy-reference notes remain visible: `yes`
 - blocking cohort gaps: `0`
@@ -122,9 +122,9 @@ change the release gate state above.
 
 This means the shipped retained cohort remains fully closed, harvest coverage
 remains complete, and the governed cohort is back at the fully green release
-gate. The bounded `wossname` and `seealso` slices now ship with curated
-provenance, runnable governed validation seams, and canonical compared
-command-discovery evidence.
+gate. The bounded `assemblyget` slice now ships with curated provenance, a
+runnable governed validation seam, and canonical compared manifest-intent
+evidence.
 
 ### First-class R story
 

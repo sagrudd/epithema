@@ -10,22 +10,8 @@
     "largest_retained_backlog_size": 0,
     "weakest_evidence_family": null,
     "weak_evidence_method_count": 0,
-    "release_truth_current": false
+    "release_truth_current": true
   },
-  "signals": [
-    {
-      "code": "release_truth_lag",
-      "severity": "warning",
-      "summary": "release-truth documentation is behind the current generated state",
-      "detail": "The RC readiness document is missing current markers for: - Shipped methods audited: `115`, - Compared-evidence methods: `115`, - Methods with harvested legacy provenance recorded: `115`."
-    }
-  ],
-  "recommendations": [
-    {
-      "priority": 1,
-      "target": "release readiness truth",
-      "rationale": "Refresh the RC readiness material before adding more shipped scope so release-facing documentation does not lag the generated cohort state.",
-      "source_signal": "release_truth_lag"
-    }
-  ]
+  "signals": [],
+  "recommendations": []
 }

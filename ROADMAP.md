@@ -7078,14 +7078,23 @@ Current baseline for this tier:
     - Documentation states honestly that no files are downloaded,
       materialized, unpacked, indexed, or written.
 
-388. Re-run the full release-truth surface after shipping `assemblyget`.
-    - Re-run the required release-generated and release-truth reports.
-    - Confirm the shipped method count, documented/compared method count,
-      full-compared cohort, harvest coverage, retained-backlog closure, and
-      release truth are current.
-    - Run the smallest practical local checks plus Sphinx/doc checks needed
-      for the touched surface.
-    - Commit and push any generated documentation or validation refreshes.
+388. Complete. Re-run the full release-truth surface after shipping `assemblyget`.
+    - Re-ran the required release-generated and release-truth reports after
+      the `assemblyget` compared-evidence closure.
+    - Refreshed release-readiness and release-note truth markers to the
+      current generated state:
+      - shipped methods: `115`
+      - documentation-complete methods: `115`
+      - compared-evidence methods: `115`
+      - executable-evidence methods: `0`
+      - harvested legacy provenance present: `115`
+      - full compared cohort: `true`
+      - harvest coverage complete: `true`
+      - retained backlog still unshipped: `0`
+      - release truth current: `true`
+    - Kept the release notes honest that `assemblyget` is a
+      manifest-intent archive metadata route, not a file materialization or
+      historical acquisition-parity claim.
 
 389. Reassess the shipped `assemblyget` slice before any further retrieval/data-discovery continuation.
     - Confirm whether the shipped slice stayed bounded to manifest/routing
