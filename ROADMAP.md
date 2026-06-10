@@ -7217,14 +7217,42 @@ Current baseline for the next milestone:
       and token-driven Pages enablement remain unvalidated while the
       `Docs Pages` GitHub Actions workflow is manually disabled.
 
-395. Assess release artifact and container smoke readiness in the current local environment.
+395. Complete. Assess release artifact and container smoke readiness in the current local environment.
     - Run release artifact packaging where practical.
     - Check whether Docker is available for the Linux container smoke path.
     - Record blockers plainly instead of treating unavailable Docker or hosted
       publication as passed validation.
+    - Ran `make release-artifacts`; it completed and produced the ignored local
+      bundle files under `dist/release/1.0.0/`:
+      `emboss-rs-1.0.0-linux-x86_64.tar.gz`,
+      `emboss-rs-1.0.0-linux-x86_64.tar.gz.sha256`,
+      `emboss-rs-docs-1.0.0.tar.gz`,
+      `emboss-rs-validation-1.0.0.tar.gz`, and
+      `emboss-rs-release-manifest.json`.
+    - Verified the binary archive checksum with `sha256sum --check` and
+      inspected the manifest and docs archive structure.
+    - Docker was available locally (`docker version` reported server
+      `29.3.1`), so `make release-container` was run and completed
+      successfully.
+    - Ran `docker run --rm emboss-rs:1.0.0 --version`; it reported
+      `emboss-rs 1.0.0`.
+    - Host and artifact platform readiness is not complete: this run occurred
+      on Darwin arm64, the archive named `linux-x86_64` contains a Mach-O arm64
+      binary, and the locally built Docker image reports `linux/arm64`. These
+      outputs are useful packaging smoke checks but must not be treated as
+      validated Linux x86_64 release artifacts.
 
 396. Reassess whether GitHub Actions should remain suspended before release cutover.
     - Summarize local validation status from Tasks `391` through `395`.
     - Identify any checks that remain materially weaker without hosted Actions.
     - Decide whether to keep workflows disabled, re-enable selected workflows,
       or defer release cutover until hosted validation is available again.
+
+397. Make release artifact packaging platform-safe before release cutover.
+    - Prevent `make release-artifacts` from emitting an archive labelled
+      `linux-x86_64` when the bundled binary was built for another host
+      platform.
+    - Either require a Linux x86_64 release host/toolchain for that archive or
+      derive the archive platform label from the actual built binary.
+    - Update release documentation to describe the validated artifact platform
+      path honestly.
