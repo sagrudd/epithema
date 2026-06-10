@@ -7096,13 +7096,30 @@ Current baseline for this tier:
       manifest-intent archive metadata route, not a file materialization or
       historical acquisition-parity claim.
 
-389. Reassess the shipped `assemblyget` slice before any further retrieval/data-discovery continuation.
-    - Confirm whether the shipped slice stayed bounded to manifest/routing
-      reporting.
-    - Confirm whether any pressure appeared for downloads, file
-      materialization, provider-wide parity, local indexing, generic flatfile
-      retrieval, or generic acquisition orchestration.
-    - Decide whether remote retrieval planning should continue, pause, or
-      switch to a different milestone.
-    - Keep `entret`, `embossdata`, and external database preparation helpers
-      inactive unless the reassessment explicitly changes that state.
+389. Complete. Reassess the shipped `assemblyget` slice before any further retrieval/data-discovery continuation.
+    - Confirmed the shipped slice stayed bounded to manifest/routing
+      reporting:
+      - the governed CLI/service route accepts exactly one provider-qualified
+        archive accession
+      - supported providers remain bounded to ENA and SRA manifest/routing
+        reports
+      - supported object classes remain bounded to assembly, project, study,
+        and run
+      - the stable table reports `manifest_intent_only` and
+        `not_materialized`
+    - Confirmed no implementation or documentation pressure appeared for:
+      - archive downloads
+      - file materialization, staging, unpacking, indexing, or writing
+      - provider-wide parity
+      - live provider search
+      - generic flatfile retrieval
+      - generic acquisition orchestration
+      - historical EMBOSS acquisition parity
+    - Decided that remote retrieval/data-discovery expansion should pause
+      after the bounded `assemblyget` closure rather than continue directly
+      into broader retrieval work.
+    - The next planning cycle should switch milestones and choose a new
+      professional stabilization target from governed/generated truth instead
+      of assuming another retrieval/data-discovery continuation.
+    - `entret`, `embossdata`, and external database preparation helpers remain
+      inactive.
