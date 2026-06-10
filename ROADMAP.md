@@ -7198,12 +7198,24 @@ Current baseline for the next milestone:
     - Existing missing-documentation warning noise remains non-fatal and was
       not introduced by this task.
 
-394. Validate local Sphinx publication readiness while the Pages workflow is disabled.
+394. Complete. Validate local Sphinx publication readiness while the Pages workflow is disabled.
     - Build the Sphinx documentation locally.
     - Confirm generated release, governance, and tool pages remain internally
       consistent.
     - Record any Pages-only checks that cannot be validated without hosted
       Actions.
+    - Ran `make lint-docs`; the strict Sphinx dummy build passed across 145
+      documentation sources.
+    - Ran `make release-docs` sequentially; the release version check and full
+      Sphinx HTML build passed and wrote `docs/_build/html`.
+    - Confirmed the local HTML output contains the root index, release process
+      and RC readiness pages, governance index and manual pages, generated
+      index, `.nojekyll`, and the `assemblyget` generated tool page.
+    - Confirmed the generated HTML tool surface contains 115 tool pages,
+      matching the current governed method count.
+    - Hosted Pages artifact upload, deployment, environment URL publication,
+      and token-driven Pages enablement remain unvalidated while the
+      `Docs Pages` GitHub Actions workflow is manually disabled.
 
 395. Assess release artifact and container smoke readiness in the current local environment.
     - Run release artifact packaging where practical.
