@@ -7242,11 +7242,28 @@ Current baseline for the next milestone:
       outputs are useful packaging smoke checks but must not be treated as
       validated Linux x86_64 release artifacts.
 
-396. Reassess whether GitHub Actions should remain suspended before release cutover.
+396. Complete. Reassess whether GitHub Actions should remain suspended before release cutover.
     - Summarize local validation status from Tasks `391` through `395`.
     - Identify any checks that remain materially weaker without hosted Actions.
     - Decide whether to keep workflows disabled, re-enable selected workflows,
       or defer release cutover until hosted validation is available again.
+    - Current hosted workflow state was checked with `gh workflow list --repo
+      sagrudd/emboss-rs --all`; `CI`, `Docs Pages`, and `Release` remain
+      `disabled_manually`.
+    - Local validation from Tasks `391` through `395` covered suspended-action
+      documentation, local CI-parity command capture, release truth/version/
+      generated/release checks, Sphinx publication readiness, release artifact
+      packaging, and Docker image smoke validation.
+    - Materially weaker checks while hosted workflows remain disabled:
+      repository-hosted CI cannot validate GitHub runner behavior, Pages upload
+      and deployment cannot validate environment URL publication or token-driven
+      Pages enablement, release workflow publication cannot validate GHCR or
+      release attachment behavior, and local release artifacts built on Darwin
+      arm64 cannot be treated as Linux x86_64 release artifacts.
+    - Decision: keep GitHub Actions disabled for now, honoring the explicit
+      suspension request, and defer release cutover until Task `397` fixes the
+      platform-labelled artifact gap and a deliberate hosted-validation pass is
+      scheduled.
 
 397. Make release artifact packaging platform-safe before release cutover.
     - Prevent `make release-artifacts` from emitting an archive labelled
