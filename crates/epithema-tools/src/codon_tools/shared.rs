@@ -72,6 +72,7 @@ pub fn load_profile_source(path: &Path) -> Result<CodonUsageProfile, ToolExecuti
     }
 }
 
+/// Renders a normalized profile as codon, amino-acid, count, frequency, and weight rows.
 pub fn render_profile_rows(profile: &CodonUsageProfile) -> Vec<Vec<String>> {
     let weights = derive_cai_weights(profile);
     sense_codons()

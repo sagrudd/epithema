@@ -118,17 +118,29 @@ pub enum CohortEvidenceLevel {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CohortGapCode {
+    /// The governed method lacks an autodoc contract.
     MissingAutodocContract,
+    /// The autodoc contract exists but is invalid.
     InvalidAutodocContract,
+    /// The generated method documentation page is missing.
     MissingGeneratedPage,
+    /// The generated documentation index lacks the method entry.
     MissingGeneratedIndexEntry,
+    /// The method lacks a validation stub.
     MissingValidationStub,
+    /// The validation stub exists but is invalid.
     InvalidValidationStub,
+    /// The validation stub declares no cases.
     MissingValidationCases,
+    /// No harvested legacy evidence is recorded.
     MissingHarvestedLegacyEvidence,
+    /// No executable validation evidence is recorded.
     MissingExecutableEvidence,
+    /// No compared validation evidence is recorded.
     MissingComparedEvidence,
+    /// Validation evidence lacks an explicit legacy reference.
     MissingExplicitLegacyReference,
+    /// The validation report contains a method-level gap.
     ValidationReportGap,
 }
 
@@ -142,6 +154,7 @@ pub struct CohortMethodGap {
 }
 
 impl CohortMethodGap {
+    /// Creates a cohort method gap with a typed code and message.
     #[must_use]
     pub fn new(code: CohortGapCode, message: impl Into<String>) -> Self {
         Self {
@@ -313,6 +326,7 @@ impl ValidationEvidenceSummary {
 }
 
 impl CohortValidationSummary {
+    /// Builds aggregate validation counts from method validation records.
     #[must_use]
     pub fn from_methods(methods: &[CohortMethodValidationRecord]) -> Self {
         let mut summary = Self {

@@ -4,6 +4,7 @@ use std::collections::BTreeSet;
 
 use epithema_core::{MoleculeKind, SequenceRecord};
 
+/// Set operator used to combine two sequence streams by molecule and residues.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SequenceSetOperator {
     /// Include records occurring in the first set, the second set, or both.

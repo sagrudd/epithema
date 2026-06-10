@@ -9,36 +9,54 @@ use epithema_core::{
 use crate::codon_tools::shared::load_profile_source;
 use crate::sequence_stream::ToolExecutionError;
 
+/// Parameters for a `codcmp` execution.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CodcmpParams {
+    /// Left coding-sequence or normalized codon-profile input.
     pub left: PathBuf,
+    /// Right coding-sequence or normalized codon-profile input.
     pub right: PathBuf,
 }
 
+/// One codon comparison row in a `codcmp` report.
 #[derive(Clone, Debug, PartialEq)]
 pub struct CodcmpRow {
+    /// Sense codon being compared.
     pub codon: String,
+    /// Amino acid encoded by the codon.
     pub amino_acid: char,
+    /// Observed codon count in the left profile.
     pub left_count: usize,
+    /// Codon frequency in the left profile.
     pub left_frequency: f64,
+    /// Observed codon count in the right profile.
     pub right_count: usize,
+    /// Codon frequency in the right profile.
     pub right_frequency: f64,
+    /// Left frequency minus right frequency.
     pub delta_frequency: f64,
 }
 
+/// Complete outcome from a `codcmp` execution.
 #[derive(Clone, Debug, PartialEq)]
 pub struct CodcmpOutcome {
+    /// Left input used for comparison.
     pub left: PathBuf,
+    /// Right input used for comparison.
     pub right: PathBuf,
+    /// Per-codon comparison rows over sense codons.
     pub rows: Vec<CodcmpRow>,
+    /// Aggregate total variation distance over sense codon frequencies.
     pub total_variation_distance: f64,
 }
 
+/// Returns command-line help text for `codcmp`.
 #[must_use]
 pub fn codcmp_help() -> &'static str {
     "Usage: epithema codcmp <left-input> <right-input>\n\nCompare normalized codon usage between two strict coding-sequence inputs or normalized codon-profile inputs. The v1 report includes codon-by-codon counts, frequencies, frequency deltas, and aggregate total variation distance over the 61 sense codons."
 }
 
+/// Runs codon-profile comparison for two coding or profile inputs.
 pub fn run_codcmp(params: CodcmpParams) -> Result<CodcmpOutcome, ToolExecutionError> {
     let left_profile = load_profile_source(&params.left)?;
     let right_profile = load_profile_source(&params.right)?;
