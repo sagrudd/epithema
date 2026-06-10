@@ -7180,10 +7180,23 @@ Current baseline for the next milestone:
       release attachment, and repository-token permission behavior cannot be
       claimed locally while hosted workflows are disabled.
 
-393. Run the release-candidate generated-truth and release-check suite locally.
+393. Complete. Run the release-candidate generated-truth and release-check suite locally.
     - Run the current release-generated and release-truth gates.
     - Run release-version and release-check targets.
     - Review and commit only intentional generated/documentation updates.
+    - Ran `make release-truth-check`, `make release-version-check`,
+      `make release-generated-check`, and `make release-check` locally while
+      GitHub Actions remained manually disabled.
+    - Confirmed `release-generated-check` left `docs/generated` unchanged.
+    - The first `make release-check` run exposed stale `114` expectations in
+      the `emboss-testkit` harvest/comparison/full-compared report tests after
+      the governed method surface increased to `115`; updated those assertions
+      to match the generated truth.
+    - Re-ran `cargo test -p emboss-testkit --lib
+      derives_report_for_current_repository_state` and `make release-check`;
+      both passed.
+    - Existing missing-documentation warning noise remains non-fatal and was
+      not introduced by this task.
 
 394. Validate local Sphinx publication readiness while the Pages workflow is disabled.
     - Build the Sphinx documentation locally.
