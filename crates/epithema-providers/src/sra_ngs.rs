@@ -212,6 +212,12 @@ mod tests {
         HttpRequest, HttpResponse, NgsAssetRole, NgsObjectClass, NgsQuery, ProviderHttpClient,
     };
 
+    const SRA_STUDY_FIXTURE: &str = include_str!("../tests/fixtures/ngs/sra_runinfo_study.csv");
+    const SRA_SAMPLE_FIXTURE: &str = include_str!("../tests/fixtures/ngs/sra_runinfo_sample.csv");
+    const SRA_EXPERIMENT_FIXTURE: &str =
+        include_str!("../tests/fixtures/ngs/sra_runinfo_experiment.csv");
+    const SRA_RUN_FIXTURE: &str = include_str!("../tests/fixtures/ngs/sra_runinfo_run.csv");
+
     #[derive(Clone, Debug, Default)]
     struct MockHttpClient {
         responses: HashMap<String, HttpResponse>,
@@ -262,13 +268,8 @@ mod tests {
         let request = adapter
             .build_manifest_request(&query)
             .expect("request should build");
-        let body = concat!(
-            "Run,ReleaseDate,LoadDate,spots,bases,spots_with_mates,avgLength,size_MB,AssemblyName,download_path,Experiment,LibraryName,LibraryStrategy,LibrarySelection,LibrarySource,LibraryLayout,InsertSize,InsertDev,Platform,Model,SRAStudy,BioProject,StudyTitle,ProjectID,Sample,BioSample,SampleType,TaxID,ScientificName,SampleName,CenterName,Submission,dbgap_study_accession,Consent,RunHash,ReadHash\n",
-            "SRR1,2024-01-01,2024-01-02,1,100,1,100,1,,https://example.invalid/SRR1.sra,SRX1,,WGS,RANDOM,GENOMIC,PAIRED,,,ILLUMINA,NovaSeq 6000,SRP1,PRJNA1011899,Study title,1,SRS1,SAMN1,,9606,Homo sapiens,Sample one,NCBI,SRA1,,,runhash1,readhash1\n",
-            "SRR2,2024-01-01,2024-01-02,1,100,0,100,1,,,SRX2,,RNA-Seq,cDNA,TRANSCRIPTOMIC,SINGLE,,,OXFORD_NANOPORE,PromethION,SRP1,PRJNA1011899,Study title,1,SRS2,SAMN2,,9606,Homo sapiens,Sample two,NCBI,SRA1,,,runhash2,readhash2\n"
-        );
-        let client =
-            MockHttpClient::default().with_response(request.url, HttpResponse::new(200, body));
+        let client = MockHttpClient::default()
+            .with_response(request.url, HttpResponse::new(200, SRA_STUDY_FIXTURE));
 
         let manifest = adapter
             .manifest(&query, &client)
@@ -283,7 +284,7 @@ mod tests {
         );
         assert_eq!(
             manifest.runs[0].metadata.study_title.as_deref(),
-            Some("Study title")
+            Some("SRA fixture study")
         );
         assert_eq!(
             manifest.runs[1].metadata.instrument_platform.as_deref(),
@@ -293,11 +294,59 @@ mod tests {
         assert_eq!(manifest.assets()[0].role, NgsAssetRole::SraArchive);
         assert_eq!(
             manifest.assets()[0].source_url,
-            "https://example.invalid/SRR1.sra"
+            "https://example.invalid/SRR100001.sra"
         );
         assert_eq!(manifest.assets()[1].role, NgsAssetRole::GeneratedFastq);
-        assert_eq!(manifest.assets()[1].source_url, "sra-convert://SRR1/fastq");
-        assert_eq!(manifest.assets()[2].source_url, "sra://SRR2");
+        assert_eq!(
+            manifest.assets()[1].source_url,
+            "sra-convert://SRR100001/fastq"
+        );
+        assert_eq!(manifest.assets()[2].source_url, "sra://SRR100002");
+    }
+
+    #[test]
+    fn expands_sra_sample_experiment_and_run_fixtures() {
+        let cases = [
+            (
+                "sra:SAMN200001",
+                SRA_SAMPLE_FIXTURE,
+                NgsObjectClass::Sample,
+                "sra-convert://SRR200001/fastq",
+            ),
+            (
+                "sra:SRX300001",
+                SRA_EXPERIMENT_FIXTURE,
+                NgsObjectClass::Experiment,
+                "sra-convert://SRR300001/fastq",
+            ),
+            (
+                "sra:SRR400001",
+                SRA_RUN_FIXTURE,
+                NgsObjectClass::Run,
+                "sra-convert://SRR400001/fastq",
+            ),
+        ];
+
+        for (raw_query, fixture, object_class, conversion_locator) in cases {
+            let adapter = SraNgsAdapter::new();
+            let query = NgsQuery::classify(raw_query).expect("query should classify");
+            let request = adapter
+                .build_manifest_request(&query)
+                .expect("request should build");
+            let client = MockHttpClient::default()
+                .with_response(request.url, HttpResponse::new(200, fixture));
+
+            let manifest = adapter
+                .manifest(&query, &client)
+                .expect("manifest should parse");
+
+            assert_eq!(manifest.query.object_class, Some(object_class));
+            assert_eq!(manifest.runs.len(), 1);
+            assert_eq!(manifest.assets().len(), 2);
+            assert_eq!(manifest.assets()[0].role, NgsAssetRole::SraArchive);
+            assert_eq!(manifest.assets()[1].role, NgsAssetRole::GeneratedFastq);
+            assert_eq!(manifest.assets()[1].source_url, conversion_locator);
+        }
     }
 
     #[test]

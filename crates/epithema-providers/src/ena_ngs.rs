@@ -336,6 +336,12 @@ mod tests {
         HttpRequest, HttpResponse, NgsAssetRole, NgsObjectClass, NgsQuery, ProviderHttpClient,
     };
 
+    const ENA_STUDY_FIXTURE: &str = include_str!("../tests/fixtures/ngs/ena_read_run_study.tsv");
+    const ENA_SAMPLE_FIXTURE: &str = include_str!("../tests/fixtures/ngs/ena_read_run_sample.tsv");
+    const ENA_EXPERIMENT_FIXTURE: &str =
+        include_str!("../tests/fixtures/ngs/ena_read_run_experiment.tsv");
+    const ENA_RUN_FIXTURE: &str = include_str!("../tests/fixtures/ngs/ena_read_run_run.tsv");
+
     #[derive(Clone, Debug, Default)]
     struct MockHttpClient {
         responses: HashMap<String, HttpResponse>,
@@ -382,13 +388,8 @@ mod tests {
         let request = adapter
             .build_manifest_request(&query)
             .expect("request should build");
-        let body = concat!(
-            "run_accession\tstudy_accession\tsecondary_study_accession\texperiment_accession\tsample_accession\tsecondary_sample_accession\tstudy_title\tsample_title\texperiment_title\tscientific_name\tinstrument_platform\tinstrument_model\tlibrary_strategy\tlibrary_source\tlibrary_selection\tlibrary_layout\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\n",
-            "ERR1\tERP1\tPRJNA1011899\tERX1\tERS1\tSAMN1\tStudy title\tSample one\tExperiment one\tHomo sapiens\tILLUMINA\tNovaSeq 6000\tWGS\tGENOMIC\tRANDOM\tPAIRED\tftp.sra.ebi.ac.uk/vol1/fastq/ERR1/ERR1_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR1/ERR1_2.fastq.gz\tmd51;md52\t10;12\tftp.sra.ebi.ac.uk/vol1/submitted/ERR1/reads.pod5\tmd5raw\t20\tftp.sra.ebi.ac.uk/vol1/sra/ERR1.sra\tmd5sra\t30\n",
-            "ERR2\tERP1\tPRJNA1011899\tERX2\tERS2\tSAMN2\tStudy title\tSample two\tExperiment two\tHomo sapiens\tOXFORD_NANOPORE\tPromethION\tRNA-Seq\tTRANSCRIPTOMIC\tcDNA\tSINGLE\tftp.sra.ebi.ac.uk/vol1/fastq/ERR2/ERR2.fastq.gz\tmd53\t14\tftp.sra.ebi.ac.uk/vol1/submitted/ERR2/alignment.bam\tmd5bam\t40\t\t\t\n"
-        );
-        let client =
-            MockHttpClient::default().with_response(request.url, HttpResponse::new(200, body));
+        let client = MockHttpClient::default()
+            .with_response(request.url, HttpResponse::new(200, ENA_STUDY_FIXTURE));
 
         let manifest = adapter
             .manifest(&query, &client)
@@ -399,18 +400,62 @@ mod tests {
         assert_eq!(manifest.runs.len(), 2);
         assert_eq!(
             manifest.runs[0].metadata.study_accession.as_deref(),
-            Some("ERP1")
+            Some("ERP100001")
         );
         assert_eq!(
             manifest.runs[0].metadata.study_title.as_deref(),
-            Some("Study title")
+            Some("NGS ingestion fixture study")
         );
-        assert_eq!(manifest.assets().len(), 6);
-        assert_eq!(manifest.total_size_bytes(), Some(126));
+        assert_eq!(manifest.assets().len(), 10);
+        assert_eq!(manifest.total_size_bytes(), Some(207));
         assert_eq!(manifest.assets()[0].role, NgsAssetRole::GeneratedFastq);
         assert_eq!(manifest.assets()[2].role, NgsAssetRole::SraArchive);
         assert_eq!(manifest.assets()[3].role, NgsAssetRole::SubmittedRaw);
+        assert_eq!(manifest.assets()[4].role, NgsAssetRole::SubmittedRaw);
         assert_eq!(manifest.assets()[5].role, NgsAssetRole::SubmittedAlignment);
+        assert_eq!(manifest.assets()[6].role, NgsAssetRole::Index);
+        assert_eq!(manifest.assets()[8].role, NgsAssetRole::SubmittedAlignment);
+        assert_eq!(manifest.assets()[9].role, NgsAssetRole::Index);
+    }
+
+    #[test]
+    fn expands_ena_sample_experiment_and_run_fixtures() {
+        let cases = [
+            (
+                "ena:SAMN200001",
+                ENA_SAMPLE_FIXTURE,
+                NgsObjectClass::Sample,
+                1,
+                2,
+            ),
+            (
+                "ena:ERX300001",
+                ENA_EXPERIMENT_FIXTURE,
+                NgsObjectClass::Experiment,
+                1,
+                3,
+            ),
+            ("ena:ERR400001", ENA_RUN_FIXTURE, NgsObjectClass::Run, 1, 2),
+        ];
+
+        for (raw_query, fixture, object_class, expected_runs, expected_assets) in cases {
+            let adapter = EnaNgsAdapter::new();
+            let query = NgsQuery::classify(raw_query).expect("query should classify");
+            let request = adapter
+                .build_manifest_request(&query)
+                .expect("request should build");
+            let client = MockHttpClient::default()
+                .with_response(request.url, HttpResponse::new(200, fixture));
+
+            let manifest = adapter
+                .manifest(&query, &client)
+                .expect("manifest should parse");
+
+            assert_eq!(manifest.query.object_class, Some(object_class));
+            assert_eq!(manifest.runs.len(), expected_runs);
+            assert_eq!(manifest.assets().len(), expected_assets);
+            assert_eq!(manifest.assets()[0].role, NgsAssetRole::GeneratedFastq);
+        }
     }
 
     #[test]

@@ -279,6 +279,17 @@ The provenance document should use schema label
     FAST5/POD5-style submitted assets, BAM/CRAM-style submitted assets,
     checksum mismatch, and SRA conversion planning.
 
+    Status: implemented with fixture files under
+    `crates/epithema-providers/tests/fixtures/ngs/` and
+    `crates/epithema-service/tests/fixtures/ngs/`. Provider tests now load
+    ENA `read_run` TSV fixtures and SRA RunInfo CSV fixtures for study, sample,
+    experiment, and run-level queries. The ENA study fixture covers paired
+    FASTQ, FAST5/POD5 raw submitted assets, BAM/CRAM submitted alignments, and
+    BAI/CRAI indexes. SRA fixtures verify provider-native archive assets plus
+    generated FASTQ conversion locators. The service checksum-mismatch test now
+    uses a FASTQ fixture body. Live-provider fixture refresh remains outside
+    routine CI by design.
+
 13. Add generated documentation and release-facing caveats.
 
     Add autodoc JSON contracts for `ngslist` and `ngsget`, generate tool pages,

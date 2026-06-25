@@ -1548,7 +1548,7 @@ mod tests {
     fn leaves_partial_file_when_ena_download_fails_verification() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
-        let body = b"ACGT\n".to_vec();
+        let body = include_bytes!("../tests/fixtures/ngs/checksum_mismatch.fastq").to_vec();
         let asset = NgsAsset::new(
             "ERR123456",
             NgsAssetRole::GeneratedFastq,
