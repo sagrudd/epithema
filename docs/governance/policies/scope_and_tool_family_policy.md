@@ -268,6 +268,34 @@ The strongest examples today are:
 
 This bucket exists so the project is not trapped into only recovering the past.
 
+#### 5.5.1 Milestone: Governed NGS dataset acquisition
+
+Epithema should add a governed NGS dataset acquisition milestone for public ENA
+and SRA datasets. This milestone is a Strategic Add, not part of the
+coordinated `1.0.0` release scope.
+
+The milestone introduces two user-facing methods:
+
+- `ngslist <accession>` lists FASTQ, BAM/CRAM, FAST5, POD5, SRA, and other
+  provider-reported dataset assets associated with a study, sample, experiment,
+  or run accession.
+- `ngsget <accession>` materializes the selected assets, downloading generated
+  FASTQ by default and including raw/submitted data only when requested with an
+  explicit `--raw` flag.
+
+The milestone must extend the existing governed archive-provider seam rather
+than adding ad hoc downloader logic. It must normalize study, sample,
+experiment, and run queries to a run-level manifest; preserve ENA and SRA
+provider provenance; verify downloaded assets when checksums or byte counts are
+available; and write a standard provenance JSON document suitable for later
+object-store ingestion.
+
+SRA-specific implementation may use the SRA Toolkit execution model where that
+is the scientifically appropriate route. In that case Epithema should treat the
+toolkit invocation as a governed conversion step: the downloaded SRA archive,
+the extracted FASTQ files, the tool version, the container image when used, and
+all verification outcomes must be recorded in provenance.
+
 ---
 
 ## 6. Promotion and Demotion Rules

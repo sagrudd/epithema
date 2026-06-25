@@ -15,5 +15,6 @@ its related governance policies.
 
 contributor_workflow
 codex_workflow
+ngs_dataset_ingestion_plan
 ../autodoc/README
 ```
