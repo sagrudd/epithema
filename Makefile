@@ -22,7 +22,7 @@ RELEASE_MANIFEST := $(RELEASE_DIST_DIR)/epithema-release-manifest.json
 
 .DEFAULT_GOAL := help
 
-.PHONY: help version build fmt lint test docs docs-clean docs-live lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report full-compared-cohort-report harvest-coverage-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifact-platform-check release-artifacts release-container release-check release-clean
+.PHONY: help version build fmt lint test docs docs-clean docs-live docs-name-check lint-docs lint-repo check-sister-repo ci clean autodoc-stubs autodoc-refresh generated-index-normalize anchor-validation cohort-report governance-report cohort-health-report comparison-coverage-report full-compared-cohort-report harvest-coverage-report retained-backlog-report release-version-check release-truth-check release-generated-check release-build release-test release-docs release-artifact-platform-check release-artifacts release-container release-check release-clean
 
 help:
 	@printf "%s\n" \
@@ -41,6 +41,7 @@ help:
 		"  make harvest-coverage-report Refresh the harvest-coverage exceptions report" \
 		"  make retained-backlog-report Refresh the retained-backlog closure report" \
 		"  make lint-docs   Run strict Sphinx structure and reference checks" \
+		"  make docs-name-check Fail if documentation carries retired project names" \
 		"  make lint-repo   Validate required repository entry points and docs wiring" \
 		"  make check-sister-repo  Inspect ../epithemaR read-only when present" \
 		"  make docs-live   Start a live-reloading docs preview (requires sphinx-autobuild)" \
@@ -116,6 +117,7 @@ release-docs:
 	$(MAKE) release-version-check PYTHON=$(PYTHON)
 	$(MAKE) docs-clean
 	$(MAKE) docs PYTHON=$(PYTHON)
+	$(MAKE) docs-name-check
 
 release-artifact-platform-check:
 	@if [ "$(HOST_OS)" != "$(RELEASE_TARGET_OS)" ] || [ "$(HOST_ARCH)" != "$(RELEASE_TARGET_ARCH)" ]; then \
@@ -149,6 +151,17 @@ release-check: lint-repo check-sister-repo release-version-check release-truth-c
 
 docs:
 	$(SPHINXBUILD) $(SPHINXOPTS) -b html $(DOCS_DIR) $(DOCS_HTML_DIR)
+
+docs-name-check:
+	@pattern='EMBOSS-RS|emboss-rs|emboss_rs|emboss-r\b'; \
+	if rg -n -i --hidden --glob '!docs/_build/**' --glob '!target/**' --glob '!.git/**' "$$pattern" .github docs README.md; then \
+		printf "%s\n" "retired project name found in checked documentation or workflow source" >&2; \
+		exit 1; \
+	fi; \
+	if [ -d "$(DOCS_HTML_DIR)" ] && rg -n -i "$$pattern" "$(DOCS_HTML_DIR)"; then \
+		printf "%s\n" "retired project name found in built Sphinx HTML" >&2; \
+		exit 1; \
+	fi
 
 autodoc-stubs:
 	$(RUSTCARGO) run -p epithema-docgen --example write_registry_autodoc_stubs -- docs/autodoc/tools
@@ -254,7 +267,7 @@ clean: docs-clean
 release-clean:
 	rm -rf dist/release
 
-ci: lint-repo check-sister-repo lint-docs docs fmt lint test
+ci: lint-repo check-sister-repo lint-docs docs docs-name-check fmt lint test
 
 # Future extension points:
 # - autodoc

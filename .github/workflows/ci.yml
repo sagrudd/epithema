@@ -1,4 +1,4 @@
-name: CI
+name: Epithema CI
 
 on:
   push:
@@ -40,6 +40,9 @@ jobs:
 
       - name: Build documentation site
         run: make docs PYTHON=python
+
+      - name: Verify documentation branding
+        run: make docs-name-check
 
       - name: Verify release-generated artefacts are current
         run: make release-generated-check PYTHON=python
