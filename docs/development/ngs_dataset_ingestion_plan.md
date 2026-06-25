@@ -261,6 +261,17 @@ The provenance document should use schema label
     downloads, checksum mismatch, provider 404, unsupported object class,
     unsupported provider, and interrupted conversion.
 
+    Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs`.
+    The service semantics are covered with deterministic tests: size-only or
+    checksum-only direct downloads verify when the available evidence matches;
+    downloads with no checksum or byte count are promoted but marked
+    `unverified`; checksum or byte-count mismatches leave `.partial` files and
+    record failed verification; stale partial files are overwritten on retry
+    before successful promotion; provider 404 responses produce failed records
+    without creating partial files; unclassified queries and unsupported
+    provider routes return stable service error codes; interrupted SRA
+    conversion is recorded as a failed materialization with exit status `-1`.
+
 12. Add validation fixtures.
 
     Add mocked ENA and SRA provider responses for study, sample, experiment,

@@ -868,13 +868,13 @@ mod tests {
     use epithema_providers::{
         ArchiveRoute, EnaNgsAdapter, HttpBytesResponse, HttpRequest, HttpResponse, NgsAsset,
         NgsAssetRole, NgsDownloadPlan, NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery,
-        NgsRunMetadata, NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry,
-        SraNgsAdapter,
+        NgsRunMetadata, NgsVerificationStatus, ProviderCapability, ProviderDescriptor,
+        ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
     };
 
     use super::{
         DEFAULT_SRA_TOOLKIT_CONTAINER, ServiceNgsRetrieval, SraFastqConversionRequest,
-        SraFastqConversionResult, SraFastqRunner,
+        SraFastqConversionResult, SraFastqRunner, partial_ngs_asset_path,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -946,6 +946,13 @@ mod tests {
         fn failing() -> Self {
             Self {
                 exit_status: 2,
+                outputs: Vec::new(),
+            }
+        }
+
+        fn interrupted() -> Self {
+            Self {
+                exit_status: -1,
                 outputs: Vec::new(),
             }
         }
@@ -1148,6 +1155,53 @@ mod tests {
     }
 
     #[test]
+    fn rejects_ngs_manifest_for_unclassified_query() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let query = NgsQuery::new("ERR123456");
+
+        let error = gateway
+            .retrieve_manifest(&query)
+            .expect_err("unclassified query should fail before provider routing");
+
+        assert_eq!(
+            error.code(),
+            Some("service.ngs_retrieval.unclassified_query")
+        );
+    }
+
+    #[test]
+    fn rejects_ngs_manifest_for_registered_but_unsupported_provider_route() {
+        let provider = ProviderId::new("custom").expect("valid provider");
+        let mut registry = ProviderRegistry::builtin_defaults();
+        registry
+            .register(ProviderDescriptor::new(
+                provider.clone(),
+                "custom archive provider",
+                [ProviderCapability::ArchiveAcquisition],
+            ))
+            .expect("custom provider should register");
+        let config =
+            PlatformConfig::default().with_provider(ProviderSettings::enabled(provider.clone()));
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let query = NgsQuery::classify("ena:ERR123456")
+            .expect("query should classify")
+            .with_provider(provider);
+
+        let error = gateway
+            .retrieve_manifest(&query)
+            .expect_err("unsupported provider route should fail");
+
+        assert_eq!(
+            error.code(),
+            Some("service.ngs_retrieval.unsupported_provider")
+        );
+    }
+
+    #[test]
     fn plans_generated_fastq_assets_by_default() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
@@ -1246,6 +1300,143 @@ mod tests {
                 .join("runs/ERR123456/fastq/ERR123456.fastq.gz.partial")
                 .exists()
         );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn records_missing_checksum_and_size_semantics_for_direct_downloads() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let size_only = NgsAsset::new(
+            "ERRSIZE",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERRSIZE.fastq.gz",
+        )
+        .with_size_bytes(Some(5));
+        let checksum_only = NgsAsset::new(
+            "ERRCHECKSUM",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERRCHECKSUM.fastq.gz",
+        )
+        .with_checksum_md5(Some(checksum.clone()));
+        let no_evidence = NgsAsset::new(
+            "ERRNOEVIDENCE",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERRNOEVIDENCE.fastq.gz",
+        );
+        let provider = ProviderId::new("ena").expect("static provider id should be valid");
+        let query = NgsQuery::classify("ena:ERRSIZE").expect("query should classify");
+        let runs = vec![
+            NgsManifestRun::new(NgsRunMetadata::new("ERRSIZE"), vec![size_only.clone()]),
+            NgsManifestRun::new(
+                NgsRunMetadata::new("ERRCHECKSUM"),
+                vec![checksum_only.clone()],
+            ),
+            NgsManifestRun::new(
+                NgsRunMetadata::new("ERRNOEVIDENCE"),
+                vec![no_evidence.clone()],
+            ),
+        ];
+        let manifest = NgsManifest::new(
+            query,
+            provider.clone(),
+            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
+            runs,
+        );
+        let output_root = temp_ngs_output_root("missing-evidence");
+        let plan = NgsDownloadPlan::new(
+            manifest,
+            output_root.clone(),
+            false,
+            vec![size_only, checksum_only, no_evidence],
+        );
+        let client = MockHttpClient::default()
+            .with_byte_response(
+                "https://example.invalid/ERRSIZE.fastq.gz",
+                HttpBytesResponse::new(200, body.clone()),
+            )
+            .with_byte_response(
+                "https://example.invalid/ERRCHECKSUM.fastq.gz",
+                HttpBytesResponse::new(200, body.clone()),
+            )
+            .with_byte_response(
+                "https://example.invalid/ERRNOEVIDENCE.fastq.gz",
+                HttpBytesResponse::new(200, body),
+            );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("direct downloads should materialize");
+
+        assert_eq!(records.len(), 3);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            records[1].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            records[2].verification_status,
+            NgsVerificationStatus::Unverified
+        );
+        assert_eq!(records[2].observed_size_bytes, Some(5));
+        assert!(records[2].observed_checksum_md5.is_some());
+        assert!(records.iter().all(|record| record.local_path.exists()));
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn records_provider_404_without_creating_partial_download() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let asset = NgsAsset::new(
+            "ERR404",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR404.fastq.gz",
+        );
+        let provider = ProviderId::new("ena").expect("static provider id should be valid");
+        let query = NgsQuery::classify("ena:ERR404").expect("query should classify");
+        let manifest = NgsManifest::new(
+            query,
+            provider.clone(),
+            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
+            vec![NgsManifestRun::new(
+                NgsRunMetadata::new("ERR404"),
+                vec![asset.clone()],
+            )],
+        );
+        let output_root = temp_ngs_output_root("404");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERR404.fastq.gz",
+            HttpBytesResponse::new(404, Vec::new()),
+        );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("provider 404 should be captured as a failed record");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Failed
+        );
+        assert_eq!(
+            records[0].failure_reason.as_deref(),
+            Some("download returned HTTP status 404")
+        );
+        assert!(!records[0].local_path.exists());
+        assert!(!partial_ngs_asset_path(&records[0].local_path).exists());
         fs::remove_dir_all(output_root).ok();
     }
 
@@ -1401,6 +1592,65 @@ mod tests {
     }
 
     #[test]
+    fn overwrites_stale_partial_file_on_retry_before_promotion() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let asset = NgsAsset::new(
+            "ERRRETRY",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERRRETRY.fastq.gz",
+        )
+        .with_size_bytes(Some(5))
+        .with_checksum_md5(Some(checksum));
+        let provider = ProviderId::new("ena").expect("static provider id should be valid");
+        let query = NgsQuery::classify("ena:ERRRETRY").expect("query should classify");
+        let manifest = NgsManifest::new(
+            query,
+            provider.clone(),
+            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
+            vec![NgsManifestRun::new(
+                NgsRunMetadata::new("ERRRETRY"),
+                vec![asset.clone()],
+            )],
+        );
+        let output_root = temp_ngs_output_root("retry");
+        let local_path = output_root.join("runs/ERRRETRY/fastq/ERRRETRY.fastq.gz");
+        let partial_path = partial_ngs_asset_path(&local_path);
+        fs::create_dir_all(
+            partial_path
+                .parent()
+                .expect("partial path should have parent"),
+        )
+        .expect("partial directory should be created");
+        fs::write(&partial_path, b"stale partial").expect("stale partial should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERRRETRY.fastq.gz",
+            HttpBytesResponse::new(200, body.clone()),
+        );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("retry should overwrite stale partial and promote verified file");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            fs::read(&records[0].local_path).expect("promoted file should be readable"),
+            body
+        );
+        assert!(!partial_path.exists());
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
     fn materializes_sra_archive_and_records_fastq_conversion_plan() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
@@ -1504,6 +1754,41 @@ mod tests {
                 .failure_reason
                 .as_deref()
                 .is_some_and(|reason| reason.contains("exited with status 2"))
+        );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn records_interrupted_sra_fastq_conversion_as_failed() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let manifest = sra_planned_manifest();
+        let selected_assets = manifest
+            .assets()
+            .into_iter()
+            .filter(|asset| asset.role == NgsAssetRole::GeneratedFastq)
+            .cloned()
+            .collect();
+        let output_root = temp_ngs_output_root("sra-interrupted");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, selected_assets);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_sra_runner(&plan, &FakeSraFastqRunner::interrupted())
+            .expect("interrupted SRA conversion should be recorded");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Failed
+        );
+        assert_eq!(records[0].exit_status, Some(-1));
+        assert!(
+            records[0]
+                .failure_reason
+                .as_deref()
+                .is_some_and(|reason| reason.contains("exited with status -1"))
         );
         fs::remove_dir_all(output_root).ok();
     }
