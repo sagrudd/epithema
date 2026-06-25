@@ -6,6 +6,7 @@
 //! implementations.
 
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -177,22 +178,55 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         self.materialize_download_plan_with_sra_runner(plan, &DockerSraFastqRunner)
     }
 
+    /// Materializes selected assets, checking existing download roots first.
+    pub fn materialize_download_plan_with_existing_downloads(
+        &self,
+        plan: &NgsDownloadPlan,
+        existing_download_roots: &[PathBuf],
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads(
+            plan,
+            &DockerSraFastqRunner,
+            existing_download_roots,
+        )
+    }
+
     /// Materializes selected assets with an explicit SRA FASTQ conversion runner.
     pub fn materialize_download_plan_with_sra_runner<R: SraFastqRunner>(
         &self,
         plan: &NgsDownloadPlan,
         runner: &R,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads(plan, runner, &[])
+    }
+
+    /// Materializes selected assets with an explicit runner and existing download roots.
+    pub fn materialize_download_plan_with_sra_runner_and_existing_downloads<R: SraFastqRunner>(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+        existing_download_roots: &[PathBuf],
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
         match plan.manifest.provider.as_str() {
             "ena" => plan
                 .selected_assets
                 .iter()
-                .map(|asset| materialize_direct_ngs_asset(&self.client, plan, asset))
+                .map(|asset| {
+                    materialize_direct_ngs_asset(&self.client, plan, asset, existing_download_roots)
+                })
                 .collect(),
             "sra" => plan
                 .selected_assets
                 .iter()
-                .map(|asset| materialize_sra_ngs_asset(&self.client, plan, asset, runner))
+                .map(|asset| {
+                    materialize_sra_ngs_asset(
+                        &self.client,
+                        plan,
+                        asset,
+                        runner,
+                        existing_download_roots,
+                    )
+                })
                 .collect(),
             _ => Err(not_implemented(
                 "NGS materialization is not implemented for the requested provider",
@@ -349,6 +383,7 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     client: &C,
     plan: &NgsDownloadPlan,
     asset: &NgsAsset,
+    existing_download_roots: &[PathBuf],
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let local_path = local_ngs_asset_path(&plan.output_root, asset);
     if let Some((observed_size, observed_checksum)) =
@@ -358,6 +393,12 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             .with_observed_evidence(Some(observed_size), Some(observed_checksum))
             .with_verification_status(NgsVerificationStatus::SkippedVerified)
             .with_materialization_method("direct_download"));
+    }
+
+    if let Some(record) =
+        materialize_existing_download_candidate(asset, &local_path, existing_download_roots)?
+    {
+        return Ok(record);
     }
 
     let Some(download_url) = direct_download_url(&asset.source_url) else {
@@ -416,9 +457,12 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     plan: &NgsDownloadPlan,
     asset: &NgsAsset,
     runner: &impl SraFastqRunner,
+    existing_download_roots: &[PathBuf],
 ) -> Result<NgsDownloadRecord, PlatformError> {
     match asset.role {
-        NgsAssetRole::SraArchive => materialize_direct_ngs_asset(client, plan, asset),
+        NgsAssetRole::SraArchive => {
+            materialize_direct_ngs_asset(client, plan, asset, existing_download_roots)
+        }
         NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
             execute_sra_fastq_conversion_with_runner(plan, asset, runner)
         }
@@ -945,6 +989,147 @@ fn partial_ngs_asset_path(local_path: &Path) -> PathBuf {
     local_path.with_file_name(format!("{file_name}.partial"))
 }
 
+fn materialize_existing_download_candidate(
+    asset: &NgsAsset,
+    local_path: &Path,
+    existing_download_roots: &[PathBuf],
+) -> Result<Option<NgsDownloadRecord>, PlatformError> {
+    if existing_download_roots.is_empty() {
+        return Ok(None);
+    }
+
+    let Some(file_name) = local_path.file_name() else {
+        return Ok(None);
+    };
+
+    for root in existing_download_roots {
+        if !root.exists() {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "existing NGS download search root does not exist",
+            )
+            .with_code("service.ngs_retrieval.existing_download_root_missing")
+            .with_detail(root.display().to_string()));
+        }
+
+        for candidate in existing_download_candidates(root, file_name)? {
+            let (observed_size, observed_checksum) = ngs_file_evidence(&candidate)?;
+            let observed_checksum_option = Some(observed_checksum.clone());
+            if let Some(reason) =
+                ngs_verification_failure(asset, Some(observed_size), &observed_checksum_option)
+            {
+                return Ok(Some(
+                    NgsDownloadRecord::new(asset.clone(), local_path)
+                        .with_observed_evidence(Some(observed_size), Some(observed_checksum))
+                        .with_verification_status(NgsVerificationStatus::Failed)
+                        .with_materialization_method("existing_download_copy")
+                        .with_failure_reason(format!(
+                            "existing download candidate {} failed verification: {reason}",
+                            candidate.display()
+                        )),
+                ));
+            }
+
+            return copy_existing_download_candidate(
+                asset,
+                &candidate,
+                local_path,
+                observed_size,
+                observed_checksum,
+            )
+            .map(Some);
+        }
+    }
+
+    Ok(None)
+}
+
+fn existing_download_candidates(
+    root: &Path,
+    file_name: &std::ffi::OsStr,
+) -> Result<Vec<PathBuf>, PlatformError> {
+    let mut candidates = Vec::new();
+    let mut stack = vec![root.to_path_buf()];
+
+    while let Some(directory) = stack.pop() {
+        for entry in fs::read_dir(&directory)
+            .map_err(|error| ngs_io_error("read existing NGS download search directory", error))?
+        {
+            let entry = entry.map_err(|error| {
+                ngs_io_error("read existing NGS download directory entry", error)
+            })?;
+            let file_type = entry
+                .file_type()
+                .map_err(|error| ngs_io_error("read existing NGS download file type", error))?;
+            if file_type.is_dir() {
+                stack.push(entry.path());
+            } else if file_type.is_file() && entry.file_name() == file_name {
+                candidates.push(entry.path());
+            }
+        }
+    }
+
+    candidates.sort();
+    Ok(candidates)
+}
+
+fn copy_existing_download_candidate(
+    asset: &NgsAsset,
+    candidate: &Path,
+    local_path: &Path,
+    observed_size: u64,
+    observed_checksum: String,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    let partial_path = partial_ngs_asset_path(local_path);
+    if let Some(parent) = partial_path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|error| ngs_io_error("create output directory", error))?;
+    }
+
+    fs::copy(candidate, &partial_path)
+        .map_err(|error| ngs_io_error("copy existing NGS download candidate", error))?;
+    let (copied_size, copied_checksum) = ngs_file_evidence(&partial_path)?;
+    let copied_checksum_option = Some(copied_checksum.clone());
+    let mut record = NgsDownloadRecord::new(asset.clone(), local_path)
+        .with_observed_evidence(Some(copied_size), Some(copied_checksum.clone()))
+        .with_materialization_method("existing_download_copy");
+
+    if let Some(reason) =
+        ngs_verification_failure(asset, Some(copied_size), &copied_checksum_option)
+    {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason(format!(
+                "copied existing download candidate {} failed verification: {reason}",
+                candidate.display()
+            )));
+    }
+
+    if observed_size != copied_size || !observed_checksum.eq_ignore_ascii_case(&copied_checksum) {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason(format!(
+                "copied existing download candidate {} changed during copy",
+                candidate.display()
+            )));
+    }
+
+    if local_path.exists() {
+        fs::remove_file(local_path)
+            .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
+    }
+    fs::rename(&partial_path, local_path)
+        .map_err(|error| ngs_io_error("promote copied existing NGS download", error))?;
+
+    let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
+        NgsVerificationStatus::Verified
+    } else {
+        NgsVerificationStatus::Unverified
+    };
+    record = record.with_verification_status(status);
+    Ok(record)
+}
+
 fn verified_existing_asset_evidence(
     local_path: &Path,
     asset: &NgsAsset,
@@ -953,23 +1138,46 @@ fn verified_existing_asset_evidence(
         return Ok(None);
     }
 
-    let body =
-        fs::read(local_path).map_err(|error| ngs_io_error("read existing NGS download", error))?;
-    let observed_size = u64::try_from(body.len()).map_err(|error| {
-        PlatformError::new(
-            ErrorCategory::Invocation,
-            "existing NGS download size could not be represented as u64",
-        )
-        .with_code("service.ngs_retrieval.size_overflow")
-        .with_detail(error.to_string())
-    })?;
-    let observed_checksum = format!("{:x}", md5::compute(&body));
+    let (observed_size, observed_checksum) = ngs_file_evidence(local_path)?;
     let observed_checksum_option = Some(observed_checksum.clone());
     if ngs_verification_failure(asset, Some(observed_size), &observed_checksum_option).is_none() {
         Ok(Some((observed_size, observed_checksum)))
     } else {
         Ok(None)
     }
+}
+
+fn ngs_file_evidence(path: &Path) -> Result<(u64, String), PlatformError> {
+    let mut file = fs::File::open(path)
+        .map_err(|error| ngs_io_error("open NGS file for verification", error))?;
+    let mut context = md5::Context::new();
+    let mut total_size = 0u64;
+    let mut buffer = [0u8; 64 * 1024];
+
+    loop {
+        let bytes_read = file
+            .read(&mut buffer)
+            .map_err(|error| ngs_io_error("read NGS file for verification", error))?;
+        if bytes_read == 0 {
+            break;
+        }
+        total_size = total_size
+            .checked_add(u64::try_from(bytes_read).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "NGS file size could not be represented as u64",
+                )
+                .with_code("service.ngs_retrieval.size_overflow")
+                .with_detail(error.to_string())
+            })?)
+            .ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Invocation, "NGS file sizes overflowed u64")
+                    .with_code("service.ngs_retrieval.size_overflow")
+            })?;
+        context.consume(&buffer[..bytes_read]);
+    }
+
+    Ok((total_size, format!("{:x}", context.compute())))
 }
 
 fn ngs_verification_failure(
@@ -1452,6 +1660,124 @@ mod tests {
                 .exists()
         );
         fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn copies_verified_existing_download_candidate_before_network_download() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(5))
+        .with_checksum_md5(Some(checksum.clone()));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("download-cache-copy");
+        let cache_root = temp_ngs_output_root("download-cache-source");
+        let candidate_path = cache_root.join("nested/ERR123456.fastq.gz");
+        fs::create_dir_all(
+            candidate_path
+                .parent()
+                .expect("candidate should have parent"),
+        )
+        .expect("candidate parent should be created");
+        fs::write(&candidate_path, &body).expect("candidate file should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads(&plan, &[cache_root.clone()])
+            .expect("verified existing download should be copied");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            records[0].materialization_method.as_deref(),
+            Some("existing_download_copy")
+        );
+        assert_eq!(
+            fs::read(&records[0].local_path).expect("copied file should be readable"),
+            body
+        );
+        assert_eq!(
+            fs::read(&candidate_path).expect("original candidate should remain intact"),
+            b"ACGT\n".to_vec()
+        );
+        assert_eq!(
+            records[0].observed_checksum_md5.as_deref(),
+            Some(checksum.as_str())
+        );
+        fs::remove_dir_all(output_root).ok();
+        fs::remove_dir_all(cache_root).ok();
+    }
+
+    #[test]
+    fn fails_when_existing_download_candidate_has_unexpected_checksum() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let expected_body = b"ACGT\n".to_vec();
+        let wrong_body = b"TGCA\n".to_vec();
+        let expected_checksum = format!("{:x}", md5::compute(&expected_body));
+        let wrong_checksum = format!("{:x}", md5::compute(&wrong_body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(5))
+        .with_checksum_md5(Some(expected_checksum));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("download-cache-fail");
+        let cache_root = temp_ngs_output_root("download-cache-mismatch");
+        let candidate_path = cache_root.join("ERR123456.fastq.gz");
+        fs::create_dir_all(&cache_root).expect("cache root should be created");
+        fs::write(&candidate_path, &wrong_body).expect("candidate file should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads(&plan, &[cache_root.clone()])
+            .expect("checksum mismatch should be captured as a failed record");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Failed
+        );
+        assert_eq!(
+            records[0].materialization_method.as_deref(),
+            Some("existing_download_copy")
+        );
+        assert_eq!(
+            records[0].observed_checksum_md5.as_deref(),
+            Some(wrong_checksum.as_str())
+        );
+        assert!(
+            records[0]
+                .failure_reason
+                .as_deref()
+                .is_some_and(|reason| reason.contains("MD5 checksum mismatch"))
+        );
+        assert!(!records[0].local_path.exists());
+        assert_eq!(
+            fs::read(&candidate_path).expect("original candidate should remain intact"),
+            wrong_body
+        );
+        fs::remove_dir_all(output_root).ok();
+        fs::remove_dir_all(cache_root).ok();
     }
 
     #[test]

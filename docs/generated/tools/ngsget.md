@@ -25,7 +25,7 @@ Plan and materialize public ENA or SRA NGS assets for one study, sample, experim
 
 ## Inputs
 
-The target interface is `epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--container <image>]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are part of the contract. The current implementation work is service-layer first; the governed CLI route is not yet exposed.
+The target interface is `epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--container <image>] [--check-downloads <path>]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are part of the contract. The optional `--check-downloads` path recursively searches an existing download tree for same-name files before network retrieval. The current implementation work is service-layer first; the governed CLI route is not yet exposed.
 
 ## Outputs
 
@@ -33,7 +33,7 @@ The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, a
 
 ## Current Status
 
-`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write per-run logs, and connect the end-to-end command surface.
+`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, recursive existing-download lookup for the planned `--check-downloads` flag, copy-then-verify reuse of matching files without modifying the originals, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write per-run logs, and connect the end-to-end command surface.
 
 ## Caveats
 
