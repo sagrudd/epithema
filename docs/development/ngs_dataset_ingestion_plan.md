@@ -244,6 +244,17 @@ The provenance document should use schema label
     Write `provenance.json` from the provider-neutral provenance model. Include
     selected, skipped, downloaded, converted, verified, and failed assets.
 
+    Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs`.
+    The service gateway writes stable pretty-printed `provenance.json` from
+    `NgsProvenance`, including the schema label, Epithema version, acquisition
+    timestamp, query/provider/route metadata, normalized run metadata, all
+    considered assets marked as selected or skipped, materialization records
+    with expected and observed verification evidence, SRA command/container
+    fields when present, and a flattened local-file list for downloaded and
+    generated outputs. Deterministic service coverage verifies direct-download
+    provenance serialization. Stable failure and resume behavior remains task
+    11.
+
 11. Add failure and resume semantics.
 
     Define stable behavior for missing checksums, missing byte counts, partial

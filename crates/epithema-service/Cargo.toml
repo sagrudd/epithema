@@ -16,6 +16,7 @@ epithema-plot-contract.workspace = true
 epithema-providers.workspace = true
 epithema-tools.workspace = true
 md5 = "0.7"
+serde_json = "1"
 
 [lints]
 workspace = true

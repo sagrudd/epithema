@@ -6,6 +6,7 @@
 //! external API responses.
 
 use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use epithema_diagnostics::{ArtifactProvenance, ErrorCategory, PlatformError};
 
@@ -580,6 +581,8 @@ impl NgsDownloadRecord {
 pub struct NgsProvenance {
     /// Stable schema label.
     pub schema: String,
+    /// Acquisition-bundle creation timestamp in Unix seconds.
+    pub acquisition_timestamp_unix_seconds: u64,
     /// Manifest used for acquisition.
     pub manifest: NgsManifest,
     /// Download plan selected from the manifest.
@@ -596,13 +599,37 @@ impl NgsProvenance {
         download_plan: NgsDownloadPlan,
         download_records: Vec<NgsDownloadRecord>,
     ) -> Self {
+        Self::new_at_unix_seconds(
+            manifest,
+            download_plan,
+            download_records,
+            current_unix_seconds(),
+        )
+    }
+
+    /// Creates an NGS provenance bundle with an explicit timestamp.
+    #[must_use]
+    pub fn new_at_unix_seconds(
+        manifest: NgsManifest,
+        download_plan: NgsDownloadPlan,
+        download_records: Vec<NgsDownloadRecord>,
+        acquisition_timestamp_unix_seconds: u64,
+    ) -> Self {
         Self {
             schema: NGS_PROVENANCE_SCHEMA.to_owned(),
+            acquisition_timestamp_unix_seconds,
             manifest,
             download_plan,
             download_records,
         }
     }
+}
+
+fn current_unix_seconds() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_secs())
+        .unwrap_or(0)
 }
 
 #[cfg(test)]
@@ -770,6 +797,7 @@ mod tests {
         let provenance = NgsProvenance::new(manifest.clone(), plan.clone(), Vec::new());
 
         assert_eq!(provenance.schema, NGS_PROVENANCE_SCHEMA);
+        assert!(provenance.acquisition_timestamp_unix_seconds > 0);
         assert_eq!(provenance.manifest, manifest);
         assert_eq!(provenance.download_plan, plan);
     }

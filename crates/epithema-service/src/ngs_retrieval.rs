@@ -10,12 +10,14 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use epithema_config::PlatformConfig;
-use epithema_diagnostics::{ErrorCategory, PlatformError};
+use epithema_diagnostics::{ArtifactOriginKind, ArtifactProvenance, ErrorCategory, PlatformError};
 use epithema_providers::{
     EnaNgsAdapter, HttpRequest, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord,
-    NgsManifest, NgsProvenance, NgsQuery, NgsVerificationStatus, ProviderCapability,
-    ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient, SraNgsAdapter,
+    NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus,
+    ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient,
+    SraNgsAdapter,
 };
+use serde_json::{Value, json};
 
 const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
@@ -213,13 +215,23 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
     /// Future provenance writer entry point for NGS acquisition runs.
     pub fn write_provenance(
         &self,
-        _provenance: &NgsProvenance,
-        _path: &Path,
+        provenance: &NgsProvenance,
+        path: &Path,
     ) -> Result<(), PlatformError> {
-        Err(not_implemented(
-            "NGS provenance serialization is not implemented by the service gateway yet",
-            "service.ngs_retrieval.provenance_writing_not_implemented",
-        ))
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| ngs_io_error("create NGS provenance directory", error))?;
+        }
+        let body =
+            serde_json::to_vec_pretty(&ngs_provenance_json(provenance)).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to serialize NGS provenance JSON",
+                )
+                .with_code("service.ngs_retrieval.provenance_serialization_failed")
+                .with_detail(error.to_string())
+            })?;
+        fs::write(path, body).map_err(|error| ngs_io_error("write NGS provenance JSON", error))
     }
 
     fn ensure_ngs_provider_enabled(&self, query: &NgsQuery) -> Result<ProviderId, PlatformError> {
@@ -531,6 +543,163 @@ fn sum_file_sizes(paths: &[PathBuf]) -> Result<u64, PlatformError> {
     Ok(total)
 }
 
+fn ngs_provenance_json(provenance: &NgsProvenance) -> Value {
+    let selected_assets = &provenance.download_plan.selected_assets;
+    json!({
+        "schema": provenance.schema.as_str(),
+        "epithema_version": env!("CARGO_PKG_VERSION"),
+        "acquisition_timestamp_unix_seconds": provenance.acquisition_timestamp_unix_seconds,
+        "query": {
+            "accession": provenance.manifest.query.accession.as_str(),
+            "provider": provenance.manifest.query.provider.as_ref().map(ProviderId::as_str),
+            "object_class": provenance.manifest.query.object_class.map(|object_class| object_class.as_str()),
+        },
+        "provider": provenance.manifest.provider.as_str(),
+        "route": {
+            "provider": provenance.manifest.route.provider.as_str(),
+            "endpoint": provenance.manifest.route.endpoint.as_str(),
+            "format": provenance.manifest.route.format.as_str(),
+        },
+        "manifest_lookup": artifact_provenance_json(&provenance.manifest.provenance),
+        "selection": {
+            "output_root": provenance.download_plan.output_root.display().to_string(),
+            "include_raw": provenance.download_plan.include_raw,
+            "selected_asset_count": provenance.download_plan.selected_assets.len(),
+            "considered_asset_count": provenance.manifest.assets().len(),
+        },
+        "runs": provenance
+            .manifest
+            .runs
+            .iter()
+            .map(|run| manifest_run_json(run, selected_assets))
+            .collect::<Vec<_>>(),
+        "download_records": provenance
+            .download_records
+            .iter()
+            .map(download_record_json)
+            .collect::<Vec<_>>(),
+        "local_files": provenance
+            .download_records
+            .iter()
+            .flat_map(local_file_records_json)
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn manifest_run_json(run: &NgsManifestRun, selected_assets: &[NgsAsset]) -> Value {
+    json!({
+        "metadata": run_metadata_json(&run.metadata),
+        "assets": run.assets
+            .iter()
+            .map(|asset| {
+                let selection_status = if selected_assets.contains(asset) {
+                    "selected"
+                } else {
+                    "skipped"
+                };
+                asset_json(asset, selection_status)
+            })
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn run_metadata_json(metadata: &NgsRunMetadata) -> Value {
+    json!({
+        "run_accession": metadata.run_accession.as_str(),
+        "experiment_accession": metadata.experiment_accession.as_deref(),
+        "sample_accession": metadata.sample_accession.as_deref(),
+        "study_accession": metadata.study_accession.as_deref(),
+        "study_title": metadata.study_title.as_deref(),
+        "sample_title": metadata.sample_title.as_deref(),
+        "experiment_title": metadata.experiment_title.as_deref(),
+        "scientific_name": metadata.scientific_name.as_deref(),
+        "instrument_platform": metadata.instrument_platform.as_deref(),
+        "instrument_model": metadata.instrument_model.as_deref(),
+        "library_strategy": metadata.library_strategy.as_deref(),
+        "library_source": metadata.library_source.as_deref(),
+        "library_selection": metadata.library_selection.as_deref(),
+        "library_layout": metadata.library_layout.as_deref(),
+    })
+}
+
+fn asset_json(asset: &NgsAsset, selection_status: &str) -> Value {
+    json!({
+        "run_accession": asset.run_accession.as_str(),
+        "asset_role": asset.role.as_str(),
+        "asset_format": asset.format.as_str(),
+        "source_url": asset.source_url.as_str(),
+        "expected_size_bytes": asset.size_bytes,
+        "expected_checksum_md5": asset.checksum_md5.as_deref(),
+        "selection_status": selection_status,
+    })
+}
+
+fn download_record_json(record: &NgsDownloadRecord) -> Value {
+    json!({
+        "asset": asset_json(&record.asset, "selected"),
+        "local_path": record.local_path.display().to_string(),
+        "generated_paths": record
+            .generated_paths
+            .iter()
+            .map(|path| path.display().to_string())
+            .collect::<Vec<_>>(),
+        "observed_size_bytes": record.observed_size_bytes,
+        "observed_checksum_md5": record.observed_checksum_md5.as_deref(),
+        "verification_status": record.verification_status.as_str(),
+        "failure_reason": record.failure_reason.as_deref(),
+        "materialization_method": record.materialization_method.as_deref(),
+        "command_line": record.command_line.as_deref(),
+        "exit_status": record.exit_status,
+        "container_image": record.container_image.as_deref(),
+        "tool_version": record.tool_version.as_deref(),
+    })
+}
+
+fn local_file_records_json(record: &NgsDownloadRecord) -> Vec<Value> {
+    let mut files = vec![json!({
+        "path": record.local_path.display().to_string(),
+        "kind": "primary",
+        "run_accession": record.asset.run_accession.as_str(),
+        "asset_role": record.asset.role.as_str(),
+        "asset_format": record.asset.format.as_str(),
+        "verification_status": record.verification_status.as_str(),
+        "observed_size_bytes": record.observed_size_bytes,
+        "observed_checksum_md5": record.observed_checksum_md5.as_deref(),
+    })];
+    files.extend(record.generated_paths.iter().map(|path| {
+        json!({
+            "path": path.display().to_string(),
+            "kind": "generated",
+            "run_accession": record.asset.run_accession.as_str(),
+            "asset_role": record.asset.role.as_str(),
+            "asset_format": record.asset.format.as_str(),
+            "verification_status": record.verification_status.as_str(),
+        })
+    }));
+    files
+}
+
+fn artifact_provenance_json(provenance: &ArtifactProvenance) -> Value {
+    json!({
+        "origin_kind": artifact_origin_kind_label(provenance.origin_kind),
+        "locator": provenance.locator(),
+        "provider": provenance.provider(),
+        "description": provenance.description(),
+    })
+}
+
+fn artifact_origin_kind_label(origin_kind: ArtifactOriginKind) -> &'static str {
+    match origin_kind {
+        ArtifactOriginKind::LocalFile => "local_file",
+        ArtifactOriginKind::LegacyEmbossAsset => "legacy_emboss_asset",
+        ArtifactOriginKind::Accession => "accession",
+        ArtifactOriginKind::ProviderAsset => "provider_asset",
+        ArtifactOriginKind::GeneratedFixture => "generated_fixture",
+        ArtifactOriginKind::GeneratedOutput => "generated_output",
+        ArtifactOriginKind::Unknown => "unknown",
+    }
+}
+
 fn direct_download_url(source_url: &str) -> Option<String> {
     if let Some(path) = source_url.strip_prefix("ftp://") {
         Some(format!("https://{path}"))
@@ -698,8 +867,9 @@ mod tests {
     use epithema_diagnostics::PlatformError;
     use epithema_providers::{
         ArchiveRoute, EnaNgsAdapter, HttpBytesResponse, HttpRequest, HttpResponse, NgsAsset,
-        NgsAssetRole, NgsDownloadPlan, NgsManifest, NgsManifestRun, NgsQuery, NgsRunMetadata,
-        NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
+        NgsAssetRole, NgsDownloadPlan, NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery,
+        NgsRunMetadata, NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry,
+        SraNgsAdapter,
     };
 
     use super::{
@@ -1076,6 +1246,72 @@ mod tests {
                 .join("runs/ERR123456/fastq/ERR123456.fastq.gz.partial")
                 .exists()
         );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn writes_ngs_provenance_json_with_selected_skipped_and_records() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].metadata.study_title = Some("Example study".to_owned());
+        manifest.runs[0].assets[0] = manifest.runs[0].assets[0]
+            .clone()
+            .with_size_bytes(Some(5))
+            .with_checksum_md5(Some(checksum.clone()));
+        let output_root = temp_ngs_output_root("provenance");
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERR123456.fastq.gz",
+            HttpBytesResponse::new(200, body),
+        );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+        let plan = gateway
+            .plan_downloads(&manifest, &output_root, false)
+            .expect("NGS download plan should build");
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("direct ENA asset should materialize");
+        let provenance =
+            NgsProvenance::new_at_unix_seconds(manifest.clone(), plan, records, 123_456);
+        let path = output_root.join("provenance.json");
+
+        gateway
+            .write_provenance(&provenance, &path)
+            .expect("provenance JSON should be written");
+
+        let value: serde_json::Value =
+            serde_json::from_slice(&fs::read(&path).expect("provenance JSON should be readable"))
+                .expect("provenance JSON should parse");
+        assert_eq!(value["schema"], "epithema.ngs-provenance/v1");
+        assert_eq!(value["acquisition_timestamp_unix_seconds"], 123_456);
+        assert_eq!(value["query"]["accession"], "ERR123456");
+        assert_eq!(value["query"]["object_class"], "run");
+        assert_eq!(value["provider"], "ena");
+        assert_eq!(value["route"]["endpoint"], "ena.portal.filereport.read_run");
+        assert_eq!(value["runs"][0]["metadata"]["study_title"], "Example study");
+        assert_eq!(value["selection"]["selected_asset_count"], 1);
+        assert_eq!(value["selection"]["considered_asset_count"], 6);
+        assert_eq!(
+            value["runs"][0]["assets"][0]["selection_status"],
+            "selected"
+        );
+        assert_eq!(value["runs"][0]["assets"][1]["selection_status"], "skipped");
+        assert_eq!(
+            value["download_records"][0]["materialization_method"],
+            "direct_download"
+        );
+        assert_eq!(
+            value["download_records"][0]["verification_status"],
+            "verified"
+        );
+        assert_eq!(
+            value["download_records"][0]["observed_checksum_md5"],
+            checksum
+        );
+        assert_eq!(value["local_files"][0]["kind"], "primary");
+        assert_eq!(value["local_files"][0]["verification_status"], "verified");
         fs::remove_dir_all(output_root).ok();
     }
 

@@ -290,6 +290,7 @@ dependencies = [
  "epithema-providers",
  "epithema-tools",
  "md5",
+ "serde_json",
 ]
 
 [[package]]
