@@ -144,6 +144,10 @@ The provenance document should use schema label
    FASTQ fields, submitted file fields, checksums, byte counts, study titles,
    sample titles, sequencing metadata, and provider route metadata.
 
+   Status: implemented in `crates/epithema-providers/src/ena_ngs.rs` as an
+   ENA provider adapter that builds `read_run` file-report requests and
+   normalizes mocked multi-run TSV responses into `NgsManifest`.
+
 4. Implement SRA manifest expansion.
 
    Add an SRA NGS adapter that normalizes SRA RunInfo responses into the same

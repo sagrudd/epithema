@@ -15,6 +15,7 @@ pub mod client;
 pub mod descriptor;
 pub mod ena;
 pub mod ena_archive;
+pub mod ena_ngs;
 pub mod identity;
 pub mod input;
 pub mod ncbi;
@@ -38,6 +39,7 @@ pub use client::{HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClien
 pub use descriptor::ProviderDescriptor;
 pub use ena::EnaSequenceAdapter;
 pub use ena_archive::EnaArchiveAdapter;
+pub use ena_ngs::EnaNgsAdapter;
 pub use identity::ProviderId;
 pub use input::{InputReference, InputReferenceKind, ResolutionIntent};
 pub use ncbi::{NcbiDatabase, NcbiSequenceAdapter};
