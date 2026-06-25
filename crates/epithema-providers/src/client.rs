@@ -71,15 +71,59 @@ impl HttpResponse {
     }
 }
 
+/// Minimal byte response used by provider-backed file materialization.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HttpBytesResponse {
+    /// HTTP status code.
+    pub status: u16,
+    /// Response body bytes.
+    pub body: Vec<u8>,
+    /// Optional content type.
+    pub content_type: Option<String>,
+}
+
+impl HttpBytesResponse {
+    /// Creates a byte response payload.
+    #[must_use]
+    pub fn new(status: u16, body: impl Into<Vec<u8>>) -> Self {
+        Self {
+            status,
+            body: body.into(),
+            content_type: None,
+        }
+    }
+
+    /// Attaches a content type.
+    #[must_use]
+    pub fn with_content_type(mut self, content_type: impl Into<String>) -> Self {
+        self.content_type = Some(content_type.into());
+        self
+    }
+}
+
 /// Minimal HTTP client interface used by provider adapters.
 pub trait ProviderHttpClient {
     /// Executes a GET request and returns the response body as text.
     fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError>;
+
+    /// Executes a GET request and returns the response body as bytes.
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        let response = self.get_text(request)?;
+        Ok(HttpBytesResponse {
+            status: response.status,
+            body: response.body.into_bytes(),
+            content_type: response.content_type,
+        })
+    }
 }
 
 impl<T: ProviderHttpClient + ?Sized> ProviderHttpClient for &T {
     fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError> {
         (**self).get_text(request)
+    }
+
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        (**self).get_bytes(request)
     }
 }
 
@@ -150,6 +194,46 @@ impl ProviderHttpClient for ReqwestHttpClient {
         Ok(HttpResponse {
             status,
             body,
+            content_type,
+        })
+    }
+
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        let mut builder = self
+            .client
+            .get(&request.url)
+            .header("User-Agent", &request.user_agent);
+        if let Some(accept) = &request.accept {
+            builder = builder.header("Accept", accept);
+        }
+
+        let response = builder.send().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider request failed during transport",
+            )
+            .with_code("providers.http.transport_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        let status = response.status().as_u16();
+        let content_type = response
+            .headers()
+            .get(reqwest::header::CONTENT_TYPE)
+            .and_then(|value| value.to_str().ok())
+            .map(ToOwned::to_owned);
+        let body = response.bytes().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider response body could not be read as bytes",
+            )
+            .with_code("providers.http.body_read_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        Ok(HttpBytesResponse {
+            status,
+            body: body.to_vec(),
             content_type,
         })
     }

@@ -15,6 +15,7 @@ epithema-diagnostics.workspace = true
 epithema-plot-contract.workspace = true
 epithema-providers.workspace = true
 epithema-tools.workspace = true
+md5 = "0.7"
 
 [lints]
 workspace = true

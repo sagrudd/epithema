@@ -213,6 +213,14 @@ The provenance document should use schema label
    atomic rename after verification, byte-count checks, MD5 verification, and
    skip-on-verified behavior.
 
+   Status: implemented for direct ENA-style file URLs in
+   `crates/epithema-service/src/ngs_retrieval.rs`. The materializer writes
+   selected assets to the documented `runs/<run>/fastq`, `runs/<run>/raw`, or
+   `runs/<run>/sra` layout using `.partial` files, promotes only after
+   available byte-count and MD5 evidence passes, leaves failed verification as
+   a partial file, and skips already verified local files. SRA provider
+   materialization and `sra-convert://` FASTQ extraction remain task 9.
+
 9. Implement SRA FASTQ extraction.
 
    Support SRA archive acquisition followed by FASTQ extraction with

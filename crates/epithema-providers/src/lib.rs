@@ -36,7 +36,9 @@ pub use archive::{
     ProviderArchiveRouter, RetrievedArchiveManifest, RetrievedArchiveMetadata,
 };
 pub use capability::ProviderCapability;
-pub use client::{HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient};
+pub use client::{
+    HttpBytesResponse, HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient,
+};
 pub use descriptor::ProviderDescriptor;
 pub use ena::EnaSequenceAdapter;
 pub use ena_archive::EnaArchiveAdapter;
