@@ -183,6 +183,16 @@ The provenance document should use schema label
    The first acceptance fixtures should cover one ENA study query that expands
    to multiple runs and one run-level query.
 
+   Status: implemented across `crates/epithema-tools`,
+   `crates/epithema-service`, `crates/epithema-cli`, and
+   `docs/autodoc/tools/ngslist.json`. The service path supports
+   `epithema ngslist <accession> [--provider auto|ena|sra] [--format
+   table|json]`, emits the documented one-row-per-asset table by default, and
+   provides deterministic JSON text rendering. Mocked service coverage includes
+   an ENA study query that expands to multiple runs and an ENA run-level JSON
+   rendering case. The command remains a manifest-listing surface only; download
+   planning and materialization are later tasks.
+
 7. Implement download planning for `ngsget`.
 
    Build a deterministic selector that chooses `generated_fastq` assets by

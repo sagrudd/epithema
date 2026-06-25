@@ -13,8 +13,8 @@ use epithema_diagnostics::{
     OutcomeStatus, PlatformError,
 };
 use epithema_providers::{
-    AcquisitionRequest, ArchiveObjectClass, ProviderHttpClient, ProviderRegistry,
-    RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
+    AcquisitionRequest, ArchiveObjectClass, NgsManifest, NgsQuery, ProviderHttpClient, ProviderId,
+    ProviderRegistry, RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
 };
 use epithema_tools::ToolDescriptor;
 use epithema_tools::alignment_analysis::{
@@ -28,9 +28,9 @@ use epithema_tools::alignment_tools::{
     run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use epithema_tools::archive_tools::{
-    AssemblygetParams, InfoassemblyParams, RungetParams, RuninfoParams, assemblyget_help,
-    infoassembly_help, run_assemblyget, run_infoassembly, run_runget, run_runinfo, runget_help,
-    runinfo_help,
+    AssemblygetParams, InfoassemblyParams, NgslistFormat, NgslistParams, RungetParams,
+    RuninfoParams, assemblyget_help, infoassembly_help, ngslist_help, run_assemblyget,
+    run_infoassembly, run_ngslist, run_runget, run_runinfo, runget_help, runinfo_help,
 };
 use epithema_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
@@ -306,6 +306,7 @@ impl EpithemaService {
                 ),
             "runinfo" => self.invoke_runinfo(request, descriptor),
             "runget" => self.invoke_runget(request, descriptor),
+            "ngslist" => self.invoke_ngslist(request, descriptor),
             "matcher" => self.invoke_matcher(request, descriptor),
             "distmat" => self.invoke_distmat(request, descriptor),
             "cons" => self.invoke_cons(request, descriptor),
@@ -1382,6 +1383,85 @@ impl EpithemaService {
                 .with_line(format!("Route: {}", manifest.route.endpoint)),
             report.clone(),
         );
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_ngslist(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_ngslist_with_client::<epithema_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
+    }
+
+    /// Invokes `ngslist` using an explicit provider HTTP client.
+    pub fn invoke_ngslist_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, ngslist_help()));
+        }
+
+        let params = parse_ngslist_arguments(request.arguments())?;
+        let query = build_ngslist_query(&params.accession, &params.provider)?;
+        let manifest = self.retrieve_ngs_manifest_with_client(&query, client)?;
+        let rows = ngs_manifest_rows(&manifest);
+        let outcome = run_ngslist(NgslistParams {
+            accession: manifest.query.accession.clone(),
+            provider: manifest.provider.as_str().to_owned(),
+            format: params.format,
+            run_count: manifest.runs.len(),
+            asset_count: rows.len(),
+            route_endpoint: manifest.route.endpoint.clone(),
+        })?;
+
+        let output_provenance = ArtifactProvenance::generated_output("stdout")
+            .with_description(format!("ngslist {} report", outcome.format.as_str()));
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "listed NGS assets for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            Vec::new(),
+            vec![manifest.provenance.clone(), output_provenance],
+        );
+        let summary = ResultSummary::new("NGS asset manifest listed")
+            .with_line(format!("Provider: {}", outcome.provider))
+            .with_line(format!("Accession: {}", outcome.accession))
+            .with_line(format!(
+                "Object class: {}",
+                manifest
+                    .query
+                    .object_class
+                    .map(|object_class| object_class.as_str())
+                    .unwrap_or("-")
+            ))
+            .with_line(format!("Runs: {}", outcome.run_count))
+            .with_line(format!("Assets: {}", outcome.asset_count))
+            .with_line(format!("Route: {}", outcome.route_endpoint))
+            .with_line(format!("Format: {}", outcome.format.as_str()));
+        let payload = match outcome.format {
+            NgslistFormat::Table => {
+                ResultPayload::TableReport(TableReport::new(ngs_manifest_columns(), rows))
+            }
+            NgslistFormat::Json => {
+                ResultPayload::TextReport(TextReport::new(render_ngs_manifest_json(&manifest)))
+            }
+        };
+        let result = MethodResult::new(request.tool.clone(), payload, summary, report.clone());
 
         Ok(InvocationResponse::completed(
             request.context,
@@ -9574,6 +9654,18 @@ impl EpithemaService {
         }
     }
 
+    fn retrieve_ngs_manifest_with_client<C: ProviderHttpClient>(
+        &self,
+        query: &NgsQuery,
+        client: Option<&C>,
+    ) -> Result<NgsManifest, ServiceError> {
+        match client {
+            Some(client) => ServiceNgsRetrieval::with_client(&self.config, &self.providers, client)
+                .list_manifest(query),
+            None => self.ngs_retrieval()?.list_manifest(query),
+        }
+    }
+
     fn resolve_local_sequence_input(
         &self,
         raw: &str,
@@ -11779,6 +11871,130 @@ fn parse_runget_arguments(arguments: &[String]) -> Result<(String, bool), Servic
     }
 }
 
+struct NgslistCliParams {
+    accession: String,
+    provider: String,
+    format: NgslistFormat,
+}
+
+fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("ngslist", ngslist_help()));
+    }
+
+    let mut accession = None;
+    let mut provider = "auto".to_owned();
+    let mut format = NgslistFormat::Table;
+    let mut index = 0usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--provider=") {
+            provider = parse_ngslist_provider(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--provider" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --provider")
+                    .with_code("service.ngslist.provider_missing")
+                    .with_detail(ngslist_help())
+            })?;
+            provider = parse_ngslist_provider(value)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--format=") {
+            format = parse_ngslist_format(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--format" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --format")
+                    .with_code("service.ngslist.format_missing")
+                    .with_detail(ngslist_help())
+            })?;
+            format = parse_ngslist_format(value)?;
+            index += 2;
+            continue;
+        }
+        if argument.starts_with("--") {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("unknown ngslist argument '{argument}'"),
+            )
+            .with_code("service.ngslist.argument_unknown")
+            .with_detail(ngslist_help()));
+        }
+        if accession.is_some() {
+            return Err(tool_usage_error("ngslist", ngslist_help()));
+        }
+        accession = Some(argument.clone());
+        index += 1;
+    }
+
+    let accession = accession.ok_or_else(|| tool_usage_error("ngslist", ngslist_help()))?;
+    Ok(NgslistCliParams {
+        accession,
+        provider,
+        format,
+    })
+}
+
+fn parse_ngslist_provider(value: &str) -> Result<String, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "auto" => Ok("auto".to_owned()),
+        "ena" => Ok("ena".to_owned()),
+        "sra" => Ok("sra".to_owned()),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngslist --provider must be one of auto, ena, or sra",
+        )
+        .with_code("service.ngslist.provider_invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn parse_ngslist_format(value: &str) -> Result<NgslistFormat, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "table" => Ok(NgslistFormat::Table),
+        "json" => Ok(NgslistFormat::Json),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngslist --format must be one of table or json",
+        )
+        .with_code("service.ngslist.format_invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn build_ngslist_query(accession: &str, provider: &str) -> Result<NgsQuery, ServiceError> {
+    let query = NgsQuery::classify(accession)?;
+    if provider == "auto" {
+        return Ok(query);
+    }
+
+    let requested_provider = ProviderId::new(provider.to_owned())?;
+    if let Some(query_provider) = &query.provider {
+        if query_provider.as_str() != requested_provider.as_str() {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "ngslist provider flag conflicts with the provider-qualified accession",
+            )
+            .with_code("service.ngslist.provider_conflict")
+            .with_detail(format!(
+                "query={} flag={}",
+                query_provider.as_str(),
+                requested_provider.as_str()
+            )));
+        }
+        return Ok(query);
+    }
+
+    Ok(query.with_provider(requested_provider))
+}
+
 fn archive_file_rows(files: &[epithema_providers::ArchiveFile]) -> Vec<Vec<String>> {
     files
         .iter()
@@ -11794,6 +12010,156 @@ fn archive_file_rows(files: &[epithema_providers::ArchiveFile]) -> Vec<Vec<Strin
             ]
         })
         .collect()
+}
+
+fn ngs_manifest_columns() -> Vec<String> {
+    [
+        "provider",
+        "query_accession",
+        "query_object_class",
+        "study_accession",
+        "study_title",
+        "sample_accession",
+        "sample_title",
+        "experiment_accession",
+        "run_accession",
+        "instrument_platform",
+        "instrument_model",
+        "library_strategy",
+        "library_source",
+        "library_selection",
+        "library_layout",
+        "asset_role",
+        "asset_format",
+        "source_url",
+        "size_bytes",
+        "checksum_md5",
+    ]
+    .iter()
+    .map(|column| (*column).to_owned())
+    .collect()
+}
+
+fn ngs_manifest_rows(manifest: &NgsManifest) -> Vec<Vec<String>> {
+    let provider = manifest.provider.as_str().to_owned();
+    let query_accession = manifest.query.accession.clone();
+    let query_object_class = manifest
+        .query
+        .object_class
+        .map(|object_class| object_class.as_str().to_owned())
+        .unwrap_or_else(|| "-".to_owned());
+
+    manifest
+        .runs
+        .iter()
+        .flat_map(|run| {
+            run.assets.iter().map({
+                let provider = provider.clone();
+                let query_accession = query_accession.clone();
+                let query_object_class = query_object_class.clone();
+                move |asset| {
+                    vec![
+                        provider.clone(),
+                        query_accession.clone(),
+                        query_object_class.clone(),
+                        optional_string(&run.metadata.study_accession),
+                        optional_string(&run.metadata.study_title),
+                        optional_string(&run.metadata.sample_accession),
+                        optional_string(&run.metadata.sample_title),
+                        optional_string(&run.metadata.experiment_accession),
+                        run.metadata.run_accession.clone(),
+                        optional_string(&run.metadata.instrument_platform),
+                        optional_string(&run.metadata.instrument_model),
+                        optional_string(&run.metadata.library_strategy),
+                        optional_string(&run.metadata.library_source),
+                        optional_string(&run.metadata.library_selection),
+                        optional_string(&run.metadata.library_layout),
+                        asset.role.as_str().to_owned(),
+                        asset.format.clone(),
+                        asset.source_url.clone(),
+                        asset
+                            .size_bytes
+                            .map(|value| value.to_string())
+                            .unwrap_or_else(|| "-".to_owned()),
+                        asset.checksum_md5.clone().unwrap_or_else(|| "-".to_owned()),
+                    ]
+                }
+            })
+        })
+        .collect()
+}
+
+fn optional_string(value: &Option<String>) -> String {
+    value.clone().unwrap_or_else(|| "-".to_owned())
+}
+
+fn render_ngs_manifest_json(manifest: &NgsManifest) -> String {
+    let columns = ngs_manifest_columns();
+    let rows = ngs_manifest_rows(manifest);
+    let query_object_class = manifest
+        .query
+        .object_class
+        .map(|object_class| object_class.as_str())
+        .unwrap_or("-");
+    let mut rendered = String::new();
+    rendered.push_str("{\n");
+    rendered.push_str("  \"schema\": \"epithema.ngslist/v1\",\n");
+    rendered.push_str(&format!(
+        "  \"provider\": \"{}\",\n",
+        json_escape(manifest.provider.as_str())
+    ));
+    rendered.push_str(&format!(
+        "  \"query_accession\": \"{}\",\n",
+        json_escape(&manifest.query.accession)
+    ));
+    rendered.push_str(&format!(
+        "  \"query_object_class\": \"{}\",\n",
+        json_escape(query_object_class)
+    ));
+    rendered.push_str(&format!(
+        "  \"route_endpoint\": \"{}\",\n",
+        json_escape(&manifest.route.endpoint)
+    ));
+    rendered.push_str(&format!("  \"run_count\": {},\n", manifest.runs.len()));
+    rendered.push_str(&format!("  \"asset_count\": {},\n", rows.len()));
+    rendered.push_str("  \"assets\": [\n");
+    for (row_index, row) in rows.iter().enumerate() {
+        rendered.push_str("    {\n");
+        for (column_index, column) in columns.iter().enumerate() {
+            let comma = if column_index + 1 == columns.len() {
+                ""
+            } else {
+                ","
+            };
+            rendered.push_str(&format!(
+                "      \"{}\": \"{}\"{}\n",
+                json_escape(column),
+                json_escape(row.get(column_index).map_or("-", String::as_str)),
+                comma
+            ));
+        }
+        let comma = if row_index + 1 == rows.len() { "" } else { "," };
+        rendered.push_str(&format!("    }}{comma}\n"));
+    }
+    rendered.push_str("  ]\n");
+    rendered.push('}');
+    rendered
+}
+
+fn json_escape(value: &str) -> String {
+    let mut escaped = String::new();
+    for ch in value.chars() {
+        match ch {
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            '\n' => escaped.push_str("\\n"),
+            '\r' => escaped.push_str("\\r"),
+            '\t' => escaped.push_str("\\t"),
+            ch if ch.is_control() => escaped.push_str(&format!("\\u{:04x}", ch as u32)),
+            ch => escaped.push(ch),
+        }
+    }
+    escaped
 }
 
 fn infoassembly_rows(
@@ -13259,7 +13625,9 @@ mod tests {
 
     use epithema_core::MoleculeKind;
     use epithema_diagnostics::PlatformError;
-    use epithema_providers::{HttpRequest, HttpResponse, ProviderHttpClient};
+    use epithema_providers::{
+        EnaNgsAdapter, HttpRequest, HttpResponse, NgsQuery, ProviderHttpClient,
+    };
     use epithema_tools::{ToolDescriptor, governed_tool_descriptors};
 
     use super::EpithemaService;
@@ -14455,6 +14823,142 @@ mod tests {
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
+    }
+
+    #[test]
+    fn executes_ngslist_against_mocked_ena_study_manifest() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngslist").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngslist should be registered");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "PRJNA1011899".to_owned(),
+                "--provider".to_owned(),
+                "ena".to_owned(),
+            ]);
+        let query = NgsQuery::classify("ena:PRJNA1011899").expect("query should classify");
+        let provider_request = EnaNgsAdapter::new()
+            .build_manifest_request(&query)
+            .expect("ENA NGS request should build");
+        let body = concat!(
+            "run_accession\tstudy_accession\tsecondary_study_accession\texperiment_accession\tsample_accession\tsecondary_sample_accession\tstudy_title\tsample_title\texperiment_title\tscientific_name\tinstrument_platform\tinstrument_model\tlibrary_strategy\tlibrary_source\tlibrary_selection\tlibrary_layout\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\n",
+            "ERR1\tERP1\tPRJNA1011899\tERX1\tERS1\tSAMN1\tStudy title\tSample one\tExperiment one\tHomo sapiens\tILLUMINA\tNovaSeq 6000\tWGS\tGENOMIC\tRANDOM\tPAIRED\tftp.sra.ebi.ac.uk/vol1/fastq/ERR1/ERR1_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/ERR1/ERR1_2.fastq.gz\tmd51;md52\t10;12\tftp.sra.ebi.ac.uk/vol1/submitted/ERR1/reads.pod5\tmd5raw\t20\t\t\t\n",
+            "ERR2\tERP1\tPRJNA1011899\tERX2\tERS2\tSAMN2\tStudy title\tSample two\tExperiment two\tHomo sapiens\tOXFORD_NANOPORE\tPromethION\tRNA-Seq\tTRANSCRIPTOMIC\tcDNA\tSINGLE\tftp.sra.ebi.ac.uk/vol1/fastq/ERR2/ERR2.fastq.gz\tmd53\t14\tftp.sra.ebi.ac.uk/vol1/submitted/ERR2/alignment.bam\tmd5bam\t40\t\t\t\n"
+        );
+        let client = MockHttpClient::default()
+            .with_response(provider_request.url, HttpResponse::new(200, body));
+
+        let response = service
+            .invoke_ngslist_with_client(request, descriptor, Some(&client))
+            .expect("ngslist should execute with mocked ENA study manifest");
+
+        match &response.result.payload {
+            ResultPayload::TableReport(table) => {
+                assert_eq!(
+                    table.columns,
+                    vec![
+                        "provider",
+                        "query_accession",
+                        "query_object_class",
+                        "study_accession",
+                        "study_title",
+                        "sample_accession",
+                        "sample_title",
+                        "experiment_accession",
+                        "run_accession",
+                        "instrument_platform",
+                        "instrument_model",
+                        "library_strategy",
+                        "library_source",
+                        "library_selection",
+                        "library_layout",
+                        "asset_role",
+                        "asset_format",
+                        "source_url",
+                        "size_bytes",
+                        "checksum_md5",
+                    ]
+                );
+                assert_eq!(table.rows.len(), 5);
+                assert_eq!(table.rows[0][0], "ena");
+                assert_eq!(table.rows[0][1], "PRJNA1011899");
+                assert_eq!(table.rows[0][2], "study");
+                assert_eq!(table.rows[0][3], "ERP1");
+                assert_eq!(table.rows[0][15], "generated_fastq");
+                assert_eq!(table.rows[2][15], "submitted_raw");
+                assert_eq!(table.rows[4][15], "submitted_alignment");
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Runs: 2")
+        );
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Assets: 5")
+        );
+    }
+
+    #[test]
+    fn executes_ngslist_json_against_mocked_ena_run_manifest() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngslist").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngslist should be registered");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "ena:ERR123456".to_owned(),
+                "--format".to_owned(),
+                "json".to_owned(),
+            ]);
+        let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
+        let provider_request = EnaNgsAdapter::new()
+            .build_manifest_request(&query)
+            .expect("ENA NGS request should build");
+        let body = concat!(
+            "run_accession\tstudy_accession\tsecondary_study_accession\texperiment_accession\tsample_accession\tsecondary_sample_accession\tstudy_title\tsample_title\texperiment_title\tscientific_name\tinstrument_platform\tinstrument_model\tlibrary_strategy\tlibrary_source\tlibrary_selection\tlibrary_layout\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes\n",
+            "ERR123456\tERP1\tPRJNA1\tERX1\tERS1\tSAMN1\tStudy title\tSample one\tExperiment one\tHomo sapiens\tILLUMINA\tNovaSeq 6000\tWGS\tGENOMIC\tRANDOM\tPAIRED\tftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456.fastq.gz\tmd51\t10\t\t\t\t\t\t\n"
+        );
+        let client = MockHttpClient::default()
+            .with_response(provider_request.url, HttpResponse::new(200, body));
+
+        let response = service
+            .invoke_ngslist_with_client(request, descriptor, Some(&client))
+            .expect("ngslist JSON should execute with mocked ENA run manifest");
+
+        match &response.result.payload {
+            ResultPayload::TextReport(report) => {
+                assert!(report.body.contains("\"schema\": \"epithema.ngslist/v1\""));
+                assert!(report.body.contains("\"query_accession\": \"ERR123456\""));
+                assert!(report.body.contains("\"asset_role\": \"generated_fastq\""));
+                assert!(report.body.contains("\"asset_count\": 1"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Format: json")
+        );
     }
 
     #[test]

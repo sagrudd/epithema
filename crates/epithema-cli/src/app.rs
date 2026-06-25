@@ -263,6 +263,22 @@ mod tests {
     }
 
     #[test]
+    fn routes_ngslist_to_tool_path() {
+        let cli = Cli::try_parse_from([
+            "epithema",
+            "ngslist",
+            "PRJNA1011899",
+            "--provider",
+            "ena",
+            "--format",
+            "json",
+        ])
+        .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("ngslist"));
+    }
+
+    #[test]
     fn routes_charge_to_tool_path() {
         let cli =
             Cli::try_parse_from(["epithema", "charge", "example.faa"]).expect("tool should parse");
