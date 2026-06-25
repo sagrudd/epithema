@@ -228,6 +228,16 @@ The provenance document should use schema label
    first. Record the SRA archive, extraction outputs, command lines, exit
    statuses, tool versions, and container metadata in provenance.
 
+   Status: partially implemented in
+   `crates/epithema-service/src/ngs_retrieval.rs`. SRA materialization now
+   downloads direct provider-native SRA archive assets when a direct URL is
+   available and records deterministic planned FASTQ conversion records for
+   `sra-convert://.../fastq` assets using pinned container image
+   `docker.io/ncbi/sra-tools:3.1.1`, including the planned `prefetch` and
+   `fasterq-dump` command line. External container execution, actual generated
+   FASTQ verification, command exit-status capture, and produced-file discovery
+   remain to be implemented before this task is complete.
+
 10. Add provenance serialization.
 
     Write `provenance.json` from the provider-neutral provenance model. Include

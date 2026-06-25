@@ -16,6 +16,9 @@ use epithema_providers::{
     ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient, SraNgsAdapter,
 };
 
+const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
+const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
+
 /// Service-backed NGS dataset retrieval gateway.
 #[derive(Clone, Debug)]
 pub struct ServiceNgsRetrieval<'a, C> {
@@ -92,22 +95,27 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         ))
     }
 
-    /// Materializes directly downloadable ENA assets selected by `ngsget`.
+    /// Materializes directly downloadable assets and plans SRA FASTQ conversion.
     pub fn materialize_download_plan(
         &self,
         plan: &NgsDownloadPlan,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
-        if plan.manifest.provider.as_str() != "ena" {
-            return Err(not_implemented(
-                "NGS materialization is currently implemented for direct ENA downloads only",
+        match plan.manifest.provider.as_str() {
+            "ena" => plan
+                .selected_assets
+                .iter()
+                .map(|asset| materialize_direct_ngs_asset(&self.client, plan, asset))
+                .collect(),
+            "sra" => plan
+                .selected_assets
+                .iter()
+                .map(|asset| materialize_sra_ngs_asset(&self.client, plan, asset))
+                .collect(),
+            _ => Err(not_implemented(
+                "NGS materialization is not implemented for the requested provider",
                 "service.ngs_retrieval.materialization_provider_not_implemented",
-            ));
+            )),
         }
-
-        plan.selected_assets
-            .iter()
-            .map(|asset| materialize_direct_ngs_asset(&self.client, plan, asset))
-            .collect()
     }
 
     /// Future verification entry point for materialized NGS assets.
@@ -241,7 +249,8 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     {
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_observed_evidence(Some(observed_size), Some(observed_checksum))
-            .with_verification_status(NgsVerificationStatus::SkippedVerified));
+            .with_verification_status(NgsVerificationStatus::SkippedVerified)
+            .with_materialization_method("direct_download"));
     }
 
     let Some(download_url) = direct_download_url(&asset.source_url) else {
@@ -270,7 +279,8 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     let observed_checksum = Some(format!("{:x}", md5::compute(&response.body)));
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
     let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
-        .with_observed_evidence(observed_size, observed_checksum.clone());
+        .with_observed_evidence(observed_size, observed_checksum.clone())
+        .with_materialization_method("direct_download");
 
     if let Some(reason) = verification_failure {
         return Ok(record
@@ -292,6 +302,60 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     };
     record = record.with_verification_status(status);
     Ok(record)
+}
+
+fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
+    client: &C,
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    match asset.role {
+        NgsAssetRole::SraArchive => materialize_direct_ngs_asset(client, plan, asset),
+        NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
+            Ok(planned_sra_fastq_conversion_record(plan, asset))
+        }
+        _ => Ok(NgsDownloadRecord::new(
+            asset.clone(),
+            local_ngs_asset_path(&plan.output_root, asset),
+        )
+        .with_verification_status(NgsVerificationStatus::Failed)
+        .with_failure_reason(
+            "SRA materialization only supports archives and generated FASTQ conversion plans",
+        )),
+    }
+}
+
+fn planned_sra_fastq_conversion_record(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+) -> NgsDownloadRecord {
+    let fastq_dir = plan
+        .output_root
+        .join("runs")
+        .join(sanitize_path_component(&asset.run_accession))
+        .join("fastq");
+    let local_path = fastq_dir.join(format!(
+        "{}.fastq",
+        sanitize_path_component(&asset.run_accession)
+    ));
+    let run_accession = sanitize_path_component(&asset.run_accession);
+    let command_line = format!(
+        "docker run --rm -v {} {} sh -lc 'prefetch {} --output-directory /work/runs/{}/sra && fasterq-dump /work/runs/{}/sra/{}.sra --outdir /work/runs/{}/fastq'",
+        shell_quote_volume(&plan.output_root),
+        DEFAULT_SRA_TOOLKIT_CONTAINER,
+        run_accession,
+        run_accession,
+        run_accession,
+        run_accession,
+        run_accession
+    );
+
+    NgsDownloadRecord::new(asset.clone(), local_path)
+        .with_verification_status(NgsVerificationStatus::Planned)
+        .with_materialization_method("sra_toolkit_conversion")
+        .with_command_line(command_line)
+        .with_container_image(DEFAULT_SRA_TOOLKIT_CONTAINER)
+        .with_tool_version(DEFAULT_SRA_TOOLKIT_VERSION)
 }
 
 fn direct_download_url(source_url: &str) -> Option<String> {
@@ -324,6 +388,11 @@ fn local_ngs_asset_directory(role: NgsAssetRole) -> &'static str {
 }
 
 fn local_ngs_asset_filename(asset: &NgsAsset) -> String {
+    if asset.source_url.starts_with("sra-convert://") && asset.role == NgsAssetRole::GeneratedFastq
+    {
+        return format!("{}.fastq", sanitize_path_component(&asset.run_accession));
+    }
+
     let without_fragment = asset
         .source_url
         .split('#')
@@ -349,6 +418,11 @@ fn local_ngs_asset_filename(asset: &NgsAsset) -> String {
     } else {
         sanitized
     }
+}
+
+fn shell_quote_volume(output_root: &Path) -> String {
+    let raw = format!("{}:/work", output_root.display());
+    format!("'{}'", raw.replace('\'', "'\\''"))
 }
 
 fn sanitize_path_component(value: &str) -> String {
@@ -455,7 +529,7 @@ mod tests {
         NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
     };
 
-    use super::ServiceNgsRetrieval;
+    use super::{DEFAULT_SRA_TOOLKIT_CONTAINER, ServiceNgsRetrieval};
 
     #[derive(Clone, Debug, Default)]
     struct MockHttpClient {
@@ -560,12 +634,20 @@ mod tests {
         let provider = ProviderId::new("sra").expect("static provider id should be valid");
         let query = NgsQuery::classify("sra:SRR123456").expect("query should classify");
         let metadata = NgsRunMetadata::new("SRR123456");
-        let assets = vec![NgsAsset::new(
-            "SRR123456",
-            NgsAssetRole::GeneratedFastq,
-            "fastq",
-            "sra-convert://SRR123456/fastq",
-        )];
+        let assets = vec![
+            NgsAsset::new(
+                "SRR123456",
+                NgsAssetRole::SraArchive,
+                "sra",
+                "https://example.invalid/SRR123456.sra",
+            ),
+            NgsAsset::new(
+                "SRR123456",
+                NgsAssetRole::GeneratedFastq,
+                "fastq",
+                "sra-convert://SRR123456/fastq",
+            ),
+        ];
         NgsManifest::new(
             query,
             provider.clone(),
@@ -865,22 +947,64 @@ mod tests {
     }
 
     #[test]
-    fn keeps_sra_materialization_guarded_for_conversion_task() {
+    fn materializes_sra_archive_and_records_fastq_conversion_plan() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
-        let gateway =
-            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
         let manifest = sra_planned_manifest();
         let selected_assets = manifest.assets().into_iter().cloned().collect();
-        let plan = NgsDownloadPlan::new(manifest, "ngs-out", false, selected_assets);
-
-        let error = gateway
-            .materialize_download_plan(&plan)
-            .expect_err("SRA conversion remains a later task");
-
-        assert_eq!(
-            error.code(),
-            Some("service.ngs_retrieval.materialization_provider_not_implemented")
+        let output_root = temp_ngs_output_root("sra");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, selected_assets);
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/SRR123456.sra",
+            HttpBytesResponse::new(200, b"SRA_ARCHIVE".to_vec()),
         );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("SRA materialization should download archive and plan FASTQ conversion");
+
+        assert_eq!(records.len(), 2);
+        assert_eq!(records[0].asset.role, NgsAssetRole::SraArchive);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Unverified
+        );
+        assert_eq!(
+            records[0].materialization_method.as_deref(),
+            Some("direct_download")
+        );
+        assert_eq!(
+            records[0].local_path,
+            output_root.join("runs/SRR123456/sra/SRR123456.sra")
+        );
+        assert_eq!(
+            fs::read(&records[0].local_path).expect("SRA archive should be readable"),
+            b"SRA_ARCHIVE".to_vec()
+        );
+        assert_eq!(records[1].asset.role, NgsAssetRole::GeneratedFastq);
+        assert_eq!(
+            records[1].verification_status,
+            NgsVerificationStatus::Planned
+        );
+        assert_eq!(
+            records[1].materialization_method.as_deref(),
+            Some("sra_toolkit_conversion")
+        );
+        assert_eq!(
+            records[1].container_image.as_deref(),
+            Some(DEFAULT_SRA_TOOLKIT_CONTAINER)
+        );
+        assert!(
+            records[1]
+                .command_line
+                .as_deref()
+                .is_some_and(|command| command.contains("fasterq-dump"))
+        );
+        assert_eq!(
+            records[1].local_path,
+            output_root.join("runs/SRR123456/fastq/SRR123456.fastq")
+        );
+        fs::remove_dir_all(output_root).ok();
     }
 }

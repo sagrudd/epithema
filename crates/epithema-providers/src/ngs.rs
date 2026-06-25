@@ -469,6 +469,16 @@ pub struct NgsDownloadRecord {
     pub verification_status: NgsVerificationStatus,
     /// Failure detail when materialization or verification failed.
     pub failure_reason: Option<String>,
+    /// Stable materialization method label such as `direct_download` or `sra_toolkit_conversion`.
+    pub materialization_method: Option<String>,
+    /// Command line used or planned for generated/conversion outputs.
+    pub command_line: Option<String>,
+    /// Process exit status when an external command was executed.
+    pub exit_status: Option<i32>,
+    /// Container image used or planned for external tool execution.
+    pub container_image: Option<String>,
+    /// Tool version string when available.
+    pub tool_version: Option<String>,
 }
 
 impl NgsDownloadRecord {
@@ -482,6 +492,11 @@ impl NgsDownloadRecord {
             observed_checksum_md5: None,
             verification_status: NgsVerificationStatus::Planned,
             failure_reason: None,
+            materialization_method: None,
+            command_line: None,
+            exit_status: None,
+            container_image: None,
+            tool_version: None,
         }
     }
 
@@ -508,6 +523,44 @@ impl NgsDownloadRecord {
     #[must_use]
     pub fn with_failure_reason(mut self, failure_reason: impl Into<String>) -> Self {
         self.failure_reason = Some(failure_reason.into());
+        self
+    }
+
+    /// Attaches a stable materialization method label.
+    #[must_use]
+    pub fn with_materialization_method(
+        mut self,
+        materialization_method: impl Into<String>,
+    ) -> Self {
+        self.materialization_method = Some(materialization_method.into());
+        self
+    }
+
+    /// Attaches the command line used or planned for generated outputs.
+    #[must_use]
+    pub fn with_command_line(mut self, command_line: impl Into<String>) -> Self {
+        self.command_line = Some(command_line.into());
+        self
+    }
+
+    /// Attaches an external process exit status.
+    #[must_use]
+    pub fn with_exit_status(mut self, exit_status: i32) -> Self {
+        self.exit_status = Some(exit_status);
+        self
+    }
+
+    /// Attaches a container image reference.
+    #[must_use]
+    pub fn with_container_image(mut self, container_image: impl Into<String>) -> Self {
+        self.container_image = Some(container_image.into());
+        self
+    }
+
+    /// Attaches a tool version string.
+    #[must_use]
+    pub fn with_tool_version(mut self, tool_version: impl Into<String>) -> Self {
+        self.tool_version = Some(tool_version.into());
         self
     }
 }
@@ -691,6 +744,7 @@ mod tests {
         assert_eq!(record.observed_checksum_md5.as_deref(), Some("observed"));
         assert_eq!(record.verification_status, NgsVerificationStatus::Failed);
         assert_eq!(record.failure_reason.as_deref(), Some("checksum mismatch"));
+        assert_eq!(record.materialization_method, None);
     }
 
     #[test]
