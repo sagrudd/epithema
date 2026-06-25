@@ -131,6 +131,12 @@ The provenance document should use schema label
    `sra:SRR...` should be accepted. Ambiguous bare prefixes should route through
    `auto` only when a deterministic provider strategy is documented.
 
+   Status: implemented as `NgsQuery::classify` in
+   `crates/epithema-providers/src/ngs.rs`. The classifier accepts bare
+   accessions plus `auto:`, `ena:`, and `sra:` qualified forms, resolves the
+   NGS object class, and leaves bare or `auto:` queries provider-neutral for a
+   later service routing decision.
+
 3. Implement ENA manifest expansion.
 
    Add an ENA NGS adapter that expands study, sample, experiment, and run

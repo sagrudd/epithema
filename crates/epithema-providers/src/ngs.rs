@@ -7,7 +7,7 @@
 
 use std::path::PathBuf;
 
-use epithema_diagnostics::ArtifactProvenance;
+use epithema_diagnostics::{ArtifactProvenance, ErrorCategory, PlatformError};
 
 use crate::{ArchiveRoute, ProviderId};
 
@@ -62,6 +62,32 @@ impl NgsQuery {
         }
     }
 
+    /// Classifies a raw NGS query token into a provider-neutral query.
+    ///
+    /// This parser accepts bare accessions plus `auto:`, `ena:`, and `sra:`
+    /// provider-qualified forms. Bare accessions are classified by object
+    /// class only; later service/provider routing decides whether ENA or SRA is
+    /// appropriate for materialization.
+    pub fn classify(raw: impl Into<String>) -> Result<Self, PlatformError> {
+        let raw = raw.into();
+        let token = raw.trim();
+        if token.is_empty() {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "NGS query accession must not be empty",
+            )
+            .with_code("providers.ngs.query.empty"));
+        }
+
+        let (provider, accession) = parse_optional_ngs_provider(token)?;
+        let object_class = infer_ngs_object_class(accession)?;
+        let mut query = Self::new(accession).with_object_class(object_class);
+        if let Some(provider) = provider {
+            query = query.with_provider(provider);
+        }
+        Ok(query)
+    }
+
     /// Attaches a provider identity to the query.
     #[must_use]
     pub fn with_provider(mut self, provider: ProviderId) -> Self {
@@ -75,6 +101,65 @@ impl NgsQuery {
         self.object_class = Some(object_class);
         self
     }
+}
+
+fn parse_optional_ngs_provider(token: &str) -> Result<(Option<ProviderId>, &str), PlatformError> {
+    let Some((provider_raw, accession_raw)) = token.split_once(':') else {
+        return Ok((None, token));
+    };
+
+    let provider = provider_raw.trim().to_ascii_lowercase();
+    let accession = accession_raw.trim();
+    if accession.is_empty() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "NGS provider-qualified query is missing an accession",
+        )
+        .with_code("providers.ngs.query.missing_accession")
+        .with_detail(token.to_owned()));
+    }
+
+    match provider.as_str() {
+        "auto" => Ok((None, accession)),
+        "ena" | "sra" => Ok((Some(ProviderId::new(provider)?), accession)),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "NGS provider-qualified query must use 'auto', 'ena', or 'sra'",
+        )
+        .with_code("providers.ngs.query.unsupported_provider")
+        .with_detail(token.to_owned())),
+    }
+}
+
+fn infer_ngs_object_class(accession: &str) -> Result<NgsObjectClass, PlatformError> {
+    let uppercase = accession.trim().to_ascii_uppercase();
+    if uppercase.starts_with("ERR") || uppercase.starts_with("SRR") {
+        return Ok(NgsObjectClass::Run);
+    }
+    if uppercase.starts_with("ERX") || uppercase.starts_with("SRX") {
+        return Ok(NgsObjectClass::Experiment);
+    }
+    if uppercase.starts_with("ERS")
+        || uppercase.starts_with("SRS")
+        || uppercase.starts_with("SAMN")
+        || uppercase.starts_with("SAMEA")
+    {
+        return Ok(NgsObjectClass::Sample);
+    }
+    if uppercase.starts_with("ERP")
+        || uppercase.starts_with("SRP")
+        || uppercase.starts_with("PRJNA")
+        || uppercase.starts_with("PRJEB")
+    {
+        return Ok(NgsObjectClass::Study);
+    }
+
+    Err(PlatformError::new(
+        ErrorCategory::Validation,
+        "NGS accession could not be classified conservatively",
+    )
+    .with_code("providers.ngs.query.unsupported_accession")
+    .with_detail(accession.to_owned()))
 }
 
 /// Normalized run-level metadata for an NGS dataset row.
@@ -524,6 +609,55 @@ mod tests {
         assert_eq!(
             NgsVerificationStatus::SkippedVerified.as_str(),
             "skipped_verified"
+        );
+    }
+
+    #[test]
+    fn classifies_bare_project_accession_without_provider() {
+        let query =
+            NgsQuery::classify(" PRJNA1011899 ").expect("project accession should classify");
+
+        assert_eq!(query.accession, "PRJNA1011899");
+        assert_eq!(query.provider, None);
+        assert_eq!(query.object_class, Some(NgsObjectClass::Study));
+    }
+
+    #[test]
+    fn classifies_provider_qualified_run_accession() {
+        let query = NgsQuery::classify("ena:ERR123456").expect("ENA run accession should classify");
+
+        assert_eq!(query.accession, "ERR123456");
+        assert_eq!(query.provider.as_ref().map(ProviderId::as_str), Some("ena"));
+        assert_eq!(query.object_class, Some(NgsObjectClass::Run));
+    }
+
+    #[test]
+    fn classifies_auto_qualified_sample_without_provider_lock() {
+        let query =
+            NgsQuery::classify("auto:SAMN123456").expect("auto sample accession should classify");
+
+        assert_eq!(query.provider, None);
+        assert_eq!(query.object_class, Some(NgsObjectClass::Sample));
+    }
+
+    #[test]
+    fn rejects_unsupported_ngs_provider_prefix() {
+        let error =
+            NgsQuery::classify("ncbi:SRR123456").expect_err("unsupported provider should fail");
+
+        assert_eq!(
+            error.code(),
+            Some("providers.ngs.query.unsupported_provider")
+        );
+    }
+
+    #[test]
+    fn rejects_unclassified_ngs_accession() {
+        let error = NgsQuery::classify("ABC123").expect_err("unclassified accession should fail");
+
+        assert_eq!(
+            error.code(),
+            Some("providers.ngs.query.unsupported_accession")
         );
     }
 
