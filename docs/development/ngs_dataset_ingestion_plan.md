@@ -314,6 +314,17 @@ The provenance document should use schema label
     files, metadata, checksums, and run/sample/study relationships without
     reparsing provider-specific reports.
 
+    Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs` as
+    `ServiceNgsRetrieval::write_manifest`. The service writes a stable
+    `manifest.tsv` handoff file from the normalized `NgsProvenance` bundle,
+    including provider/query metadata, study/sample/experiment/run
+    relationships, asset roles and formats, expected checksums and byte counts,
+    selection status, local materialized paths, generated FASTQ paths, observed
+    verification evidence, verification status, materialization method, and
+    failure reason. This remains an importer-ready local handoff only; object
+    upload, publication, credentials, and requester-pays workflows are still
+    explicitly outside the implemented scope.
+
 ## Validation Expectations
 
 Initial validation should be mocked and deterministic. Live-provider validation

@@ -29,11 +29,11 @@ The target interface is `epithema ngsget <accession> [--provider auto|ena|sra] [
 
 ## Outputs
 
-The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, and `runs/<run_accession>/` subdirectories for `fastq`, `raw`, `sra`, and logs. Implemented service records capture selected and skipped assets, expected and observed byte counts and MD5 checksums, direct-download verification state, SRA Toolkit conversion command details, container image and tool version metadata, exit status, and generated FASTQ output paths.
+The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, and `runs/<run_accession>/` subdirectories for `fastq`, `raw`, `sra`, and logs. Implemented service records capture selected and skipped assets, expected and observed byte counts and MD5 checksums, direct-download verification state, SRA Toolkit conversion command details, container image and tool version metadata, exit status, and generated FASTQ output paths. The service can write a stable handoff `manifest.tsv` for later object-store importers without uploading or publishing objects.
 
 ## Current Status
 
-`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write the manifest/log files, and connect the end-to-end command surface.
+`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write per-run logs, and connect the end-to-end command surface.
 
 ## Caveats
 

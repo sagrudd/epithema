@@ -234,6 +234,20 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         fs::write(path, body).map_err(|error| ngs_io_error("write NGS provenance JSON", error))
     }
 
+    /// Writes a stable TSV handoff manifest for a materialized NGS acquisition.
+    pub fn write_manifest(
+        &self,
+        provenance: &NgsProvenance,
+        path: &Path,
+    ) -> Result<(), PlatformError> {
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| ngs_io_error("create NGS manifest directory", error))?;
+        }
+        fs::write(path, ngs_handoff_manifest_tsv(provenance))
+            .map_err(|error| ngs_io_error("write NGS manifest TSV", error))
+    }
+
     fn ensure_ngs_provider_enabled(&self, query: &NgsQuery) -> Result<ProviderId, PlatformError> {
         if !self.config.acquisition.allow_remote_acquisition {
             return Err(PlatformError::new(
@@ -677,6 +691,143 @@ fn local_file_records_json(record: &NgsDownloadRecord) -> Vec<Value> {
         })
     }));
     files
+}
+
+const NGS_HANDOFF_MANIFEST_COLUMNS: &[&str] = &[
+    "provider",
+    "query_accession",
+    "query_object_class",
+    "study_accession",
+    "study_title",
+    "sample_accession",
+    "sample_title",
+    "experiment_accession",
+    "experiment_title",
+    "run_accession",
+    "instrument_platform",
+    "instrument_model",
+    "library_strategy",
+    "library_source",
+    "library_selection",
+    "library_layout",
+    "asset_role",
+    "asset_format",
+    "source_url",
+    "expected_size_bytes",
+    "expected_checksum_md5",
+    "selection_status",
+    "local_path",
+    "generated_paths",
+    "observed_size_bytes",
+    "observed_checksum_md5",
+    "verification_status",
+    "materialization_method",
+    "failure_reason",
+];
+
+fn ngs_handoff_manifest_tsv(provenance: &NgsProvenance) -> String {
+    let mut lines = vec![NGS_HANDOFF_MANIFEST_COLUMNS.join("\t")];
+    for run in &provenance.manifest.runs {
+        for asset in &run.assets {
+            let selected = provenance
+                .download_plan
+                .selected_assets
+                .iter()
+                .any(|selected_asset| selected_asset == asset);
+            let record = provenance
+                .download_records
+                .iter()
+                .find(|record| record.asset == *asset);
+            let row = ngs_handoff_manifest_row(provenance, &run.metadata, asset, selected, record);
+            lines.push(row.join("\t"));
+        }
+    }
+    lines.push(String::new());
+    lines.join("\n")
+}
+
+fn ngs_handoff_manifest_row(
+    provenance: &NgsProvenance,
+    metadata: &NgsRunMetadata,
+    asset: &NgsAsset,
+    selected: bool,
+    record: Option<&NgsDownloadRecord>,
+) -> Vec<String> {
+    let generated_paths = serde_json::to_string(
+        &record
+            .map(|record| {
+                record
+                    .generated_paths
+                    .iter()
+                    .map(|path| path.display().to_string())
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default(),
+    )
+    .unwrap_or_else(|_| "[]".to_owned());
+    vec![
+        tsv_cell(provenance.manifest.provider.as_str()),
+        tsv_cell(&provenance.manifest.query.accession),
+        tsv_cell(
+            provenance
+                .manifest
+                .query
+                .object_class
+                .map(|object_class| object_class.as_str())
+                .unwrap_or_default(),
+        ),
+        tsv_optional(metadata.study_accession.as_deref()),
+        tsv_optional(metadata.study_title.as_deref()),
+        tsv_optional(metadata.sample_accession.as_deref()),
+        tsv_optional(metadata.sample_title.as_deref()),
+        tsv_optional(metadata.experiment_accession.as_deref()),
+        tsv_optional(metadata.experiment_title.as_deref()),
+        tsv_cell(&metadata.run_accession),
+        tsv_optional(metadata.instrument_platform.as_deref()),
+        tsv_optional(metadata.instrument_model.as_deref()),
+        tsv_optional(metadata.library_strategy.as_deref()),
+        tsv_optional(metadata.library_source.as_deref()),
+        tsv_optional(metadata.library_selection.as_deref()),
+        tsv_optional(metadata.library_layout.as_deref()),
+        tsv_cell(asset.role.as_str()),
+        tsv_cell(&asset.format),
+        tsv_cell(&asset.source_url),
+        tsv_optional_u64(asset.size_bytes),
+        tsv_optional(asset.checksum_md5.as_deref()),
+        tsv_cell(if selected { "selected" } else { "skipped" }),
+        tsv_cell(
+            record
+                .map(|record| record.local_path.display().to_string())
+                .as_deref()
+                .unwrap_or_default(),
+        ),
+        tsv_cell(&generated_paths),
+        tsv_optional_u64(record.and_then(|record| record.observed_size_bytes)),
+        tsv_optional(record.and_then(|record| record.observed_checksum_md5.as_deref())),
+        tsv_cell(
+            record
+                .map(|record| record.verification_status.as_str())
+                .unwrap_or("not_materialized"),
+        ),
+        tsv_optional(record.and_then(|record| record.materialization_method.as_deref())),
+        tsv_optional(record.and_then(|record| record.failure_reason.as_deref())),
+    ]
+}
+
+fn tsv_optional(value: Option<&str>) -> String {
+    value.map(tsv_cell).unwrap_or_default()
+}
+
+fn tsv_optional_u64(value: Option<u64>) -> String {
+    value.map(|value| value.to_string()).unwrap_or_default()
+}
+
+fn tsv_cell(value: &str) -> String {
+    value
+        .replace('\t', " ")
+        .replace(['\r', '\n'], " ")
+        .trim()
+        .to_owned()
 }
 
 fn artifact_provenance_json(provenance: &ArtifactProvenance) -> Value {
@@ -1503,6 +1654,76 @@ mod tests {
         );
         assert_eq!(value["local_files"][0]["kind"], "primary");
         assert_eq!(value["local_files"][0]["verification_status"], "verified");
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn writes_ngs_handoff_manifest_for_object_store_importers() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].metadata = NgsRunMetadata::new("ERR123456").with_accessions(
+            Some("PRJNA1011899".to_owned()),
+            Some("SAMN1011899".to_owned()),
+            Some("ERX123456".to_owned()),
+        );
+        manifest.runs[0].metadata.study_title = Some("Example study".to_owned());
+        manifest.runs[0].metadata.sample_title = Some("Example sample".to_owned());
+        manifest.runs[0].metadata.instrument_platform = Some("ILLUMINA".to_owned());
+        manifest.runs[0].metadata.library_strategy = Some("WGS".to_owned());
+        manifest.runs[0].assets[0] = manifest.runs[0].assets[0]
+            .clone()
+            .with_size_bytes(Some(5))
+            .with_checksum_md5(Some(checksum.clone()));
+        let output_root = temp_ngs_output_root("handoff-manifest");
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERR123456.fastq.gz",
+            HttpBytesResponse::new(200, body),
+        );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+        let plan = gateway
+            .plan_downloads(&manifest, &output_root, false)
+            .expect("NGS download plan should build");
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("direct ENA asset should materialize");
+        let provenance =
+            NgsProvenance::new_at_unix_seconds(manifest.clone(), plan, records, 123_456);
+        let path = output_root.join("manifest.tsv");
+
+        gateway
+            .write_manifest(&provenance, &path)
+            .expect("handoff manifest TSV should be written");
+
+        let body = fs::read_to_string(&path).expect("manifest TSV should be readable");
+        let lines = body.lines().collect::<Vec<_>>();
+        assert_eq!(lines.len(), 7);
+        assert!(lines[0].starts_with(
+            "provider\tquery_accession\tquery_object_class\tstudy_accession\tstudy_title"
+        ));
+        let selected = lines[1].split('\t').collect::<Vec<_>>();
+        assert_eq!(selected[0], "ena");
+        assert_eq!(selected[1], "ERR123456");
+        assert_eq!(selected[2], "run");
+        assert_eq!(selected[3], "PRJNA1011899");
+        assert_eq!(selected[4], "Example study");
+        assert_eq!(selected[5], "SAMN1011899");
+        assert_eq!(selected[9], "ERR123456");
+        assert_eq!(selected[16], "generated_fastq");
+        assert_eq!(selected[21], "selected");
+        assert!(selected[22].ends_with("runs/ERR123456/fastq/ERR123456.fastq.gz"));
+        assert_eq!(selected[23], "[]");
+        assert_eq!(selected[24], "5");
+        assert_eq!(selected[25], checksum);
+        assert_eq!(selected[26], "verified");
+        assert_eq!(selected[27], "direct_download");
+        let skipped = lines[2].split('\t').collect::<Vec<_>>();
+        assert_eq!(skipped[16], "submitted_raw");
+        assert_eq!(skipped[21], "skipped");
+        assert_eq!(skipped[22], "");
+        assert_eq!(skipped[26], "not_materialized");
         fs::remove_dir_all(output_root).ok();
     }
 
