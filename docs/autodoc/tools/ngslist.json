@@ -36,7 +36,7 @@
       "id": "caveats",
       "kind": "caveats",
       "title": "Caveats",
-      "content": "`ngslist` is a public manifest listing surface only. It does not download files, convert SRA archives to FASTQ, write provenance files, handle protected-access datasets, or publish object-store records. Those behaviors belong to later NGS ingestion tasks."
+      "content": "`ngslist` is a public manifest listing surface only. It does not download files, convert SRA archives to FASTQ, write provenance files, handle protected-access datasets, or publish object-store records. Downloading, conversion, and provenance writing belong to the planned `ngsget` surface; protected-access, dbGaP-controlled, credentialed, and object-store publication workflows remain explicit future work."
     }
   ],
   "artifacts": [

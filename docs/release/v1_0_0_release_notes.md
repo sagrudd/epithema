@@ -143,6 +143,8 @@ This release does not claim:
 - full historical EMBOSS catalog parity
 - full public R exposure of every shipped CLI method
 - protected-data retrieval or broad raw-read orchestration
+- protected-access, dbGaP-controlled, credentialed, requester-pays, or
+  object-store publication workflows for the NGS acquisition milestone
 - broad multi-platform native packaging beyond the Linux-first release path
 - CRAN or Bioconductor publication for the R package
 - broad plotting-family rollout beyond the governed `charge`, `pepwindow`, and

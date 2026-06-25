@@ -297,6 +297,16 @@ The provenance document should use schema label
     only. Protected-access, dbGaP-controlled, and object-store publication
     workflows must remain explicit future work unless implemented.
 
+    Status: implemented with curated autodoc contracts for `ngslist` and
+    `ngsget`, generated tool pages, and generated validation stubs. The
+    `ngslist` page documents the shipped manifest-listing boundary, while the
+    `ngsget` page documents the implemented service-layer acquisition,
+    verification, SRA conversion-runner, and provenance behavior without
+    claiming that the governed CLI route is shipped. Release-facing scope and
+    notes now explicitly keep protected-access, dbGaP-controlled, credentialed,
+    requester-pays, and object-store publication workflows outside the current
+    NGS milestone.
+
 14. Add object-store handoff readiness.
 
     Keep object-store upload out of the first `ngsget` implementation, but make

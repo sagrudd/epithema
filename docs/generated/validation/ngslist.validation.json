@@ -1,0 +1,40 @@
+{
+  "tool_name": "ngslist",
+  "document_id": "ngslist-v1",
+  "source_mode": "curated",
+  "evidence_source": "curated_autodoc",
+  "summary": {
+    "total_case_count": 1,
+    "declared_case_count": 1,
+    "harvested_case_count": 0,
+    "runnable_case_count": 1,
+    "executed_case_count": 0,
+    "compared_case_count": 0,
+    "passed_case_count": 0,
+    "failed_case_count": 0,
+    "partial_case_count": 0,
+    "unsupported_case_count": 0
+  },
+  "cases": [
+    {
+      "id": "list_ena_study_assets",
+      "title": "List assets for an ENA study accession",
+      "evidence_source": "curated_autodoc",
+      "declaration_status": "declared",
+      "execution_status": "runnable",
+      "comparison_status": "not_requested",
+      "required": true,
+      "artifact_ids": [
+        "ngslist_mocked_ena_study_case"
+      ],
+      "expected_output_ids": [
+        "ena_study_asset_table"
+      ],
+      "provenance": [],
+      "diagnostics": []
+    }
+  ],
+  "unresolved_gaps": [],
+  "diagnostics": [],
+  "provenance": []
+}

@@ -34,6 +34,8 @@ The coordinated `1.0.0` release intentionally does not include:
 
 - full parity with the historical EMBOSS catalog
 - broad provider or protected-access retrieval workflows
+- protected-access, dbGaP-controlled, credentialed, requester-pays, or
+  object-store publication workflows for the NGS acquisition milestone
 - full archive replication/orchestration and raw-read toolkit integration
 - a full runtime Rust-to-R embedding model beyond the current governed bridge
 - exposure of every shipped CLI method as a public R wrapper

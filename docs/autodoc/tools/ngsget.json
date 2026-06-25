@@ -1,0 +1,90 @@
+{
+  "schema_version": "epithema.autodoc/v1",
+  "document_id": "ngsget-v1",
+  "tool": {
+    "name": "ngsget",
+    "family": "archive_tools",
+    "summary": "Plan and materialize public ENA or SRA NGS assets for one study, sample, experiment, or run accession",
+    "legacy_names": []
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`ngsget` is the planned acquisition companion to `ngslist`. It resolves a public ENA or SRA NGS study, sample, experiment, or run accession to a normalized run-level manifest, selects generated FASTQ assets by default, optionally includes raw or submitted assets, materializes files under the documented run layout, and writes NGS provenance JSON."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The target interface is `epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--container <image>]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are part of the contract. The current implementation work is service-layer first; the governed CLI route is not yet exposed."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, and `runs/<run_accession>/` subdirectories for `fastq`, `raw`, `sra`, and logs. Implemented service records capture selected and skipped assets, expected and observed byte counts and MD5 checksums, direct-download verification state, SRA Toolkit conversion command details, container image and tool version metadata, exit status, and generated FASTQ output paths."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write the manifest/log files, and connect the end-to-end command surface."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "The first `ngsget` implementation is limited to public ENA/SRA datasets. Protected-access, dbGaP-controlled, credentialed, requester-pays, and object-store publication workflows are not implemented and must remain explicit future work. Routine validation is mocked and deterministic; live-provider or Docker/SRA Toolkit checks should stay opt-in gated checks."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "ngsget_service_ingestion_case",
+      "label": "Mocked service NGS ingestion case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/ngsget_service_ingestion_case.md"
+      },
+      "description": "Repository-managed case note covering the mocked service-layer NGS planning, materialization, SRA conversion, and provenance serialization tests."
+    }
+  ],
+  "examples": [
+    {
+      "id": "materialize_public_ngs_fastq_assets",
+      "title": "Materialize generated FASTQ assets for a public NGS accession",
+      "description": "Plans generated FASTQ acquisition for a public ENA or SRA accession and records materialized-file provenance through mocked service seams.",
+      "artifact_ids": [
+        "ngsget_service_ingestion_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "ngs_provenance_json",
+          "label": "NGS provenance JSON",
+          "description": "A stable `epithema.ngs-provenance/v1` JSON document describing query metadata, selected and skipped assets, materialization records, verification evidence, and generated FASTQ paths."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "epithema maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "materialize_public_ngs_fastq_assets"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}
