@@ -128,6 +128,7 @@ use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
+use crate::ngs_retrieval::ServiceNgsRetrieval;
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
 use crate::response::InvocationResponse;
@@ -214,6 +215,13 @@ impl EpithemaService {
     ) -> Result<ServiceArchiveRetrieval<'_, epithema_providers::ReqwestHttpClient>, ServiceError>
     {
         ServiceArchiveRetrieval::new(&self.config, &self.providers)
+    }
+
+    /// Returns the formal NGS dataset acquisition gateway.
+    pub fn ngs_retrieval(
+        &self,
+    ) -> Result<ServiceNgsRetrieval<'_, epithema_providers::ReqwestHttpClient>, ServiceError> {
+        ServiceNgsRetrieval::new(&self.config, &self.providers)
     }
 
     /// Resolves an accession-style input into a provider-backed single sequence record.

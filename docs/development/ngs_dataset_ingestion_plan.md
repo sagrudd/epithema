@@ -168,6 +168,14 @@ The provenance document should use schema label
    provenance writing. This service must enforce existing provider enablement
    and remote-acquisition policy checks.
 
+   Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs` as a
+   service-owned NGS gateway for ENA/SRA manifest listing. The gateway enforces
+   remote-acquisition policy, provider registry membership, archive-acquisition
+   capability, and per-provider enablement before routing to the provider
+   adapters. Future `ngsget` methods for planning, materialization,
+   verification, and provenance writing are present as guarded service entry
+   points with explicit not-yet-implemented errors for the later tasks below.
+
 6. Implement `ngslist`.
 
    Add the governed tool descriptor, CLI routing, text help, tabular rendering,
