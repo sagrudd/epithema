@@ -7,6 +7,7 @@
 
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ErrorCategory, PlatformError};
@@ -18,6 +19,77 @@ use epithema_providers::{
 
 const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
+
+/// Request passed to an SRA FASTQ conversion runner.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct SraFastqConversionRequest {
+    /// Run accession being converted.
+    pub run_accession: String,
+    /// Root of the NGS materialization tree.
+    pub output_root: PathBuf,
+    /// Expected SRA archive path within the materialization tree.
+    pub sra_archive_path: PathBuf,
+    /// Directory where FASTQ outputs should be written.
+    pub fastq_dir: PathBuf,
+    /// Stable human-readable command line for provenance.
+    pub command_line: String,
+    /// Container image used for the conversion.
+    pub container_image: String,
+    /// SRA Toolkit version associated with the container image.
+    pub tool_version: String,
+}
+
+/// Result returned by an SRA FASTQ conversion runner.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct SraFastqConversionResult {
+    /// External command exit status.
+    pub exit_status: i32,
+}
+
+/// Executes a planned SRA FASTQ conversion.
+pub trait SraFastqRunner {
+    /// Runs the conversion request and returns the external command status.
+    fn run(
+        &self,
+        request: &SraFastqConversionRequest,
+    ) -> Result<SraFastqConversionResult, PlatformError>;
+}
+
+#[derive(Clone, Copy, Debug, Default)]
+struct DockerSraFastqRunner;
+
+impl SraFastqRunner for DockerSraFastqRunner {
+    fn run(
+        &self,
+        request: &SraFastqConversionRequest,
+    ) -> Result<SraFastqConversionResult, PlatformError> {
+        fs::create_dir_all(&request.fastq_dir)
+            .map_err(|error| ngs_io_error("create SRA FASTQ output directory", error))?;
+        let script = sra_fastq_container_script(&request.run_accession);
+        let status = Command::new("docker")
+            .arg("run")
+            .arg("--rm")
+            .arg("-v")
+            .arg(format!("{}:/work", request.output_root.display()))
+            .arg(&request.container_image)
+            .arg("sh")
+            .arg("-lc")
+            .arg(script)
+            .status()
+            .map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to execute SRA Toolkit container",
+                )
+                .with_code("service.ngs_retrieval.sra_container_failed")
+                .with_detail(error.to_string())
+            })?;
+
+        Ok(SraFastqConversionResult {
+            exit_status: status.code().unwrap_or(-1),
+        })
+    }
+}
 
 /// Service-backed NGS dataset retrieval gateway.
 #[derive(Clone, Debug)]
@@ -100,6 +172,15 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         &self,
         plan: &NgsDownloadPlan,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        self.materialize_download_plan_with_sra_runner(plan, &DockerSraFastqRunner)
+    }
+
+    /// Materializes selected assets with an explicit SRA FASTQ conversion runner.
+    pub fn materialize_download_plan_with_sra_runner<R: SraFastqRunner>(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
         match plan.manifest.provider.as_str() {
             "ena" => plan
                 .selected_assets
@@ -109,7 +190,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             "sra" => plan
                 .selected_assets
                 .iter()
-                .map(|asset| materialize_sra_ngs_asset(&self.client, plan, asset))
+                .map(|asset| materialize_sra_ngs_asset(&self.client, plan, asset, runner))
                 .collect(),
             _ => Err(not_implemented(
                 "NGS materialization is not implemented for the requested provider",
@@ -308,11 +389,12 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     client: &C,
     plan: &NgsDownloadPlan,
     asset: &NgsAsset,
+    runner: &impl SraFastqRunner,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     match asset.role {
         NgsAssetRole::SraArchive => materialize_direct_ngs_asset(client, plan, asset),
         NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
-            Ok(planned_sra_fastq_conversion_record(plan, asset))
+            execute_sra_fastq_conversion_with_runner(plan, asset, runner)
         }
         _ => Ok(NgsDownloadRecord::new(
             asset.clone(),
@@ -325,37 +407,128 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     }
 }
 
-fn planned_sra_fastq_conversion_record(
+fn execute_sra_fastq_conversion_with_runner(
     plan: &NgsDownloadPlan,
     asset: &NgsAsset,
-) -> NgsDownloadRecord {
+    runner: &impl SraFastqRunner,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    let request = sra_fastq_conversion_request(plan, asset);
+    let result = runner.run(&request)?;
+    let mut record = NgsDownloadRecord::new(asset.clone(), request.fastq_dir.clone())
+        .with_verification_status(NgsVerificationStatus::Planned)
+        .with_materialization_method("sra_toolkit_conversion")
+        .with_command_line(request.command_line.clone())
+        .with_container_image(request.container_image.clone())
+        .with_tool_version(request.tool_version.clone())
+        .with_exit_status(result.exit_status);
+
+    if result.exit_status != 0 {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason(format!(
+                "SRA FASTQ conversion command exited with status {}",
+                result.exit_status
+            )));
+    }
+
+    let generated_paths = discover_sra_fastq_outputs(&request.fastq_dir)?;
+    if generated_paths.is_empty() {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason("SRA FASTQ conversion did not produce FASTQ outputs"));
+    }
+
+    let observed_size = sum_file_sizes(&generated_paths)?;
+    record = record
+        .with_observed_evidence(Some(observed_size), None)
+        .with_generated_paths(generated_paths)
+        .with_verification_status(NgsVerificationStatus::Unverified);
+    Ok(record)
+}
+
+fn sra_fastq_conversion_request(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+) -> SraFastqConversionRequest {
     let fastq_dir = plan
         .output_root
         .join("runs")
         .join(sanitize_path_component(&asset.run_accession))
         .join("fastq");
-    let local_path = fastq_dir.join(format!(
-        "{}.fastq",
-        sanitize_path_component(&asset.run_accession)
-    ));
     let run_accession = sanitize_path_component(&asset.run_accession);
+    let sra_archive_path = plan
+        .output_root
+        .join("runs")
+        .join(&run_accession)
+        .join("sra")
+        .join(format!("{run_accession}.sra"));
     let command_line = format!(
-        "docker run --rm -v {} {} sh -lc 'prefetch {} --output-directory /work/runs/{}/sra && fasterq-dump /work/runs/{}/sra/{}.sra --outdir /work/runs/{}/fastq'",
+        "docker run --rm -v {} {} sh -lc '{}'",
         shell_quote_volume(&plan.output_root),
         DEFAULT_SRA_TOOLKIT_CONTAINER,
-        run_accession,
-        run_accession,
-        run_accession,
-        run_accession,
-        run_accession
+        sra_fastq_container_script(&run_accession)
     );
 
-    NgsDownloadRecord::new(asset.clone(), local_path)
-        .with_verification_status(NgsVerificationStatus::Planned)
-        .with_materialization_method("sra_toolkit_conversion")
-        .with_command_line(command_line)
-        .with_container_image(DEFAULT_SRA_TOOLKIT_CONTAINER)
-        .with_tool_version(DEFAULT_SRA_TOOLKIT_VERSION)
+    SraFastqConversionRequest {
+        run_accession,
+        output_root: plan.output_root.clone(),
+        sra_archive_path,
+        fastq_dir,
+        command_line,
+        container_image: DEFAULT_SRA_TOOLKIT_CONTAINER.to_owned(),
+        tool_version: DEFAULT_SRA_TOOLKIT_VERSION.to_owned(),
+    }
+}
+
+fn sra_fastq_container_script(run_accession: &str) -> String {
+    format!(
+        "mkdir -p /work/runs/{run_accession}/sra /work/runs/{run_accession}/fastq && archive=\"$(find /work/runs/{run_accession}/sra -name \"{run_accession}.sra\" -type f | head -n 1)\" && if [ -z \"$archive\" ]; then prefetch {run_accession} --output-directory /work/runs/{run_accession}/sra; archive=\"$(find /work/runs/{run_accession}/sra -name \"{run_accession}.sra\" -type f | head -n 1)\"; fi && test -n \"$archive\" && fasterq-dump \"$archive\" --outdir /work/runs/{run_accession}/fastq"
+    )
+}
+
+fn discover_sra_fastq_outputs(fastq_dir: &Path) -> Result<Vec<PathBuf>, PlatformError> {
+    if !fastq_dir.exists() {
+        return Ok(Vec::new());
+    }
+
+    let mut paths = fs::read_dir(fastq_dir)
+        .map_err(|error| ngs_io_error("read SRA FASTQ output directory", error))?
+        .filter_map(|entry| entry.ok().map(|entry| entry.path()))
+        .filter(|path| {
+            path.is_file()
+                && path
+                    .file_name()
+                    .and_then(|value| value.to_str())
+                    .is_some_and(is_fastq_filename)
+        })
+        .collect::<Vec<_>>();
+    paths.sort();
+    Ok(paths)
+}
+
+fn is_fastq_filename(file_name: &str) -> bool {
+    let lower = file_name.to_ascii_lowercase();
+    lower.ends_with(".fastq")
+        || lower.ends_with(".fq")
+        || lower.ends_with(".fastq.gz")
+        || lower.ends_with(".fq.gz")
+}
+
+fn sum_file_sizes(paths: &[PathBuf]) -> Result<u64, PlatformError> {
+    let mut total = 0u64;
+    for path in paths {
+        let size = fs::metadata(path)
+            .map_err(|error| ngs_io_error("read generated FASTQ metadata", error))?
+            .len();
+        total = total.checked_add(size).ok_or_else(|| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "generated FASTQ file sizes overflowed u64",
+            )
+            .with_code("service.ngs_retrieval.size_overflow")
+        })?;
+    }
+    Ok(total)
 }
 
 fn direct_download_url(source_url: &str) -> Option<String> {
@@ -529,7 +702,10 @@ mod tests {
         NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
     };
 
-    use super::{DEFAULT_SRA_TOOLKIT_CONTAINER, ServiceNgsRetrieval};
+    use super::{
+        DEFAULT_SRA_TOOLKIT_CONTAINER, ServiceNgsRetrieval, SraFastqConversionRequest,
+        SraFastqConversionResult, SraFastqRunner,
+    };
 
     #[derive(Clone, Debug, Default)]
     struct MockHttpClient {
@@ -577,6 +753,48 @@ mod tests {
                     .with_code("service.ngs_retrieval.test.missing_byte_response")
                     .with_detail(request.url.clone())
                 })
+        }
+    }
+
+    #[derive(Clone, Debug)]
+    struct FakeSraFastqRunner {
+        exit_status: i32,
+        outputs: Vec<(&'static str, Vec<u8>)>,
+    }
+
+    impl FakeSraFastqRunner {
+        fn successful_paired() -> Self {
+            Self {
+                exit_status: 0,
+                outputs: vec![
+                    ("SRR123456_1.fastq", b"@r1\nACGT\n+\n!!!!\n".to_vec()),
+                    ("SRR123456_2.fastq", b"@r2\nTGCA\n+\n!!!!\n".to_vec()),
+                ],
+            }
+        }
+
+        fn failing() -> Self {
+            Self {
+                exit_status: 2,
+                outputs: Vec::new(),
+            }
+        }
+    }
+
+    impl SraFastqRunner for FakeSraFastqRunner {
+        fn run(
+            &self,
+            request: &SraFastqConversionRequest,
+        ) -> Result<SraFastqConversionResult, PlatformError> {
+            fs::create_dir_all(&request.fastq_dir)
+                .expect("fake SRA runner should create FASTQ directory");
+            for (file_name, body) in &self.outputs {
+                fs::write(request.fastq_dir.join(file_name), body)
+                    .expect("fake SRA runner should write FASTQ output");
+            }
+            Ok(SraFastqConversionResult {
+                exit_status: self.exit_status,
+            })
         }
     }
 
@@ -960,8 +1178,9 @@ mod tests {
         );
         let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
 
+        let runner = FakeSraFastqRunner::successful_paired();
         let records = gateway
-            .materialize_download_plan(&plan)
+            .materialize_download_plan_with_sra_runner(&plan, &runner)
             .expect("SRA materialization should download archive and plan FASTQ conversion");
 
         assert_eq!(records.len(), 2);
@@ -985,8 +1204,9 @@ mod tests {
         assert_eq!(records[1].asset.role, NgsAssetRole::GeneratedFastq);
         assert_eq!(
             records[1].verification_status,
-            NgsVerificationStatus::Planned
+            NgsVerificationStatus::Unverified
         );
+        assert_eq!(records[1].exit_status, Some(0));
         assert_eq!(
             records[1].materialization_method.as_deref(),
             Some("sra_toolkit_conversion")
@@ -1003,7 +1223,51 @@ mod tests {
         );
         assert_eq!(
             records[1].local_path,
-            output_root.join("runs/SRR123456/fastq/SRR123456.fastq")
+            output_root.join("runs/SRR123456/fastq")
+        );
+        assert_eq!(records[1].generated_paths.len(), 2);
+        assert_eq!(
+            records[1].generated_paths,
+            vec![
+                output_root.join("runs/SRR123456/fastq/SRR123456_1.fastq"),
+                output_root.join("runs/SRR123456/fastq/SRR123456_2.fastq"),
+            ]
+        );
+        assert_eq!(records[1].observed_size_bytes, Some(32));
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn records_failed_sra_fastq_conversion_exit_status() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let manifest = sra_planned_manifest();
+        let selected_assets = manifest
+            .assets()
+            .into_iter()
+            .filter(|asset| asset.role == NgsAssetRole::GeneratedFastq)
+            .cloned()
+            .collect();
+        let output_root = temp_ngs_output_root("sra-fail");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, selected_assets);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_sra_runner(&plan, &FakeSraFastqRunner::failing())
+            .expect("failed SRA conversion should be recorded");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Failed
+        );
+        assert_eq!(records[0].exit_status, Some(2));
+        assert!(
+            records[0]
+                .failure_reason
+                .as_deref()
+                .is_some_and(|reason| reason.contains("exited with status 2"))
         );
         fs::remove_dir_all(output_root).ok();
     }

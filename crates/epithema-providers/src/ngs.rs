@@ -479,6 +479,8 @@ pub struct NgsDownloadRecord {
     pub container_image: Option<String>,
     /// Tool version string when available.
     pub tool_version: Option<String>,
+    /// Local files produced by a conversion step.
+    pub generated_paths: Vec<PathBuf>,
 }
 
 impl NgsDownloadRecord {
@@ -497,6 +499,7 @@ impl NgsDownloadRecord {
             exit_status: None,
             container_image: None,
             tool_version: None,
+            generated_paths: Vec::new(),
         }
     }
 
@@ -561,6 +564,13 @@ impl NgsDownloadRecord {
     #[must_use]
     pub fn with_tool_version(mut self, tool_version: impl Into<String>) -> Self {
         self.tool_version = Some(tool_version.into());
+        self
+    }
+
+    /// Attaches local files produced by a conversion step.
+    #[must_use]
+    pub fn with_generated_paths(mut self, generated_paths: Vec<PathBuf>) -> Self {
+        self.generated_paths = generated_paths;
         self
     }
 }
