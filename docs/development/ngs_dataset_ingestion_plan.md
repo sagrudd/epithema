@@ -199,6 +199,14 @@ The provenance document should use schema label
    default and adds raw/submitted assets only when `--raw` is present. The plan
    must be previewable in tests without network downloads.
 
+   Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs` as
+   the service-owned `ServiceNgsRetrieval::plan_downloads` selector. The
+   planner preserves manifest order, selects only `generated_fastq` assets by
+   default, and includes submitted raw, submitted alignment, index,
+   provider-native SRA archive, and unknown submitted assets when raw inclusion
+   is requested. Coverage uses in-memory manifests and does not perform network
+   downloads or file materialization.
+
 8. Implement direct ENA downloads.
 
    Add resumable or idempotent file materialization with `.partial` files,

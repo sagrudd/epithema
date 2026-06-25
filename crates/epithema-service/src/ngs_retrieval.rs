@@ -10,9 +10,9 @@ use std::path::{Path, PathBuf};
 use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ErrorCategory, PlatformError};
 use epithema_providers::{
-    EnaNgsAdapter, NgsDownloadPlan, NgsDownloadRecord, NgsManifest, NgsProvenance, NgsQuery,
-    ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient,
-    SraNgsAdapter,
+    EnaNgsAdapter, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest,
+    NgsProvenance, NgsQuery, ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry,
+    ReqwestHttpClient, SraNgsAdapter,
 };
 
 /// Service-backed NGS dataset retrieval gateway.
@@ -76,16 +76,18 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         self.retrieve_manifest(query)
     }
 
-    /// Future materialization-plan entry point for the planned `ngsget`.
+    /// Builds a deterministic materialization plan for the planned `ngsget`.
     pub fn plan_downloads(
         &self,
-        _manifest: &NgsManifest,
-        _output_root: impl Into<PathBuf>,
-        _include_raw: bool,
+        manifest: &NgsManifest,
+        output_root: impl Into<PathBuf>,
+        include_raw: bool,
     ) -> Result<NgsDownloadPlan, PlatformError> {
-        Err(not_implemented(
-            "download planning is not implemented by the NGS service gateway yet",
-            "service.ngs_retrieval.download_planning_not_implemented",
+        Ok(NgsDownloadPlan::new(
+            manifest.clone(),
+            output_root,
+            include_raw,
+            select_ngs_assets_for_download(manifest, include_raw),
         ))
     }
 
@@ -197,6 +199,29 @@ fn provider_enabled(config: &PlatformConfig, provider: &str) -> bool {
         .unwrap_or(false)
 }
 
+fn select_ngs_assets_for_download(manifest: &NgsManifest, include_raw: bool) -> Vec<NgsAsset> {
+    manifest
+        .runs
+        .iter()
+        .flat_map(|run| run.assets.iter())
+        .filter(|asset| should_select_ngs_asset(asset.role, include_raw))
+        .cloned()
+        .collect()
+}
+
+fn should_select_ngs_asset(role: NgsAssetRole, include_raw: bool) -> bool {
+    role == NgsAssetRole::GeneratedFastq
+        || (include_raw
+            && matches!(
+                role,
+                NgsAssetRole::SubmittedRaw
+                    | NgsAssetRole::SubmittedAlignment
+                    | NgsAssetRole::SraArchive
+                    | NgsAssetRole::Index
+                    | NgsAssetRole::UnknownSubmitted
+            ))
+}
+
 fn not_implemented(message: &str, code: &'static str) -> PlatformError {
     PlatformError::new(ErrorCategory::Invocation, message).with_code(code)
 }
@@ -204,12 +229,14 @@ fn not_implemented(message: &str, code: &'static str) -> PlatformError {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use std::path::PathBuf;
 
     use epithema_config::{PlatformConfig, ProviderSettings};
     use epithema_diagnostics::PlatformError;
     use epithema_providers::{
-        ArchiveRoute, EnaNgsAdapter, HttpRequest, HttpResponse, NgsManifest, NgsQuery,
-        ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
+        ArchiveRoute, EnaNgsAdapter, HttpRequest, HttpResponse, NgsAsset, NgsAssetRole,
+        NgsDownloadPlan, NgsManifest, NgsManifestRun, NgsQuery, NgsRunMetadata, ProviderHttpClient,
+        ProviderId, ProviderRegistry, SraNgsAdapter,
     };
 
     use super::ServiceNgsRetrieval;
@@ -237,6 +264,56 @@ mod tests {
                 .with_detail(request.url.clone())
             })
         }
+    }
+
+    fn planned_manifest() -> NgsManifest {
+        let provider = ProviderId::new("ena").expect("static provider id should be valid");
+        let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
+        let metadata = NgsRunMetadata::new("ERR123456");
+        let assets = vec![
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::GeneratedFastq,
+                "fastq.gz",
+                "ftp://example.invalid/ERR123456.fastq.gz",
+            ),
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::SubmittedRaw,
+                "pod5",
+                "ftp://example.invalid/ERR123456.pod5",
+            ),
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::SubmittedAlignment,
+                "bam",
+                "ftp://example.invalid/ERR123456.bam",
+            ),
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::Index,
+                "bai",
+                "ftp://example.invalid/ERR123456.bam.bai",
+            ),
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::SraArchive,
+                "sra",
+                "ftp://example.invalid/ERR123456.sra",
+            ),
+            NgsAsset::new(
+                "ERR123456",
+                NgsAssetRole::UnknownSubmitted,
+                "submitted",
+                "ftp://example.invalid/ERR123456.dat",
+            ),
+        ];
+        NgsManifest::new(
+            query,
+            provider.clone(),
+            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
+            vec![NgsManifestRun::new(metadata, assets)],
+        )
     }
 
     #[test]
@@ -332,27 +409,68 @@ mod tests {
     }
 
     #[test]
-    fn exposes_guarded_future_ngsget_methods() {
+    fn plans_generated_fastq_assets_by_default() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
         let gateway =
             ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
-        let provider = ProviderId::new("ena").expect("static provider id should be valid");
-        let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
-        let manifest = NgsManifest::new(
-            query,
-            provider.clone(),
-            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
-            Vec::new(),
+        let manifest = planned_manifest();
+
+        let plan = gateway
+            .plan_downloads(&manifest, "ngs-out", false)
+            .expect("default NGS download planning should succeed");
+
+        assert_eq!(plan.output_root, PathBuf::from("ngs-out"));
+        assert!(!plan.include_raw);
+        assert_eq!(plan.manifest, manifest);
+        assert_eq!(plan.selected_assets.len(), 1);
+        assert_eq!(plan.selected_assets[0].role, NgsAssetRole::GeneratedFastq);
+    }
+
+    #[test]
+    fn plans_raw_and_submitted_assets_when_requested() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let manifest = planned_manifest();
+
+        let plan = gateway
+            .plan_downloads(&manifest, "ngs-out", true)
+            .expect("raw-inclusive NGS download planning should succeed");
+
+        assert!(plan.include_raw);
+        assert_eq!(
+            plan.selected_assets
+                .iter()
+                .map(|asset| asset.role.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "generated_fastq",
+                "submitted_raw",
+                "submitted_alignment",
+                "index",
+                "sra_archive",
+                "unknown_submitted",
+            ]
         );
+    }
+
+    #[test]
+    fn keeps_future_ngsget_materialization_methods_guarded() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let plan = NgsDownloadPlan::new(planned_manifest(), "ngs-out", false, Vec::new());
 
         let error = gateway
-            .plan_downloads(&manifest, "ngs-out", false)
-            .expect_err("download planning should be guarded");
+            .materialize_download_plan(&plan)
+            .expect_err("materialization should remain guarded");
 
         assert_eq!(
             error.code(),
-            Some("service.ngs_retrieval.download_planning_not_implemented")
+            Some("service.ngs_retrieval.materialization_not_implemented")
         );
     }
 }
