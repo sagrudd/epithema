@@ -120,6 +120,10 @@ The provenance document should use schema label
    `NgsManifest`, `NgsDownloadPlan`, `NgsDownloadRecord`, and
    `NgsProvenance`.
 
+   Status: implemented in `crates/epithema-providers/src/ngs.rs` as
+   provider-neutral Rust models. Serialization and provider-specific filling of
+   these models remain later tasks in this plan.
+
 2. Add accession classification for NGS queries.
 
    Implement conservative parsing for study, sample, experiment, and run

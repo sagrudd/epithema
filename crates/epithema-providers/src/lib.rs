@@ -18,6 +18,7 @@ pub mod ena_archive;
 pub mod identity;
 pub mod input;
 pub mod ncbi;
+pub mod ngs;
 pub mod registry;
 pub mod request;
 pub mod sequence_retrieval;
@@ -40,6 +41,10 @@ pub use ena_archive::EnaArchiveAdapter;
 pub use identity::ProviderId;
 pub use input::{InputReference, InputReferenceKind, ResolutionIntent};
 pub use ncbi::{NcbiDatabase, NcbiSequenceAdapter};
+pub use ngs::{
+    NGS_PROVENANCE_SCHEMA, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest,
+    NgsManifestRun, NgsObjectClass, NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus,
+};
 pub use registry::ProviderRegistry;
 pub use request::{
     AcquisitionRequest, DocumentationAssetRequest, MetadataLookupRequest, SequenceRequest,
