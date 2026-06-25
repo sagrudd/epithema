@@ -155,6 +155,12 @@ The provenance document should use schema label
    represent the provider-native SRA archive as the source asset and mark FASTQ
    as generated through a conversion step rather than direct download.
 
+   Status: implemented in `crates/epithema-providers/src/sra_ngs.rs` as an
+   SRA provider adapter that builds RunInfo requests, normalizes mocked
+   multi-run CSV responses into `NgsManifest`, records provider-native SRA
+   archive assets, and represents FASTQ materialization through
+   `sra-convert://.../fastq` conversion locators.
+
 5. Add service-level NGS acquisition gateways.
 
    Add `ServiceNgsRetrieval` under `crates/epithema-service` with methods for

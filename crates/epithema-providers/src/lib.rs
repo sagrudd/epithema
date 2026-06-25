@@ -24,6 +24,7 @@ pub mod registry;
 pub mod request;
 pub mod sequence_retrieval;
 pub mod sra_archive;
+pub mod sra_ngs;
 pub mod traits;
 
 pub use acquisition::{
@@ -56,6 +57,7 @@ pub use sequence_retrieval::{
     SequenceProviderResolution,
 };
 pub use sra_archive::SraArchiveAdapter;
+pub use sra_ngs::SraNgsAdapter;
 pub use traits::{
     ArchiveProvider, CapabilityProvider, DocumentationAssetProvider, MetadataProvider,
     SequenceProvider,
