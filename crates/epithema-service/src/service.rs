@@ -1503,7 +1503,7 @@ impl EpithemaService {
     }
 
     /// Invokes `ngsget` using an explicit provider HTTP client.
-    pub fn invoke_ngsget_with_client<C: ProviderHttpClient>(
+    pub fn invoke_ngsget_with_client<C: ProviderHttpClient + Sync>(
         &self,
         request: InvocationRequest,
         descriptor: ToolDescriptor,
@@ -1532,7 +1532,7 @@ impl EpithemaService {
         }
     }
 
-    fn invoke_ngsget_with_gateway<C: ProviderHttpClient>(
+    fn invoke_ngsget_with_gateway<C: ProviderHttpClient + Sync>(
         &self,
         request: InvocationRequest,
         descriptor: ToolDescriptor,
@@ -1543,11 +1543,12 @@ impl EpithemaService {
         let manifest = gateway.retrieve_manifest(query)?;
         let plan = gateway.plan_downloads(&manifest, &params.output_root, params.include_raw)?;
         let records = if params.existing_download_roots.is_empty() {
-            gateway.materialize_download_plan(&plan)?
+            gateway.materialize_download_plan_with_threads(&plan, params.download_threads)?
         } else {
-            gateway.materialize_download_plan_with_existing_downloads(
+            gateway.materialize_download_plan_with_existing_downloads_and_threads(
                 &plan,
                 &params.existing_download_roots,
+                params.download_threads,
             )?
         };
         let selected_asset_count = plan.selected_assets.len();
@@ -1567,6 +1568,7 @@ impl EpithemaService {
             output_root: params.output_root.clone(),
             include_raw: params.include_raw,
             existing_download_roots: params.existing_download_roots.clone(),
+            download_threads: params.download_threads,
             run_count: manifest.runs.len(),
             selected_asset_count,
             failed_record_count,
@@ -1598,6 +1600,7 @@ impl EpithemaService {
             .with_line(format!("Selected assets: {}", outcome.selected_asset_count))
             .with_line(format!("Failed records: {}", outcome.failed_record_count))
             .with_line(format!("Include raw: {}", outcome.include_raw))
+            .with_line(format!("Download threads: {}", outcome.download_threads))
             .with_line(format!("Output root: {}", outcome.output_root.display()))
             .with_line(format!("Manifest: {}", manifest_path.display()))
             .with_line(format!("Provenance: {}", provenance_path.display()));
@@ -12047,6 +12050,7 @@ struct NgsgetCliParams {
     output_root: PathBuf,
     include_raw: bool,
     existing_download_roots: Vec<PathBuf>,
+    download_threads: usize,
 }
 
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
@@ -12177,6 +12181,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut output_root = PathBuf::from("ngsget-out");
     let mut include_raw = false;
     let mut existing_download_roots = Vec::new();
+    let mut download_threads = 1usize;
     let mut index = 0usize;
 
     while index < arguments.len() {
@@ -12234,6 +12239,21 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
             index += 1;
             continue;
         }
+        if let Some(value) = argument.strip_prefix("--threads=") {
+            download_threads = parse_ngsget_threads(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--threads" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --threads")
+                    .with_code("service.ngsget.threads_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            download_threads = parse_ngsget_threads(value)?;
+            index += 2;
+            continue;
+        }
         if argument == "--container" || argument.starts_with("--container=") {
             return Err(PlatformError::new(
                 ErrorCategory::Invocation,
@@ -12264,7 +12284,29 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         output_root,
         include_raw,
         existing_download_roots,
+        download_threads,
     })
+}
+
+fn parse_ngsget_threads(value: &str) -> Result<usize, ServiceError> {
+    let threads = value.parse::<usize>().map_err(|error| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --threads must be an integer between 1 and 20",
+        )
+        .with_code("service.ngsget.threads_invalid")
+        .with_detail(error.to_string())
+    })?;
+    if (1..=20).contains(&threads) {
+        Ok(threads)
+    } else {
+        Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --threads must be between 1 and 20",
+        )
+        .with_code("service.ngsget.threads_out_of_range")
+        .with_detail(threads.to_string()))
+    }
 }
 
 fn parse_ngsget_provider(value: &str) -> Result<String, ServiceError> {
@@ -12470,6 +12512,7 @@ fn render_ngsget_report(
     rendered.push_str(&format!("accession\t{}\n", outcome.accession));
     rendered.push_str(&format!("output_root\t{}\n", outcome.output_root.display()));
     rendered.push_str(&format!("include_raw\t{}\n", outcome.include_raw));
+    rendered.push_str(&format!("download_threads\t{}\n", outcome.download_threads));
     rendered.push_str(&format!("runs\t{}\n", outcome.run_count));
     rendered.push_str(&format!(
         "selected_assets\t{}\n",
@@ -15349,6 +15392,8 @@ mod tests {
                 output_root.display().to_string(),
                 "--check-downloads".to_owned(),
                 cache_root.display().to_string(),
+                "--threads".to_owned(),
+                "3".to_owned(),
             ]);
         let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
         let provider_request = EnaNgsAdapter::new()
@@ -15394,6 +15439,7 @@ mod tests {
             ResultPayload::TextReport(report) => {
                 assert!(report.body.contains("failed_records\t0"));
                 assert!(report.body.contains("selected_assets\t1"));
+                assert!(report.body.contains("download_threads\t3"));
             }
             payload => panic!("unexpected payload: {payload:?}"),
         }
@@ -15409,8 +15455,39 @@ mod tests {
         assert!(output_root.join("manifest.tsv").exists());
         assert!(output_root.join("provenance.json").exists());
         assert_eq!(response.result.artifacts.len(), 2);
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Download threads: 3")
+        );
         fs::remove_dir_all(output_root).ok();
         fs::remove_dir_all(cache_root).ok();
+    }
+
+    #[test]
+    fn rejects_ngsget_thread_counts_above_limit() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngsget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngsget should be registered");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "ena:ERR123456".to_owned(),
+                "--threads".to_owned(),
+                "21".to_owned(),
+            ]);
+
+        let error = service
+            .invoke_ngsget_with_client(request, descriptor, None::<&MockHttpClient>)
+            .expect_err("ngsget should reject thread counts above the cap");
+
+        assert_eq!(error.code(), Some("service.ngsget.threads_out_of_range"));
     }
 
     #[test]

@@ -16,7 +16,7 @@ The planned commands are:
 
 ```text
 epithema ngslist <accession> [--provider auto|ena|sra] [--format table|json]
-epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--check-downloads <path>]
+epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--check-downloads <path>]
 ```
 
 `ngslist` reports the assets associated with a study, sample, experiment, or
@@ -27,7 +27,9 @@ provider-native SRA files when the provider exposes them. With
 `--check-downloads <path>`, `ngsget` should recursively search an existing
 download root for same-name files, copy verified matches into the output tree
 without modifying the original files, and fail the selected asset if a
-same-name candidate has an unexpected checksum.
+same-name candidate has an unexpected checksum. With `--threads <n>`, `ngsget`
+allows concurrent direct downloads for ENA-style file URLs; the default is `1`
+and the maximum accepted value is `20`.
 
 Custom container selection is not part of the current command surface. SRA FASTQ
 conversion uses the pinned default SRA Toolkit container recorded by the service
@@ -226,11 +228,14 @@ The provenance document should use schema label
    Status: implemented for direct ENA-style file URLs in
    `crates/epithema-service/src/ngs_retrieval.rs`. The materializer streams
    provider response bodies directly to `.partial` files, emits CLI progress
-   events for long downloads, verifies size and MD5 evidence from disk, and
-   promotes only after available byte-count and checksum evidence passes. It
-   writes selected assets to the documented `runs/<run>/fastq`,
+   events with transfer-speed estimates for long downloads, verifies size and
+   MD5 evidence from disk, and promotes only after available byte-count and
+   checksum evidence passes. It writes selected assets to the documented
+   `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification as
-   a partial file, skips already verified local files, and supports
+   a partial file, resumes existing `.partial` files when the provider honors
+   byte-range requests, skips already verified local files, supports bounded
+   concurrent direct downloads through `ngsget --threads <n>`, and supports
    service-layer `ngsget --check-downloads <path>` behavior: recursive
    same-name lookup, copy-then-verify into the output tree, original source
    preservation, and failed materialization records for same-name candidates
@@ -282,8 +287,9 @@ The provenance document should use schema label
     checksum-only direct downloads verify when the available evidence matches;
     downloads with no checksum or byte count are promoted but marked
     `unverified`; checksum or byte-count mismatches leave `.partial` files and
-    record failed verification; stale partial files are overwritten on retry
-    before successful promotion; provider 404 responses produce failed records
+    record failed verification; retry behavior resumes incomplete `.partial`
+    files when the provider accepts byte-range requests and otherwise restarts
+    the direct download; provider 404 responses produce failed records
     without creating partial files; unclassified queries and unsupported
     provider routes return stable service error codes; interrupted SRA
     conversion is recorded as a failed materialization with exit status `-1`.
@@ -319,10 +325,12 @@ The provenance document should use schema label
     `ngsget` page documents the governed command route for public ENA/SRA
     acquisition, generated FASTQ default selection, optional raw/submitted
     assets alongside any available FASTQ, recursive verified reuse through
-    `--check-downloads`, streamed large-file direct downloads with CLI progress,
-    SRA conversion through the pinned default container, provenance JSON, and
-    stable handoff manifest behavior. Release-facing scope and notes now
-    explicitly keep protected-access, dbGaP-controlled, credentialed,
+    `--check-downloads`, bounded concurrent direct downloads through
+    `--threads`, streamed large-file direct downloads with speed-aware CLI
+    progress and resumable `.partial` files, SRA conversion through the pinned
+    default container, provenance JSON, and stable handoff manifest behavior.
+    Release-facing scope and notes now explicitly keep protected-access,
+    dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and
     live-provider validation workflows outside the current NGS milestone.
 

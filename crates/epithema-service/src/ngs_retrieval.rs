@@ -9,6 +9,9 @@ use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::thread;
 
 use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ArtifactOriginKind, ArtifactProvenance, ErrorCategory, PlatformError};
@@ -22,6 +25,7 @@ use serde_json::{Value, json};
 
 const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
+const MAX_NGS_DOWNLOAD_THREADS: usize = 20;
 
 /// Callback used to report streamed NGS file download progress.
 pub type NgsDownloadProgressCallback = dyn Fn(HttpDownloadProgress) + Send + Sync + 'static;
@@ -206,7 +210,27 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         &self,
         plan: &NgsDownloadPlan,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
-        self.materialize_download_plan_with_sra_runner(plan, &DockerSraFastqRunner)
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads_sequential(
+            plan,
+            &DockerSraFastqRunner,
+            &[],
+        )
+    }
+
+    /// Materializes selected assets using the default SRA runner and thread cap.
+    pub fn materialize_download_plan_with_threads(
+        &self,
+        plan: &NgsDownloadPlan,
+        download_threads: usize,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        self.materialize_download_plan_with_sra_runner_and_threads(
+            plan,
+            &DockerSraFastqRunner,
+            download_threads,
+        )
     }
 
     /// Materializes selected assets, checking existing download roots first.
@@ -215,10 +239,28 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         plan: &NgsDownloadPlan,
         existing_download_roots: &[PathBuf],
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
-        self.materialize_download_plan_with_sra_runner_and_existing_downloads(
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads_sequential(
             plan,
             &DockerSraFastqRunner,
             existing_download_roots,
+        )
+    }
+
+    /// Materializes selected assets with existing download roots and thread cap.
+    pub fn materialize_download_plan_with_existing_downloads_and_threads(
+        &self,
+        plan: &NgsDownloadPlan,
+        existing_download_roots: &[PathBuf],
+        download_threads: usize,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        self.materialize_download_plan_with_sra_runner_existing_downloads_and_threads(
+            plan,
+            &DockerSraFastqRunner,
+            existing_download_roots,
+            download_threads,
         )
     }
 
@@ -228,11 +270,48 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         plan: &NgsDownloadPlan,
         runner: &R,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
-        self.materialize_download_plan_with_sra_runner_and_existing_downloads(plan, runner, &[])
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads_sequential(
+            plan,
+            runner,
+            &[],
+        )
+    }
+
+    /// Materializes selected assets with an explicit SRA FASTQ conversion runner and thread cap.
+    pub fn materialize_download_plan_with_sra_runner_and_threads<R: SraFastqRunner>(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+        download_threads: usize,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        self.materialize_download_plan_with_sra_runner_existing_downloads_and_threads(
+            plan,
+            runner,
+            &[],
+            download_threads,
+        )
     }
 
     /// Materializes selected assets with an explicit runner and existing download roots.
     pub fn materialize_download_plan_with_sra_runner_and_existing_downloads<R: SraFastqRunner>(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+        existing_download_roots: &[PathBuf],
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        self.materialize_download_plan_with_sra_runner_and_existing_downloads_sequential(
+            plan,
+            runner,
+            existing_download_roots,
+        )
+    }
+
+    fn materialize_download_plan_with_sra_runner_and_existing_downloads_sequential<
+        R: SraFastqRunner,
+    >(
         &self,
         plan: &NgsDownloadPlan,
         runner: &R,
@@ -252,6 +331,49 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                     )
                 })
                 .collect(),
+            "sra" => plan
+                .selected_assets
+                .iter()
+                .map(|asset| {
+                    materialize_sra_ngs_asset(
+                        &self.client,
+                        plan,
+                        asset,
+                        runner,
+                        existing_download_roots,
+                        self.progress_callback,
+                    )
+                })
+                .collect(),
+            _ => Err(not_implemented(
+                "NGS materialization is not implemented for the requested provider",
+                "service.ngs_retrieval.materialization_provider_not_implemented",
+            )),
+        }
+    }
+
+    /// Materializes selected assets with an explicit runner, existing download roots, and thread cap.
+    pub fn materialize_download_plan_with_sra_runner_existing_downloads_and_threads<
+        R: SraFastqRunner,
+    >(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+        existing_download_roots: &[PathBuf],
+        download_threads: usize,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        let download_threads = validate_ngs_download_thread_count(download_threads)?;
+        match plan.manifest.provider.as_str() {
+            "ena" => materialize_ena_assets_with_threads(
+                &self.client,
+                plan,
+                existing_download_roots,
+                self.progress_callback,
+                download_threads,
+            ),
             "sra" => plan
                 .selected_assets
                 .iter()
@@ -417,6 +539,135 @@ fn should_select_ngs_asset(role: NgsAssetRole, include_raw: bool) -> bool {
             ))
 }
 
+fn validate_ngs_download_thread_count(download_threads: usize) -> Result<usize, PlatformError> {
+    if (1..=MAX_NGS_DOWNLOAD_THREADS).contains(&download_threads) {
+        Ok(download_threads)
+    } else {
+        Err(PlatformError::new(
+            ErrorCategory::Validation,
+            format!("ngsget --threads must be between 1 and {MAX_NGS_DOWNLOAD_THREADS}"),
+        )
+        .with_code("service.ngs_retrieval.invalid_thread_count")
+        .with_detail(download_threads.to_string()))
+    }
+}
+
+fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
+    client: &C,
+    plan: &NgsDownloadPlan,
+    existing_download_roots: &[PathBuf],
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    download_threads: usize,
+) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+    if download_threads == 1 || plan.selected_assets.len() <= 1 {
+        return plan
+            .selected_assets
+            .iter()
+            .map(|asset| {
+                materialize_direct_ngs_asset(
+                    client,
+                    plan,
+                    asset,
+                    existing_download_roots,
+                    progress_callback,
+                )
+            })
+            .collect();
+    }
+
+    let worker_count = download_threads.min(plan.selected_assets.len());
+    let next_index = AtomicUsize::new(0);
+    let records = (0..plan.selected_assets.len())
+        .map(|_| Mutex::new(None))
+        .collect::<Vec<Mutex<Option<NgsDownloadRecord>>>>();
+    let first_error = Mutex::new(None);
+
+    thread::scope(|scope| {
+        let mut handles = Vec::with_capacity(worker_count);
+        for _ in 0..worker_count {
+            handles.push(scope.spawn(|| {
+                loop {
+                    if first_error
+                        .lock()
+                        .expect("NGS download error state should be lockable")
+                        .is_some()
+                    {
+                        break;
+                    }
+                    let index = next_index.fetch_add(1, Ordering::SeqCst);
+                    let Some(asset) = plan.selected_assets.get(index) else {
+                        break;
+                    };
+                    match materialize_direct_ngs_asset(
+                        client,
+                        plan,
+                        asset,
+                        existing_download_roots,
+                        progress_callback,
+                    ) {
+                        Ok(record) => {
+                            *records[index]
+                                .lock()
+                                .expect("NGS download record slot should be lockable") =
+                                Some(record);
+                        }
+                        Err(error) => {
+                            let mut first_error = first_error
+                                .lock()
+                                .expect("NGS download error state should be lockable");
+                            if first_error.is_none() {
+                                *first_error = Some(error);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }));
+        }
+        for handle in handles {
+            if handle.join().is_err() {
+                let mut first_error = first_error
+                    .lock()
+                    .expect("NGS download error state should be lockable");
+                if first_error.is_none() {
+                    *first_error = Some(
+                        PlatformError::new(
+                            ErrorCategory::Invocation,
+                            "NGS download worker thread panicked",
+                        )
+                        .with_code("service.ngs_retrieval.worker_panicked"),
+                    );
+                }
+            }
+        }
+    });
+
+    if let Some(error) = first_error
+        .into_inner()
+        .expect("NGS download error state should be recoverable")
+    {
+        return Err(error);
+    }
+
+    records
+        .into_iter()
+        .enumerate()
+        .map(|(index, record)| {
+            record
+                .into_inner()
+                .expect("NGS download record slot should be recoverable")
+                .ok_or_else(|| {
+                    PlatformError::new(
+                        ErrorCategory::Invocation,
+                        "NGS download worker did not produce a record",
+                    )
+                    .with_code("service.ngs_retrieval.worker_missing_record")
+                    .with_detail(index.to_string())
+                })
+        })
+        .collect()
+}
+
 fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     client: &C,
     plan: &NgsDownloadPlan,
@@ -447,8 +698,30 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     };
 
     let partial_path = partial_ngs_asset_path(&local_path);
+    if let Some((observed_size, observed_checksum)) =
+        verified_existing_asset_evidence(&partial_path, asset)?
+    {
+        if local_path.exists() {
+            fs::remove_file(&local_path)
+                .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
+        }
+        fs::rename(&partial_path, &local_path)
+            .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_observed_evidence(Some(observed_size), Some(observed_checksum))
+            .with_verification_status(NgsVerificationStatus::Verified)
+            .with_materialization_method("direct_download_resume"));
+    }
+
+    let resume_offset = resumable_partial_size(&partial_path, asset)?;
+    let request = HttpRequest::new(download_url).with_accept("application/octet-stream, */*");
+    let request = if let Some(resume_offset) = resume_offset {
+        request.with_range_start(resume_offset)
+    } else {
+        request
+    };
     let response = client.download_to_path(
-        &HttpRequest::new(download_url).with_accept("application/octet-stream, */*"),
+        &request,
         &partial_path,
         progress_callback.map(|callback| callback as &dyn Fn(HttpDownloadProgress)),
     )?;
@@ -464,7 +737,11 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
     let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
         .with_observed_evidence(observed_size, observed_checksum.clone())
-        .with_materialization_method("direct_download");
+        .with_materialization_method(if response.resumed_from.is_some() {
+            "direct_download_resume"
+        } else {
+            "direct_download"
+        });
 
     if let Some(reason) = verification_failure {
         return Ok(record
@@ -1186,6 +1463,30 @@ fn verified_existing_asset_evidence(
     } else {
         Ok(None)
     }
+}
+
+fn resumable_partial_size(
+    partial_path: &Path,
+    asset: &NgsAsset,
+) -> Result<Option<u64>, PlatformError> {
+    if !partial_path.exists() {
+        return Ok(None);
+    }
+    let size = fs::metadata(partial_path)
+        .map_err(|error| ngs_io_error("inspect partial NGS download", error))?
+        .len();
+    if size == 0 {
+        return Ok(None);
+    }
+    if let Some(expected_size) = asset.size_bytes {
+        if size >= expected_size {
+            fs::remove_file(partial_path).map_err(|error| {
+                ngs_io_error("discard invalid complete partial NGS download", error)
+            })?;
+            return Ok(None);
+        }
+    }
+    Ok(Some(size))
 }
 
 fn ngs_file_evidence(path: &Path) -> Result<(u64, String), PlatformError> {
@@ -2242,7 +2543,7 @@ mod tests {
     }
 
     #[test]
-    fn overwrites_stale_partial_file_on_retry_before_promotion() {
+    fn resumes_partial_file_on_retry_before_promotion() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
         let body = b"ACGT\n".to_vec();
@@ -2275,17 +2576,17 @@ mod tests {
                 .expect("partial path should have parent"),
         )
         .expect("partial directory should be created");
-        fs::write(&partial_path, b"stale partial").expect("stale partial should be written");
+        fs::write(&partial_path, b"AC").expect("partial should be written");
         let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
         let client = MockHttpClient::default().with_byte_response(
             "https://example.invalid/ERRRETRY.fastq.gz",
-            HttpBytesResponse::new(200, body.clone()),
+            HttpBytesResponse::new(200, b"GT\n".to_vec()),
         );
         let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
 
         let records = gateway
             .materialize_download_plan(&plan)
-            .expect("retry should overwrite stale partial and promote verified file");
+            .expect("retry should resume partial and promote verified file");
 
         assert_eq!(records.len(), 1);
         assert_eq!(
@@ -2295,6 +2596,10 @@ mod tests {
         assert_eq!(
             fs::read(&records[0].local_path).expect("promoted file should be readable"),
             body
+        );
+        assert_eq!(
+            records[0].materialization_method.as_deref(),
+            Some("direct_download_resume")
         );
         assert!(!partial_path.exists());
         fs::remove_dir_all(output_root).ok();

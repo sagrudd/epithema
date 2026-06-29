@@ -1,6 +1,6 @@
 //! Minimal HTTP client seam for provider-backed retrieval.
 
-use std::fs;
+use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
@@ -16,6 +16,8 @@ pub struct HttpRequest {
     pub accept: Option<String>,
     /// User agent string.
     pub user_agent: String,
+    /// Optional byte offset used to resume a direct download.
+    pub range_start: Option<u64>,
 }
 
 impl HttpRequest {
@@ -26,6 +28,7 @@ impl HttpRequest {
             url: url.into(),
             accept: None,
             user_agent: format!("epithema/{}", env!("CARGO_PKG_VERSION")),
+            range_start: None,
         }
     }
 
@@ -40,6 +43,13 @@ impl HttpRequest {
     #[must_use]
     pub fn with_user_agent(mut self, user_agent: impl Into<String>) -> Self {
         self.user_agent = user_agent.into();
+        self
+    }
+
+    /// Requests bytes from the supplied offset onward.
+    #[must_use]
+    pub fn with_range_start(mut self, range_start: u64) -> Self {
+        self.range_start = Some(range_start);
         self
     }
 }
@@ -94,6 +104,8 @@ pub struct HttpDownloadResponse {
     pub bytes_written: u64,
     /// Server-reported content length when available.
     pub content_length: Option<u64>,
+    /// Byte offset that was reused from an existing local partial file.
+    pub resumed_from: Option<u64>,
     /// Optional content type.
     pub content_type: Option<String>,
 }
@@ -179,6 +191,7 @@ pub trait ProviderHttpClient {
                 status: response.status,
                 bytes_written: 0,
                 content_length: None,
+                resumed_from: None,
                 content_type: response.content_type,
             });
         }
@@ -197,11 +210,34 @@ pub trait ProviderHttpClient {
                 state: HttpDownloadProgressState::Started,
                 url: request.url.clone(),
                 path: path.to_path_buf(),
-                bytes_downloaded: 0,
-                total_bytes: Some(bytes_written),
+                bytes_downloaded: request.range_start.unwrap_or(0),
+                total_bytes: Some(request.range_start.unwrap_or(0) + bytes_written),
             });
         }
-        fs::write(path, &response.body).map_err(|error| {
+        let mut file = if request.range_start.unwrap_or(0) > 0 {
+            OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(path)
+                .map_err(|error| {
+                    PlatformError::new(
+                        ErrorCategory::Invocation,
+                        "failed to open provider download file for append",
+                    )
+                    .with_code("providers.http.download_append_failed")
+                    .with_detail(error.to_string())
+                })?
+        } else {
+            fs::File::create(path).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to create provider download file",
+                )
+                .with_code("providers.http.download_create_failed")
+                .with_detail(error.to_string())
+            })?
+        };
+        file.write_all(&response.body).map_err(|error| {
             PlatformError::new(
                 ErrorCategory::Invocation,
                 "failed to write provider download body",
@@ -214,14 +250,15 @@ pub trait ProviderHttpClient {
                 state: HttpDownloadProgressState::Finished,
                 url: request.url.clone(),
                 path: path.to_path_buf(),
-                bytes_downloaded: bytes_written,
-                total_bytes: Some(bytes_written),
+                bytes_downloaded: request.range_start.unwrap_or(0) + bytes_written,
+                total_bytes: Some(request.range_start.unwrap_or(0) + bytes_written),
             });
         }
         Ok(HttpDownloadResponse {
             status: response.status,
-            bytes_written,
-            content_length: Some(bytes_written),
+            bytes_written: request.range_start.unwrap_or(0) + bytes_written,
+            content_length: Some(request.range_start.unwrap_or(0) + bytes_written),
+            resumed_from: request.range_start.filter(|offset| *offset > 0),
             content_type: response.content_type,
         })
     }
@@ -292,6 +329,9 @@ impl ProviderHttpClient for ReqwestHttpClient {
         if let Some(accept) = &request.accept {
             builder = builder.header("Accept", accept);
         }
+        if let Some(range_start) = request.range_start {
+            builder = builder.header(reqwest::header::RANGE, format!("bytes={range_start}-"));
+        }
 
         let response = builder.send().map_err(|error| {
             PlatformError::new(
@@ -331,6 +371,9 @@ impl ProviderHttpClient for ReqwestHttpClient {
             .header("User-Agent", &request.user_agent);
         if let Some(accept) = &request.accept {
             builder = builder.header("Accept", accept);
+        }
+        if let Some(range_start) = request.range_start {
+            builder = builder.header(reqwest::header::RANGE, format!("bytes={range_start}-"));
         }
 
         let response = builder.send().map_err(|error| {
@@ -399,6 +442,7 @@ impl ProviderHttpClient for ReqwestHttpClient {
                 status,
                 bytes_written: 0,
                 content_length,
+                resumed_from: None,
                 content_type,
             });
         }
@@ -413,26 +457,47 @@ impl ProviderHttpClient for ReqwestHttpClient {
                 .with_detail(error.to_string())
             })?;
         }
-        let mut file = fs::File::create(path).map_err(|error| {
-            PlatformError::new(
-                ErrorCategory::Invocation,
-                "failed to create provider download file",
-            )
-            .with_code("providers.http.download_create_failed")
-            .with_detail(error.to_string())
-        })?;
+        let requested_range_start = request.range_start.unwrap_or(0);
+        let range_was_accepted = requested_range_start > 0 && status == 206;
+        let resumed_from = range_was_accepted.then_some(requested_range_start);
+        let starting_size = resumed_from.unwrap_or(0);
+        let expected_total = content_length.map(|length| length + starting_size);
+
+        let mut file = if range_was_accepted {
+            OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(path)
+                .map_err(|error| {
+                    PlatformError::new(
+                        ErrorCategory::Invocation,
+                        "failed to open provider download file for append",
+                    )
+                    .with_code("providers.http.download_append_failed")
+                    .with_detail(error.to_string())
+                })?
+        } else {
+            fs::File::create(path).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to create provider download file",
+                )
+                .with_code("providers.http.download_create_failed")
+                .with_detail(error.to_string())
+            })?
+        };
 
         if let Some(progress) = progress {
             progress(HttpDownloadProgress {
                 state: HttpDownloadProgressState::Started,
                 url: request.url.clone(),
                 path: path.to_path_buf(),
-                bytes_downloaded: 0,
-                total_bytes: content_length,
+                bytes_downloaded: starting_size,
+                total_bytes: expected_total,
             });
         }
 
-        let mut bytes_written = 0u64;
+        let mut bytes_written = starting_size;
         let mut buffer = vec![0u8; 1024 * 1024];
         loop {
             let bytes_read = response.read(&mut buffer).map_err(|error| {
@@ -476,7 +541,7 @@ impl ProviderHttpClient for ReqwestHttpClient {
                     url: request.url.clone(),
                     path: path.to_path_buf(),
                     bytes_downloaded: bytes_written,
-                    total_bytes: content_length,
+                    total_bytes: expected_total,
                 });
             }
         }
@@ -495,14 +560,15 @@ impl ProviderHttpClient for ReqwestHttpClient {
                 url: request.url.clone(),
                 path: path.to_path_buf(),
                 bytes_downloaded: bytes_written,
-                total_bytes: content_length,
+                total_bytes: expected_total,
             });
         }
 
         Ok(HttpDownloadResponse {
             status,
             bytes_written,
-            content_length,
+            content_length: expected_total,
+            resumed_from,
             content_type,
         })
     }

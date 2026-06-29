@@ -20,6 +20,8 @@ pub struct NgsgetParams {
     pub include_raw: bool,
     /// Existing download roots searched before network retrieval.
     pub existing_download_roots: Vec<PathBuf>,
+    /// Maximum number of concurrent direct-download workers.
+    pub download_threads: usize,
     /// Number of normalized runs in the manifest.
     pub run_count: usize,
     /// Number of selected assets.
@@ -45,12 +47,14 @@ pub struct NgsgetOutcome {
     pub selected_asset_count: usize,
     /// Number of failed materialization records.
     pub failed_record_count: usize,
+    /// Maximum number of concurrent direct-download workers.
+    pub download_threads: usize,
 }
 
 /// Returns the bounded `ngsget` help text.
 #[must_use]
 pub fn ngsget_help() -> &'static str {
-    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--check-downloads <path>]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --check-downloads to recursively search an existing download tree for same-name files before network retrieval. The service copies verified matches into the output tree, leaves originals intact, and reports same-name checksum mismatches as failed materialization records."
+    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--check-downloads <path>]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --threads to allow 1 to 20 concurrent direct downloads; the default is 1. Use --check-downloads to recursively search an existing download tree for same-name files before network retrieval. The service copies verified matches into the output tree, leaves originals intact, resumes partial downloads when possible, and reports same-name checksum mismatches as failed materialization records."
 }
 
 /// Executes `ngsget`.
@@ -63,5 +67,6 @@ pub fn run_ngsget(params: NgsgetParams) -> Result<NgsgetOutcome, ToolExecutionEr
         run_count: params.run_count,
         selected_asset_count: params.selected_asset_count,
         failed_record_count: params.failed_record_count,
+        download_threads: params.download_threads,
     })
 }

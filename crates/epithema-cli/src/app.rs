@@ -111,7 +111,7 @@ fn build_service() -> EpithemaService {
 }
 
 fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
-    let state = Arc::new(Mutex::new(HashMap::<String, Instant>::new()));
+    let state = Arc::new(Mutex::new(HashMap::<String, ProgressRenderState>::new()));
     Arc::new(move |progress: HttpDownloadProgress| {
         let key = progress.path.display().to_string();
         let now = Instant::now();
@@ -119,29 +119,60 @@ fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
             Ok(state) => state,
             Err(_) => return,
         };
-        let should_render = match progress.state {
-            HttpDownloadProgressState::Started | HttpDownloadProgressState::Finished => true,
-            HttpDownloadProgressState::Advanced => state
-                .get(&key)
-                .is_none_or(|last| now.duration_since(*last) >= Duration::from_millis(500)),
+        let previous = state.get(&key).copied();
+        let speed_bytes_per_second = previous.and_then(|previous| {
+            let elapsed = now.duration_since(previous.last_rendered);
+            if elapsed.is_zero() {
+                None
+            } else {
+                Some(
+                    progress
+                        .bytes_downloaded
+                        .saturating_sub(previous.bytes_downloaded) as f64
+                        / elapsed.as_secs_f64(),
+                )
+            }
+        });
+        let should_render = match (progress.state, previous) {
+            (HttpDownloadProgressState::Started | HttpDownloadProgressState::Finished, _) => true,
+            (HttpDownloadProgressState::Advanced, None) => true,
+            (HttpDownloadProgressState::Advanced, Some(previous)) => {
+                now.duration_since(previous.last_rendered) >= Duration::from_secs(2)
+            }
         };
         if !should_render {
             return;
         }
-        state.insert(key, now);
+        state.insert(
+            key,
+            ProgressRenderState {
+                last_rendered: now,
+                bytes_downloaded: progress.bytes_downloaded,
+            },
+        );
         let label = progress
             .path
             .file_name()
             .and_then(|name| name.to_str())
             .unwrap_or("download");
-        eprint!("\r{}", render_ngs_download_progress(label, &progress));
-        if progress.state == HttpDownloadProgressState::Finished {
-            eprintln!();
-        }
+        eprintln!(
+            "{}",
+            render_ngs_download_progress(label, &progress, speed_bytes_per_second)
+        );
     })
 }
 
-fn render_ngs_download_progress(label: &str, progress: &HttpDownloadProgress) -> String {
+#[derive(Clone, Copy, Debug)]
+struct ProgressRenderState {
+    last_rendered: Instant,
+    bytes_downloaded: u64,
+}
+
+fn render_ngs_download_progress(
+    label: &str,
+    progress: &HttpDownloadProgress,
+    speed_bytes_per_second: Option<f64>,
+) -> String {
     const BAR_WIDTH: usize = 24;
     let short_label = if label.chars().count() > 36 {
         let suffix: String = label
@@ -163,19 +194,27 @@ fn render_ngs_download_progress(label: &str, progress: &HttpDownloadProgress) ->
         let empty = BAR_WIDTH.saturating_sub(filled);
         let percent = ratio * 100.0;
         format!(
-            "ngsget {short_label:<36} [{}{}] {:>6.2}% {}/{}",
+            "ngsget {short_label:<36} [{}{}] {:>6.2}% {}/{} at {}",
             "=".repeat(filled),
             " ".repeat(empty),
             percent,
             format_bytes(progress.bytes_downloaded),
             format_bytes(total),
+            format_speed(speed_bytes_per_second),
         )
     } else {
         format!(
-            "ngsget {short_label:<36} {} downloaded",
+            "ngsget {short_label:<36} {} downloaded at {}",
             format_bytes(progress.bytes_downloaded),
+            format_speed(speed_bytes_per_second),
         )
     }
+}
+
+fn format_speed(bytes_per_second: Option<f64>) -> String {
+    bytes_per_second
+        .map(|speed| format!("{}/s", format_bytes(speed.max(0.0) as u64)))
+        .unwrap_or_else(|| "calculating".to_owned())
 }
 
 fn format_bytes(bytes: u64) -> String {
@@ -378,6 +417,8 @@ mod tests {
             "--out",
             "ngs-output",
             "--raw",
+            "--threads",
+            "3",
             "--check-downloads",
             "existing-downloads",
         ])
