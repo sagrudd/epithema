@@ -2,6 +2,7 @@
 
 use std::collections::HashMap;
 use std::ffi::OsString;
+use std::io::{self, IsTerminal, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::{Arc, Mutex};
@@ -111,15 +112,43 @@ fn build_service() -> EpithemaService {
 }
 
 fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
-    let state = Arc::new(Mutex::new(HashMap::<String, ProgressRenderState>::new()));
+    let state = Arc::new(Mutex::new(ProgressDashboardState::new(
+        io::stderr().is_terminal(),
+    )));
     Arc::new(move |progress: HttpDownloadProgress| {
-        let key = progress.path.display().to_string();
-        let now = Instant::now();
-        let mut state = match state.lock() {
-            Ok(state) => state,
+        let output = match state.lock() {
+            Ok(mut state) => state.record(progress, Instant::now()),
             Err(_) => return,
         };
-        let previous = state.get(&key).copied();
+        if let Some(output) = output {
+            let mut stderr = io::stderr().lock();
+            let _ = stderr.write_all(output.as_bytes());
+            let _ = stderr.flush();
+        }
+    })
+}
+
+#[derive(Debug)]
+struct ProgressDashboardState {
+    entries: HashMap<String, ProgressRenderState>,
+    order: Vec<String>,
+    rendered_lines: usize,
+    dashboard_enabled: bool,
+}
+
+impl ProgressDashboardState {
+    fn new(dashboard_enabled: bool) -> Self {
+        Self {
+            entries: HashMap::new(),
+            order: Vec::new(),
+            rendered_lines: 0,
+            dashboard_enabled,
+        }
+    }
+
+    fn record(&mut self, progress: HttpDownloadProgress, now: Instant) -> Option<String> {
+        let key = progress.path.display().to_string();
+        let previous = self.entries.get(&key);
         let speed_bytes_per_second = previous.and_then(|previous| {
             let elapsed = now.duration_since(previous.last_rendered);
             if elapsed.is_zero() {
@@ -141,31 +170,102 @@ fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
             }
         };
         if !should_render {
-            return;
+            return None;
         }
-        state.insert(
-            key,
-            ProgressRenderState {
-                last_rendered: now,
-                bytes_downloaded: progress.bytes_downloaded,
-            },
-        );
+
+        if !self.entries.contains_key(&key) {
+            self.order.push(key.clone());
+        }
         let label = progress
             .path
             .file_name()
             .and_then(|name| name.to_str())
-            .unwrap_or("download");
-        eprintln!(
-            "{}",
-            render_ngs_download_progress(label, &progress, speed_bytes_per_second)
+            .unwrap_or("download")
+            .to_owned();
+        let entry_key = key.clone();
+        let finished_key =
+            (progress.state == HttpDownloadProgressState::Finished).then(|| entry_key.clone());
+        self.entries.insert(
+            key,
+            ProgressRenderState {
+                last_rendered: now,
+                bytes_downloaded: progress.bytes_downloaded,
+                latest_progress: progress,
+                speed_bytes_per_second,
+                label,
+            },
         );
-    })
+
+        if self.dashboard_enabled {
+            let lines = self.rendered_lines();
+            let output = render_progress_dashboard(&lines, self.rendered_lines);
+            self.rendered_lines = lines.len();
+            self.retire_finished(finished_key);
+            Some(output)
+        } else {
+            let output = self.entries.get(&entry_key).map(|entry| {
+                format!(
+                    "{}\n",
+                    render_ngs_download_progress(
+                        &entry.label,
+                        &entry.latest_progress,
+                        entry.speed_bytes_per_second,
+                    )
+                )
+            });
+            self.retire_finished(finished_key);
+            output
+        }
+    }
+
+    fn rendered_lines(&self) -> Vec<String> {
+        self.order
+            .iter()
+            .filter_map(|key| self.entries.get(key))
+            .map(|entry| {
+                render_ngs_download_progress(
+                    &entry.label,
+                    &entry.latest_progress,
+                    entry.speed_bytes_per_second,
+                )
+            })
+            .collect()
+    }
+
+    fn retire_finished(&mut self, finished_key: Option<String>) {
+        if let Some(finished_key) = finished_key {
+            self.entries.remove(&finished_key);
+            self.order.retain(|key| key != &finished_key);
+        }
+    }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 struct ProgressRenderState {
     last_rendered: Instant,
     bytes_downloaded: u64,
+    latest_progress: HttpDownloadProgress,
+    speed_bytes_per_second: Option<f64>,
+    label: String,
+}
+
+fn render_progress_dashboard(lines: &[String], previous_line_count: usize) -> String {
+    if lines.is_empty() {
+        return String::new();
+    }
+
+    let mut output = String::new();
+    if previous_line_count > 0 {
+        output.push_str(&format!("\x1b[{previous_line_count}F"));
+    }
+    for index in 0..previous_line_count.max(lines.len()) {
+        output.push_str("\x1b[2K");
+        if let Some(line) = lines.get(index) {
+            output.push_str(line);
+        }
+        output.push('\n');
+    }
+    output
 }
 
 fn render_ngs_download_progress(
@@ -173,7 +273,7 @@ fn render_ngs_download_progress(
     progress: &HttpDownloadProgress,
     speed_bytes_per_second: Option<f64>,
 ) -> String {
-    const BAR_WIDTH: usize = 24;
+    const BAR_WIDTH: usize = 16;
     let short_label = if label.chars().count() > 36 {
         let suffix: String = label
             .chars()
@@ -275,11 +375,13 @@ enum Command {
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;
+    use std::time::{Duration, Instant};
 
     use clap::Parser;
 
     use super::{
-        Cli, HttpDownloadProgress, HttpDownloadProgressState, render_ngs_download_progress,
+        Cli, HttpDownloadProgress, HttpDownloadProgressState, ProgressDashboardState,
+        render_ngs_download_progress, render_progress_dashboard,
     };
 
     #[test]
@@ -300,6 +402,60 @@ mod tests {
 
         assert!(rendered.contains("4.07 GiB / 66.88 GiB  speed 12.50 MiB/s"));
         assert!(!rendered.contains("GiBGiB"));
+    }
+
+    #[test]
+    fn renders_ngs_download_dashboard_by_repainting_existing_rows() {
+        let lines = vec![
+            "ngsget file_a.partial [==                      ]".to_owned(),
+            "ngsget file_b.partial [=                       ]".to_owned(),
+        ];
+
+        let rendered = render_progress_dashboard(&lines, 2);
+
+        assert!(rendered.starts_with("\x1b[2F"));
+        assert_eq!(rendered.matches("\x1b[2K").count(), 2);
+        assert_eq!(rendered.matches("ngsget file_a.partial").count(), 1);
+        assert_eq!(rendered.matches("ngsget file_b.partial").count(), 1);
+    }
+
+    #[test]
+    fn retires_finished_download_rows_after_rendering_completion_once() {
+        let mut dashboard = ProgressDashboardState::new(true);
+        let started_at = Instant::now();
+        let file_a = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Started,
+            url: "https://example.invalid/a.fastq.gz".to_owned(),
+            path: PathBuf::from("a.fastq.gz.partial"),
+            bytes_downloaded: 0,
+            total_bytes: Some(100),
+        };
+        let file_b = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Started,
+            url: "https://example.invalid/b.fastq.gz".to_owned(),
+            path: PathBuf::from("b.fastq.gz.partial"),
+            bytes_downloaded: 0,
+            total_bytes: Some(100),
+        };
+
+        dashboard.record(file_a.clone(), started_at);
+        dashboard.record(file_b.clone(), started_at + Duration::from_millis(1));
+        let mut finished_a = file_a;
+        finished_a.state = HttpDownloadProgressState::Finished;
+        finished_a.bytes_downloaded = 100;
+        let finished_render = dashboard
+            .record(finished_a, started_at + Duration::from_secs(1))
+            .expect("finished download should render once");
+        assert!(finished_render.contains("a.fastq.gz.partial"));
+
+        let mut advanced_b = file_b;
+        advanced_b.state = HttpDownloadProgressState::Advanced;
+        advanced_b.bytes_downloaded = 50;
+        let next_render = dashboard
+            .record(advanced_b, started_at + Duration::from_secs(3))
+            .expect("remaining active download should render");
+        assert!(!next_render.contains("a.fastq.gz.partial"));
+        assert!(next_render.contains("b.fastq.gz.partial"));
     }
 
     #[test]
