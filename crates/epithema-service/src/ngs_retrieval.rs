@@ -29,11 +29,11 @@ const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
 const MAX_NGS_DOWNLOAD_THREADS: usize = 20;
 const DEFAULT_ASPERA_TARGET_RATE: &str = "300m";
 const ASPERA_KEY_FILENAMES: &[&str] = &[
-    "asperaweb_id_dsa.openssh",
-    "aspera_tokenauth_id_dsa",
-    "aspera_tokenauth_id_rsa",
-    "aspera_bypass_dsa.pem",
     "aspera_bypass_rsa.pem",
+    "aspera_bypass_dsa.pem",
+    "aspera_tokenauth_id_rsa",
+    "aspera_tokenauth_id_dsa",
+    "asperaweb_id_dsa.openssh",
 ];
 
 /// Callback used to report streamed NGS file download progress.

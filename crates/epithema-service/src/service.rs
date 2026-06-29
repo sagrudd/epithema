@@ -12064,11 +12064,11 @@ struct NgsgetCliParams {
 }
 
 const ASPERA_KEY_FILENAMES: &[&str] = &[
-    "asperaweb_id_dsa.openssh",
-    "aspera_tokenauth_id_dsa",
-    "aspera_tokenauth_id_rsa",
-    "aspera_bypass_dsa.pem",
     "aspera_bypass_rsa.pem",
+    "aspera_bypass_dsa.pem",
+    "aspera_tokenauth_id_rsa",
+    "aspera_tokenauth_id_dsa",
+    "asperaweb_id_dsa.openssh",
 ];
 
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
@@ -12436,17 +12436,17 @@ fn ensure_managed_aspera_key(ascp_path: &Path) -> Result<Option<PathBuf>, Servic
         return copy_aspera_key_to_managed_cache(source).map(Some);
     }
 
-    if let Some(managed_key) = managed_aspera_key_path().filter(|path| path.exists()) {
-        return Ok(Some(managed_key));
-    }
-
     let mut source = discover_installed_aspera_key(ascp_path);
     if source.is_none() {
         materialize_ascli_sdk_aspera_keys();
         source = discover_installed_aspera_key(ascp_path);
     }
 
-    source.map(copy_aspera_key_to_managed_cache).transpose()
+    if let Some(source) = source {
+        return copy_aspera_key_to_managed_cache(source).map(Some);
+    }
+
+    Ok(first_existing_managed_aspera_key())
 }
 
 fn discover_installed_aspera_key(ascp_path: &Path) -> Option<PathBuf> {
@@ -12611,7 +12611,7 @@ fn is_uuid_like(value: &str) -> bool {
 }
 
 fn copy_aspera_key_to_managed_cache(source: PathBuf) -> Result<PathBuf, ServiceError> {
-    let Some(target) = managed_aspera_key_path() else {
+    let Some(target) = managed_aspera_key_path_for_source(&source) else {
         return Ok(source);
     };
     copy_aspera_key_to_managed_path(source, target)
@@ -12624,9 +12624,6 @@ fn copy_aspera_key_to_managed_path(
     if source == target {
         return Ok(target);
     }
-    if target.exists() {
-        return Ok(target);
-    }
     if let Some(parent) = target.parent() {
         fs::create_dir_all(parent).map_err(|error| {
             PlatformError::new(
@@ -12634,6 +12631,16 @@ fn copy_aspera_key_to_managed_path(
                 "failed to create epithema Aspera key cache directory",
             )
             .with_code("service.ngsget.aspera_key_cache_create_failed")
+            .with_detail(error.to_string())
+        })?;
+    }
+    if target.exists() {
+        fs::remove_file(&target).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to replace epithema-managed Aspera key cache file",
+            )
+            .with_code("service.ngsget.aspera_key_cache_replace_failed")
             .with_detail(error.to_string())
         })?;
     }
@@ -12653,7 +12660,17 @@ fn copy_aspera_key_to_managed_path(
     Ok(target)
 }
 
-fn managed_aspera_key_path() -> Option<PathBuf> {
+fn managed_aspera_key_path_for_source(source: &Path) -> Option<PathBuf> {
+    let filename = source.file_name()?.to_owned();
+    managed_aspera_key_cache_root().map(|root| root.join(filename))
+}
+
+fn first_existing_managed_aspera_key() -> Option<PathBuf> {
+    let root = managed_aspera_key_cache_root()?;
+    first_existing_path(ASPERA_KEY_FILENAMES.iter().map(|name| root.join(name)))
+}
+
+fn managed_aspera_key_cache_root() -> Option<PathBuf> {
     env::var_os("XDG_CACHE_HOME")
         .map(PathBuf::from)
         .or_else(|| {
@@ -12665,10 +12682,7 @@ fn managed_aspera_key_path() -> Option<PathBuf> {
 }
 
 fn managed_aspera_key_path_from_cache_root(cache_root: PathBuf) -> PathBuf {
-    cache_root
-        .join("epithema")
-        .join("aspera")
-        .join("asperaweb_id_dsa.openssh")
+    cache_root.join("epithema").join("aspera")
 }
 
 fn restrict_private_key_permissions(path: &Path) -> Result<(), ServiceError> {
@@ -16017,7 +16031,7 @@ mod tests {
         fs::create_dir_all(&bin_dir).expect("bin directory should be created");
         fs::create_dir_all(&etc_dir).expect("etc directory should be created");
         let ascp_path = bin_dir.join("ascp");
-        let key_path = etc_dir.join("aspera_bypass_dsa.pem");
+        let key_path = etc_dir.join("aspera_bypass_rsa.pem");
         fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
         fs::write(&key_path, b"trusted SDK bypass key").expect("key should be written");
 
@@ -16032,7 +16046,7 @@ mod tests {
         let sdk_dir = root.join(".aspera/sdk");
         fs::create_dir_all(&sdk_dir).expect("SDK directory should be created");
         let ascp_path = sdk_dir.join("ascp");
-        let key_path = sdk_dir.join("aspera_bypass_dsa.pem");
+        let key_path = sdk_dir.join("aspera_bypass_rsa.pem");
         fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
         fs::write(&key_path, b"trusted SDK bypass key").expect("key should be written");
 
@@ -16151,11 +16165,12 @@ esac
     #[test]
     fn creates_epithema_managed_aspera_key_copy() {
         let root = temp_service_output_root("aspera-key-cache");
-        let source = root.join("source/asperaweb_id_dsa.openssh");
+        let source = root.join("source/aspera_bypass_rsa.pem");
         fs::create_dir_all(source.parent().expect("source key should have parent"))
             .expect("source directory should be created");
         fs::write(&source, b"trusted package key").expect("source key should be written");
-        let target = super::managed_aspera_key_path_from_cache_root(root.join("cache"));
+        let target = super::managed_aspera_key_path_from_cache_root(root.join("cache"))
+            .join("aspera_bypass_rsa.pem");
 
         let copied = super::copy_aspera_key_to_managed_path(source.clone(), target.clone())
             .expect("managed key copy should be created");
@@ -16179,6 +16194,31 @@ esac
                 & 0o777;
             assert_eq!(mode, 0o600);
         }
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn replaces_stale_epithema_managed_aspera_key_copy() {
+        let root = temp_service_output_root("aspera-key-cache-replace");
+        let source = root.join("source/aspera_bypass_rsa.pem");
+        fs::create_dir_all(source.parent().expect("source key should have parent"))
+            .expect("source directory should be created");
+        fs::write(&source, b"fresh rsa key").expect("source key should be written");
+        let target = super::managed_aspera_key_path_from_cache_root(root.join("cache"))
+            .join("aspera_bypass_rsa.pem");
+        fs::create_dir_all(target.parent().expect("target key should have parent"))
+            .expect("target directory should be created");
+        fs::write(&target, b"stale dsa-era key").expect("stale key should be written");
+
+        let copied = super::copy_aspera_key_to_managed_path(source.clone(), target.clone())
+            .expect("managed key copy should be replaced");
+
+        assert_eq!(copied, target);
+        assert_eq!(
+            fs::read(&copied).expect("managed key should be readable"),
+            b"fresh rsa key"
+        );
 
         fs::remove_dir_all(root).ok();
     }
