@@ -340,11 +340,13 @@ The provenance document should use schema label
    events with transfer-speed estimates for long downloads, renders a study
    header with accession, provider, available title, byte-based global progress
    when provider sizes are available, selected asset completion, and completed
-   run/sample counters, repaints active transfer rows about every two seconds,
-   measures Aspera progress from live filesystem artifacts in the target run
-   directory, verifies size and MD5 evidence from disk, and promotes only after
-   available byte-count and checksum evidence passes. It writes selected assets
-   to the documented `runs/<run>/fastq`,
+   run/sample counters, applies a startup baseline for existing verified files
+   and partial artifacts across the selected manifest without rendering dormant
+   files as active transfers, repaints active transfer rows about every two
+   seconds, measures Aspera progress from live filesystem artifacts in the
+   target run directory, verifies size and MD5 evidence from disk, and promotes
+   only after available byte-count and checksum evidence passes. It writes
+   selected assets to the documented `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification
    artifacts in place for inspection, resumes existing `.partial` files when
    the provider honors byte-range requests, skips already verified local files,
@@ -444,11 +446,12 @@ The provenance document should use schema label
     `--threads`, optional ENA Aspera transfer through `--transport aspera`,
     streamed large-file direct downloads with speed-aware CLI progress, a
     manifest-derived study header, byte-based global progress when sizes are
-    available, selected asset completion, completed run/sample counters, roughly
-    two-second active-transfer heartbeat repaints, live filesystem artifact
-    measurement for Aspera transfers, and resumable `.partial` files, SRA
-    conversion through the pinned default container, provenance JSON, and stable
-    handoff manifest behavior.
+    available, startup baseline accounting for existing verified files and
+    partial artifacts, selected asset completion, completed run/sample counters,
+    roughly two-second active-transfer heartbeat repaints, live filesystem
+    artifact measurement for Aspera transfers, and resumable `.partial` files,
+    SRA conversion through the pinned default container, provenance JSON, and
+    stable handoff manifest behavior.
     Release-facing scope and notes now explicitly keep protected-access,
     dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and

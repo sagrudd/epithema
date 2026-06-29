@@ -156,6 +156,15 @@ impl ProgressDashboardState {
         if let Some(context) = &progress.context {
             self.record_summary(context, &key, &progress.transfer);
         }
+        if progress.summary_only {
+            if self.dashboard_enabled {
+                let lines = self.rendered_lines();
+                let output = render_progress_dashboard(&lines, self.rendered_lines);
+                self.rendered_lines = lines.len();
+                return Some(output);
+            }
+            return None;
+        }
         let previous = self.entries.get(&key);
         let speed_bytes_per_second = previous.and_then(|previous| {
             let elapsed = now.duration_since(previous.last_rendered);
@@ -613,7 +622,22 @@ mod tests {
         transfer: HttpDownloadProgress,
         context: Option<NgsDownloadProgressContext>,
     ) -> NgsDownloadProgress {
-        NgsDownloadProgress { transfer, context }
+        NgsDownloadProgress {
+            transfer,
+            context,
+            summary_only: false,
+        }
+    }
+
+    fn ngs_summary_progress(
+        transfer: HttpDownloadProgress,
+        context: Option<NgsDownloadProgressContext>,
+    ) -> NgsDownloadProgress {
+        NgsDownloadProgress {
+            transfer,
+            context,
+            summary_only: true,
+        }
     }
 
     fn summary_context(
@@ -802,6 +826,31 @@ mod tests {
         assert!(completed_render.contains("assets 2/3"));
         assert!(completed_render.contains("runs 1/2"));
         assert!(completed_render.contains("samples 1/2"));
+    }
+
+    #[test]
+    fn renders_summary_only_baseline_without_transfer_rows() {
+        let mut dashboard = ProgressDashboardState::new(true);
+        let started_at = Instant::now();
+        let baseline = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Finished,
+            url: "https://example.invalid/a.fastq.gz".to_owned(),
+            path: PathBuf::from("a.fastq.gz"),
+            bytes_downloaded: 100,
+            total_bytes: Some(100),
+        };
+
+        let rendered = dashboard
+            .record(
+                ngs_summary_progress(baseline, Some(summary_context("ERR1", "ERS1", 1, 2))),
+                started_at,
+            )
+            .expect("summary-only baseline should render dashboard summary");
+
+        assert!(rendered.contains("assets 1/3"));
+        assert!(rendered.contains("33.33%"));
+        assert!(rendered.contains("bytes 100 B / 300 B"));
+        assert!(!rendered.contains("a.fastq.gz"));
     }
 
     #[test]

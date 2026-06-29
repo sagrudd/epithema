@@ -47,6 +47,8 @@ pub struct NgsDownloadProgress {
     pub transfer: HttpDownloadProgress,
     /// Optional manifest-derived context for dashboard summaries.
     pub context: Option<NgsDownloadProgressContext>,
+    /// Whether this event should update only aggregate summary state.
+    pub summary_only: bool,
 }
 
 /// Manifest-derived context attached to NGS download progress events.
@@ -460,20 +462,22 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         transport_config: &NgsDownloadTransportConfig,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
         match plan.manifest.provider.as_str() {
-            "ena" => plan
-                .selected_assets
-                .iter()
-                .map(|asset| {
-                    materialize_direct_ngs_asset(
-                        &self.client,
-                        plan,
-                        asset,
-                        existing_download_roots,
-                        self.progress_callback,
-                        transport_config,
-                    )
-                })
-                .collect(),
+            "ena" => {
+                emit_existing_ngs_download_baseline_progress(self.progress_callback, plan)?;
+                plan.selected_assets
+                    .iter()
+                    .map(|asset| {
+                        materialize_direct_ngs_asset(
+                            &self.client,
+                            plan,
+                            asset,
+                            existing_download_roots,
+                            self.progress_callback,
+                            transport_config,
+                        )
+                    })
+                    .collect()
+            }
             "sra" => plan
                 .selected_assets
                 .iter()
@@ -707,6 +711,8 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
     download_threads: usize,
     transport_config: &NgsDownloadTransportConfig,
 ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+    emit_existing_ngs_download_baseline_progress(progress_callback, plan)?;
+
     if download_threads == 1 || plan.selected_assets.len() <= 1 {
         return plan
             .selected_assets
@@ -907,6 +913,7 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             progress_callback(NgsDownloadProgress {
                 transfer: progress,
                 context: Some(progress_context.clone()),
+                summary_only: false,
             });
         };
         client.download_to_path(&request, &partial_path, Some(&progress_adapter))?
@@ -1689,6 +1696,28 @@ fn emit_ngs_download_progress(
     total_bytes: Option<u64>,
     context: Option<NgsDownloadProgressContext>,
 ) {
+    emit_ngs_download_progress_with_visibility(
+        progress_callback,
+        state,
+        url,
+        path,
+        bytes_downloaded,
+        total_bytes,
+        context,
+        false,
+    );
+}
+
+fn emit_ngs_download_progress_with_visibility(
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    state: HttpDownloadProgressState,
+    url: &str,
+    path: &Path,
+    bytes_downloaded: u64,
+    total_bytes: Option<u64>,
+    context: Option<NgsDownloadProgressContext>,
+    summary_only: bool,
+) {
     if let Some(progress_callback) = progress_callback {
         progress_callback(NgsDownloadProgress {
             transfer: HttpDownloadProgress {
@@ -1699,6 +1728,7 @@ fn emit_ngs_download_progress(
                 total_bytes,
             },
             context,
+            summary_only,
         });
     }
 }
@@ -1719,6 +1749,64 @@ fn emit_ngs_asset_finished_progress(
         asset.size_bytes.or(Some(observed_size)),
         Some(ngs_download_progress_context(plan, asset)),
     );
+}
+
+fn emit_existing_ngs_download_baseline_progress(
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    plan: &NgsDownloadPlan,
+) -> Result<(), PlatformError> {
+    if progress_callback.is_none() {
+        return Ok(());
+    }
+
+    for asset in &plan.selected_assets {
+        let local_path = local_ngs_asset_path(&plan.output_root, asset);
+        if let Some((observed_size, _observed_checksum)) =
+            verified_existing_asset_evidence(&local_path, asset)?
+        {
+            emit_ngs_download_progress_with_visibility(
+                progress_callback,
+                HttpDownloadProgressState::Finished,
+                &asset.source_url,
+                &local_path,
+                observed_size,
+                asset.size_bytes.or(Some(observed_size)),
+                Some(ngs_download_progress_context(plan, asset)),
+                true,
+            );
+            continue;
+        }
+
+        let partial_path = partial_ngs_asset_path(&local_path);
+        if let Some((partial_artifact, observed_size)) =
+            existing_ngs_partial_progress_artifact(&local_path, &partial_path)
+        {
+            emit_ngs_download_progress_with_visibility(
+                progress_callback,
+                HttpDownloadProgressState::Advanced,
+                &asset.source_url,
+                &partial_artifact,
+                observed_size,
+                asset.size_bytes,
+                Some(ngs_download_progress_context(plan, asset)),
+                true,
+            );
+        }
+    }
+
+    Ok(())
+}
+
+fn existing_ngs_partial_progress_artifact(
+    local_path: &Path,
+    partial_path: &Path,
+) -> Option<(PathBuf, u64)> {
+    aspera_download_artifact_candidates(local_path, partial_path)
+        .into_iter()
+        .filter(|path| path != local_path)
+        .filter_map(|path| file_size(&path).map(|size| (path, size)))
+        .filter(|(_, size)| *size > 0)
+        .max_by_key(|(_, size)| *size)
 }
 
 fn ngs_download_progress_context(
@@ -2381,7 +2469,7 @@ mod tests {
         DEFAULT_SRA_TOOLKIT_CONTAINER, NgsAsperaConfig, NgsDownloadProgressCallback,
         NgsDownloadTransport, NgsDownloadTransportConfig, ServiceNgsRetrieval,
         SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner, aspera_command_line,
-        aspera_download_source, partial_ngs_asset_path,
+        aspera_download_source, local_ngs_asset_path, partial_ngs_asset_path,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -2934,6 +3022,101 @@ mod tests {
         fs::remove_dir_all(output_root).ok();
     }
 
+    #[test]
+    fn emits_summary_only_baseline_progress_for_existing_ena_downloads() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let first_body = b"ACGT\n".to_vec();
+        let second_body = b"TGCA\n".to_vec();
+        let first_asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(first_body.len() as u64))
+        .with_checksum_md5(Some(format!("{:x}", md5::compute(&first_body))));
+        let second_asset = NgsAsset::new(
+            "ERR654321",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR654321.fastq.gz",
+        )
+        .with_size_bytes(Some(second_body.len() as u64))
+        .with_checksum_md5(Some(format!("{:x}", md5::compute(&second_body))));
+        let mut manifest = planned_manifest();
+        manifest.runs = vec![
+            NgsManifestRun::new(NgsRunMetadata::new("ERR123456"), vec![first_asset.clone()]),
+            NgsManifestRun::new(NgsRunMetadata::new("ERR654321"), vec![second_asset.clone()]),
+        ];
+        let output_root = temp_ngs_output_root("download-baseline-progress");
+        let first_path = local_ngs_asset_path(&output_root, &first_asset);
+        let second_path = local_ngs_asset_path(&output_root, &second_asset);
+        fs::create_dir_all(first_path.parent().expect("first path should have parent"))
+            .expect("first download directory should be created");
+        fs::create_dir_all(
+            second_path
+                .parent()
+                .expect("second path should have parent"),
+        )
+        .expect("second download directory should be created");
+        fs::write(&first_path, &first_body).expect("first existing download should be written");
+        fs::write(&second_path, &second_body).expect("second existing download should be written");
+        let plan = NgsDownloadPlan::new(
+            manifest,
+            output_root.clone(),
+            false,
+            vec![first_asset, second_asset],
+        );
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let progress_callback: Box<NgsDownloadProgressCallback> = {
+            let events = Arc::clone(&events);
+            Box::new(move |event| {
+                events
+                    .lock()
+                    .expect("progress events should be lockable")
+                    .push(event);
+            })
+        };
+        let gateway = ServiceNgsRetrieval::with_client_and_progress(
+            &config,
+            &registry,
+            MockHttpClient::default(),
+            Some(progress_callback.as_ref()),
+        );
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("existing ENA downloads should be skipped");
+
+        assert_eq!(records.len(), 2);
+        assert!(
+            records
+                .iter()
+                .all(|record| record.verification_status == NgsVerificationStatus::SkippedVerified)
+        );
+        let events = events.lock().expect("progress events should be lockable");
+        assert!(events.len() >= 2);
+        assert!(events[0].summary_only);
+        assert!(events[1].summary_only);
+        assert_eq!(
+            events[0].transfer.state,
+            HttpDownloadProgressState::Finished
+        );
+        assert_eq!(
+            events[1].transfer.state,
+            HttpDownloadProgressState::Finished
+        );
+        assert_eq!(
+            events[0]
+                .context
+                .as_ref()
+                .map(|context| context.selected_asset_count),
+            Some(2)
+        );
+        fs::remove_dir_all(output_root).ok();
+    }
+
     #[cfg(unix)]
     #[test]
     fn reports_aspera_progress_from_live_download_artifact() {
@@ -3470,12 +3653,19 @@ mod tests {
         );
         assert_eq!(records[0].local_path, local_path);
         let events = events.lock().expect("progress events should be lockable");
-        assert_eq!(events.len(), 1);
+        assert_eq!(events.len(), 2);
+        assert!(events[0].summary_only);
+        assert!(!events[1].summary_only);
         assert_eq!(
             events[0].transfer.state,
             HttpDownloadProgressState::Finished
         );
+        assert_eq!(
+            events[1].transfer.state,
+            HttpDownloadProgressState::Finished
+        );
         assert_eq!(events[0].transfer.bytes_downloaded, 5);
+        assert_eq!(events[1].transfer.bytes_downloaded, 5);
         assert_eq!(
             events[0]
                 .context
