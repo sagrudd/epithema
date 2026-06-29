@@ -1,6 +1,8 @@
 //! Shared service façade for front-end-neutral tool discovery and invocation.
 
-use std::path::PathBuf;
+use std::env;
+use std::fs;
+use std::path::{Path, PathBuf};
 use std::str::FromStr;
 use std::sync::Arc;
 
@@ -12060,6 +12062,12 @@ struct NgsgetCliParams {
     transport_config: NgsDownloadTransportConfig,
 }
 
+const ASPERA_KEY_FILENAMES: &[&str] = &[
+    "asperaweb_id_dsa.openssh",
+    "aspera_tokenauth_id_dsa",
+    "aspera_tokenauth_id_rsa",
+];
+
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("ngslist", ngslist_help()));
@@ -12190,6 +12198,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut existing_download_roots = Vec::new();
     let mut download_threads = 1usize;
     let mut transport_config = NgsDownloadTransportConfig::default();
+    let mut explicit_aspera_key = false;
     let mut index = 0usize;
 
     while index < arguments.len() {
@@ -12294,6 +12303,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
         if let Some(value) = argument.strip_prefix("--aspera-key=") {
             transport_config.aspera.key_path = Some(PathBuf::from(value));
+            explicit_aspera_key = true;
             index += 1;
             continue;
         }
@@ -12304,6 +12314,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
                     .with_detail(ngsget_help())
             })?;
             transport_config.aspera.key_path = Some(PathBuf::from(value));
+            explicit_aspera_key = true;
             index += 2;
             continue;
         }
@@ -12345,9 +12356,13 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         index += 1;
     }
 
-    if transport_config.aspera.key_path.is_none() {
+    if !explicit_aspera_key {
         transport_config.aspera.key_path =
-            aspera_key_from_ascp_path(&transport_config.aspera.ascp_path);
+            ensure_managed_aspera_key(&transport_config.aspera.ascp_path)?;
+    }
+
+    if transport_config.mode == NgsDownloadTransport::Aspera {
+        validate_ngsget_aspera_transport(&transport_config)?;
     }
 
     let accession = accession.ok_or_else(|| tool_usage_error("ngsget", ngsget_help()))?;
@@ -12362,16 +12377,177 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     })
 }
 
-fn aspera_key_from_ascp_path(ascp_path: &std::path::Path) -> Option<PathBuf> {
+fn validate_ngsget_aspera_transport(
+    transport_config: &NgsDownloadTransportConfig,
+) -> Result<(), ServiceError> {
+    if !command_path_is_available(&transport_config.aspera.ascp_path) {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --transport aspera requires a runnable ascp executable; pass --ascp or install IBM Aspera CLI/Connect",
+        )
+        .with_code("service.ngsget.ascp_unavailable")
+        .with_detail(transport_config.aspera.ascp_path.display().to_string()));
+    }
+
+    let Some(key_path) = transport_config.aspera.key_path.as_ref() else {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --transport aspera requires an ENA public Aspera key; install an Aspera package that provides asperaweb_id_dsa.openssh or pass --aspera-key",
+        )
+        .with_code("service.ngsget.aspera_key_unavailable")
+        .with_detail("freshly generated SSH keys cannot authenticate to ENA public FASP endpoints"));
+    };
+
+    if !key_path.exists() {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --transport aspera key path does not exist",
+        )
+        .with_code("service.ngsget.aspera_key_missing")
+        .with_detail(key_path.display().to_string()));
+    }
+
+    Ok(())
+}
+
+fn ensure_managed_aspera_key(ascp_path: &Path) -> Result<Option<PathBuf>, ServiceError> {
+    if let Some(source) = env::var_os("EPITHEMA_ASPERA_KEY")
+        .map(PathBuf::from)
+        .filter(|path| path.exists())
+    {
+        return copy_aspera_key_to_managed_cache(source).map(Some);
+    }
+
+    if let Some(managed_key) = managed_aspera_key_path().filter(|path| path.exists()) {
+        return Ok(Some(managed_key));
+    }
+
+    let source = aspera_key_from_ascp_path(ascp_path)
+        .or_else(|| {
+            env::var_os("CONDA_PREFIX")
+                .map(PathBuf::from)
+                .and_then(|prefix| first_existing_aspera_key(&prefix))
+        })
+        .or_else(|| {
+            env::var_os("HOME").map(PathBuf::from).and_then(|home| {
+                first_existing_path(
+                    ASPERA_KEY_FILENAMES
+                        .iter()
+                        .map(|name| home.join(".aspera").join("connect").join("etc").join(name)),
+                )
+            })
+        });
+
+    source.map(copy_aspera_key_to_managed_cache).transpose()
+}
+
+fn copy_aspera_key_to_managed_cache(source: PathBuf) -> Result<PathBuf, ServiceError> {
+    let Some(target) = managed_aspera_key_path() else {
+        return Ok(source);
+    };
+    copy_aspera_key_to_managed_path(source, target)
+}
+
+fn copy_aspera_key_to_managed_path(
+    source: PathBuf,
+    target: PathBuf,
+) -> Result<PathBuf, ServiceError> {
+    if source == target {
+        return Ok(target);
+    }
+    if target.exists() {
+        return Ok(target);
+    }
+    if let Some(parent) = target.parent() {
+        fs::create_dir_all(parent).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to create epithema Aspera key cache directory",
+            )
+            .with_code("service.ngsget.aspera_key_cache_create_failed")
+            .with_detail(error.to_string())
+        })?;
+    }
+    fs::copy(&source, &target).map_err(|error| {
+        PlatformError::new(
+            ErrorCategory::Invocation,
+            "failed to create epithema-managed Aspera key from installed package key",
+        )
+        .with_code("service.ngsget.aspera_key_cache_copy_failed")
+        .with_detail(format!(
+            "{} -> {}: {error}",
+            source.display(),
+            target.display()
+        ))
+    })?;
+    restrict_private_key_permissions(&target)?;
+    Ok(target)
+}
+
+fn managed_aspera_key_path() -> Option<PathBuf> {
+    env::var_os("XDG_CACHE_HOME")
+        .map(PathBuf::from)
+        .or_else(|| {
+            env::var_os("HOME")
+                .map(PathBuf::from)
+                .map(|home| home.join(".cache"))
+        })
+        .map(managed_aspera_key_path_from_cache_root)
+}
+
+fn managed_aspera_key_path_from_cache_root(cache_root: PathBuf) -> PathBuf {
+    cache_root
+        .join("epithema")
+        .join("aspera")
+        .join("asperaweb_id_dsa.openssh")
+}
+
+fn restrict_private_key_permissions(path: &Path) -> Result<(), ServiceError> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(path, fs::Permissions::from_mode(0o600)).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to restrict epithema-managed Aspera key permissions",
+            )
+            .with_code("service.ngsget.aspera_key_permissions_failed")
+            .with_detail(error.to_string())
+        })?;
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+    }
+    Ok(())
+}
+
+fn aspera_key_from_ascp_path(ascp_path: &Path) -> Option<PathBuf> {
     let bin_dir = ascp_path.parent()?;
     let prefix = bin_dir.parent()?;
-    [
-        prefix.join("etc/asperaweb_id_dsa.openssh"),
-        prefix.join("etc/aspera_tokenauth_id_dsa"),
-        prefix.join("etc/aspera_tokenauth_id_rsa"),
-    ]
-    .into_iter()
-    .find(|path| path.exists())
+    first_existing_aspera_key(prefix)
+}
+
+fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
+    first_existing_path(
+        ASPERA_KEY_FILENAMES
+            .iter()
+            .map(|name| prefix.join("etc").join(name)),
+    )
+}
+
+fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {
+    paths.into_iter().find(|path| path.exists())
+}
+
+fn command_path_is_available(command: &Path) -> bool {
+    if command.components().count() > 1 {
+        return command.exists();
+    }
+    let Some(path_var) = env::var_os("PATH") else {
+        return false;
+    };
+    env::split_paths(&path_var).any(|path| path.join(command).exists())
 }
 
 fn parse_ngsget_transport(value: &str) -> Result<NgsDownloadTransport, ServiceError> {
@@ -15604,6 +15780,58 @@ mod tests {
         );
         fs::remove_dir_all(output_root).ok();
         fs::remove_dir_all(cache_root).ok();
+    }
+
+    #[test]
+    fn discovers_aspera_key_from_ascp_install_prefix() {
+        let root = temp_service_output_root("aspera-install");
+        let bin_dir = root.join("bin");
+        let etc_dir = root.join("etc");
+        fs::create_dir_all(&bin_dir).expect("bin directory should be created");
+        fs::create_dir_all(&etc_dir).expect("etc directory should be created");
+        let ascp_path = bin_dir.join("ascp");
+        let key_path = etc_dir.join("asperaweb_id_dsa.openssh");
+        fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
+        fs::write(&key_path, b"trusted package key").expect("key should be written");
+
+        assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn creates_epithema_managed_aspera_key_copy() {
+        let root = temp_service_output_root("aspera-key-cache");
+        let source = root.join("source/asperaweb_id_dsa.openssh");
+        fs::create_dir_all(source.parent().expect("source key should have parent"))
+            .expect("source directory should be created");
+        fs::write(&source, b"trusted package key").expect("source key should be written");
+        let target = super::managed_aspera_key_path_from_cache_root(root.join("cache"));
+
+        let copied = super::copy_aspera_key_to_managed_path(source.clone(), target.clone())
+            .expect("managed key copy should be created");
+
+        assert_eq!(copied, target);
+        assert_eq!(
+            fs::read(&copied).expect("managed key should be readable"),
+            b"trusted package key"
+        );
+        assert_eq!(
+            fs::read(&source).expect("source key should remain readable"),
+            b"trusted package key"
+        );
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mode = fs::metadata(&copied)
+                .expect("managed key metadata should be readable")
+                .permissions()
+                .mode()
+                & 0o777;
+            assert_eq!(mode, 0o600);
+        }
+
+        fs::remove_dir_all(root).ok();
     }
 
     #[test]

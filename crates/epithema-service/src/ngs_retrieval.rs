@@ -900,6 +900,15 @@ fn materialize_aspera_ngs_asset(
                 "Aspera transfer requires an auth key; pass --aspera-key or set EPITHEMA_ASPERA_KEY",
             ));
     };
+    if !key_path.exists() {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_materialization_method("aspera_download")
+            .with_failure_reason(format!(
+                "Aspera auth key does not exist: {}",
+                key_path.display()
+            )));
+    }
 
     if let Some((observed_size, observed_checksum)) =
         verified_existing_asset_evidence(&partial_path, asset)?
@@ -1541,7 +1550,11 @@ fn should_use_aspera_transport(
         NgsDownloadTransport::Https => false,
         NgsDownloadTransport::Aspera => true,
         NgsDownloadTransport::Auto => {
-            transport_config.aspera.key_path.is_some()
+            transport_config
+                .aspera
+                .key_path
+                .as_ref()
+                .is_some_and(|path| path.exists())
                 && command_path_is_available(&transport_config.aspera.ascp_path)
         }
     }
