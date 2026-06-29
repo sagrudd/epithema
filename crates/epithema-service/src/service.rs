@@ -12198,6 +12198,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut existing_download_roots = Vec::new();
     let mut download_threads = 1usize;
     let mut transport_config = NgsDownloadTransportConfig::default();
+    let mut explicit_ascp = false;
     let mut explicit_aspera_key = false;
     let mut index = 0usize;
 
@@ -12288,6 +12289,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
         if let Some(value) = argument.strip_prefix("--ascp=") {
             transport_config.aspera.ascp_path = PathBuf::from(value);
+            explicit_ascp = true;
             index += 1;
             continue;
         }
@@ -12298,6 +12300,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
                     .with_detail(ngsget_help())
             })?;
             transport_config.aspera.ascp_path = PathBuf::from(value);
+            explicit_ascp = true;
             index += 2;
             continue;
         }
@@ -12354,6 +12357,12 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
         accession = Some(argument.clone());
         index += 1;
+    }
+
+    if !explicit_ascp {
+        if let Some(resolved_ascp_path) = resolve_command_path(&transport_config.aspera.ascp_path) {
+            transport_config.aspera.ascp_path = resolved_ascp_path;
+        }
     }
 
     if !explicit_aspera_key {
@@ -12541,13 +12550,41 @@ fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathB
 }
 
 fn command_path_is_available(command: &Path) -> bool {
+    resolve_command_path(command).is_some()
+}
+
+fn resolve_command_path(command: &Path) -> Option<PathBuf> {
     if command.components().count() > 1 {
-        return command.exists();
+        return is_runnable_file(command).then(|| command.to_path_buf());
     }
-    let Some(path_var) = env::var_os("PATH") else {
+    env::var_os("PATH").and_then(|path_var| resolve_command_path_from_path_var(command, &path_var))
+}
+
+fn resolve_command_path_from_path_var(
+    command: &Path,
+    path_var: &std::ffi::OsStr,
+) -> Option<PathBuf> {
+    env::split_paths(path_var)
+        .map(|path| path.join(command))
+        .find(|path| is_runnable_file(path))
+}
+
+fn is_runnable_file(path: &Path) -> bool {
+    let Ok(metadata) = path.metadata() else {
         return false;
     };
-    env::split_paths(&path_var).any(|path| path.join(command).exists())
+    if !metadata.is_file() {
+        return false;
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        metadata.permissions().mode() & 0o111 != 0
+    }
+    #[cfg(not(unix))]
+    {
+        true
+    }
 }
 
 fn parse_ngsget_transport(value: &str) -> Result<NgsDownloadTransport, ServiceError> {
@@ -15795,6 +15832,29 @@ mod tests {
         fs::write(&key_path, b"trusted package key").expect("key should be written");
 
         assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn resolves_default_ascp_from_search_path() {
+        let root = temp_service_output_root("aspera-path");
+        let bin_dir = root.join("bin");
+        fs::create_dir_all(&bin_dir).expect("bin directory should be created");
+        let ascp_path = bin_dir.join("ascp");
+        fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(&ascp_path, fs::Permissions::from_mode(0o755))
+                .expect("ascp placeholder should be executable");
+        }
+        let path_var = std::env::join_paths([bin_dir]).expect("PATH value should join");
+
+        assert_eq!(
+            super::resolve_command_path_from_path_var(std::path::Path::new("ascp"), &path_var),
+            Some(ascp_path)
+        );
 
         fs::remove_dir_all(root).ok();
     }

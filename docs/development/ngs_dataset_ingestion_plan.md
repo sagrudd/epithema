@@ -34,9 +34,11 @@ uses IBM Aspera `ascp` for ENA public file URLs that can be mapped to ENA's
 public FASP endpoints. `--transport auto` uses Aspera when `ascp` and an auth
 key are discoverable and otherwise falls back to HTTPS. `--ascp`,
 `--aspera-key`, and `--aspera-rate` configure the external `ascp` command. When
-`--aspera-key` is omitted, `ngsget` creates and uses an epithema-managed copy of
-a discovered Aspera package key; it does not synthesize a fresh SSH key because
-ENA's public FASP endpoints only accept trusted public-data keys.
+`--ascp` is omitted, `ngsget` resolves `ascp` from `PATH`; `--transport aspera`
+fails early if `ascp` cannot be found. When `--aspera-key` is omitted, `ngsget`
+creates and uses an epithema-managed copy of a discovered Aspera package key; it
+does not synthesize a fresh SSH key because ENA's public FASP endpoints only
+accept trusted public-data keys.
 
 Custom container selection is not part of the current command surface. SRA FASTQ
 conversion uses the pinned default SRA Toolkit container recorded by the service
