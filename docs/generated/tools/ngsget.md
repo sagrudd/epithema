@@ -21,7 +21,7 @@ Plan and materialize public ENA or SRA NGS assets for one study, sample, experim
 
 ## Overview
 
-`ngsget` is the acquisition companion to `ngslist`. It resolves a public ENA or SRA NGS study, sample, experiment, or run accession to a normalized run-level manifest, selects generated FASTQ assets by default, optionally includes raw or submitted assets, materializes files under the documented run layout, and writes NGS provenance JSON.
+`ngsget` is the acquisition companion to `ngslist`. It resolves a public ENA or SRA NGS study, sample, experiment, or run accession to a normalized run-level manifest, selects generated FASTQ assets by default, optionally adds raw or submitted assets alongside any available FASTQ when `--raw` is present, materializes files under the documented run layout, and writes NGS provenance JSON.
 
 ## Inputs
 
@@ -29,11 +29,11 @@ The command interface is `epithema ngsget <accession> [--provider auto|ena|sra] 
 
 ## Outputs
 
-The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, and `runs/<run_accession>/` subdirectories for `fastq`, `raw`, `sra`, and logs. Implemented service records capture selected and skipped assets, expected and observed byte counts and MD5 checksums, direct-download verification state, SRA Toolkit conversion command details, container image and tool version metadata, exit status, and generated FASTQ output paths. The service can write a stable handoff `manifest.tsv` for later object-store importers without uploading or publishing objects.
+The documented output layout is `<out>/manifest.tsv`, `<out>/provenance.json`, and `runs/<run_accession>/` subdirectories for `fastq`, `raw`, `sra`, and logs. Implemented service records capture selected and skipped assets, expected and observed byte counts and MD5 checksums, direct-download verification state, SRA Toolkit conversion command details, container image and tool version metadata, exit status, and generated FASTQ output paths. Direct provider downloads stream to `.partial` files, verify from disk, and emit CLI progress events so raw archives in the tens or hundreds of gigabytes are not buffered in memory. The service can write a stable handoff `manifest.tsv` for later object-store importers without uploading or publishing objects.
 
 ## Current Status
 
-`ngsget` is exposed through the governed command route. The implementation supports download planning, direct ENA-style materialization with partial-file handling and verification, recursive existing-download lookup through `--check-downloads`, copy-then-verify reuse of matching files without modifying the originals, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. Remaining follow-up work includes per-run log files, custom container selection, and opt-in live-provider or Docker/SRA Toolkit validation.
+`ngsget` is exposed through the governed command route. The implementation supports download planning, direct ENA-style materialization with streamed partial-file handling, disk-based verification, and CLI progress reporting, recursive existing-download lookup through `--check-downloads`, copy-then-verify reuse of matching files without modifying the originals, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. Remaining follow-up work includes per-run log files, custom container selection, and opt-in live-provider or Docker/SRA Toolkit validation.
 
 ## Caveats
 

@@ -13,15 +13,18 @@ use std::process::Command;
 use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ArtifactOriginKind, ArtifactProvenance, ErrorCategory, PlatformError};
 use epithema_providers::{
-    EnaNgsAdapter, HttpRequest, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord,
-    NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus,
-    ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient,
-    SraNgsAdapter,
+    EnaNgsAdapter, HttpDownloadProgress, HttpRequest, NgsAsset, NgsAssetRole, NgsDownloadPlan,
+    NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery, NgsRunMetadata,
+    NgsVerificationStatus, ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry,
+    ReqwestHttpClient, SraNgsAdapter,
 };
 use serde_json::{Value, json};
 
 const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
+
+/// Callback used to report streamed NGS file download progress.
+pub type NgsDownloadProgressCallback = dyn Fn(HttpDownloadProgress) + Send + Sync + 'static;
 
 /// Request passed to an SRA FASTQ conversion runner.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -95,11 +98,12 @@ impl SraFastqRunner for DockerSraFastqRunner {
 }
 
 /// Service-backed NGS dataset retrieval gateway.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ServiceNgsRetrieval<'a, C> {
     config: &'a PlatformConfig,
     providers: &'a ProviderRegistry,
     client: C,
+    progress_callback: Option<&'a NgsDownloadProgressCallback>,
 }
 
 impl<'a> ServiceNgsRetrieval<'a, ReqwestHttpClient> {
@@ -112,6 +116,21 @@ impl<'a> ServiceNgsRetrieval<'a, ReqwestHttpClient> {
             config,
             providers,
             client: ReqwestHttpClient::new()?,
+            progress_callback: None,
+        })
+    }
+
+    /// Creates a service-backed NGS gateway with download progress reporting.
+    pub fn new_with_progress(
+        config: &'a PlatformConfig,
+        providers: &'a ProviderRegistry,
+        progress_callback: Option<&'a NgsDownloadProgressCallback>,
+    ) -> Result<Self, PlatformError> {
+        Ok(Self {
+            config,
+            providers,
+            client: ReqwestHttpClient::new()?,
+            progress_callback,
         })
     }
 }
@@ -124,10 +143,22 @@ impl<'a, C> ServiceNgsRetrieval<'a, C> {
         providers: &'a ProviderRegistry,
         client: C,
     ) -> Self {
+        Self::with_client_and_progress(config, providers, client, None)
+    }
+
+    /// Creates a service-backed NGS gateway with an injected HTTP client and progress reporting.
+    #[must_use]
+    pub fn with_client_and_progress(
+        config: &'a PlatformConfig,
+        providers: &'a ProviderRegistry,
+        client: C,
+        progress_callback: Option<&'a NgsDownloadProgressCallback>,
+    ) -> Self {
         Self {
             config,
             providers,
             client,
+            progress_callback,
         }
     }
 }
@@ -212,7 +243,13 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                 .selected_assets
                 .iter()
                 .map(|asset| {
-                    materialize_direct_ngs_asset(&self.client, plan, asset, existing_download_roots)
+                    materialize_direct_ngs_asset(
+                        &self.client,
+                        plan,
+                        asset,
+                        existing_download_roots,
+                        self.progress_callback,
+                    )
                 })
                 .collect(),
             "sra" => plan
@@ -225,6 +262,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         asset,
                         runner,
                         existing_download_roots,
+                        self.progress_callback,
                     )
                 })
                 .collect(),
@@ -384,6 +422,7 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     plan: &NgsDownloadPlan,
     asset: &NgsAsset,
     existing_download_roots: &[PathBuf],
+    progress_callback: Option<&NgsDownloadProgressCallback>,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let local_path = local_ngs_asset_path(&plan.output_root, asset);
     if let Some((observed_size, observed_checksum)) =
@@ -407,24 +446,21 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             .with_failure_reason("asset source is not a direct ENA download URL"));
     };
 
-    let response = client
-        .get_bytes(&HttpRequest::new(download_url).with_accept("application/octet-stream, */*"))?;
+    let partial_path = partial_ngs_asset_path(&local_path);
+    let response = client.download_to_path(
+        &HttpRequest::new(download_url).with_accept("application/octet-stream, */*"),
+        &partial_path,
+        progress_callback.map(|callback| callback as &dyn Fn(HttpDownloadProgress)),
+    )?;
     if !(200..300).contains(&response.status) {
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_verification_status(NgsVerificationStatus::Failed)
             .with_failure_reason(format!("download returned HTTP status {}", response.status)));
     }
 
-    let partial_path = partial_ngs_asset_path(&local_path);
-    if let Some(parent) = partial_path.parent() {
-        fs::create_dir_all(parent)
-            .map_err(|error| ngs_io_error("create output directory", error))?;
-    }
-    fs::write(&partial_path, &response.body)
-        .map_err(|error| ngs_io_error("write partial NGS download", error))?;
-
-    let observed_size = u64::try_from(response.body.len()).ok();
-    let observed_checksum = Some(format!("{:x}", md5::compute(&response.body)));
+    let (observed_size, observed_checksum) = ngs_file_evidence(&partial_path)?;
+    let observed_size = Some(observed_size);
+    let observed_checksum = Some(observed_checksum);
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
     let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
         .with_observed_evidence(observed_size, observed_checksum.clone())
@@ -458,11 +494,16 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     asset: &NgsAsset,
     runner: &impl SraFastqRunner,
     existing_download_roots: &[PathBuf],
+    progress_callback: Option<&NgsDownloadProgressCallback>,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     match asset.role {
-        NgsAssetRole::SraArchive => {
-            materialize_direct_ngs_asset(client, plan, asset, existing_download_roots)
-        }
+        NgsAssetRole::SraArchive => materialize_direct_ngs_asset(
+            client,
+            plan,
+            asset,
+            existing_download_roots,
+            progress_callback,
+        ),
         NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
             execute_sra_fastq_conversion_with_runner(plan, asset, runner)
         }
@@ -1220,20 +1261,22 @@ mod tests {
     use std::collections::HashMap;
     use std::fs;
     use std::path::PathBuf;
+    use std::sync::{Arc, Mutex};
     use std::time::{SystemTime, UNIX_EPOCH};
 
     use epithema_config::{PlatformConfig, ProviderSettings};
     use epithema_diagnostics::PlatformError;
     use epithema_providers::{
-        ArchiveRoute, EnaNgsAdapter, HttpBytesResponse, HttpRequest, HttpResponse, NgsAsset,
-        NgsAssetRole, NgsDownloadPlan, NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery,
-        NgsRunMetadata, NgsVerificationStatus, ProviderCapability, ProviderDescriptor,
-        ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
+        ArchiveRoute, EnaNgsAdapter, HttpBytesResponse, HttpDownloadProgressState, HttpRequest,
+        HttpResponse, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsManifest, NgsManifestRun,
+        NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus, ProviderCapability,
+        ProviderDescriptor, ProviderHttpClient, ProviderId, ProviderRegistry, SraNgsAdapter,
     };
 
     use super::{
-        DEFAULT_SRA_TOOLKIT_CONTAINER, ServiceNgsRetrieval, SraFastqConversionRequest,
-        SraFastqConversionResult, SraFastqRunner, partial_ngs_asset_path,
+        DEFAULT_SRA_TOOLKIT_CONTAINER, NgsDownloadProgressCallback, ServiceNgsRetrieval,
+        SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
+        partial_ngs_asset_path,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -1659,6 +1702,66 @@ mod tests {
                 .join("runs/ERR123456/fastq/ERR123456.fastq.gz.partial")
                 .exists()
         );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn reports_progress_for_direct_ena_downloads() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(5))
+        .with_checksum_md5(Some(checksum));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("download-progress");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERR123456.fastq.gz",
+            HttpBytesResponse::new(200, body),
+        );
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let progress_callback: Box<NgsDownloadProgressCallback> = {
+            let events = Arc::clone(&events);
+            Box::new(move |event| {
+                events
+                    .lock()
+                    .expect("progress events should be lockable")
+                    .push(event);
+            })
+        };
+        let gateway = ServiceNgsRetrieval::with_client_and_progress(
+            &config,
+            &registry,
+            client,
+            Some(progress_callback.as_ref()),
+        );
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("direct ENA download should materialize");
+
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        let events = events.lock().expect("progress events should be lockable");
+        assert_eq!(
+            events.first().map(|event| event.state),
+            Some(HttpDownloadProgressState::Started)
+        );
+        assert_eq!(
+            events.last().map(|event| event.state),
+            Some(HttpDownloadProgressState::Finished)
+        );
+        assert_eq!(events.last().map(|event| event.bytes_downloaded), Some(5));
         fs::remove_dir_all(output_root).ok();
     }
 

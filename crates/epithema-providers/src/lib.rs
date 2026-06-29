@@ -37,7 +37,8 @@ pub use archive::{
 };
 pub use capability::ProviderCapability;
 pub use client::{
-    HttpBytesResponse, HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient,
+    HttpBytesResponse, HttpDownloadProgress, HttpDownloadProgressState, HttpDownloadResponse,
+    HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient,
 };
 pub use descriptor::ProviderDescriptor;
 pub use ena::EnaSequenceAdapter;

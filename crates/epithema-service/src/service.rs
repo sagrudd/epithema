@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 use std::str::FromStr;
+use std::sync::Arc;
 
 use epithema_config::PlatformConfig;
 use epithema_core::{
@@ -130,7 +131,7 @@ use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
-use crate::ngs_retrieval::ServiceNgsRetrieval;
+use crate::ngs_retrieval::{NgsDownloadProgressCallback, ServiceNgsRetrieval};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
 use crate::response::InvocationResponse;
@@ -141,11 +142,12 @@ use crate::result::{
 use crate::sequence_retrieval::ServiceSequenceRetrieval;
 
 /// Front-end-neutral Epithema service façade.
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Default)]
 pub struct EpithemaService {
     registry: ServiceRegistry,
     config: PlatformConfig,
     providers: ProviderRegistry,
+    ngs_download_progress: Option<Arc<NgsDownloadProgressCallback>>,
 }
 
 impl EpithemaService {
@@ -170,7 +172,18 @@ impl EpithemaService {
             registry,
             config,
             providers,
+            ngs_download_progress: None,
         }
+    }
+
+    /// Installs a callback for NGS direct-download progress events.
+    #[must_use]
+    pub fn with_ngs_download_progress(
+        mut self,
+        progress_callback: Arc<NgsDownloadProgressCallback>,
+    ) -> Self {
+        self.ngs_download_progress = Some(progress_callback);
+        self
     }
 
     /// Creates an empty service façade.
@@ -223,7 +236,11 @@ impl EpithemaService {
     pub fn ngs_retrieval(
         &self,
     ) -> Result<ServiceNgsRetrieval<'_, epithema_providers::ReqwestHttpClient>, ServiceError> {
-        ServiceNgsRetrieval::new(&self.config, &self.providers)
+        ServiceNgsRetrieval::new_with_progress(
+            &self.config,
+            &self.providers,
+            self.ngs_download_progress.as_deref(),
+        )
     }
 
     /// Resolves an accession-style input into a provider-backed single sequence record.
@@ -1500,8 +1517,12 @@ impl EpithemaService {
         let query = build_ngsget_query(&params.accession, &params.provider)?;
         match client {
             Some(client) => {
-                let gateway =
-                    ServiceNgsRetrieval::with_client(&self.config, &self.providers, client);
+                let gateway = ServiceNgsRetrieval::with_client_and_progress(
+                    &self.config,
+                    &self.providers,
+                    client,
+                    self.ngs_download_progress.as_deref(),
+                );
                 self.invoke_ngsget_with_gateway(request, descriptor, params, &query, gateway)
             }
             None => {

@@ -21,8 +21,9 @@ epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--c
 
 `ngslist` reports the assets associated with a study, sample, experiment, or
 run accession. `ngsget` downloads generated FASTQ by default. With `--raw`,
-`ngsget` also includes raw or submitted assets such as BAM, CRAM, FAST5, POD5,
-and provider-native SRA files when the provider exposes them. With
+`ngsget` downloads any available generated FASTQ and also includes raw or
+submitted assets such as BAM, CRAM, FAST5, POD5, tar archives, and
+provider-native SRA files when the provider exposes them. With
 `--check-downloads <path>`, `ngsget` should recursively search an existing
 download root for same-name files, copy verified matches into the output tree
 without modifying the original files, and fail the selected asset if a
@@ -223,16 +224,18 @@ The provenance document should use schema label
    skip-on-verified behavior.
 
    Status: implemented for direct ENA-style file URLs in
-   `crates/epithema-service/src/ngs_retrieval.rs`. The materializer writes
-   selected assets to the documented `runs/<run>/fastq`, `runs/<run>/raw`, or
-   `runs/<run>/sra` layout using `.partial` files, promotes only after
-   available byte-count and MD5 evidence passes, leaves failed verification as
-   a partial file, skips already verified local files, and supports the
-   service-layer behavior needed for future `ngsget --check-downloads <path>`:
-   recursive same-name lookup, copy-then-verify into the output tree, original
-   source preservation, and failed materialization records for same-name
-   candidates with unexpected checksum evidence. SRA provider materialization
-   and `sra-convert://` FASTQ extraction remain task 9.
+   `crates/epithema-service/src/ngs_retrieval.rs`. The materializer streams
+   provider response bodies directly to `.partial` files, emits CLI progress
+   events for long downloads, verifies size and MD5 evidence from disk, and
+   promotes only after available byte-count and checksum evidence passes. It
+   writes selected assets to the documented `runs/<run>/fastq`,
+   `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification as
+   a partial file, skips already verified local files, and supports
+   service-layer `ngsget --check-downloads <path>` behavior: recursive
+   same-name lookup, copy-then-verify into the output tree, original source
+   preservation, and failed materialization records for same-name candidates
+   with unexpected checksum evidence. SRA provider materialization and
+   `sra-convert://` FASTQ extraction remain task 9.
 
 9. Implement SRA FASTQ extraction.
 
@@ -315,8 +318,9 @@ The provenance document should use schema label
     `ngslist` page documents the shipped manifest-listing boundary. The
     `ngsget` page documents the governed command route for public ENA/SRA
     acquisition, generated FASTQ default selection, optional raw/submitted
-    assets, recursive verified reuse through `--check-downloads`, SRA
-    conversion through the pinned default container, provenance JSON, and
+    assets alongside any available FASTQ, recursive verified reuse through
+    `--check-downloads`, streamed large-file direct downloads with CLI progress,
+    SRA conversion through the pinned default container, provenance JSON, and
     stable handoff manifest behavior. Release-facing scope and notes now
     explicitly keep protected-access, dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and
