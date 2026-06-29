@@ -12,7 +12,7 @@ use std::process::{Command, Stdio};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use std::{env, fs};
 
 use epithema_config::PlatformConfig;
@@ -909,7 +909,10 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     let progress_context = ngs_download_progress_context(plan, asset);
     let response = if let Some(progress_callback) = progress_callback {
         let progress_context = progress_context.clone();
-        let progress_adapter = |progress: HttpDownloadProgress| {
+        let progress_adapter = |mut progress: HttpDownloadProgress| {
+            if progress.state == HttpDownloadProgressState::Finished {
+                progress.state = HttpDownloadProgressState::Finalizing;
+            }
             progress_callback(NgsDownloadProgress {
                 transfer: progress,
                 context: Some(progress_context.clone()),
@@ -926,7 +929,13 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             .with_failure_reason(format!("download returned HTTP status {}", response.status)));
     }
 
-    let (observed_size, observed_checksum) = ngs_file_evidence(&partial_path)?;
+    let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+        &partial_path,
+        progress_callback,
+        &asset.source_url,
+        asset.size_bytes,
+        Some(progress_context.clone()),
+    )?;
     let observed_size = Some(observed_size);
     let observed_checksum = Some(observed_checksum);
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
@@ -950,6 +959,13 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     }
     fs::rename(&partial_path, &local_path)
         .map_err(|error| ngs_io_error("promote verified NGS download", error))?;
+    emit_ngs_asset_finished_progress(
+        progress_callback,
+        plan,
+        asset,
+        &local_path,
+        observed_size.unwrap_or(0),
+    );
 
     let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
         NgsVerificationStatus::Verified
@@ -1085,9 +1101,17 @@ fn materialize_aspera_ngs_asset(
                 thread::sleep(Duration::from_secs(2));
                 let current_size = observed_aspera_download_size(&local_path, &partial_path)
                     .max(last_progress_bytes);
+                let progress_state = if asset
+                    .size_bytes
+                    .is_some_and(|expected| current_size >= expected)
+                {
+                    HttpDownloadProgressState::Finalizing
+                } else {
+                    HttpDownloadProgressState::Advanced
+                };
                 emit_ngs_download_progress(
                     progress_callback,
-                    HttpDownloadProgressState::Advanced,
+                    progress_state,
                     &asset.source_url,
                     &partial_path,
                     current_size,
@@ -1130,11 +1154,15 @@ fn materialize_aspera_ngs_asset(
             )));
     }
 
-    let completed_path = verified_aspera_download_artifact(&local_path, &partial_path, asset)?
-        .map(|(path, _, _)| path)
-        .or_else(|| largest_aspera_download_artifact(&local_path, &partial_path))
-        .unwrap_or_else(|| partial_path.clone());
-    let (observed_size, observed_checksum) = ngs_file_evidence(&completed_path)?;
+    let completed_path =
+        largest_aspera_download_artifact(&local_path, &partial_path).unwrap_or(partial_path);
+    let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+        &completed_path,
+        progress_callback,
+        &asset.source_url,
+        asset.size_bytes,
+        Some(progress_context.clone()),
+    )?;
     emit_ngs_download_progress(
         progress_callback,
         HttpDownloadProgressState::Finished,
@@ -1911,24 +1939,6 @@ fn largest_aspera_download_artifact(local_path: &Path, partial_path: &Path) -> O
         .map(|(path, _)| path)
 }
 
-fn verified_aspera_download_artifact(
-    local_path: &Path,
-    partial_path: &Path,
-    asset: &NgsAsset,
-) -> Result<Option<(PathBuf, u64, String)>, PlatformError> {
-    for candidate in aspera_download_artifact_candidates(local_path, partial_path) {
-        if file_size(&candidate).is_none() {
-            continue;
-        }
-        if let Some((observed_size, observed_checksum)) =
-            verified_existing_asset_evidence(&candidate, asset)?
-        {
-            return Ok(Some((candidate, observed_size, observed_checksum)));
-        }
-    }
-    Ok(None)
-}
-
 fn file_size(path: &Path) -> Option<u64> {
     fs::metadata(path)
         .ok()
@@ -2381,11 +2391,31 @@ fn resumable_partial_size(
 }
 
 fn ngs_file_evidence(path: &Path) -> Result<(u64, String), PlatformError> {
+    ngs_file_evidence_with_progress(path, None, "", None, None)
+}
+
+fn ngs_file_evidence_with_progress(
+    path: &Path,
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    url: &str,
+    total_bytes: Option<u64>,
+    context: Option<NgsDownloadProgressContext>,
+) -> Result<(u64, String), PlatformError> {
     let mut file = fs::File::open(path)
         .map_err(|error| ngs_io_error("open NGS file for verification", error))?;
-    let mut context = md5::Context::new();
+    let mut md5_context = md5::Context::new();
     let mut total_size = 0u64;
-    let mut buffer = [0u8; 64 * 1024];
+    let mut buffer = [0u8; 1024 * 1024];
+    let mut last_emit = Instant::now();
+    emit_ngs_download_progress(
+        progress_callback,
+        HttpDownloadProgressState::Verifying,
+        url,
+        path,
+        0,
+        total_bytes,
+        context.clone(),
+    );
 
     loop {
         let bytes_read = file
@@ -2407,10 +2437,22 @@ fn ngs_file_evidence(path: &Path) -> Result<(u64, String), PlatformError> {
                 PlatformError::new(ErrorCategory::Invocation, "NGS file sizes overflowed u64")
                     .with_code("service.ngs_retrieval.size_overflow")
             })?;
-        context.consume(&buffer[..bytes_read]);
+        md5_context.consume(&buffer[..bytes_read]);
+        if last_emit.elapsed() >= Duration::from_secs(2) {
+            emit_ngs_download_progress(
+                progress_callback,
+                HttpDownloadProgressState::Verifying,
+                url,
+                path,
+                total_size,
+                total_bytes,
+                context.clone(),
+            );
+            last_emit = Instant::now();
+        }
     }
 
-    Ok((total_size, format!("{:x}", context.compute())))
+    Ok((total_size, format!("{:x}", md5_context.compute())))
 }
 
 fn ngs_verification_failure(
@@ -3004,6 +3046,16 @@ mod tests {
             events.first().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Started)
         );
+        assert!(
+            events
+                .iter()
+                .any(|event| event.transfer.state == HttpDownloadProgressState::Finalizing)
+        );
+        assert!(
+            events
+                .iter()
+                .any(|event| event.transfer.state == HttpDownloadProgressState::Verifying)
+        );
         assert_eq!(
             events.last().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Finished)
@@ -3144,7 +3196,7 @@ mod tests {
         fs::write(&key_path, b"trusted key").expect("fake key should be written");
         fs::write(
             &fake_ascp,
-            "#!/bin/sh\nfor destination do :; done\nartifact=${destination%.partial}\nprintf 'AC' > \"$artifact\"\nsleep 3\nprintf 'ACGT\\n' > \"$artifact\"\n",
+            "#!/bin/sh\nfor destination do :; done\nartifact=${destination%.partial}\nprintf 'AC' > \"$artifact\"\nsleep 3\nprintf 'ACGT\\n' > \"$artifact\"\nsleep 3\n",
         )
         .expect("fake ascp should be written");
         fs::set_permissions(&fake_ascp, fs::Permissions::from_mode(0o755))
@@ -3203,6 +3255,15 @@ mod tests {
             event.transfer.state == HttpDownloadProgressState::Advanced
                 && event.transfer.bytes_downloaded == 2
         }));
+        assert!(events.iter().any(|event| {
+            event.transfer.state == HttpDownloadProgressState::Finalizing
+                && event.transfer.bytes_downloaded == body.len() as u64
+        }));
+        assert!(
+            events
+                .iter()
+                .any(|event| event.transfer.state == HttpDownloadProgressState::Verifying)
+        );
         assert_eq!(
             events.last().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Finished)

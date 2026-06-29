@@ -182,6 +182,14 @@ impl ProgressDashboardState {
         });
         let should_render = match (progress.transfer.state, previous) {
             (HttpDownloadProgressState::Started | HttpDownloadProgressState::Finished, _) => true,
+            (
+                HttpDownloadProgressState::Finalizing | HttpDownloadProgressState::Verifying,
+                None,
+            ) => true,
+            (
+                HttpDownloadProgressState::Finalizing | HttpDownloadProgressState::Verifying,
+                Some(previous),
+            ) => now.duration_since(previous.last_rendered) >= Duration::from_secs(2),
             (HttpDownloadProgressState::Advanced, None) => true,
             (HttpDownloadProgressState::Advanced, Some(previous)) => {
                 now.duration_since(previous.last_rendered) >= Duration::from_secs(2)
@@ -208,11 +216,16 @@ impl ProgressDashboardState {
         if progress.transfer.state != HttpDownloadProgressState::Finished {
             self.activity_frame = self.activity_frame.wrapping_add(1);
         }
+        let phase_started_at = previous
+            .filter(|previous| previous.latest_progress.state == progress.transfer.state)
+            .map(|previous| previous.phase_started_at)
+            .unwrap_or(now);
         let transfer = progress.transfer;
         self.entries.insert(
             key,
             ProgressRenderState {
                 last_rendered: now,
+                phase_started_at,
                 bytes_downloaded: transfer.bytes_downloaded,
                 latest_progress: transfer,
                 speed_bytes_per_second,
@@ -236,6 +249,7 @@ impl ProgressDashboardState {
                         &entry.latest_progress,
                         entry.speed_bytes_per_second,
                         entry.activity_frame,
+                        entry.phase_elapsed(now),
                     )
                 )
             });
@@ -260,6 +274,7 @@ impl ProgressDashboardState {
                         &entry.latest_progress,
                         entry.speed_bytes_per_second,
                         entry.activity_frame,
+                        entry.phase_elapsed(Instant::now()),
                     )
                 })
                 .collect::<Vec<_>>(),
@@ -291,11 +306,18 @@ impl ProgressDashboardState {
 #[derive(Clone, Debug)]
 struct ProgressRenderState {
     last_rendered: Instant,
+    phase_started_at: Instant,
     bytes_downloaded: u64,
     latest_progress: HttpDownloadProgress,
     speed_bytes_per_second: Option<f64>,
     label: String,
     activity_frame: usize,
+}
+
+impl ProgressRenderState {
+    fn phase_elapsed(&self, now: Instant) -> Duration {
+        now.duration_since(self.phase_started_at)
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -348,8 +370,14 @@ impl ProgressSummaryState {
         context: &NgsDownloadProgressContext,
         transfer: &HttpDownloadProgress,
     ) {
+        let observed_bytes = self
+            .asset_bytes
+            .get(asset_key)
+            .copied()
+            .unwrap_or_default()
+            .max(transfer.bytes_downloaded);
         self.asset_bytes
-            .insert(asset_key.to_owned(), transfer.bytes_downloaded);
+            .insert(asset_key.to_owned(), observed_bytes);
         let run_group = self
             .runs
             .entry(context.run_accession.clone())
@@ -495,14 +523,24 @@ fn render_ngs_download_progress(
     progress: &HttpDownloadProgress,
     speed_bytes_per_second: Option<f64>,
     activity_frame: usize,
+    phase_elapsed: Duration,
 ) -> String {
     const BAR_WIDTH: usize = 16;
     const SPINNER_FRAMES: &[&str] = &["|", "/", "-", "\\"];
     let short_label = shorten_text(label, 36);
-    let activity = if progress.state == HttpDownloadProgressState::Finished {
-        "done"
-    } else {
-        SPINNER_FRAMES[activity_frame % SPINNER_FRAMES.len()]
+    let activity = match progress.state {
+        HttpDownloadProgressState::Finished => "done".to_owned(),
+        HttpDownloadProgressState::Finalizing => "wait".to_owned(),
+        HttpDownloadProgressState::Verifying => "md5".to_owned(),
+        HttpDownloadProgressState::Started | HttpDownloadProgressState::Advanced => {
+            SPINNER_FRAMES[activity_frame % SPINNER_FRAMES.len()].to_owned()
+        }
+    };
+    let phase = match progress.state {
+        HttpDownloadProgressState::Finalizing | HttpDownloadProgressState::Verifying => {
+            format!("  elapsed {}", format_duration(phase_elapsed))
+        }
+        _ => String::new(),
     };
 
     if let Some(total) = progress.total_bytes.filter(|total| *total > 0) {
@@ -511,20 +549,34 @@ fn render_ngs_download_progress(
         let empty = BAR_WIDTH.saturating_sub(filled);
         let percent = ratio * 100.0;
         format!(
-            "ngsget {activity:<4} {short_label:<36} [{}{}] {:>6.2}% {} / {}  speed {}",
+            "ngsget {activity:<4} {short_label:<36} [{}{}] {:>6.2}% {} / {}  speed {}{}",
             "=".repeat(filled),
             " ".repeat(empty),
             percent,
             format_bytes(progress.bytes_downloaded),
             format_bytes(total),
             format_speed(speed_bytes_per_second),
+            phase,
         )
     } else {
         format!(
-            "ngsget {activity:<4} {short_label:<36} {} downloaded  speed {}",
+            "ngsget {activity:<4} {short_label:<36} {} downloaded  speed {}{}",
             format_bytes(progress.bytes_downloaded),
             format_speed(speed_bytes_per_second),
+            phase,
         )
+    }
+}
+
+fn format_duration(duration: Duration) -> String {
+    let seconds = duration.as_secs();
+    let hours = seconds / 3600;
+    let minutes = (seconds % 3600) / 60;
+    let seconds = seconds % 60;
+    if hours > 0 {
+        format!("{hours:02}:{minutes:02}:{seconds:02}")
+    } else {
+        format!("{minutes:02}:{seconds:02}")
     }
 }
 
@@ -676,11 +728,35 @@ mod tests {
             &progress,
             Some(13_107_200.0),
             0,
+            Duration::ZERO,
         );
 
         assert!(rendered.contains("4.07 GiB / 66.88 GiB  speed 12.50 MiB/s"));
         assert!(rendered.starts_with("ngsget |"));
         assert!(!rendered.contains("GiBGiB"));
+    }
+
+    #[test]
+    fn renders_ngs_post_transfer_phase_elapsed_time() {
+        let progress = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Verifying,
+            url: "https://example.invalid/ERR8562402.fastq.gz".to_owned(),
+            path: PathBuf::from("ERR8562402.fastq.gz.partial"),
+            bytes_downloaded: 4_370_129_224,
+            total_bytes: Some(8_685_137_920),
+        };
+
+        let rendered = render_ngs_download_progress(
+            "ERR8562402.fastq.gz.partial",
+            &progress,
+            Some(40_000_000.0),
+            0,
+            Duration::from_secs(125),
+        );
+
+        assert!(rendered.starts_with("ngsget md5"));
+        assert!(rendered.contains("elapsed 02:05"));
+        assert!(rendered.contains("speed 38.15 MiB/s"));
     }
 
     #[test]

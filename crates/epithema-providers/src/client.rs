@@ -117,6 +117,10 @@ pub enum HttpDownloadProgressState {
     Started,
     /// More bytes were written to disk.
     Advanced,
+    /// The transfer has reached the expected size and the external downloader is finalizing.
+    Finalizing,
+    /// The local file is being read for checksum verification.
+    Verifying,
     /// The response body has been fully written.
     Finished,
 }
