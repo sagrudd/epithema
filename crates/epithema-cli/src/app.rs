@@ -154,7 +154,7 @@ impl ProgressDashboardState {
     fn record(&mut self, progress: NgsDownloadProgress, now: Instant) -> Option<String> {
         let key = progress.transfer.url.clone();
         if let Some(context) = &progress.context {
-            self.record_summary(context, &key, progress.transfer.state);
+            self.record_summary(context, &key, &progress.transfer);
         }
         let previous = self.entries.get(&key);
         let speed_bytes_per_second = previous.and_then(|previous| {
@@ -269,13 +269,13 @@ impl ProgressDashboardState {
         &mut self,
         context: &NgsDownloadProgressContext,
         asset_key: &str,
-        state: HttpDownloadProgressState,
+        transfer: &HttpDownloadProgress,
     ) {
         let summary = self
             .summary
             .get_or_insert_with(|| ProgressSummaryState::from_context(context));
         summary.merge_context(context);
-        summary.record_asset(asset_key, context, state);
+        summary.record_asset(asset_key, context, transfer);
     }
 }
 
@@ -299,6 +299,7 @@ struct ProgressSummaryState {
     selected_asset_count: usize,
     selected_total_bytes: Option<u64>,
     completed_assets: HashSet<String>,
+    asset_bytes: HashMap<String, u64>,
     runs: HashMap<String, ProgressGroupState>,
     samples: HashMap<String, ProgressGroupState>,
 }
@@ -314,6 +315,7 @@ impl ProgressSummaryState {
             selected_asset_count: context.selected_asset_count,
             selected_total_bytes: context.selected_total_bytes,
             completed_assets: HashSet::new(),
+            asset_bytes: HashMap::new(),
             runs: HashMap::new(),
             samples: HashMap::new(),
         }
@@ -335,8 +337,10 @@ impl ProgressSummaryState {
         &mut self,
         asset_key: &str,
         context: &NgsDownloadProgressContext,
-        state: HttpDownloadProgressState,
+        transfer: &HttpDownloadProgress,
     ) {
+        self.asset_bytes
+            .insert(asset_key.to_owned(), transfer.bytes_downloaded);
         let run_group = self
             .runs
             .entry(context.run_accession.clone())
@@ -353,7 +357,7 @@ impl ProgressSummaryState {
             .or_insert_with(|| ProgressGroupState::new(context.sample_selected_asset_count));
         sample_group.total_assets = context.sample_selected_asset_count;
 
-        if state == HttpDownloadProgressState::Finished {
+        if transfer.state == HttpDownloadProgressState::Finished {
             let asset_key = asset_key.to_owned();
             self.completed_assets.insert(asset_key.clone());
             run_group.completed_assets.insert(asset_key.clone());
@@ -373,6 +377,10 @@ impl ProgressSummaryState {
             .values()
             .filter(|group| group.is_complete())
             .count()
+    }
+
+    fn observed_bytes(&self) -> u64 {
+        self.asset_bytes.values().copied().sum()
     }
 }
 
@@ -425,17 +433,31 @@ fn render_ngs_download_summary(summary: &ProgressSummaryState) -> Vec<String> {
         .completed_assets
         .len()
         .min(summary.selected_asset_count);
-    let asset_ratio = if summary.selected_asset_count > 0 {
+    let observed_bytes = summary
+        .selected_total_bytes
+        .map(|total| summary.observed_bytes().min(total));
+    let progress_ratio = if let (Some(observed), Some(total)) = (
+        observed_bytes,
+        summary.selected_total_bytes.filter(|total| *total > 0),
+    ) {
+        observed as f64 / total as f64
+    } else if summary.selected_asset_count > 0 {
         completed_assets as f64 / summary.selected_asset_count as f64
     } else {
         0.0
     };
-    let filled = (asset_ratio * BAR_WIDTH as f64).round() as usize;
+    let filled = (progress_ratio * BAR_WIDTH as f64).round() as usize;
     let empty = BAR_WIDTH.saturating_sub(filled);
-    let percent = asset_ratio * 100.0;
+    let percent = progress_ratio * 100.0;
     let size = summary
         .selected_total_bytes
-        .map(|bytes| format!("  known_size {}", format_bytes(bytes)))
+        .map(|bytes| {
+            format!(
+                "  bytes {} / {}",
+                format_bytes(observed_bytes.unwrap_or(0)),
+                format_bytes(bytes)
+            )
+        })
         .unwrap_or_default();
 
     vec![
@@ -689,7 +711,7 @@ mod tests {
             state: HttpDownloadProgressState::Started,
             url: "https://example.invalid/a.fastq.gz".to_owned(),
             path: PathBuf::from("a.fastq.gz.partial"),
-            bytes_downloaded: 0,
+            bytes_downloaded: 45,
             total_bytes: Some(100),
         };
         let file_b = HttpDownloadProgress {
@@ -737,7 +759,7 @@ mod tests {
             state: HttpDownloadProgressState::Started,
             url: "https://example.invalid/a.fastq.gz".to_owned(),
             path: PathBuf::from("a.fastq.gz.partial"),
-            bytes_downloaded: 0,
+            bytes_downloaded: 45,
             total_bytes: Some(100),
         };
         let mut file_b = HttpDownloadProgress {
@@ -772,6 +794,8 @@ mod tests {
             first_render.contains("ngsget study PRJEB50706  provider ena  title Porkchop study")
         );
         assert!(first_render.contains("assets 0/3"));
+        assert!(first_render.contains("15.00%"), "{first_render:?}");
+        assert!(first_render.contains("bytes 45 B / 300 B"));
         assert!(finished_render.contains("assets 1/3"));
         assert!(finished_render.contains("runs 1/2"));
         assert!(finished_render.contains("samples 1/2"));

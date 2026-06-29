@@ -830,6 +830,13 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     if let Some((observed_size, observed_checksum)) =
         verified_existing_asset_evidence(&local_path, asset)?
     {
+        emit_ngs_asset_finished_progress(
+            progress_callback,
+            plan,
+            asset,
+            &local_path,
+            observed_size,
+        );
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_observed_evidence(Some(observed_size), Some(observed_checksum))
             .with_verification_status(NgsVerificationStatus::SkippedVerified)
@@ -839,6 +846,17 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     if let Some(record) =
         materialize_existing_download_candidate(asset, &local_path, existing_download_roots)?
     {
+        if record.verification_status != NgsVerificationStatus::Failed {
+            if let Some(observed_size) = record.observed_size_bytes {
+                emit_ngs_asset_finished_progress(
+                    progress_callback,
+                    plan,
+                    asset,
+                    &record.local_path,
+                    observed_size,
+                );
+            }
+        }
         return Ok(record);
     }
 
@@ -862,6 +880,13 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
         }
         fs::rename(&partial_path, &local_path)
             .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        emit_ngs_asset_finished_progress(
+            progress_callback,
+            plan,
+            asset,
+            &local_path,
+            observed_size,
+        );
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_observed_evidence(Some(observed_size), Some(observed_checksum))
             .with_verification_status(NgsVerificationStatus::Verified)
@@ -976,6 +1001,13 @@ fn materialize_aspera_ngs_asset(
         }
         fs::rename(&partial_path, &local_path)
             .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        emit_ngs_asset_finished_progress(
+            progress_callback,
+            plan,
+            asset,
+            &local_path,
+            observed_size,
+        );
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_observed_evidence(Some(observed_size), Some(observed_checksum))
             .with_verification_status(NgsVerificationStatus::Verified)
@@ -1669,6 +1701,24 @@ fn emit_ngs_download_progress(
             context,
         });
     }
+}
+
+fn emit_ngs_asset_finished_progress(
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+    path: &Path,
+    observed_size: u64,
+) {
+    emit_ngs_download_progress(
+        progress_callback,
+        HttpDownloadProgressState::Finished,
+        &asset.source_url,
+        path,
+        observed_size,
+        asset.size_bytes.or(Some(observed_size)),
+        Some(ngs_download_progress_context(plan, asset)),
+    );
 }
 
 fn ngs_download_progress_context(
@@ -3392,8 +3442,22 @@ mod tests {
             .expect("download directory should be created");
         fs::write(&local_path, &body).expect("existing verified download should be written");
         let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
-        let gateway =
-            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let progress_callback: Box<NgsDownloadProgressCallback> = {
+            let events = Arc::clone(&events);
+            Box::new(move |event| {
+                events
+                    .lock()
+                    .expect("progress events should be lockable")
+                    .push(event);
+            })
+        };
+        let gateway = ServiceNgsRetrieval::with_client_and_progress(
+            &config,
+            &registry,
+            MockHttpClient::default(),
+            Some(progress_callback.as_ref()),
+        );
 
         let records = gateway
             .materialize_download_plan(&plan)
@@ -3405,6 +3469,20 @@ mod tests {
             NgsVerificationStatus::SkippedVerified
         );
         assert_eq!(records[0].local_path, local_path);
+        let events = events.lock().expect("progress events should be lockable");
+        assert_eq!(events.len(), 1);
+        assert_eq!(
+            events[0].transfer.state,
+            HttpDownloadProgressState::Finished
+        );
+        assert_eq!(events[0].transfer.bytes_downloaded, 5);
+        assert_eq!(
+            events[0]
+                .context
+                .as_ref()
+                .map(|context| context.selected_asset_count),
+            Some(1)
+        );
         fs::remove_dir_all(output_root).ok();
     }
 
