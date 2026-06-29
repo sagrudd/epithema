@@ -941,9 +941,7 @@ fn materialize_aspera_ngs_asset(
         fs::create_dir_all(parent)
             .map_err(|error| ngs_io_error("create Aspera NGS download directory", error))?;
     }
-    let starting_size = fs::metadata(&partial_path)
-        .map(|metadata| metadata.len())
-        .unwrap_or(0);
+    let starting_size = observed_aspera_download_size(&local_path, &partial_path);
     emit_ngs_download_progress(
         progress_callback,
         HttpDownloadProgressState::Started,
@@ -999,20 +997,17 @@ fn materialize_aspera_ngs_asset(
             Ok(Some(_status)) => break,
             Ok(None) => {
                 thread::sleep(Duration::from_secs(2));
-                if let Ok(metadata) = fs::metadata(&partial_path) {
-                    let current_size = metadata.len();
-                    if current_size != last_progress_bytes {
-                        emit_ngs_download_progress(
-                            progress_callback,
-                            HttpDownloadProgressState::Advanced,
-                            &asset.source_url,
-                            &partial_path,
-                            current_size,
-                            asset.size_bytes,
-                        );
-                        last_progress_bytes = current_size;
-                    }
-                }
+                let current_size = observed_aspera_download_size(&local_path, &partial_path)
+                    .max(last_progress_bytes);
+                emit_ngs_download_progress(
+                    progress_callback,
+                    HttpDownloadProgressState::Advanced,
+                    &asset.source_url,
+                    &partial_path,
+                    current_size,
+                    asset.size_bytes,
+                );
+                last_progress_bytes = current_size;
             }
             Err(error) => {
                 return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
@@ -1048,12 +1043,16 @@ fn materialize_aspera_ngs_asset(
             )));
     }
 
-    let (observed_size, observed_checksum) = ngs_file_evidence(&partial_path)?;
+    let completed_path = verified_aspera_download_artifact(&local_path, &partial_path, asset)?
+        .map(|(path, _, _)| path)
+        .or_else(|| largest_aspera_download_artifact(&local_path, &partial_path))
+        .unwrap_or_else(|| partial_path.clone());
+    let (observed_size, observed_checksum) = ngs_file_evidence(&completed_path)?;
     emit_ngs_download_progress(
         progress_callback,
         HttpDownloadProgressState::Finished,
         &asset.source_url,
-        &partial_path,
+        &completed_path,
         observed_size,
         asset.size_bytes.or(Some(observed_size)),
     );
@@ -1077,12 +1076,14 @@ fn materialize_aspera_ngs_asset(
             .with_failure_reason(reason));
     }
 
-    if local_path.exists() {
+    if completed_path != local_path && local_path.exists() {
         fs::remove_file(&local_path)
             .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
     }
-    fs::rename(&partial_path, &local_path)
-        .map_err(|error| ngs_io_error("promote verified Aspera NGS download", error))?;
+    if completed_path != local_path {
+        fs::rename(&completed_path, &local_path)
+            .map_err(|error| ngs_io_error("promote verified Aspera NGS download", error))?;
+    }
 
     let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
         NgsVerificationStatus::Verified
@@ -1621,6 +1622,96 @@ fn aspera_command_log_path(partial_path: &Path) -> PathBuf {
     partial_path.with_extension("ascp.log")
 }
 
+fn observed_aspera_download_size(local_path: &Path, partial_path: &Path) -> u64 {
+    largest_aspera_download_artifact(local_path, partial_path)
+        .and_then(|path| file_size(&path))
+        .unwrap_or(0)
+}
+
+fn largest_aspera_download_artifact(local_path: &Path, partial_path: &Path) -> Option<PathBuf> {
+    aspera_download_artifact_candidates(local_path, partial_path)
+        .into_iter()
+        .filter_map(|path| file_size(&path).map(|size| (path, size)))
+        .max_by_key(|(_, size)| *size)
+        .map(|(path, _)| path)
+}
+
+fn verified_aspera_download_artifact(
+    local_path: &Path,
+    partial_path: &Path,
+    asset: &NgsAsset,
+) -> Result<Option<(PathBuf, u64, String)>, PlatformError> {
+    for candidate in aspera_download_artifact_candidates(local_path, partial_path) {
+        if file_size(&candidate).is_none() {
+            continue;
+        }
+        if let Some((observed_size, observed_checksum)) =
+            verified_existing_asset_evidence(&candidate, asset)?
+        {
+            return Ok(Some((candidate, observed_size, observed_checksum)));
+        }
+    }
+    Ok(None)
+}
+
+fn file_size(path: &Path) -> Option<u64> {
+    fs::metadata(path)
+        .ok()
+        .filter(|metadata| metadata.is_file())
+        .map(|metadata| metadata.len())
+}
+
+fn aspera_download_artifact_candidates(local_path: &Path, partial_path: &Path) -> Vec<PathBuf> {
+    let local_name = local_path.file_name().and_then(|value| value.to_str());
+    let partial_name = partial_path.file_name().and_then(|value| value.to_str());
+    let mut candidates = Vec::new();
+    push_unique_path(&mut candidates, partial_path.to_path_buf());
+    push_unique_path(&mut candidates, local_path.to_path_buf());
+
+    let mut directories = Vec::new();
+    if let Some(parent) = partial_path.parent() {
+        push_unique_path(&mut directories, parent.to_path_buf());
+    }
+    if partial_path.is_dir() {
+        push_unique_path(&mut directories, partial_path.to_path_buf());
+    }
+
+    for directory in directories {
+        let Ok(entries) = fs::read_dir(directory) else {
+            continue;
+        };
+        for entry in entries.flatten() {
+            let file_name = entry.file_name();
+            let Some(file_name) = file_name.to_str() else {
+                continue;
+            };
+            if is_aspera_download_artifact_name(file_name, local_name, partial_name) {
+                push_unique_path(&mut candidates, entry.path());
+            }
+        }
+    }
+
+    candidates
+}
+
+fn push_unique_path(paths: &mut Vec<PathBuf>, path: PathBuf) {
+    if !paths.iter().any(|existing| existing == &path) {
+        paths.push(path);
+    }
+}
+
+fn is_aspera_download_artifact_name(
+    file_name: &str,
+    local_name: Option<&str>,
+    partial_name: Option<&str>,
+) -> bool {
+    if file_name.ends_with(".ascp.log") || file_name.ends_with(".log") {
+        return false;
+    }
+    local_name.is_some_and(|name| file_name == name || file_name.contains(name))
+        || partial_name.is_some_and(|name| file_name == name || file_name.contains(name))
+}
+
 fn aspera_command_log_excerpt(path: &Path) -> String {
     let Ok(contents) = fs::read_to_string(path) else {
         return "unavailable".to_owned();
@@ -2101,8 +2192,9 @@ mod tests {
 
     use super::{
         DEFAULT_SRA_TOOLKIT_CONTAINER, NgsAsperaConfig, NgsDownloadProgressCallback,
-        ServiceNgsRetrieval, SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
-        aspera_command_line, aspera_download_source, partial_ngs_asset_path,
+        NgsDownloadTransport, NgsDownloadTransportConfig, ServiceNgsRetrieval,
+        SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner, aspera_command_line,
+        aspera_download_source, partial_ngs_asset_path,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -2643,6 +2735,100 @@ mod tests {
         );
         assert_eq!(events.last().map(|event| event.bytes_downloaded), Some(5));
         fs::remove_dir_all(output_root).ok();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn reports_aspera_progress_from_live_download_artifact() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n";
+        let checksum = format!("{:x}", md5::compute(body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(body.len() as u64))
+        .with_checksum_md5(Some(checksum));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("aspera-download-progress");
+        let runtime_root = temp_ngs_output_root("fake-ascp-progress");
+        let fake_ascp = runtime_root.join("ascp");
+        let key_path = runtime_root.join("aspera_bypass_rsa.pem");
+        fs::create_dir_all(&runtime_root).expect("fake ascp runtime should be created");
+        fs::write(&key_path, b"trusted key").expect("fake key should be written");
+        fs::write(
+            &fake_ascp,
+            "#!/bin/sh\nfor destination do :; done\nartifact=${destination%.partial}\nprintf 'AC' > \"$artifact\"\nsleep 3\nprintf 'ACGT\\n' > \"$artifact\"\n",
+        )
+        .expect("fake ascp should be written");
+        fs::set_permissions(&fake_ascp, fs::Permissions::from_mode(0o755))
+            .expect("fake ascp should be executable");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let progress_callback: Box<NgsDownloadProgressCallback> = {
+            let events = Arc::clone(&events);
+            Box::new(move |event| {
+                events
+                    .lock()
+                    .expect("progress events should be lockable")
+                    .push(event);
+            })
+        };
+        let gateway = ServiceNgsRetrieval::with_client_and_progress(
+            &config,
+            &registry,
+            MockHttpClient::default(),
+            Some(progress_callback.as_ref()),
+        );
+        let transport_config = NgsDownloadTransportConfig {
+            mode: NgsDownloadTransport::Aspera,
+            aspera: NgsAsperaConfig {
+                ascp_path: fake_ascp,
+                key_path: Some(key_path),
+                key_passphrase: None,
+                target_rate: "300m".to_owned(),
+            },
+        };
+
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads_transport_and_threads(
+                &plan,
+                &[],
+                1,
+                &transport_config,
+            )
+            .expect("fake Aspera download should materialize");
+
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            fs::read(&records[0].local_path).expect("downloaded artifact should be readable"),
+            body
+        );
+        assert!(!partial_ngs_asset_path(&records[0].local_path).exists());
+        let events = events.lock().expect("progress events should be lockable");
+        assert_eq!(
+            events.first().map(|event| event.state),
+            Some(HttpDownloadProgressState::Started)
+        );
+        assert!(events.iter().any(|event| {
+            event.state == HttpDownloadProgressState::Advanced && event.bytes_downloaded == 2
+        }));
+        assert_eq!(
+            events.last().map(|event| event.state),
+            Some(HttpDownloadProgressState::Finished)
+        );
+
+        fs::remove_dir_all(output_root).ok();
+        fs::remove_dir_all(runtime_root).ok();
     }
 
     #[test]

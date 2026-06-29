@@ -337,13 +337,16 @@ The provenance document should use schema label
    Status: implemented for direct ENA-style file URLs in
    `crates/epithema-service/src/ngs_retrieval.rs`. The materializer streams
    provider response bodies directly to `.partial` files, emits CLI progress
-   events with transfer-speed estimates for long downloads, verifies size and
-   MD5 evidence from disk, and promotes only after available byte-count and
-   checksum evidence passes. It writes selected assets to the documented
+   events with transfer-speed estimates for long downloads, repaints active
+   transfer rows about every two seconds, measures Aspera progress from live
+   filesystem artifacts in the target run directory, verifies size and MD5
+   evidence from disk, and promotes only after available byte-count and checksum
+   evidence passes. It writes selected assets to the documented
    `runs/<run>/fastq`,
-   `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification as
-   a partial file, resumes existing `.partial` files when the provider honors
-   byte-range requests, skips already verified local files, supports optional
+   `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification
+   artifacts in place for inspection, resumes existing `.partial` files when
+   the provider honors byte-range requests, skips already verified local files,
+   supports optional
    ENA Aspera `ascp` downloads through `ngsget --transport aspera`, supports
    bounded concurrent direct downloads through `ngsget --threads <n>`, and supports
    service-layer `ngsget --check-downloads <path>` behavior: recursive
@@ -437,9 +440,11 @@ The provenance document should use schema label
     assets alongside any available FASTQ, recursive verified reuse through
     `--check-downloads`, bounded concurrent direct downloads through
     `--threads`, optional ENA Aspera transfer through `--transport aspera`,
-    streamed large-file direct downloads with speed-aware CLI progress and
-    resumable `.partial` files, SRA conversion through the pinned default
-    container, provenance JSON, and stable handoff manifest behavior.
+    streamed large-file direct downloads with speed-aware CLI progress,
+    roughly two-second active-transfer heartbeat repaints, live filesystem
+    artifact measurement for Aspera transfers, and resumable `.partial` files,
+    SRA conversion through the pinned default container, provenance JSON, and
+    stable handoff manifest behavior.
     Release-facing scope and notes now explicitly keep protected-access,
     dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and

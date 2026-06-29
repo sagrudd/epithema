@@ -134,6 +134,7 @@ struct ProgressDashboardState {
     order: Vec<String>,
     rendered_lines: usize,
     dashboard_enabled: bool,
+    activity_frame: usize,
 }
 
 impl ProgressDashboardState {
@@ -143,6 +144,7 @@ impl ProgressDashboardState {
             order: Vec::new(),
             rendered_lines: 0,
             dashboard_enabled,
+            activity_frame: 0,
         }
     }
 
@@ -185,6 +187,10 @@ impl ProgressDashboardState {
         let entry_key = key.clone();
         let finished_key =
             (progress.state == HttpDownloadProgressState::Finished).then(|| entry_key.clone());
+        let activity_frame = self.activity_frame;
+        if progress.state != HttpDownloadProgressState::Finished {
+            self.activity_frame = self.activity_frame.wrapping_add(1);
+        }
         self.entries.insert(
             key,
             ProgressRenderState {
@@ -193,6 +199,7 @@ impl ProgressDashboardState {
                 latest_progress: progress,
                 speed_bytes_per_second,
                 label,
+                activity_frame,
             },
         );
 
@@ -210,6 +217,7 @@ impl ProgressDashboardState {
                         &entry.label,
                         &entry.latest_progress,
                         entry.speed_bytes_per_second,
+                        entry.activity_frame,
                     )
                 )
             });
@@ -227,6 +235,7 @@ impl ProgressDashboardState {
                     &entry.label,
                     &entry.latest_progress,
                     entry.speed_bytes_per_second,
+                    entry.activity_frame,
                 )
             })
             .collect()
@@ -247,6 +256,7 @@ struct ProgressRenderState {
     latest_progress: HttpDownloadProgress,
     speed_bytes_per_second: Option<f64>,
     label: String,
+    activity_frame: usize,
 }
 
 fn render_progress_dashboard(lines: &[String], previous_line_count: usize) -> String {
@@ -272,8 +282,10 @@ fn render_ngs_download_progress(
     label: &str,
     progress: &HttpDownloadProgress,
     speed_bytes_per_second: Option<f64>,
+    activity_frame: usize,
 ) -> String {
     const BAR_WIDTH: usize = 16;
+    const SPINNER_FRAMES: &[&str] = &["|", "/", "-", "\\"];
     let short_label = if label.chars().count() > 36 {
         let suffix: String = label
             .chars()
@@ -287,6 +299,11 @@ fn render_ngs_download_progress(
     } else {
         label.to_owned()
     };
+    let activity = if progress.state == HttpDownloadProgressState::Finished {
+        "done"
+    } else {
+        SPINNER_FRAMES[activity_frame % SPINNER_FRAMES.len()]
+    };
 
     if let Some(total) = progress.total_bytes.filter(|total| *total > 0) {
         let ratio = (progress.bytes_downloaded as f64 / total as f64).clamp(0.0, 1.0);
@@ -294,7 +311,7 @@ fn render_ngs_download_progress(
         let empty = BAR_WIDTH.saturating_sub(filled);
         let percent = ratio * 100.0;
         format!(
-            "ngsget {short_label:<36} [{}{}] {:>6.2}% {} / {}  speed {}",
+            "ngsget {activity:<4} {short_label:<36} [{}{}] {:>6.2}% {} / {}  speed {}",
             "=".repeat(filled),
             " ".repeat(empty),
             percent,
@@ -304,7 +321,7 @@ fn render_ngs_download_progress(
         )
     } else {
         format!(
-            "ngsget {short_label:<36} {} downloaded  speed {}",
+            "ngsget {activity:<4} {short_label:<36} {} downloaded  speed {}",
             format_bytes(progress.bytes_downloaded),
             format_speed(speed_bytes_per_second),
         )
@@ -398,10 +415,38 @@ mod tests {
             "BMDM_mrna1273_0h_3.tar.gz.partial",
             &progress,
             Some(13_107_200.0),
+            0,
         );
 
         assert!(rendered.contains("4.07 GiB / 66.88 GiB  speed 12.50 MiB/s"));
+        assert!(rendered.starts_with("ngsget |"));
         assert!(!rendered.contains("GiBGiB"));
+    }
+
+    #[test]
+    fn repaints_active_download_rows_on_heartbeat_without_byte_delta() {
+        let mut dashboard = ProgressDashboardState::new(true);
+        let started_at = Instant::now();
+        let progress = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Started,
+            url: "https://example.invalid/a.fastq.gz".to_owned(),
+            path: PathBuf::from("a.fastq.gz.partial"),
+            bytes_downloaded: 0,
+            total_bytes: Some(100),
+        };
+
+        let first_render = dashboard
+            .record(progress.clone(), started_at)
+            .expect("started download should render");
+        let mut heartbeat = progress;
+        heartbeat.state = HttpDownloadProgressState::Advanced;
+        let heartbeat_render = dashboard
+            .record(heartbeat, started_at + Duration::from_secs(2))
+            .expect("heartbeat should repaint even without byte progress");
+
+        assert!(first_render.contains("ngsget |"));
+        assert!(heartbeat_render.contains("ngsget /"));
+        assert!(heartbeat_render.contains("speed 0 B/s"));
     }
 
     #[test]
