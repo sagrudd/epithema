@@ -12496,23 +12496,72 @@ fn ascli_aspera_key_passphrase() -> Option<String> {
 }
 
 fn ascli_aspera_key_passphrase_with_command(ascli_path: &Path) -> Option<String> {
-    let output = Command::new(ascli_path)
-        .args([
+    const CANDIDATES: &[&[&str]] = &[
+        &[
+            "config",
+            "ascp",
+            "info",
+            "--fields=uuid",
+            "--show-secrets",
+            "--format=text",
+        ],
+        &[
+            "config",
+            "ascp",
+            "info",
+            "--fields=uuid",
+            "--show-secrets=true",
+            "--format=text",
+        ],
+        &[
             "config",
             "ascp",
             "info",
             "--fields=uuid",
             "--show-secrets=yes",
             "--format=text",
-        ])
-        .stdin(Stdio::null())
-        .output()
-        .ok()?;
-    if !output.status.success() {
-        return None;
-    }
-    let stdout = String::from_utf8(output.stdout).ok()?;
-    extract_ascli_uuid_passphrase(&stdout)
+        ],
+        &[
+            "config",
+            "ascp",
+            "info",
+            "--fields=uuid",
+            "--show_secrets=yes",
+            "--format=text",
+        ],
+        &[
+            "--fields=uuid",
+            "--show-secrets",
+            "--format=text",
+            "config",
+            "ascp",
+            "info",
+        ],
+        &[
+            "--fields=uuid",
+            "--show-secrets=yes",
+            "--format=text",
+            "config",
+            "ascp",
+            "info",
+        ],
+        &["config", "ascp", "info", "--fields=uuid", "--format=text"],
+        &["config", "ascp", "info", "--fields=uuid"],
+        &["config", "ascp", "info"],
+    ];
+
+    CANDIDATES.iter().find_map(|args| {
+        let output = Command::new(ascli_path)
+            .args(*args)
+            .stdin(Stdio::null())
+            .output()
+            .ok()?;
+        if !output.status.success() {
+            return None;
+        }
+        let stdout = String::from_utf8(output.stdout).ok()?;
+        extract_ascli_uuid_passphrase(&stdout)
+    })
 }
 
 fn extract_ascli_uuid_passphrase(output: &str) -> Option<String> {
@@ -16007,7 +16056,19 @@ mod tests {
         let ascli_path = root.join("ascli");
         fs::write(
             &ascli_path,
-            "#!/bin/sh\nprintf '%s\\n' '01234567-89ab-cdef-0123-456789abcdef'\n",
+            r#"#!/bin/sh
+case "$*" in
+  *"--show-secrets=yes"*)
+    exit 2
+    ;;
+  *"--show-secrets"*)
+    printf '%s\n' '01234567-89ab-cdef-0123-456789abcdef'
+    ;;
+  *)
+    exit 3
+    ;;
+esac
+"#,
         )
         .expect("fake ascli should be written");
         fs::set_permissions(&ascli_path, fs::Permissions::from_mode(0o755))
