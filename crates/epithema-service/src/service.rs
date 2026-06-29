@@ -12372,6 +12372,12 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         transport_config.aspera.key_path =
             ensure_managed_aspera_key(&transport_config.aspera.ascp_path)?;
     }
+    if transport_config.mode != NgsDownloadTransport::Https
+        && transport_config.aspera.key_passphrase.is_none()
+        && env::var_os("ASPERA_SCP_PASS").is_none()
+    {
+        transport_config.aspera.key_passphrase = ascli_aspera_key_passphrase();
+    }
 
     if transport_config.mode == NgsDownloadTransport::Aspera {
         validate_ngsget_aspera_transport(&transport_config)?;
@@ -12482,6 +12488,51 @@ fn materialize_ascli_sdk_aspera_keys_with_command(ascli_path: &Path) -> bool {
         .status()
         .map(|status| status.success())
         .unwrap_or(false)
+}
+
+fn ascli_aspera_key_passphrase() -> Option<String> {
+    let ascli_path = resolve_command_path(Path::new("ascli"))?;
+    ascli_aspera_key_passphrase_with_command(&ascli_path)
+}
+
+fn ascli_aspera_key_passphrase_with_command(ascli_path: &Path) -> Option<String> {
+    let output = Command::new(ascli_path)
+        .args([
+            "config",
+            "ascp",
+            "info",
+            "--fields=uuid",
+            "--show-secrets=yes",
+            "--format=text",
+        ])
+        .stdin(Stdio::null())
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    let stdout = String::from_utf8(output.stdout).ok()?;
+    extract_ascli_uuid_passphrase(&stdout)
+}
+
+fn extract_ascli_uuid_passphrase(output: &str) -> Option<String> {
+    output
+        .lines()
+        .filter_map(|line| {
+            line.split_whitespace()
+                .last()
+                .map(|candidate| candidate.trim_matches(|ch| ch == '"' || ch == '\''))
+        })
+        .find(|candidate| is_uuid_like(candidate))
+        .map(str::to_owned)
+}
+
+fn is_uuid_like(value: &str) -> bool {
+    value.len() == 36
+        && value.chars().enumerate().all(|(index, ch)| match index {
+            8 | 13 | 18 | 23 => ch == '-',
+            _ => ch.is_ascii_hexdigit(),
+        })
 }
 
 fn copy_aspera_key_to_managed_cache(source: PathBuf) -> Result<PathBuf, ServiceError> {
@@ -15944,6 +15995,41 @@ mod tests {
         );
 
         fs::remove_dir_all(root).ok();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn obtains_ascli_uuid_passphrase_for_sdk_keys() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_service_output_root("aspera-ascli-passphrase");
+        fs::create_dir_all(&root).expect("root should be created");
+        let ascli_path = root.join("ascli");
+        fs::write(
+            &ascli_path,
+            "#!/bin/sh\nprintf '%s\\n' '01234567-89ab-cdef-0123-456789abcdef'\n",
+        )
+        .expect("fake ascli should be written");
+        fs::set_permissions(&ascli_path, fs::Permissions::from_mode(0o755))
+            .expect("fake ascli should be executable");
+
+        assert_eq!(
+            super::ascli_aspera_key_passphrase_with_command(&ascli_path),
+            Some("01234567-89ab-cdef-0123-456789abcdef".to_owned())
+        );
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn extracts_uuid_passphrase_from_ascli_table_output() {
+        assert_eq!(
+            super::extract_ascli_uuid_passphrase(
+                "field value\nuuid 01234567-89ab-cdef-0123-456789abcdef\n"
+            ),
+            Some("01234567-89ab-cdef-0123-456789abcdef".to_owned())
+        );
+        assert_eq!(super::extract_ascli_uuid_passphrase("uuid hidden\n"), None);
     }
 
     #[test]

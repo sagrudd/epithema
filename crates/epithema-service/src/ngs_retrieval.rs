@@ -69,6 +69,8 @@ pub struct NgsAsperaConfig {
     pub ascp_path: PathBuf,
     /// Private key used for public ENA Aspera authentication.
     pub key_path: Option<PathBuf>,
+    /// Optional key passphrase supplied to `ascp` through ASPERA_SCP_PASS.
+    pub key_passphrase: Option<String>,
     /// Aspera target transfer rate, passed to `ascp -l`.
     pub target_rate: String,
 }
@@ -78,6 +80,9 @@ impl Default for NgsAsperaConfig {
         Self {
             ascp_path: PathBuf::from("ascp"),
             key_path: default_aspera_key_path(),
+            key_passphrase: env::var("ASPERA_SCP_PASS")
+                .ok()
+                .filter(|value| !value.is_empty()),
             target_rate: DEFAULT_ASPERA_TARGET_RATE.to_owned(),
         }
     }
@@ -972,8 +977,10 @@ fn materialize_aspera_ngs_asset(
         .arg(key_path)
         .arg(&remote)
         .arg(&partial_path)
+        .stdin(Stdio::null())
         .stdout(Stdio::from(ascp_log))
         .stderr(Stdio::from(ascp_error_log))
+        .apply_aspera_env(&transport_config.aspera)
         .spawn()
     {
         Ok(child) => child,
@@ -1676,6 +1683,23 @@ fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
     })
 }
 
+trait AsperaCommandExt {
+    fn apply_aspera_env(&mut self, config: &NgsAsperaConfig) -> &mut Self;
+}
+
+impl AsperaCommandExt for Command {
+    fn apply_aspera_env(&mut self, config: &NgsAsperaConfig) -> &mut Self {
+        if let Some(passphrase) = config
+            .key_passphrase
+            .as_ref()
+            .filter(|passphrase| !passphrase.is_empty())
+        {
+            self.env("ASPERA_SCP_PASS", passphrase);
+        }
+        self
+    }
+}
+
 fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {
     paths.into_iter().find(|path| path.exists())
 }
@@ -2214,6 +2238,7 @@ mod tests {
         let config = NgsAsperaConfig {
             ascp_path: PathBuf::from("/opt/aspera/bin/ascp"),
             key_path: Some(PathBuf::from("/opt/aspera/etc/asperaweb_id_dsa.openssh")),
+            key_passphrase: None,
             target_rate: "1g".to_owned(),
         };
 

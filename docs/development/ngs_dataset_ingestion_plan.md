@@ -66,7 +66,17 @@ the FASP transfer engine, including `ascp`.
 The `ascli config ascp info` command is intentionally included. IBM `ascli`
 creates the SDK bypass keys lazily through its Aspera installation helper; a
 fresh SDK install can contain `ascp` but no key files until that command has
-inspected the transfer runtime.
+inspected the transfer runtime. The same command can report the key passphrase
+used by those SDK keys:
+
+```bash
+ascli config ascp info --fields=uuid --show-secrets=yes --format=text
+```
+
+Epithema uses that value only as an in-memory `ASPERA_SCP_PASS` environment
+variable for the spawned `ascp` process when the user has not already set
+`ASPERA_SCP_PASS`. The value is not written to provenance, command summaries, or
+download logs.
 
 After installation, make the SDK transfer binary visible inside the active
 environment:
@@ -101,10 +111,12 @@ to the `ascp` executable, the Aspera install prefix, `$CONDA_PREFIX/etc`,
 `$HOME/.aspera/connect/etc`, and `$HOME/.aspera/sdk` for supported key names. If
 no key is found and `ascli` is available on `PATH`, epithema silently runs
 `ascli config ascp info` once to let `ascli` materialize the SDK key files and
-then repeats discovery. When a key is found, epithema copies it to its managed
-cache with private permissions and uses that cache copy for later `ngsget`
-runs. A freshly generated SSH key is not useful because ENA public FASP
-endpoints only trust their configured public-data keys.
+then repeats discovery. When using SDK bypass keys, epithema also asks `ascli`
+for the UUID passphrase and passes it to `ascp` through `ASPERA_SCP_PASS` so
+downloads do not stop at interactive `Password:` prompts. When a key is found,
+epithema copies it to its managed cache with private permissions and uses that
+cache copy for later `ngsget` runs. A freshly generated SSH key is not useful
+because ENA public FASP endpoints only trust their configured public-data keys.
 
 With that setup, the intended command is:
 
