@@ -3,6 +3,7 @@
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::{Command, Stdio};
 use std::str::FromStr;
 use std::sync::Arc;
 
@@ -12403,10 +12404,10 @@ fn validate_ngsget_aspera_transport(
     let Some(key_path) = transport_config.aspera.key_path.as_ref() else {
         return Err(PlatformError::new(
             ErrorCategory::Validation,
-            "ngsget --transport aspera requires an ENA public Aspera key; install an Aspera package that provides asperaweb_id_dsa.openssh or pass --aspera-key",
+            "ngsget --transport aspera requires an ENA public Aspera key; install Aspera with ascli, run `ascli config ascp info`, or pass --aspera-key",
         )
         .with_code("service.ngsget.aspera_key_unavailable")
-        .with_detail("freshly generated SSH keys cannot authenticate to ENA public FASP endpoints"));
+        .with_detail("freshly generated SSH keys cannot authenticate to ENA public FASP endpoints; supported installed key names include asperaweb_id_dsa.openssh, aspera_bypass_dsa.pem, and aspera_bypass_rsa.pem"));
     };
 
     if !key_path.exists() {
@@ -12433,7 +12434,17 @@ fn ensure_managed_aspera_key(ascp_path: &Path) -> Result<Option<PathBuf>, Servic
         return Ok(Some(managed_key));
     }
 
-    let source = aspera_key_from_ascp_path(ascp_path)
+    let mut source = discover_installed_aspera_key(ascp_path);
+    if source.is_none() {
+        materialize_ascli_sdk_aspera_keys();
+        source = discover_installed_aspera_key(ascp_path);
+    }
+
+    source.map(copy_aspera_key_to_managed_cache).transpose()
+}
+
+fn discover_installed_aspera_key(ascp_path: &Path) -> Option<PathBuf> {
+    aspera_key_from_ascp_path(ascp_path)
         .or_else(|| {
             env::var_os("CONDA_PREFIX")
                 .map(PathBuf::from)
@@ -12452,9 +12463,25 @@ fn ensure_managed_aspera_key(ascp_path: &Path) -> Result<Option<PathBuf>, Servic
                         ),
                 )
             })
-        });
+        })
+}
 
-    source.map(copy_aspera_key_to_managed_cache).transpose()
+fn materialize_ascli_sdk_aspera_keys() {
+    let Some(ascli_path) = resolve_command_path(Path::new("ascli")) else {
+        return;
+    };
+    materialize_ascli_sdk_aspera_keys_with_command(&ascli_path);
+}
+
+fn materialize_ascli_sdk_aspera_keys_with_command(ascli_path: &Path) -> bool {
+    Command::new(ascli_path)
+        .args(["config", "ascp", "info"])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map(|status| status.success())
+        .unwrap_or(false)
 }
 
 fn copy_aspera_key_to_managed_cache(source: PathBuf) -> Result<PathBuf, ServiceError> {
@@ -12540,8 +12567,10 @@ fn restrict_private_key_permissions(path: &Path) -> Result<(), ServiceError> {
 
 fn aspera_key_from_ascp_path(ascp_path: &Path) -> Option<PathBuf> {
     let bin_dir = ascp_path.parent()?;
-    let prefix = bin_dir.parent()?;
-    first_existing_aspera_key(prefix)
+    first_existing_aspera_key_in_directory(bin_dir).or_else(|| {
+        let prefix = bin_dir.parent()?;
+        first_existing_aspera_key(prefix)
+    })
 }
 
 fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
@@ -12550,6 +12579,17 @@ fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
             .iter()
             .map(|name| prefix.join("etc").join(name)),
     )
+    .or_else(|| {
+        first_existing_path(
+            ASPERA_KEY_FILENAMES
+                .iter()
+                .map(|name| prefix.join("sdk").join(name)),
+        )
+    })
+}
+
+fn first_existing_aspera_key_in_directory(directory: &Path) -> Option<PathBuf> {
+    first_existing_path(ASPERA_KEY_FILENAMES.iter().map(|name| directory.join(name)))
 }
 
 fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {
@@ -15856,6 +15896,52 @@ mod tests {
         fs::write(&key_path, b"trusted SDK bypass key").expect("key should be written");
 
         assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn discovers_aspera_sdk_bypass_key_next_to_ascp_executable() {
+        let root = temp_service_output_root("aspera-sdk-flat");
+        let sdk_dir = root.join(".aspera/sdk");
+        fs::create_dir_all(&sdk_dir).expect("SDK directory should be created");
+        let ascp_path = sdk_dir.join("ascp");
+        let key_path = sdk_dir.join("aspera_bypass_dsa.pem");
+        fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
+        fs::write(&key_path, b"trusted SDK bypass key").expect("key should be written");
+
+        assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn invokes_ascli_ascp_info_to_materialize_sdk_keys() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_service_output_root("aspera-ascli-info");
+        fs::create_dir_all(&root).expect("root should be created");
+        let ascli_path = root.join("ascli");
+        let marker = root.join("ascli-args.txt");
+        fs::write(
+            &ascli_path,
+            format!(
+                "#!/bin/sh\nprintf '%s\\n' \"$@\" > '{}'\n",
+                marker.display()
+            ),
+        )
+        .expect("fake ascli should be written");
+        fs::set_permissions(&ascli_path, fs::Permissions::from_mode(0o755))
+            .expect("fake ascli should be executable");
+
+        assert!(super::materialize_ascli_sdk_aspera_keys_with_command(
+            &ascli_path
+        ));
+        assert_eq!(
+            fs::read_to_string(&marker).expect("fake ascli args should be written"),
+            "config\nascp\ninfo\n"
+        );
 
         fs::remove_dir_all(root).ok();
     }

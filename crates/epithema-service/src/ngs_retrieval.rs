@@ -1667,6 +1667,13 @@ fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
             .iter()
             .map(|name| prefix.join("etc").join(name)),
     )
+    .or_else(|| {
+        first_existing_path(
+            ASPERA_KEY_FILENAMES
+                .iter()
+                .map(|name| prefix.join("sdk").join(name)),
+        )
+    })
 }
 
 fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {
