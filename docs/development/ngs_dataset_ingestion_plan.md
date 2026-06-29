@@ -70,16 +70,16 @@ inspected the transfer runtime. The same command can report the key passphrase
 used by those SDK keys:
 
 ```bash
-ascli config ascp info --fields=uuid --show-secrets --format=text
+ascli config ascp info --fields=uuid --show-secrets=true --format=text
 ```
 
 Epithema uses that value only as an in-memory `ASPERA_SCP_PASS` environment
 variable for the spawned `ascp` process when the user has not already set
 `ASPERA_SCP_PASS`. The value is not written to provenance, command summaries, or
 download logs. Some `ascli` versions document or accept
-`--show-secrets=yes`; others reject the `=yes` argument and require the boolean
-`--show-secrets` form. Epithema tries both forms, plus a plain `info` fallback
-when extracting the UUID.
+`--show-secrets=yes`; conda-provided builds can require strict boolean values
+such as `--show-secrets=true`. Epithema tries both forms, plus bare/global
+option placement and a plain `info` fallback when extracting the UUID.
 
 After installation, make the SDK transfer binary visible inside the active
 environment:

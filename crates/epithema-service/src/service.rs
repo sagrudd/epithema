@@ -12502,7 +12502,7 @@ fn ascli_aspera_key_passphrase_with_command(ascli_path: &Path) -> Option<String>
             "ascp",
             "info",
             "--fields=uuid",
-            "--show-secrets",
+            "--show-secrets=true",
             "--format=text",
         ],
         &[
@@ -12510,7 +12510,7 @@ fn ascli_aspera_key_passphrase_with_command(ascli_path: &Path) -> Option<String>
             "ascp",
             "info",
             "--fields=uuid",
-            "--show-secrets=true",
+            "--show-secrets",
             "--format=text",
         ],
         &[
