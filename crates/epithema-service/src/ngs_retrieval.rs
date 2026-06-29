@@ -28,6 +28,13 @@ const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
 const MAX_NGS_DOWNLOAD_THREADS: usize = 20;
 const DEFAULT_ASPERA_TARGET_RATE: &str = "300m";
+const ASPERA_KEY_FILENAMES: &[&str] = &[
+    "asperaweb_id_dsa.openssh",
+    "aspera_tokenauth_id_dsa",
+    "aspera_tokenauth_id_rsa",
+    "aspera_bypass_dsa.pem",
+    "aspera_bypass_rsa.pem",
+];
 
 /// Callback used to report streamed NGS file download progress.
 pub type NgsDownloadProgressCallback = dyn Fn(HttpDownloadProgress) + Send + Sync + 'static;
@@ -1640,21 +1647,26 @@ fn default_aspera_key_path() -> Option<PathBuf> {
         })
         .or_else(|| {
             env::var_os("HOME").map(PathBuf::from).and_then(|home| {
-                first_existing_path([
-                    home.join(".aspera/connect/etc/asperaweb_id_dsa.openssh"),
-                    home.join(".aspera/connect/etc/aspera_tokenauth_id_dsa"),
-                    home.join(".aspera/connect/etc/aspera_tokenauth_id_rsa"),
-                ])
+                first_existing_path(
+                    ASPERA_KEY_FILENAMES
+                        .iter()
+                        .map(|name| home.join(".aspera").join("connect").join("etc").join(name))
+                        .chain(
+                            ASPERA_KEY_FILENAMES
+                                .iter()
+                                .map(|name| home.join(".aspera").join("sdk").join(name)),
+                        ),
+                )
             })
         })
 }
 
 fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
-    first_existing_path([
-        prefix.join("etc/asperaweb_id_dsa.openssh"),
-        prefix.join("etc/aspera_tokenauth_id_dsa"),
-        prefix.join("etc/aspera_tokenauth_id_rsa"),
-    ])
+    first_existing_path(
+        ASPERA_KEY_FILENAMES
+            .iter()
+            .map(|name| prefix.join("etc").join(name)),
+    )
 }
 
 fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {

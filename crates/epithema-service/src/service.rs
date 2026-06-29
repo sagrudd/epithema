@@ -12066,6 +12066,8 @@ const ASPERA_KEY_FILENAMES: &[&str] = &[
     "asperaweb_id_dsa.openssh",
     "aspera_tokenauth_id_dsa",
     "aspera_tokenauth_id_rsa",
+    "aspera_bypass_dsa.pem",
+    "aspera_bypass_rsa.pem",
 ];
 
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
@@ -12442,7 +12444,12 @@ fn ensure_managed_aspera_key(ascp_path: &Path) -> Result<Option<PathBuf>, Servic
                 first_existing_path(
                     ASPERA_KEY_FILENAMES
                         .iter()
-                        .map(|name| home.join(".aspera").join("connect").join("etc").join(name)),
+                        .map(|name| home.join(".aspera").join("connect").join("etc").join(name))
+                        .chain(
+                            ASPERA_KEY_FILENAMES
+                                .iter()
+                                .map(|name| home.join(".aspera").join("sdk").join(name)),
+                        ),
                 )
             })
         });
@@ -15830,6 +15837,23 @@ mod tests {
         let key_path = etc_dir.join("asperaweb_id_dsa.openssh");
         fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
         fs::write(&key_path, b"trusted package key").expect("key should be written");
+
+        assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
+
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn discovers_aspera_sdk_bypass_key_from_ascp_install_prefix() {
+        let root = temp_service_output_root("aspera-sdk-install");
+        let bin_dir = root.join("bin");
+        let etc_dir = root.join("etc");
+        fs::create_dir_all(&bin_dir).expect("bin directory should be created");
+        fs::create_dir_all(&etc_dir).expect("etc directory should be created");
+        let ascp_path = bin_dir.join("ascp");
+        let key_path = etc_dir.join("aspera_bypass_dsa.pem");
+        fs::write(&ascp_path, b"").expect("ascp placeholder should be written");
+        fs::write(&key_path, b"trusted SDK bypass key").expect("key should be written");
 
         assert_eq!(super::aspera_key_from_ascp_path(&ascp_path), Some(key_path));
 
