@@ -194,7 +194,7 @@ fn render_ngs_download_progress(
         let empty = BAR_WIDTH.saturating_sub(filled);
         let percent = ratio * 100.0;
         format!(
-            "ngsget {short_label:<36} [{}{}] {:>6.2}% {}/{} at {}",
+            "ngsget {short_label:<36} [{}{}] {:>6.2}% {} / {}  speed {}",
             "=".repeat(filled),
             " ".repeat(empty),
             percent,
@@ -204,7 +204,7 @@ fn render_ngs_download_progress(
         )
     } else {
         format!(
-            "ngsget {short_label:<36} {} downloaded at {}",
+            "ngsget {short_label:<36} {} downloaded  speed {}",
             format_bytes(progress.bytes_downloaded),
             format_speed(speed_bytes_per_second),
         )
@@ -274,9 +274,33 @@ enum Command {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use clap::Parser;
 
-    use super::Cli;
+    use super::{
+        Cli, HttpDownloadProgress, HttpDownloadProgressState, render_ngs_download_progress,
+    };
+
+    #[test]
+    fn renders_ngs_download_progress_with_clear_size_and_speed_columns() {
+        let progress = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Advanced,
+            url: "https://example.invalid/BMDM_mrna1273_0h_3.tar.gz".to_owned(),
+            path: PathBuf::from("BMDM_mrna1273_0h_3.tar.gz.partial"),
+            bytes_downloaded: 4_370_129_224,
+            total_bytes: Some(71_811_853_189),
+        };
+
+        let rendered = render_ngs_download_progress(
+            "BMDM_mrna1273_0h_3.tar.gz.partial",
+            &progress,
+            Some(13_107_200.0),
+        );
+
+        assert!(rendered.contains("4.07 GiB / 66.88 GiB  speed 12.50 MiB/s"));
+        assert!(!rendered.contains("GiBGiB"));
+    }
 
     #[test]
     fn parses_list_command() {
