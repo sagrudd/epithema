@@ -131,7 +131,10 @@ use crate::archive_retrieval::ServiceArchiveRetrieval;
 use crate::context::ExecutionContext;
 use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
-use crate::ngs_retrieval::{NgsDownloadProgressCallback, ServiceNgsRetrieval};
+use crate::ngs_retrieval::{
+    NgsDownloadProgressCallback, NgsDownloadTransport, NgsDownloadTransportConfig,
+    ServiceNgsRetrieval,
+};
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
 use crate::response::InvocationResponse;
@@ -1542,15 +1545,13 @@ impl EpithemaService {
     ) -> Result<InvocationResponse, ServiceError> {
         let manifest = gateway.retrieve_manifest(query)?;
         let plan = gateway.plan_downloads(&manifest, &params.output_root, params.include_raw)?;
-        let records = if params.existing_download_roots.is_empty() {
-            gateway.materialize_download_plan_with_threads(&plan, params.download_threads)?
-        } else {
-            gateway.materialize_download_plan_with_existing_downloads_and_threads(
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads_transport_and_threads(
                 &plan,
                 &params.existing_download_roots,
                 params.download_threads,
-            )?
-        };
+                &params.transport_config,
+            )?;
         let selected_asset_count = plan.selected_assets.len();
         let failed_record_count = records
             .iter()
@@ -1569,6 +1570,7 @@ impl EpithemaService {
             include_raw: params.include_raw,
             existing_download_roots: params.existing_download_roots.clone(),
             download_threads: params.download_threads,
+            download_transport: params.transport_config.mode.as_str().to_owned(),
             run_count: manifest.runs.len(),
             selected_asset_count,
             failed_record_count,
@@ -1600,6 +1602,10 @@ impl EpithemaService {
             .with_line(format!("Selected assets: {}", outcome.selected_asset_count))
             .with_line(format!("Failed records: {}", outcome.failed_record_count))
             .with_line(format!("Include raw: {}", outcome.include_raw))
+            .with_line(format!(
+                "Download transport: {}",
+                outcome.download_transport
+            ))
             .with_line(format!("Download threads: {}", outcome.download_threads))
             .with_line(format!("Output root: {}", outcome.output_root.display()))
             .with_line(format!("Manifest: {}", manifest_path.display()))
@@ -12051,6 +12057,7 @@ struct NgsgetCliParams {
     include_raw: bool,
     existing_download_roots: Vec<PathBuf>,
     download_threads: usize,
+    transport_config: NgsDownloadTransportConfig,
 }
 
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
@@ -12182,6 +12189,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut include_raw = false;
     let mut existing_download_roots = Vec::new();
     let mut download_threads = 1usize;
+    let mut transport_config = NgsDownloadTransportConfig::default();
     let mut index = 0usize;
 
     while index < arguments.len() {
@@ -12254,6 +12262,66 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
             index += 2;
             continue;
         }
+        if let Some(value) = argument.strip_prefix("--transport=") {
+            transport_config.mode = parse_ngsget_transport(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--transport" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --transport")
+                    .with_code("service.ngsget.transport_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            transport_config.mode = parse_ngsget_transport(value)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--ascp=") {
+            transport_config.aspera.ascp_path = PathBuf::from(value);
+            index += 1;
+            continue;
+        }
+        if argument == "--ascp" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --ascp")
+                    .with_code("service.ngsget.ascp_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            transport_config.aspera.ascp_path = PathBuf::from(value);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--aspera-key=") {
+            transport_config.aspera.key_path = Some(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--aspera-key" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --aspera-key")
+                    .with_code("service.ngsget.aspera_key_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            transport_config.aspera.key_path = Some(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--aspera-rate=") {
+            transport_config.aspera.target_rate = parse_ngsget_aspera_rate(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--aspera-rate" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --aspera-rate")
+                    .with_code("service.ngsget.aspera_rate_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            transport_config.aspera.target_rate = parse_ngsget_aspera_rate(value)?;
+            index += 2;
+            continue;
+        }
         if argument == "--container" || argument.starts_with("--container=") {
             return Err(PlatformError::new(
                 ErrorCategory::Invocation,
@@ -12277,6 +12345,11 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         index += 1;
     }
 
+    if transport_config.aspera.key_path.is_none() {
+        transport_config.aspera.key_path =
+            aspera_key_from_ascp_path(&transport_config.aspera.ascp_path);
+    }
+
     let accession = accession.ok_or_else(|| tool_usage_error("ngsget", ngsget_help()))?;
     Ok(NgsgetCliParams {
         accession,
@@ -12285,7 +12358,52 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         include_raw,
         existing_download_roots,
         download_threads,
+        transport_config,
     })
+}
+
+fn aspera_key_from_ascp_path(ascp_path: &std::path::Path) -> Option<PathBuf> {
+    let bin_dir = ascp_path.parent()?;
+    let prefix = bin_dir.parent()?;
+    [
+        prefix.join("etc/asperaweb_id_dsa.openssh"),
+        prefix.join("etc/aspera_tokenauth_id_dsa"),
+        prefix.join("etc/aspera_tokenauth_id_rsa"),
+    ]
+    .into_iter()
+    .find(|path| path.exists())
+}
+
+fn parse_ngsget_transport(value: &str) -> Result<NgsDownloadTransport, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "https" => Ok(NgsDownloadTransport::Https),
+        "auto" => Ok(NgsDownloadTransport::Auto),
+        "aspera" => Ok(NgsDownloadTransport::Aspera),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --transport must be one of https, auto, or aspera",
+        )
+        .with_code("service.ngsget.transport_invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn parse_ngsget_aspera_rate(value: &str) -> Result<String, ServiceError> {
+    let trimmed = value.trim();
+    if !trimmed.is_empty()
+        && trimmed
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || ch == '.')
+    {
+        Ok(trimmed.to_owned())
+    } else {
+        Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --aspera-rate must be a non-empty ascp rate such as 300m or 1g",
+        )
+        .with_code("service.ngsget.aspera_rate_invalid")
+        .with_detail(value.to_owned()))
+    }
 }
 
 fn parse_ngsget_threads(value: &str) -> Result<usize, ServiceError> {
@@ -12512,6 +12630,10 @@ fn render_ngsget_report(
     rendered.push_str(&format!("accession\t{}\n", outcome.accession));
     rendered.push_str(&format!("output_root\t{}\n", outcome.output_root.display()));
     rendered.push_str(&format!("include_raw\t{}\n", outcome.include_raw));
+    rendered.push_str(&format!(
+        "download_transport\t{}\n",
+        outcome.download_transport
+    ));
     rendered.push_str(&format!("download_threads\t{}\n", outcome.download_threads));
     rendered.push_str(&format!("runs\t{}\n", outcome.run_count));
     rendered.push_str(&format!(
@@ -15394,6 +15516,14 @@ mod tests {
                 cache_root.display().to_string(),
                 "--threads".to_owned(),
                 "3".to_owned(),
+                "--transport".to_owned(),
+                "auto".to_owned(),
+                "--ascp".to_owned(),
+                "/opt/aspera/bin/ascp".to_owned(),
+                "--aspera-key".to_owned(),
+                "/opt/aspera/etc/asperaweb_id_dsa.openssh".to_owned(),
+                "--aspera-rate".to_owned(),
+                "1g".to_owned(),
             ]);
         let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
         let provider_request = EnaNgsAdapter::new()
@@ -15439,6 +15569,7 @@ mod tests {
             ResultPayload::TextReport(report) => {
                 assert!(report.body.contains("failed_records\t0"));
                 assert!(report.body.contains("selected_assets\t1"));
+                assert!(report.body.contains("download_transport\tauto"));
                 assert!(report.body.contains("download_threads\t3"));
             }
             payload => panic!("unexpected payload: {payload:?}"),
@@ -15455,6 +15586,14 @@ mod tests {
         assert!(output_root.join("manifest.tsv").exists());
         assert!(output_root.join("provenance.json").exists());
         assert_eq!(response.result.artifacts.len(), 2);
+        assert!(
+            response
+                .result
+                .summary
+                .lines
+                .iter()
+                .any(|line| line == "Download transport: auto")
+        );
         assert!(
             response
                 .result

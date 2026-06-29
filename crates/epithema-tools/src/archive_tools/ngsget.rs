@@ -22,6 +22,8 @@ pub struct NgsgetParams {
     pub existing_download_roots: Vec<PathBuf>,
     /// Maximum number of concurrent direct-download workers.
     pub download_threads: usize,
+    /// Direct-download transport mode: `https`, `auto`, or `aspera`.
+    pub download_transport: String,
     /// Number of normalized runs in the manifest.
     pub run_count: usize,
     /// Number of selected assets.
@@ -49,12 +51,14 @@ pub struct NgsgetOutcome {
     pub failed_record_count: usize,
     /// Maximum number of concurrent direct-download workers.
     pub download_threads: usize,
+    /// Direct-download transport mode.
+    pub download_transport: String,
 }
 
 /// Returns the bounded `ngsget` help text.
 #[must_use]
 pub fn ngsget_help() -> &'static str {
-    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--check-downloads <path>]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --threads to allow 1 to 20 concurrent direct downloads; the default is 1. Use --check-downloads to recursively search an existing download tree for same-name files before network retrieval. The service copies verified matches into the output tree, leaves originals intact, resumes partial downloads when possible, and reports same-name checksum mismatches as failed materialization records."
+    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--transport https|auto|aspera] [--ascp <path>] [--aspera-key <path>] [--aspera-rate <rate>] [--check-downloads <path>]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --threads to allow 1 to 20 concurrent direct downloads; the default is 1. Use --transport aspera to download ENA-compatible public file URLs with IBM Aspera ascp, or --transport auto to use Aspera when ascp and an auth key are discoverable and otherwise fall back to HTTPS. Use --ascp to set the ascp executable, --aspera-key to set the ENA public Aspera auth key, and --aspera-rate to set the ascp target rate. Use --check-downloads to recursively search an existing download tree before network retrieval. The service copies verified matches into the output tree, leaves originals intact, resumes partial downloads when possible, and reports same-name checksum mismatches as failed materialization records."
 }
 
 /// Executes `ngsget`.
@@ -68,5 +72,6 @@ pub fn run_ngsget(params: NgsgetParams) -> Result<NgsgetOutcome, ToolExecutionEr
         selected_asset_count: params.selected_asset_count,
         failed_record_count: params.failed_record_count,
         download_threads: params.download_threads,
+        download_transport: params.download_transport,
     })
 }

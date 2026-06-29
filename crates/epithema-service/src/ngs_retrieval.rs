@@ -5,30 +5,94 @@
 //! and the future download/provenance method surface outside the CLI and tool
 //! implementations.
 
-use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::thread;
+use std::time::Duration;
+use std::{env, fs};
 
 use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ArtifactOriginKind, ArtifactProvenance, ErrorCategory, PlatformError};
 use epithema_providers::{
-    EnaNgsAdapter, HttpDownloadProgress, HttpRequest, NgsAsset, NgsAssetRole, NgsDownloadPlan,
-    NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsProvenance, NgsQuery, NgsRunMetadata,
-    NgsVerificationStatus, ProviderCapability, ProviderHttpClient, ProviderId, ProviderRegistry,
-    ReqwestHttpClient, SraNgsAdapter,
+    EnaNgsAdapter, HttpDownloadProgress, HttpDownloadProgressState, HttpRequest, NgsAsset,
+    NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsProvenance,
+    NgsQuery, NgsRunMetadata, NgsVerificationStatus, ProviderCapability, ProviderHttpClient,
+    ProviderId, ProviderRegistry, ReqwestHttpClient, SraNgsAdapter,
 };
 use serde_json::{Value, json};
 
 const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
 const MAX_NGS_DOWNLOAD_THREADS: usize = 20;
+const DEFAULT_ASPERA_TARGET_RATE: &str = "300m";
 
 /// Callback used to report streamed NGS file download progress.
 pub type NgsDownloadProgressCallback = dyn Fn(HttpDownloadProgress) + Send + Sync + 'static;
+
+/// Direct-download transport mode for NGS assets.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum NgsDownloadTransport {
+    /// Use the existing HTTPS streaming downloader.
+    Https,
+    /// Prefer Aspera when possible, otherwise use HTTPS.
+    Auto,
+    /// Require Aspera for eligible ENA file URLs.
+    Aspera,
+}
+
+impl NgsDownloadTransport {
+    /// Returns the stable lowercase label for the transport.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Https => "https",
+            Self::Auto => "auto",
+            Self::Aspera => "aspera",
+        }
+    }
+}
+
+/// Optional Aspera command configuration for ENA direct downloads.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct NgsAsperaConfig {
+    /// Path or command name for IBM Aspera `ascp`.
+    pub ascp_path: PathBuf,
+    /// Private key used for public ENA Aspera authentication.
+    pub key_path: Option<PathBuf>,
+    /// Aspera target transfer rate, passed to `ascp -l`.
+    pub target_rate: String,
+}
+
+impl Default for NgsAsperaConfig {
+    fn default() -> Self {
+        Self {
+            ascp_path: PathBuf::from("ascp"),
+            key_path: default_aspera_key_path(),
+            target_rate: DEFAULT_ASPERA_TARGET_RATE.to_owned(),
+        }
+    }
+}
+
+/// Transport selection and command configuration for direct NGS downloads.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct NgsDownloadTransportConfig {
+    /// Requested transport mode.
+    pub mode: NgsDownloadTransport,
+    /// Aspera command configuration used by `auto` and `aspera`.
+    pub aspera: NgsAsperaConfig,
+}
+
+impl Default for NgsDownloadTransportConfig {
+    fn default() -> Self {
+        Self {
+            mode: NgsDownloadTransport::Https,
+            aspera: NgsAsperaConfig::default(),
+        }
+    }
+}
 
 /// Request passed to an SRA FASTQ conversion runner.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -214,6 +278,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             plan,
             &DockerSraFastqRunner,
             &[],
+            &NgsDownloadTransportConfig::default(),
         )
     }
 
@@ -230,6 +295,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             plan,
             &DockerSraFastqRunner,
             download_threads,
+            &NgsDownloadTransportConfig::default(),
         )
     }
 
@@ -243,6 +309,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             plan,
             &DockerSraFastqRunner,
             existing_download_roots,
+            &NgsDownloadTransportConfig::default(),
         )
     }
 
@@ -261,6 +328,27 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             &DockerSraFastqRunner,
             existing_download_roots,
             download_threads,
+            &NgsDownloadTransportConfig::default(),
+        )
+    }
+
+    /// Materializes selected assets with existing roots, thread cap, and transport selection.
+    pub fn materialize_download_plan_with_existing_downloads_transport_and_threads(
+        &self,
+        plan: &NgsDownloadPlan,
+        existing_download_roots: &[PathBuf],
+        download_threads: usize,
+        transport_config: &NgsDownloadTransportConfig,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        self.materialize_download_plan_with_sra_runner_existing_downloads_and_threads(
+            plan,
+            &DockerSraFastqRunner,
+            existing_download_roots,
+            download_threads,
+            transport_config,
         )
     }
 
@@ -274,6 +362,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             plan,
             runner,
             &[],
+            &NgsDownloadTransportConfig::default(),
         )
     }
 
@@ -283,6 +372,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         plan: &NgsDownloadPlan,
         runner: &R,
         download_threads: usize,
+        transport_config: &NgsDownloadTransportConfig,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
     where
         C: Sync,
@@ -292,6 +382,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             runner,
             &[],
             download_threads,
+            transport_config,
         )
     }
 
@@ -306,6 +397,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
             plan,
             runner,
             existing_download_roots,
+            &NgsDownloadTransportConfig::default(),
         )
     }
 
@@ -316,6 +408,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         plan: &NgsDownloadPlan,
         runner: &R,
         existing_download_roots: &[PathBuf],
+        transport_config: &NgsDownloadTransportConfig,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
         match plan.manifest.provider.as_str() {
             "ena" => plan
@@ -328,6 +421,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         asset,
                         existing_download_roots,
                         self.progress_callback,
+                        transport_config,
                     )
                 })
                 .collect(),
@@ -342,6 +436,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         runner,
                         existing_download_roots,
                         self.progress_callback,
+                        transport_config,
                     )
                 })
                 .collect(),
@@ -361,6 +456,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         runner: &R,
         existing_download_roots: &[PathBuf],
         download_threads: usize,
+        transport_config: &NgsDownloadTransportConfig,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
     where
         C: Sync,
@@ -373,6 +469,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                 existing_download_roots,
                 self.progress_callback,
                 download_threads,
+                transport_config,
             ),
             "sra" => plan
                 .selected_assets
@@ -385,6 +482,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         runner,
                         existing_download_roots,
                         self.progress_callback,
+                        transport_config,
                     )
                 })
                 .collect(),
@@ -558,6 +656,7 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
     existing_download_roots: &[PathBuf],
     progress_callback: Option<&NgsDownloadProgressCallback>,
     download_threads: usize,
+    transport_config: &NgsDownloadTransportConfig,
 ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
     if download_threads == 1 || plan.selected_assets.len() <= 1 {
         return plan
@@ -570,6 +669,7 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
                     asset,
                     existing_download_roots,
                     progress_callback,
+                    transport_config,
                 )
             })
             .collect();
@@ -604,6 +704,7 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
                         asset,
                         existing_download_roots,
                         progress_callback,
+                        transport_config,
                     ) {
                         Ok(record) => {
                             *records[index]
@@ -674,6 +775,7 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     asset: &NgsAsset,
     existing_download_roots: &[PathBuf],
     progress_callback: Option<&NgsDownloadProgressCallback>,
+    transport_config: &NgsDownloadTransportConfig,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let local_path = local_ngs_asset_path(&plan.output_root, asset);
     if let Some((observed_size, observed_checksum)) =
@@ -689,6 +791,10 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
         materialize_existing_download_candidate(asset, &local_path, existing_download_roots)?
     {
         return Ok(record);
+    }
+
+    if should_use_aspera_transport(&asset.source_url, transport_config) {
+        return materialize_aspera_ngs_asset(plan, asset, progress_callback, transport_config);
     }
 
     let Some(download_url) = direct_download_url(&asset.source_url) else {
@@ -765,6 +871,205 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     Ok(record)
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct AsperaDownloadSource {
+    user: &'static str,
+    host: &'static str,
+    remote_path: String,
+}
+
+fn materialize_aspera_ngs_asset(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    transport_config: &NgsDownloadTransportConfig,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    let local_path = local_ngs_asset_path(&plan.output_root, asset);
+    let partial_path = partial_ngs_asset_path(&local_path);
+    let Some(source) = aspera_download_source(&asset.source_url) else {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_materialization_method("aspera_download")
+            .with_failure_reason("asset source is not an ENA Aspera-compatible URL"));
+    };
+    let Some(key_path) = transport_config.aspera.key_path.as_ref() else {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_materialization_method("aspera_download")
+            .with_failure_reason(
+                "Aspera transfer requires an auth key; pass --aspera-key or set EPITHEMA_ASPERA_KEY",
+            ));
+    };
+
+    if let Some((observed_size, observed_checksum)) =
+        verified_existing_asset_evidence(&partial_path, asset)?
+    {
+        if local_path.exists() {
+            fs::remove_file(&local_path)
+                .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
+        }
+        fs::rename(&partial_path, &local_path)
+            .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_observed_evidence(Some(observed_size), Some(observed_checksum))
+            .with_verification_status(NgsVerificationStatus::Verified)
+            .with_materialization_method("aspera_download_resume"));
+    }
+
+    if let Some(parent) = partial_path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|error| ngs_io_error("create Aspera NGS download directory", error))?;
+    }
+    let starting_size = fs::metadata(&partial_path)
+        .map(|metadata| metadata.len())
+        .unwrap_or(0);
+    emit_ngs_download_progress(
+        progress_callback,
+        HttpDownloadProgressState::Started,
+        &asset.source_url,
+        &partial_path,
+        starting_size,
+        asset.size_bytes,
+    );
+
+    let remote = format!("{}@{}:{}", source.user, source.host, source.remote_path);
+    let command_line =
+        aspera_command_line(&transport_config.aspera, key_path, &remote, &partial_path);
+    let ascp_log_path = aspera_command_log_path(&partial_path);
+    let ascp_log = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&ascp_log_path)
+        .map_err(|error| ngs_io_error("open Aspera command log", error))?;
+    let ascp_error_log = ascp_log
+        .try_clone()
+        .map_err(|error| ngs_io_error("prepare Aspera command log", error))?;
+    let mut child = match Command::new(&transport_config.aspera.ascp_path)
+        .arg("-T")
+        .arg("-k1")
+        .arg("-l")
+        .arg(&transport_config.aspera.target_rate)
+        .arg("-P")
+        .arg("33001")
+        .arg("-i")
+        .arg(key_path)
+        .arg(&remote)
+        .arg(&partial_path)
+        .stdout(Stdio::from(ascp_log))
+        .stderr(Stdio::from(ascp_error_log))
+        .spawn()
+    {
+        Ok(child) => child,
+        Err(error) => {
+            return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+                .with_verification_status(NgsVerificationStatus::Failed)
+                .with_materialization_method("aspera_download")
+                .with_command_line(command_line)
+                .with_failure_reason(format!("failed to execute ascp: {error}")));
+        }
+    };
+
+    let mut last_progress_bytes = starting_size;
+    loop {
+        match child.try_wait() {
+            Ok(Some(_status)) => break,
+            Ok(None) => {
+                thread::sleep(Duration::from_secs(2));
+                if let Ok(metadata) = fs::metadata(&partial_path) {
+                    let current_size = metadata.len();
+                    if current_size != last_progress_bytes {
+                        emit_ngs_download_progress(
+                            progress_callback,
+                            HttpDownloadProgressState::Advanced,
+                            &asset.source_url,
+                            &partial_path,
+                            current_size,
+                            asset.size_bytes,
+                        );
+                        last_progress_bytes = current_size;
+                    }
+                }
+            }
+            Err(error) => {
+                return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+                    .with_verification_status(NgsVerificationStatus::Failed)
+                    .with_materialization_method("aspera_download")
+                    .with_command_line(command_line)
+                    .with_failure_reason(format!("failed to inspect ascp status: {error}")));
+            }
+        }
+    }
+
+    let status = match child.wait() {
+        Ok(status) => status,
+        Err(error) => {
+            return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+                .with_verification_status(NgsVerificationStatus::Failed)
+                .with_materialization_method("aspera_download")
+                .with_command_line(command_line)
+                .with_failure_reason(format!("failed to collect ascp status: {error}")));
+        }
+    };
+
+    if !status.success() {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_materialization_method("aspera_download")
+            .with_command_line(command_line)
+            .with_exit_status(status.code().unwrap_or(-1))
+            .with_failure_reason(format!(
+                "ascp exited with status {}; stderr: {}",
+                status.code().unwrap_or(-1),
+                aspera_command_log_excerpt(&ascp_log_path)
+            )));
+    }
+
+    let (observed_size, observed_checksum) = ngs_file_evidence(&partial_path)?;
+    emit_ngs_download_progress(
+        progress_callback,
+        HttpDownloadProgressState::Finished,
+        &asset.source_url,
+        &partial_path,
+        observed_size,
+        asset.size_bytes.or(Some(observed_size)),
+    );
+    let observed_size = Some(observed_size);
+    let observed_checksum = Some(observed_checksum);
+    let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
+    let method = if starting_size > 0 {
+        "aspera_download_resume"
+    } else {
+        "aspera_download"
+    };
+    let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
+        .with_observed_evidence(observed_size, observed_checksum.clone())
+        .with_materialization_method(method)
+        .with_command_line(command_line)
+        .with_exit_status(status.code().unwrap_or(0));
+
+    if let Some(reason) = verification_failure {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason(reason));
+    }
+
+    if local_path.exists() {
+        fs::remove_file(&local_path)
+            .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
+    }
+    fs::rename(&partial_path, &local_path)
+        .map_err(|error| ngs_io_error("promote verified Aspera NGS download", error))?;
+
+    let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
+        NgsVerificationStatus::Verified
+    } else {
+        NgsVerificationStatus::Unverified
+    };
+    record = record.with_verification_status(status);
+    Ok(record)
+}
+
 fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     client: &C,
     plan: &NgsDownloadPlan,
@@ -772,6 +1077,7 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     runner: &impl SraFastqRunner,
     existing_download_roots: &[PathBuf],
     progress_callback: Option<&NgsDownloadProgressCallback>,
+    transport_config: &NgsDownloadTransportConfig,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     match asset.role {
         NgsAssetRole::SraArchive => materialize_direct_ngs_asset(
@@ -780,6 +1086,7 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
             asset,
             existing_download_roots,
             progress_callback,
+            transport_config,
         ),
         NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
             execute_sra_fastq_conversion_with_runner(plan, asset, runner)
@@ -1223,6 +1530,168 @@ fn direct_download_url(source_url: &str) -> Option<String> {
     }
 }
 
+fn should_use_aspera_transport(
+    source_url: &str,
+    transport_config: &NgsDownloadTransportConfig,
+) -> bool {
+    if aspera_download_source(source_url).is_none() {
+        return false;
+    }
+    match transport_config.mode {
+        NgsDownloadTransport::Https => false,
+        NgsDownloadTransport::Aspera => true,
+        NgsDownloadTransport::Auto => {
+            transport_config.aspera.key_path.is_some()
+                && command_path_is_available(&transport_config.aspera.ascp_path)
+        }
+    }
+}
+
+fn aspera_download_source(source_url: &str) -> Option<AsperaDownloadSource> {
+    let path = source_url
+        .strip_prefix("ftp://ftp.sra.ebi.ac.uk/")
+        .or_else(|| source_url.strip_prefix("https://ftp.sra.ebi.ac.uk/"))
+        .or_else(|| source_url.strip_prefix("http://ftp.sra.ebi.ac.uk/"));
+    if let Some(path) = path {
+        return Some(AsperaDownloadSource {
+            user: "era-fasp",
+            host: "fasp.sra.ebi.ac.uk",
+            remote_path: path.trim_start_matches('/').to_owned(),
+        });
+    }
+
+    let ena_path = source_url
+        .strip_prefix("ftp://ftp.ebi.ac.uk/pub/")
+        .or_else(|| source_url.strip_prefix("https://ftp.ebi.ac.uk/pub/"))
+        .or_else(|| source_url.strip_prefix("http://ftp.ebi.ac.uk/pub/"));
+    ena_path.map(|path| AsperaDownloadSource {
+        user: "fasp-ebi",
+        host: "fasp.ebi.ac.uk",
+        remote_path: path.trim_start_matches('/').to_owned(),
+    })
+}
+
+fn emit_ngs_download_progress(
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    state: HttpDownloadProgressState,
+    url: &str,
+    path: &Path,
+    bytes_downloaded: u64,
+    total_bytes: Option<u64>,
+) {
+    if let Some(progress_callback) = progress_callback {
+        progress_callback(HttpDownloadProgress {
+            state,
+            url: url.to_owned(),
+            path: path.to_path_buf(),
+            bytes_downloaded,
+            total_bytes,
+        });
+    }
+}
+
+fn aspera_command_log_path(partial_path: &Path) -> PathBuf {
+    partial_path.with_extension("ascp.log")
+}
+
+fn aspera_command_log_excerpt(path: &Path) -> String {
+    let Ok(contents) = fs::read_to_string(path) else {
+        return "unavailable".to_owned();
+    };
+    let trimmed = contents.trim();
+    if trimmed.is_empty() {
+        return "empty".to_owned();
+    }
+    let mut excerpt = trimmed
+        .chars()
+        .rev()
+        .take(2_000)
+        .collect::<String>()
+        .chars()
+        .rev()
+        .collect::<String>();
+    if excerpt.len() < trimmed.len() {
+        excerpt.insert_str(0, "...");
+    }
+    excerpt
+}
+
+fn default_aspera_key_path() -> Option<PathBuf> {
+    env::var_os("EPITHEMA_ASPERA_KEY")
+        .map(PathBuf::from)
+        .filter(|path| path.exists())
+        .or_else(|| {
+            env::var_os("CONDA_PREFIX")
+                .map(PathBuf::from)
+                .and_then(|prefix| first_existing_aspera_key(&prefix))
+        })
+        .or_else(|| {
+            env::var_os("HOME").map(PathBuf::from).and_then(|home| {
+                first_existing_path([
+                    home.join(".aspera/connect/etc/asperaweb_id_dsa.openssh"),
+                    home.join(".aspera/connect/etc/aspera_tokenauth_id_dsa"),
+                    home.join(".aspera/connect/etc/aspera_tokenauth_id_rsa"),
+                ])
+            })
+        })
+}
+
+fn first_existing_aspera_key(prefix: &Path) -> Option<PathBuf> {
+    first_existing_path([
+        prefix.join("etc/asperaweb_id_dsa.openssh"),
+        prefix.join("etc/aspera_tokenauth_id_dsa"),
+        prefix.join("etc/aspera_tokenauth_id_rsa"),
+    ])
+}
+
+fn first_existing_path(paths: impl IntoIterator<Item = PathBuf>) -> Option<PathBuf> {
+    paths.into_iter().find(|path| path.exists())
+}
+
+fn command_path_is_available(command: &Path) -> bool {
+    if command.components().count() > 1 {
+        return command.exists();
+    }
+    let Some(path_var) = env::var_os("PATH") else {
+        return false;
+    };
+    env::split_paths(&path_var).any(|path| path.join(command).exists())
+}
+
+fn aspera_command_line(
+    config: &NgsAsperaConfig,
+    key_path: &Path,
+    remote: &str,
+    partial_path: &Path,
+) -> String {
+    [
+        display_command_arg(&config.ascp_path),
+        "-T".to_owned(),
+        "-k1".to_owned(),
+        "-l".to_owned(),
+        display_shell_arg(&config.target_rate),
+        "-P".to_owned(),
+        "33001".to_owned(),
+        "-i".to_owned(),
+        display_command_arg(key_path),
+        remote.to_owned(),
+        display_command_arg(partial_path),
+    ]
+    .join(" ")
+}
+
+fn display_command_arg(path: &Path) -> String {
+    display_shell_arg(&path.display().to_string())
+}
+
+fn display_shell_arg(raw: &str) -> String {
+    if raw.chars().any(char::is_whitespace) {
+        format!("'{}'", raw.replace('\'', "'\\''"))
+    } else {
+        raw.to_owned()
+    }
+}
+
 fn local_ngs_asset_path(output_root: &Path, asset: &NgsAsset) -> PathBuf {
     output_root
         .join("runs")
@@ -1561,7 +2030,7 @@ fn not_implemented(message: &str, code: &'static str) -> PlatformError {
 mod tests {
     use std::collections::HashMap;
     use std::fs;
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
     use std::sync::{Arc, Mutex};
     use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -1575,9 +2044,9 @@ mod tests {
     };
 
     use super::{
-        DEFAULT_SRA_TOOLKIT_CONTAINER, NgsDownloadProgressCallback, ServiceNgsRetrieval,
-        SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
-        partial_ngs_asset_path,
+        DEFAULT_SRA_TOOLKIT_CONTAINER, NgsAsperaConfig, NgsDownloadProgressCallback,
+        ServiceNgsRetrieval, SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
+        aspera_command_line, aspera_download_source, partial_ngs_asset_path,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -1676,6 +2145,59 @@ mod tests {
                 exit_status: self.exit_status,
             })
         }
+    }
+
+    #[test]
+    fn derives_ena_aspera_source_from_public_read_ftp_url() {
+        let source = aspera_download_source(
+            "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz",
+        )
+        .expect("ENA read FTP URL should map to an Aspera source");
+
+        assert_eq!(source.user, "era-fasp");
+        assert_eq!(source.host, "fasp.sra.ebi.ac.uk");
+        assert_eq!(
+            source.remote_path,
+            "vol1/fastq/ERR123/ERR123456/ERR123456_1.fastq.gz"
+        );
+    }
+
+    #[test]
+    fn derives_ena_aspera_source_from_public_ena_ftp_url() {
+        let source = aspera_download_source(
+            "ftp://ftp.ebi.ac.uk/pub/databases/ena/wgs/public/wya/WYAA01.dat.gz",
+        )
+        .expect("ENA public FTP URL should map to an Aspera source");
+
+        assert_eq!(source.user, "fasp-ebi");
+        assert_eq!(source.host, "fasp.ebi.ac.uk");
+        assert_eq!(
+            source.remote_path,
+            "databases/ena/wgs/public/wya/WYAA01.dat.gz"
+        );
+    }
+
+    #[test]
+    fn builds_aspera_command_line_with_rate_key_and_destination() {
+        let config = NgsAsperaConfig {
+            ascp_path: PathBuf::from("/opt/aspera/bin/ascp"),
+            key_path: Some(PathBuf::from("/opt/aspera/etc/asperaweb_id_dsa.openssh")),
+            target_rate: "1g".to_owned(),
+        };
+
+        let command_line = aspera_command_line(
+            &config,
+            config.key_path.as_deref().expect("key path should exist"),
+            "era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR123/file.fastq.gz",
+            Path::new("/tmp/file.fastq.gz.partial"),
+        );
+
+        assert!(command_line.contains("/opt/aspera/bin/ascp -T -k1 -l 1g -P 33001 -i"));
+        assert!(command_line.contains("/opt/aspera/etc/asperaweb_id_dsa.openssh"));
+        assert!(
+            command_line.contains("era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR123/file.fastq.gz")
+        );
+        assert!(command_line.contains("/tmp/file.fastq.gz.partial"));
     }
 
     fn planned_manifest() -> NgsManifest {

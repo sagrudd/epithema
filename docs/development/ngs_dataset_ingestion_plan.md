@@ -16,7 +16,7 @@ The planned commands are:
 
 ```text
 epithema ngslist <accession> [--provider auto|ena|sra] [--format table|json]
-epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--check-downloads <path>]
+epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--transport https|auto|aspera] [--ascp <path>] [--aspera-key <path>] [--aspera-rate <rate>] [--check-downloads <path>]
 ```
 
 `ngslist` reports the assets associated with a study, sample, experiment, or
@@ -29,7 +29,11 @@ download root for same-name files, copy verified matches into the output tree
 without modifying the original files, and fail the selected asset if a
 same-name candidate has an unexpected checksum. With `--threads <n>`, `ngsget`
 allows concurrent direct downloads for ENA-style file URLs; the default is `1`
-and the maximum accepted value is `20`.
+and the maximum accepted value is `20`. With `--transport aspera`, `ngsget`
+uses IBM Aspera `ascp` for ENA public file URLs that can be mapped to ENA's
+public FASP endpoints. `--transport auto` uses Aspera when `ascp` and an auth
+key are discoverable and otherwise falls back to HTTPS. `--ascp`,
+`--aspera-key`, and `--aspera-rate` configure the external `ascp` command.
 
 Custom container selection is not part of the current command surface. SRA FASTQ
 conversion uses the pinned default SRA Toolkit container recorded by the service
@@ -234,8 +238,9 @@ The provenance document should use schema label
    `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification as
    a partial file, resumes existing `.partial` files when the provider honors
-   byte-range requests, skips already verified local files, supports bounded
-   concurrent direct downloads through `ngsget --threads <n>`, and supports
+   byte-range requests, skips already verified local files, supports optional
+   ENA Aspera `ascp` downloads through `ngsget --transport aspera`, supports
+   bounded concurrent direct downloads through `ngsget --threads <n>`, and supports
    service-layer `ngsget --check-downloads <path>` behavior: recursive
    same-name lookup, copy-then-verify into the output tree, original source
    preservation, and failed materialization records for same-name candidates
@@ -326,9 +331,10 @@ The provenance document should use schema label
     acquisition, generated FASTQ default selection, optional raw/submitted
     assets alongside any available FASTQ, recursive verified reuse through
     `--check-downloads`, bounded concurrent direct downloads through
-    `--threads`, streamed large-file direct downloads with speed-aware CLI
-    progress and resumable `.partial` files, SRA conversion through the pinned
-    default container, provenance JSON, and stable handoff manifest behavior.
+    `--threads`, optional ENA Aspera transfer through `--transport aspera`,
+    streamed large-file direct downloads with speed-aware CLI progress and
+    resumable `.partial` files, SRA conversion through the pinned default
+    container, provenance JSON, and stable handoff manifest behavior.
     Release-facing scope and notes now explicitly keep protected-access,
     dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and
