@@ -12498,6 +12498,32 @@ fn ascli_aspera_key_passphrase() -> Option<String> {
 fn ascli_aspera_key_passphrase_with_command(ascli_path: &Path) -> Option<String> {
     const CANDIDATES: &[&[&str]] = &[
         &[
+            "--format=text",
+            "config",
+            "echo",
+            "@ruby:Aspera::Ascp::Installation.instance.ssh_cert_uuid",
+        ],
+        &[
+            "config",
+            "echo",
+            "@ruby:Aspera::Ascp::Installation.instance.ssh_cert_uuid",
+            "--format=text",
+        ],
+        &[
+            "--format=text",
+            "config",
+            "echo",
+            "@ruby:Aspera::DataRepository.instance.item(:uuid)",
+        ],
+        &[
+            "--fields=uuid",
+            "--show-secrets=true",
+            "--format=text",
+            "config",
+            "ascp",
+            "info",
+        ],
+        &[
             "config",
             "ascp",
             "info",
@@ -16058,11 +16084,17 @@ mod tests {
             &ascli_path,
             r#"#!/bin/sh
 case "$*" in
-  *"--show-secrets=yes"*)
-    exit 2
+  "--format=text config echo @ruby:Aspera::Ascp::Installation.instance.ssh_cert_uuid")
+    printf '%s\n' '01234567-89ab-cdef-0123-456789abcdef'
+    ;;
+  "--fields=uuid --show-secrets=true --format=text config ascp info")
+    printf '%s\n' '01234567-89ab-cdef-0123-456789abcdef'
     ;;
   *"--show-secrets"*)
-    printf '%s\n' '01234567-89ab-cdef-0123-456789abcdef'
+    exit 2
+    ;;
+  *"--show-secrets=yes"*)
+    exit 2
     ;;
   *)
     exit 3
