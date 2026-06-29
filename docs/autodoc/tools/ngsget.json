@@ -12,13 +12,13 @@
       "id": "overview",
       "kind": "overview",
       "title": "Overview",
-      "content": "`ngsget` is the planned acquisition companion to `ngslist`. It resolves a public ENA or SRA NGS study, sample, experiment, or run accession to a normalized run-level manifest, selects generated FASTQ assets by default, optionally includes raw or submitted assets, materializes files under the documented run layout, and writes NGS provenance JSON."
+      "content": "`ngsget` is the acquisition companion to `ngslist`. It resolves a public ENA or SRA NGS study, sample, experiment, or run accession to a normalized run-level manifest, selects generated FASTQ assets by default, optionally includes raw or submitted assets, materializes files under the documented run layout, and writes NGS provenance JSON."
     },
     {
       "id": "inputs",
       "kind": "inputs",
       "title": "Inputs",
-      "content": "The target interface is `epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--container <image>] [--check-downloads <path>]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are part of the contract. The optional `--check-downloads` path recursively searches an existing download tree for same-name files before network retrieval. The current implementation work is service-layer first; the governed CLI route is not yet exposed."
+      "content": "The command interface is `epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--check-downloads <path>]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are part of the contract. The optional `--check-downloads` path recursively searches an existing download tree for same-name files before network retrieval, copies verified matches into the output tree, leaves originals intact, and reports failed materialization records for same-name candidates with unexpected checksums. Custom container selection is not exposed; SRA FASTQ conversion uses the pinned default SRA Toolkit container recorded in provenance."
     },
     {
       "id": "outputs",
@@ -30,7 +30,7 @@
       "id": "status",
       "kind": "notes",
       "title": "Current Status",
-      "content": "`ngsget` is not yet a shipped CLI command. The service layer currently implements download planning, direct ENA-style materialization with partial-file handling and verification, recursive existing-download lookup for the planned `--check-downloads` flag, copy-then-verify reuse of matching files without modifying the originals, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. The remaining work is to expose the governed command route, write per-run logs, and connect the end-to-end command surface."
+      "content": "`ngsget` is exposed through the governed command route. The implementation supports download planning, direct ENA-style materialization with partial-file handling and verification, recursive existing-download lookup through `--check-downloads`, copy-then-verify reuse of matching files without modifying the originals, SRA archive download plus pinned-container FASTQ conversion through an injectable runner, deterministic failure/resume semantics, provenance JSON writing, stable handoff manifest TSV writing, and mocked ENA/SRA validation fixtures. Remaining follow-up work includes per-run log files, custom container selection, and opt-in live-provider or Docker/SRA Toolkit validation."
     },
     {
       "id": "caveats",

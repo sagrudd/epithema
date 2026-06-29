@@ -279,6 +279,25 @@ mod tests {
     }
 
     #[test]
+    fn routes_ngsget_to_tool_path() {
+        let cli = Cli::try_parse_from([
+            "epithema",
+            "ngsget",
+            "PRJNA1011899",
+            "--provider",
+            "ena",
+            "--out",
+            "ngs-output",
+            "--raw",
+            "--check-downloads",
+            "existing-downloads",
+        ])
+        .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("ngsget"));
+    }
+
+    #[test]
     fn routes_charge_to_tool_path() {
         let cli =
             Cli::try_parse_from(["epithema", "charge", "example.faa"]).expect("tool should parse");

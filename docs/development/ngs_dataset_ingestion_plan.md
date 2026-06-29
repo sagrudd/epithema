@@ -4,9 +4,11 @@ This page defines the implementation tasks for the governed NGS dataset
 acquisition milestone described in the
 [Scope and Tool-Family Policy](../governance/policies/scope_and_tool_family_policy.md).
 
-The milestone is a future Strategic Add. It is not implemented by the current
-`runget`, `runinfo`, `assemblyget`, or `seqret` surfaces, and it is not part of
-the coordinated `1.0.0` release scope.
+The milestone is a Strategic Add outside the coordinated `1.0.0` release
+scope. The governed `ngslist` and `ngsget` surfaces are now implemented for the
+public ENA/SRA acquisition workflow described below; protected-access,
+credentialed, requester-pays, object-store publication, and live provider
+validation workflows remain explicit future work.
 
 ## Target User Surface
 
@@ -14,7 +16,7 @@ The planned commands are:
 
 ```text
 epithema ngslist <accession> [--provider auto|ena|sra] [--format table|json]
-epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--container <image>] [--check-downloads <path>]
+epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--check-downloads <path>]
 ```
 
 `ngslist` reports the assets associated with a study, sample, experiment, or
@@ -25,6 +27,10 @@ and provider-native SRA files when the provider exposes them. With
 download root for same-name files, copy verified matches into the output tree
 without modifying the original files, and fail the selected asset if a
 same-name candidate has an unexpected checksum.
+
+Custom container selection is not part of the current command surface. SRA FASTQ
+conversion uses the pinned default SRA Toolkit container recorded by the service
+provenance model.
 
 ## Functional Scope
 
@@ -173,12 +179,11 @@ The provenance document should use schema label
    and remote-acquisition policy checks.
 
    Status: implemented in `crates/epithema-service/src/ngs_retrieval.rs` as a
-   service-owned NGS gateway for ENA/SRA manifest listing. The gateway enforces
-   remote-acquisition policy, provider registry membership, archive-acquisition
-   capability, and per-provider enablement before routing to the provider
-   adapters. Future `ngsget` methods for planning, materialization,
-   verification, and provenance writing are present as guarded service entry
-   points with explicit not-yet-implemented errors for the later tasks below.
+   service-owned NGS gateway for ENA/SRA manifest listing, download planning,
+   materialization, verification during materialization, provenance writing,
+   and stable handoff manifest writing. The gateway enforces remote-acquisition
+   policy, provider registry membership, archive-acquisition capability, and
+   per-provider enablement before routing to the provider adapters.
 
 6. Implement `ngslist`.
 
@@ -307,13 +312,15 @@ The provenance document should use schema label
 
     Status: implemented with curated autodoc contracts for `ngslist` and
     `ngsget`, generated tool pages, and generated validation stubs. The
-    `ngslist` page documents the shipped manifest-listing boundary, while the
-    `ngsget` page documents the implemented service-layer acquisition,
-    verification, SRA conversion-runner, and provenance behavior without
-    claiming that the governed CLI route is shipped. Release-facing scope and
-    notes now explicitly keep protected-access, dbGaP-controlled, credentialed,
-    requester-pays, and object-store publication workflows outside the current
-    NGS milestone.
+    `ngslist` page documents the shipped manifest-listing boundary. The
+    `ngsget` page documents the governed command route for public ENA/SRA
+    acquisition, generated FASTQ default selection, optional raw/submitted
+    assets, recursive verified reuse through `--check-downloads`, SRA
+    conversion through the pinned default container, provenance JSON, and
+    stable handoff manifest behavior. Release-facing scope and notes now
+    explicitly keep protected-access, dbGaP-controlled, credentialed,
+    requester-pays, object-store publication, custom container selection, and
+    live-provider validation workflows outside the current NGS milestone.
 
 14. Add object-store handoff readiness.
 

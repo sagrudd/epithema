@@ -13,8 +13,9 @@ use epithema_diagnostics::{
     OutcomeStatus, PlatformError,
 };
 use epithema_providers::{
-    AcquisitionRequest, ArchiveObjectClass, NgsManifest, NgsQuery, ProviderHttpClient, ProviderId,
-    ProviderRegistry, RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
+    AcquisitionRequest, ArchiveObjectClass, NgsManifest, NgsProvenance, NgsQuery,
+    NgsVerificationStatus, ProviderHttpClient, ProviderId, ProviderRegistry,
+    RetrievedArchiveManifest, RetrievedArchiveMetadata, RetrievedSequence,
 };
 use epithema_tools::ToolDescriptor;
 use epithema_tools::alignment_analysis::{
@@ -28,9 +29,10 @@ use epithema_tools::alignment_tools::{
     run_aligncopypair, run_diffseq, run_edialign, run_extractalign, run_infoalign, run_nthseqset,
 };
 use epithema_tools::archive_tools::{
-    AssemblygetParams, InfoassemblyParams, NgslistFormat, NgslistParams, RungetParams,
-    RuninfoParams, assemblyget_help, infoassembly_help, ngslist_help, run_assemblyget,
-    run_infoassembly, run_ngslist, run_runget, run_runinfo, runget_help, runinfo_help,
+    AssemblygetParams, InfoassemblyParams, NgsgetParams, NgslistFormat, NgslistParams,
+    RungetParams, RuninfoParams, assemblyget_help, infoassembly_help, ngsget_help, ngslist_help,
+    run_assemblyget, run_infoassembly, run_ngsget, run_ngslist, run_runget, run_runinfo,
+    runget_help, runinfo_help,
 };
 use epithema_tools::codon_tools::{
     CaiParams, ChipsParams, CodcmpParams, CodcopyParams, CuspParams, cai_help, chips_help,
@@ -307,6 +309,7 @@ impl EpithemaService {
             "runinfo" => self.invoke_runinfo(request, descriptor),
             "runget" => self.invoke_runget(request, descriptor),
             "ngslist" => self.invoke_ngslist(request, descriptor),
+            "ngsget" => self.invoke_ngsget(request, descriptor),
             "matcher" => self.invoke_matcher(request, descriptor),
             "distmat" => self.invoke_distmat(request, descriptor),
             "cons" => self.invoke_cons(request, descriptor),
@@ -1462,6 +1465,145 @@ impl EpithemaService {
             }
         };
         let result = MethodResult::new(request.tool.clone(), payload, summary, report.clone());
+
+        Ok(InvocationResponse::completed(
+            request.context,
+            request.tool,
+            descriptor,
+            report,
+            result,
+        ))
+    }
+
+    fn invoke_ngsget(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+    ) -> Result<InvocationResponse, ServiceError> {
+        self.invoke_ngsget_with_client::<epithema_providers::ReqwestHttpClient>(
+            request, descriptor, None,
+        )
+    }
+
+    /// Invokes `ngsget` using an explicit provider HTTP client.
+    pub fn invoke_ngsget_with_client<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        client: Option<&C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        if help_requested(request.arguments()) {
+            return Ok(self.help_response(request, descriptor, ngsget_help()));
+        }
+
+        let params = parse_ngsget_arguments(request.arguments())?;
+        let query = build_ngsget_query(&params.accession, &params.provider)?;
+        match client {
+            Some(client) => {
+                let gateway =
+                    ServiceNgsRetrieval::with_client(&self.config, &self.providers, client);
+                self.invoke_ngsget_with_gateway(request, descriptor, params, &query, gateway)
+            }
+            None => {
+                let gateway = self.ngs_retrieval()?;
+                self.invoke_ngsget_with_gateway(request, descriptor, params, &query, gateway)
+            }
+        }
+    }
+
+    fn invoke_ngsget_with_gateway<C: ProviderHttpClient>(
+        &self,
+        request: InvocationRequest,
+        descriptor: ToolDescriptor,
+        params: NgsgetCliParams,
+        query: &NgsQuery,
+        gateway: ServiceNgsRetrieval<'_, C>,
+    ) -> Result<InvocationResponse, ServiceError> {
+        let manifest = gateway.retrieve_manifest(query)?;
+        let plan = gateway.plan_downloads(&manifest, &params.output_root, params.include_raw)?;
+        let records = if params.existing_download_roots.is_empty() {
+            gateway.materialize_download_plan(&plan)?
+        } else {
+            gateway.materialize_download_plan_with_existing_downloads(
+                &plan,
+                &params.existing_download_roots,
+            )?
+        };
+        let selected_asset_count = plan.selected_assets.len();
+        let failed_record_count = records
+            .iter()
+            .filter(|record| record.verification_status == NgsVerificationStatus::Failed)
+            .count();
+        let provenance = NgsProvenance::new(manifest.clone(), plan, records.clone());
+        let manifest_path = params.output_root.join("manifest.tsv");
+        let provenance_path = params.output_root.join("provenance.json");
+        gateway.write_manifest(&provenance, &manifest_path)?;
+        gateway.write_provenance(&provenance, &provenance_path)?;
+
+        let outcome = run_ngsget(NgsgetParams {
+            accession: manifest.query.accession.clone(),
+            provider: manifest.provider.as_str().to_owned(),
+            output_root: params.output_root.clone(),
+            include_raw: params.include_raw,
+            existing_download_roots: params.existing_download_roots.clone(),
+            run_count: manifest.runs.len(),
+            selected_asset_count,
+            failed_record_count,
+        })?;
+
+        let manifest_provenance =
+            ArtifactProvenance::generated_output(manifest_path.display().to_string())
+                .with_description("ngsget handoff manifest TSV");
+        let provenance_provenance =
+            ArtifactProvenance::generated_output(provenance_path.display().to_string())
+                .with_description("ngsget acquisition provenance JSON");
+        let report = self.success_report(
+            &request.context,
+            format!(
+                "materialized NGS assets for {}:{}",
+                outcome.provider, outcome.accession
+            ),
+            Vec::new(),
+            vec![
+                manifest.provenance.clone(),
+                manifest_provenance.clone(),
+                provenance_provenance.clone(),
+            ],
+        );
+        let summary = ResultSummary::new("NGS assets materialized")
+            .with_line(format!("Provider: {}", outcome.provider))
+            .with_line(format!("Accession: {}", outcome.accession))
+            .with_line(format!("Runs: {}", outcome.run_count))
+            .with_line(format!("Selected assets: {}", outcome.selected_asset_count))
+            .with_line(format!("Failed records: {}", outcome.failed_record_count))
+            .with_line(format!("Include raw: {}", outcome.include_raw))
+            .with_line(format!("Output root: {}", outcome.output_root.display()))
+            .with_line(format!("Manifest: {}", manifest_path.display()))
+            .with_line(format!("Provenance: {}", provenance_path.display()));
+        let body = render_ngsget_report(
+            &outcome,
+            &manifest_path,
+            &provenance_path,
+            provenance.download_records.len(),
+        );
+        let result = MethodResult::new(
+            request.tool.clone(),
+            ResultPayload::TextReport(TextReport::new(body).with_title("ngsget")),
+            summary,
+            report.clone(),
+        )
+        .with_artifact(
+            ArtifactReference::new("manifest_tsv", ArtifactKind::Table)
+                .with_label("NGS handoff manifest TSV")
+                .with_local_path(manifest_path)
+                .with_provenance(manifest_provenance),
+        )
+        .with_artifact(
+            ArtifactReference::new("provenance_json", ArtifactKind::Auxiliary)
+                .with_label("NGS acquisition provenance JSON")
+                .with_local_path(provenance_path)
+                .with_provenance(provenance_provenance),
+        );
 
         Ok(InvocationResponse::completed(
             request.context,
@@ -11877,6 +12019,15 @@ struct NgslistCliParams {
     format: NgslistFormat,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct NgsgetCliParams {
+    accession: String,
+    provider: String,
+    output_root: PathBuf,
+    include_raw: bool,
+    existing_download_roots: Vec<PathBuf>,
+}
+
 fn parse_ngslist_arguments(arguments: &[String]) -> Result<NgslistCliParams, ServiceError> {
     if arguments.is_empty() {
         return Err(tool_usage_error("ngslist", ngslist_help()));
@@ -11983,6 +12134,146 @@ fn build_ngslist_query(accession: &str, provider: &str) -> Result<NgsQuery, Serv
                 "ngslist provider flag conflicts with the provider-qualified accession",
             )
             .with_code("service.ngslist.provider_conflict")
+            .with_detail(format!(
+                "query={} flag={}",
+                query_provider.as_str(),
+                requested_provider.as_str()
+            )));
+        }
+        return Ok(query);
+    }
+
+    Ok(query.with_provider(requested_provider))
+}
+
+fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, ServiceError> {
+    if arguments.is_empty() {
+        return Err(tool_usage_error("ngsget", ngsget_help()));
+    }
+
+    let mut accession = None;
+    let mut provider = "auto".to_owned();
+    let mut output_root = PathBuf::from("ngsget-out");
+    let mut include_raw = false;
+    let mut existing_download_roots = Vec::new();
+    let mut index = 0usize;
+
+    while index < arguments.len() {
+        let argument = &arguments[index];
+        if let Some(value) = argument.strip_prefix("--provider=") {
+            provider = parse_ngsget_provider(value)?;
+            index += 1;
+            continue;
+        }
+        if argument == "--provider" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --provider")
+                    .with_code("service.ngsget.provider_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            provider = parse_ngsget_provider(value)?;
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--out=") {
+            output_root = PathBuf::from(value);
+            index += 1;
+            continue;
+        }
+        if argument == "--out" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --out")
+                    .with_code("service.ngsget.out_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            output_root = PathBuf::from(value);
+            index += 2;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--check-downloads=") {
+            existing_download_roots.push(PathBuf::from(value));
+            index += 1;
+            continue;
+        }
+        if argument == "--check-downloads" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(
+                    ErrorCategory::Validation,
+                    "missing value for --check-downloads",
+                )
+                .with_code("service.ngsget.check_downloads_missing")
+                .with_detail(ngsget_help())
+            })?;
+            existing_download_roots.push(PathBuf::from(value));
+            index += 2;
+            continue;
+        }
+        if argument == "--raw" {
+            include_raw = true;
+            index += 1;
+            continue;
+        }
+        if argument == "--container" || argument.starts_with("--container=") {
+            return Err(PlatformError::new(
+                ErrorCategory::Invocation,
+                "ngsget --container is not implemented yet; the service uses the pinned default SRA Toolkit container",
+            )
+            .with_code("service.ngsget.container_not_supported")
+            .with_detail(ngsget_help()));
+        }
+        if argument.starts_with("--") {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                format!("unknown ngsget argument '{argument}'"),
+            )
+            .with_code("service.ngsget.argument_unknown")
+            .with_detail(ngsget_help()));
+        }
+        if accession.is_some() {
+            return Err(tool_usage_error("ngsget", ngsget_help()));
+        }
+        accession = Some(argument.clone());
+        index += 1;
+    }
+
+    let accession = accession.ok_or_else(|| tool_usage_error("ngsget", ngsget_help()))?;
+    Ok(NgsgetCliParams {
+        accession,
+        provider,
+        output_root,
+        include_raw,
+        existing_download_roots,
+    })
+}
+
+fn parse_ngsget_provider(value: &str) -> Result<String, ServiceError> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "auto" => Ok("auto".to_owned()),
+        "ena" => Ok("ena".to_owned()),
+        "sra" => Ok("sra".to_owned()),
+        _ => Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --provider must be one of auto, ena, or sra",
+        )
+        .with_code("service.ngsget.provider_invalid")
+        .with_detail(value.to_owned())),
+    }
+}
+
+fn build_ngsget_query(accession: &str, provider: &str) -> Result<NgsQuery, ServiceError> {
+    let query = NgsQuery::classify(accession)?;
+    if provider == "auto" {
+        return Ok(query);
+    }
+
+    let requested_provider = ProviderId::new(provider.to_owned())?;
+    if let Some(query_provider) = &query.provider {
+        if query_provider.as_str() != requested_provider.as_str() {
+            return Err(PlatformError::new(
+                ErrorCategory::Validation,
+                "ngsget provider flag conflicts with the provider-qualified accession",
+            )
+            .with_code("service.ngsget.provider_conflict")
             .with_detail(format!(
                 "query={} flag={}",
                 query_provider.as_str(),
@@ -12143,6 +12434,41 @@ fn render_ngs_manifest_json(manifest: &NgsManifest) -> String {
     }
     rendered.push_str("  ]\n");
     rendered.push('}');
+    rendered
+}
+
+fn render_ngsget_report(
+    outcome: &epithema_tools::archive_tools::NgsgetOutcome,
+    manifest_path: &std::path::Path,
+    provenance_path: &std::path::Path,
+    materialization_record_count: usize,
+) -> String {
+    let mut rendered = String::new();
+    rendered.push_str("ngsget acquisition summary\n");
+    rendered.push_str(&format!("provider\t{}\n", outcome.provider));
+    rendered.push_str(&format!("accession\t{}\n", outcome.accession));
+    rendered.push_str(&format!("output_root\t{}\n", outcome.output_root.display()));
+    rendered.push_str(&format!("include_raw\t{}\n", outcome.include_raw));
+    rendered.push_str(&format!("runs\t{}\n", outcome.run_count));
+    rendered.push_str(&format!(
+        "selected_assets\t{}\n",
+        outcome.selected_asset_count
+    ));
+    rendered.push_str(&format!(
+        "materialization_records\t{}\n",
+        materialization_record_count
+    ));
+    rendered.push_str(&format!(
+        "failed_records\t{}\n",
+        outcome.failed_record_count
+    ));
+    if outcome.failed_record_count > 0 {
+        rendered.push_str(
+            "warning\tone or more selected assets failed materialization or verification; inspect provenance.json for failure_reason entries\n",
+        );
+    }
+    rendered.push_str(&format!("manifest\t{}\n", manifest_path.display()));
+    rendered.push_str(&format!("provenance\t{}\n", provenance_path.display()));
     rendered
 }
 
@@ -13622,6 +13948,8 @@ fn feature_tool_help(tool: &str) -> &'static str {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     use epithema_core::MoleculeKind;
     use epithema_diagnostics::PlatformError;
@@ -14184,6 +14512,17 @@ mod tests {
                 .expect("tool registration should succeed");
         }
         EpithemaService::new(registry)
+    }
+
+    fn temp_service_output_root(label: &str) -> std::path::PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time should be after unix epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "epithema-service-{label}-{}-{nanos}",
+            std::process::id()
+        ))
     }
 
     #[test]
@@ -14959,6 +15298,98 @@ mod tests {
                 .iter()
                 .any(|line| line == "Format: json")
         );
+    }
+
+    #[test]
+    fn executes_ngsget_with_existing_download_check() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngsget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngsget should be registered");
+        let output_root = temp_service_output_root("ngsget-output");
+        let cache_root = temp_service_output_root("ngsget-cache");
+        let cached_fastq = cache_root.join("nested/ERR123456.fastq.gz");
+        fs::create_dir_all(
+            cached_fastq
+                .parent()
+                .expect("cached file should have parent"),
+        )
+        .expect("cache directory should be created");
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        fs::write(&cached_fastq, &body).expect("cached FASTQ should be written");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "ena:ERR123456".to_owned(),
+                "--out".to_owned(),
+                output_root.display().to_string(),
+                "--check-downloads".to_owned(),
+                cache_root.display().to_string(),
+            ]);
+        let query = NgsQuery::classify("ena:ERR123456").expect("query should classify");
+        let provider_request = EnaNgsAdapter::new()
+            .build_manifest_request(&query)
+            .expect("ENA NGS request should build");
+        let manifest_body = format!(
+            "{}\n{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+            "run_accession\tstudy_accession\tsecondary_study_accession\texperiment_accession\tsample_accession\tsecondary_sample_accession\tstudy_title\tsample_title\texperiment_title\tscientific_name\tinstrument_platform\tinstrument_model\tlibrary_strategy\tlibrary_source\tlibrary_selection\tlibrary_layout\tfastq_ftp\tfastq_md5\tfastq_bytes\tsubmitted_ftp\tsubmitted_md5\tsubmitted_bytes\tsra_ftp\tsra_md5\tsra_bytes",
+            "ERR123456",
+            "ERP1",
+            "PRJNA1",
+            "ERX1",
+            "ERS1",
+            "SAMN1",
+            "Study title",
+            "Sample one",
+            "Experiment one",
+            "Homo sapiens",
+            "ILLUMINA",
+            "NovaSeq 6000",
+            "WGS",
+            "GENOMIC",
+            "RANDOM",
+            "PAIRED",
+            "example.invalid/ERR123456.fastq.gz",
+            checksum,
+            body.len(),
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        );
+        let client = MockHttpClient::default()
+            .with_response(provider_request.url, HttpResponse::new(200, manifest_body));
+
+        let response = service
+            .invoke_ngsget_with_client(request, descriptor, Some(&client))
+            .expect("ngsget should execute with mocked ENA manifest and local cache");
+
+        match &response.result.payload {
+            ResultPayload::TextReport(report) => {
+                assert!(report.body.contains("failed_records\t0"));
+                assert!(report.body.contains("selected_assets\t1"));
+            }
+            payload => panic!("unexpected payload: {payload:?}"),
+        }
+        let materialized = output_root.join("runs/ERR123456/fastq/ERR123456.fastq.gz");
+        assert_eq!(
+            fs::read(&materialized).expect("materialized FASTQ should be readable"),
+            body
+        );
+        assert_eq!(
+            fs::read(&cached_fastq).expect("cached FASTQ should remain readable"),
+            b"ACGT\n".to_vec()
+        );
+        assert!(output_root.join("manifest.tsv").exists());
+        assert!(output_root.join("provenance.json").exists());
+        assert_eq!(response.result.artifacts.len(), 2);
+        fs::remove_dir_all(output_root).ok();
+        fs::remove_dir_all(cache_root).ok();
     }
 
     #[test]
