@@ -2,6 +2,8 @@
 
 mod assemblyget;
 mod infoassembly;
+mod ngsget;
+mod ngslist;
 mod runget;
 mod runinfo;
 
@@ -12,6 +14,8 @@ pub use assemblyget::{
 pub use infoassembly::{
     InfoassemblyOutcome, InfoassemblyParams, infoassembly_help, run_infoassembly,
 };
+pub use ngsget::{NgsgetOutcome, NgsgetParams, ngsget_help, run_ngsget};
+pub use ngslist::{NgslistFormat, NgslistOutcome, NgslistParams, ngslist_help, run_ngslist};
 pub use runget::{RungetOutcome, RungetParams, run_runget, runget_help};
 pub use runinfo::{RuninfoOutcome, RuninfoParams, run_runinfo, runinfo_help};
 
@@ -44,5 +48,19 @@ pub const RUNINFO_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
 pub const RUNGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
     "runget",
     "discover a normalized public-run manifest through the governed archive acquisition seam",
+)
+.with_family(FAMILY);
+
+/// `ngslist` descriptor.
+pub const NGSLIST_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "ngslist",
+    "list run-level FASTQ, raw, alignment, and SRA assets for a public NGS accession",
+)
+.with_family(FAMILY);
+
+/// `ngsget` descriptor.
+pub const NGSGET_DESCRIPTOR: ToolDescriptor = ToolDescriptor::new(
+    "ngsget",
+    "materialize public ENA or SRA NGS assets with provenance",
 )
 .with_family(FAMILY);

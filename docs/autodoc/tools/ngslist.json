@@ -1,0 +1,90 @@
+{
+  "schema_version": "epithema.autodoc/v1",
+  "document_id": "ngslist-v1",
+  "tool": {
+    "name": "ngslist",
+    "family": "archive_tools",
+    "summary": "List public ENA or SRA NGS assets for one study, sample, experiment, or run accession",
+    "legacy_names": []
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "kind": "overview",
+      "title": "Overview",
+      "content": "`ngslist` expands a public ENA or SRA NGS study, sample, experiment, or run accession into a normalized run-level manifest and reports the associated generated FASTQ, provider-native SRA, submitted raw, submitted alignment, index, or unclassified submitted assets."
+    },
+    {
+      "id": "inputs",
+      "kind": "inputs",
+      "title": "Inputs",
+      "content": "The current interface accepts one accession plus optional provider and format flags: `epithema ngslist <accession> [--provider auto|ena|sra] [--format table|json]`. Provider-qualified accessions such as `ena:PRJNA1011899` and `sra:SRR123456` are accepted. Bare or `auto` queries use the deterministic service route documented in the NGS ingestion plan."
+    },
+    {
+      "id": "outputs",
+      "kind": "outputs",
+      "title": "Outputs",
+      "content": "The default output is a stable table with one row per asset and columns for provider, query accession, resolved object class, study/sample/experiment/run metadata, sequencing metadata, asset role, asset format, source URL, size bytes, and MD5 checksum. `--format json` returns the same asset rows as deterministic JSON text."
+    },
+    {
+      "id": "status",
+      "kind": "notes",
+      "title": "Current Status",
+      "content": "This method is implemented and exposed through `epithema ngslist`. Rust service coverage includes a mocked ENA study query that expands to multiple runs, a mocked ENA run-level JSON rendering path, provider selection parsing, and service-level provider policy enforcement through the NGS retrieval gateway."
+    },
+    {
+      "id": "caveats",
+      "kind": "caveats",
+      "title": "Caveats",
+      "content": "`ngslist` is a public manifest listing surface only. It does not download files, convert SRA archives to FASTQ, write provenance files, handle protected-access datasets, or publish object-store records. Downloading, conversion, and provenance writing belong to the planned `ngsget` surface; protected-access, dbGaP-controlled, credentialed, and object-store publication workflows remain explicit future work."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "ngslist_mocked_ena_study_case",
+      "label": "Mocked ENA ngslist study case fixture",
+      "origin": {
+        "kind": "fixture_asset"
+      },
+      "acquisition": {
+        "mode": "fixture"
+      },
+      "reference": {
+        "kind": "managed_asset",
+        "asset_id": "crates/epithema-testkit/tests/fixtures/autodoc/ngslist_ena_prjna1011899_case.md"
+      },
+      "description": "Repository-managed case note for the mocked ENA study manifest expansion path used in Rust service coverage."
+    }
+  ],
+  "examples": [
+    {
+      "id": "list_ena_study_assets",
+      "title": "List assets for an ENA study accession",
+      "description": "Resolves a public ENA study accession and returns the normalized run-level asset table without downloading files.",
+      "artifact_ids": [
+        "ngslist_mocked_ena_study_case"
+      ],
+      "parameters": [],
+      "expected_outputs": [
+        {
+          "id": "ena_study_asset_table",
+          "label": "Normalized ENA study asset table",
+          "description": "A stable table report with one row per generated FASTQ or submitted NGS asset exposed by the mocked ENA study manifest."
+        }
+      ],
+      "legacy_reference": null
+    }
+  ],
+  "provenance": {
+    "source_mode": "curated",
+    "curated_by": "epithema maintainers",
+    "source_references": []
+  },
+  "validation": {
+    "required_example_ids": [
+      "list_ena_study_assets"
+    ],
+    "compare_against_legacy": false,
+    "require_provenance_capture": true
+  }
+}

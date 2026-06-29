@@ -15,13 +15,16 @@ pub mod client;
 pub mod descriptor;
 pub mod ena;
 pub mod ena_archive;
+pub mod ena_ngs;
 pub mod identity;
 pub mod input;
 pub mod ncbi;
+pub mod ngs;
 pub mod registry;
 pub mod request;
 pub mod sequence_retrieval;
 pub mod sra_archive;
+pub mod sra_ngs;
 pub mod traits;
 
 pub use acquisition::{
@@ -33,13 +36,21 @@ pub use archive::{
     ProviderArchiveRouter, RetrievedArchiveManifest, RetrievedArchiveMetadata,
 };
 pub use capability::ProviderCapability;
-pub use client::{HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient};
+pub use client::{
+    HttpBytesResponse, HttpDownloadProgress, HttpDownloadProgressState, HttpDownloadResponse,
+    HttpRequest, HttpResponse, ProviderHttpClient, ReqwestHttpClient,
+};
 pub use descriptor::ProviderDescriptor;
 pub use ena::EnaSequenceAdapter;
 pub use ena_archive::EnaArchiveAdapter;
+pub use ena_ngs::EnaNgsAdapter;
 pub use identity::ProviderId;
 pub use input::{InputReference, InputReferenceKind, ResolutionIntent};
 pub use ncbi::{NcbiDatabase, NcbiSequenceAdapter};
+pub use ngs::{
+    NGS_PROVENANCE_SCHEMA, NgsAsset, NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest,
+    NgsManifestRun, NgsObjectClass, NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus,
+};
 pub use registry::ProviderRegistry;
 pub use request::{
     AcquisitionRequest, DocumentationAssetRequest, MetadataLookupRequest, SequenceRequest,
@@ -49,6 +60,7 @@ pub use sequence_retrieval::{
     SequenceProviderResolution,
 };
 pub use sra_archive::SraArchiveAdapter;
+pub use sra_ngs::SraNgsAdapter;
 pub use traits::{
     ArchiveProvider, CapabilityProvider, DocumentationAssetProvider, MetadataProvider,
     SequenceProvider,

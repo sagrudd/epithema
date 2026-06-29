@@ -1,5 +1,8 @@
 //! Minimal HTTP client seam for provider-backed retrieval.
 
+use std::fs;
+use std::io::{Read, Write};
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use epithema_diagnostics::{ErrorCategory, PlatformError};
@@ -71,15 +74,175 @@ impl HttpResponse {
     }
 }
 
+/// Minimal byte response used by provider-backed file materialization.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HttpBytesResponse {
+    /// HTTP status code.
+    pub status: u16,
+    /// Response body bytes.
+    pub body: Vec<u8>,
+    /// Optional content type.
+    pub content_type: Option<String>,
+}
+
+/// Response metadata from a provider-backed file download.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HttpDownloadResponse {
+    /// HTTP status code.
+    pub status: u16,
+    /// Number of bytes written to the target path.
+    pub bytes_written: u64,
+    /// Server-reported content length when available.
+    pub content_length: Option<u64>,
+    /// Optional content type.
+    pub content_type: Option<String>,
+}
+
+/// Download progress event kind.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpDownloadProgressState {
+    /// The response body is about to be streamed.
+    Started,
+    /// More bytes were written to disk.
+    Advanced,
+    /// The response body has been fully written.
+    Finished,
+}
+
+/// Progress event emitted while streaming a provider download to disk.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HttpDownloadProgress {
+    /// Event kind.
+    pub state: HttpDownloadProgressState,
+    /// Download URL.
+    pub url: String,
+    /// Local path being written.
+    pub path: PathBuf,
+    /// Bytes written so far.
+    pub bytes_downloaded: u64,
+    /// Server-reported content length when available.
+    pub total_bytes: Option<u64>,
+}
+
+impl HttpBytesResponse {
+    /// Creates a byte response payload.
+    #[must_use]
+    pub fn new(status: u16, body: impl Into<Vec<u8>>) -> Self {
+        Self {
+            status,
+            body: body.into(),
+            content_type: None,
+        }
+    }
+
+    /// Attaches a content type.
+    #[must_use]
+    pub fn with_content_type(mut self, content_type: impl Into<String>) -> Self {
+        self.content_type = Some(content_type.into());
+        self
+    }
+}
+
 /// Minimal HTTP client interface used by provider adapters.
 pub trait ProviderHttpClient {
     /// Executes a GET request and returns the response body as text.
     fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError>;
+
+    /// Executes a GET request and returns the response body as bytes.
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        let response = self.get_text(request)?;
+        Ok(HttpBytesResponse {
+            status: response.status,
+            body: response.body.into_bytes(),
+            content_type: response.content_type,
+        })
+    }
+
+    /// Executes a GET request and streams a successful response body to `path`.
+    fn download_to_path(
+        &self,
+        request: &HttpRequest,
+        path: &Path,
+        progress: Option<&dyn Fn(HttpDownloadProgress)>,
+    ) -> Result<HttpDownloadResponse, PlatformError> {
+        let response = self.get_bytes(request)?;
+        let bytes_written = u64::try_from(response.body.len()).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider response body length could not be represented as u64",
+            )
+            .with_code("providers.http.body_size_overflow")
+            .with_detail(error.to_string())
+        })?;
+        if !(200..300).contains(&response.status) {
+            return Ok(HttpDownloadResponse {
+                status: response.status,
+                bytes_written: 0,
+                content_length: None,
+                content_type: response.content_type,
+            });
+        }
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to create provider download directory",
+                )
+                .with_code("providers.http.download_directory_failed")
+                .with_detail(error.to_string())
+            })?;
+        }
+        if let Some(progress) = progress {
+            progress(HttpDownloadProgress {
+                state: HttpDownloadProgressState::Started,
+                url: request.url.clone(),
+                path: path.to_path_buf(),
+                bytes_downloaded: 0,
+                total_bytes: Some(bytes_written),
+            });
+        }
+        fs::write(path, &response.body).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to write provider download body",
+            )
+            .with_code("providers.http.download_write_failed")
+            .with_detail(error.to_string())
+        })?;
+        if let Some(progress) = progress {
+            progress(HttpDownloadProgress {
+                state: HttpDownloadProgressState::Finished,
+                url: request.url.clone(),
+                path: path.to_path_buf(),
+                bytes_downloaded: bytes_written,
+                total_bytes: Some(bytes_written),
+            });
+        }
+        Ok(HttpDownloadResponse {
+            status: response.status,
+            bytes_written,
+            content_length: Some(bytes_written),
+            content_type: response.content_type,
+        })
+    }
 }
 
 impl<T: ProviderHttpClient + ?Sized> ProviderHttpClient for &T {
     fn get_text(&self, request: &HttpRequest) -> Result<HttpResponse, PlatformError> {
         (**self).get_text(request)
+    }
+
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        (**self).get_bytes(request)
+    }
+
+    fn download_to_path(
+        &self,
+        request: &HttpRequest,
+        path: &Path,
+        progress: Option<&dyn Fn(HttpDownloadProgress)>,
+    ) -> Result<HttpDownloadResponse, PlatformError> {
+        (**self).download_to_path(request, path, progress)
     }
 }
 
@@ -87,6 +250,7 @@ impl<T: ProviderHttpClient + ?Sized> ProviderHttpClient for &T {
 #[derive(Clone, Debug)]
 pub struct ReqwestHttpClient {
     client: reqwest::blocking::Client,
+    text_timeout: Option<Duration>,
 }
 
 impl ReqwestHttpClient {
@@ -98,7 +262,7 @@ impl ReqwestHttpClient {
     /// Creates a client with an explicit timeout.
     pub fn with_timeout(timeout: Duration) -> Result<Self, PlatformError> {
         let client = reqwest::blocking::Client::builder()
-            .timeout(timeout)
+            .connect_timeout(timeout)
             .build()
             .map_err(|error| {
                 PlatformError::new(
@@ -109,7 +273,10 @@ impl ReqwestHttpClient {
                 .with_detail(error.to_string())
             })?;
 
-        Ok(Self { client })
+        Ok(Self {
+            client,
+            text_timeout: Some(timeout),
+        })
     }
 }
 
@@ -119,6 +286,9 @@ impl ProviderHttpClient for ReqwestHttpClient {
             .client
             .get(&request.url)
             .header("User-Agent", &request.user_agent);
+        if let Some(timeout) = self.text_timeout {
+            builder = builder.timeout(timeout);
+        }
         if let Some(accept) = &request.accept {
             builder = builder.header("Accept", accept);
         }
@@ -150,6 +320,189 @@ impl ProviderHttpClient for ReqwestHttpClient {
         Ok(HttpResponse {
             status,
             body,
+            content_type,
+        })
+    }
+
+    fn get_bytes(&self, request: &HttpRequest) -> Result<HttpBytesResponse, PlatformError> {
+        let mut builder = self
+            .client
+            .get(&request.url)
+            .header("User-Agent", &request.user_agent);
+        if let Some(accept) = &request.accept {
+            builder = builder.header("Accept", accept);
+        }
+
+        let response = builder.send().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider request failed during transport",
+            )
+            .with_code("providers.http.transport_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        let status = response.status().as_u16();
+        let content_type = response
+            .headers()
+            .get(reqwest::header::CONTENT_TYPE)
+            .and_then(|value| value.to_str().ok())
+            .map(ToOwned::to_owned);
+        let body = response.bytes().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider response body could not be read as bytes",
+            )
+            .with_code("providers.http.body_read_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        Ok(HttpBytesResponse {
+            status,
+            body: body.to_vec(),
+            content_type,
+        })
+    }
+
+    fn download_to_path(
+        &self,
+        request: &HttpRequest,
+        path: &Path,
+        progress: Option<&dyn Fn(HttpDownloadProgress)>,
+    ) -> Result<HttpDownloadResponse, PlatformError> {
+        let mut builder = self
+            .client
+            .get(&request.url)
+            .header("User-Agent", &request.user_agent);
+        if let Some(accept) = &request.accept {
+            builder = builder.header("Accept", accept);
+        }
+
+        let mut response = builder.send().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "provider request failed during transport",
+            )
+            .with_code("providers.http.transport_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        let status = response.status().as_u16();
+        let content_length = response.content_length();
+        let content_type = response
+            .headers()
+            .get(reqwest::header::CONTENT_TYPE)
+            .and_then(|value| value.to_str().ok())
+            .map(ToOwned::to_owned);
+        if !(200..300).contains(&status) {
+            return Ok(HttpDownloadResponse {
+                status,
+                bytes_written: 0,
+                content_length,
+                content_type,
+            });
+        }
+
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to create provider download directory",
+                )
+                .with_code("providers.http.download_directory_failed")
+                .with_detail(error.to_string())
+            })?;
+        }
+        let mut file = fs::File::create(path).map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to create provider download file",
+            )
+            .with_code("providers.http.download_create_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        if let Some(progress) = progress {
+            progress(HttpDownloadProgress {
+                state: HttpDownloadProgressState::Started,
+                url: request.url.clone(),
+                path: path.to_path_buf(),
+                bytes_downloaded: 0,
+                total_bytes: content_length,
+            });
+        }
+
+        let mut bytes_written = 0u64;
+        let mut buffer = vec![0u8; 1024 * 1024];
+        loop {
+            let bytes_read = response.read(&mut buffer).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "provider response body could not be streamed to disk",
+                )
+                .with_code("providers.http.body_stream_failed")
+                .with_detail(error.to_string())
+            })?;
+            if bytes_read == 0 {
+                break;
+            }
+            file.write_all(&buffer[..bytes_read]).map_err(|error| {
+                PlatformError::new(
+                    ErrorCategory::Invocation,
+                    "failed to write provider download chunk",
+                )
+                .with_code("providers.http.download_write_failed")
+                .with_detail(error.to_string())
+            })?;
+            bytes_written = bytes_written
+                .checked_add(u64::try_from(bytes_read).map_err(|error| {
+                    PlatformError::new(
+                        ErrorCategory::Invocation,
+                        "provider download chunk length could not be represented as u64",
+                    )
+                    .with_code("providers.http.body_size_overflow")
+                    .with_detail(error.to_string())
+                })?)
+                .ok_or_else(|| {
+                    PlatformError::new(
+                        ErrorCategory::Invocation,
+                        "provider download byte count overflowed u64",
+                    )
+                    .with_code("providers.http.body_size_overflow")
+                })?;
+            if let Some(progress) = progress {
+                progress(HttpDownloadProgress {
+                    state: HttpDownloadProgressState::Advanced,
+                    url: request.url.clone(),
+                    path: path.to_path_buf(),
+                    bytes_downloaded: bytes_written,
+                    total_bytes: content_length,
+                });
+            }
+        }
+        file.flush().map_err(|error| {
+            PlatformError::new(
+                ErrorCategory::Invocation,
+                "failed to flush provider download file",
+            )
+            .with_code("providers.http.download_flush_failed")
+            .with_detail(error.to_string())
+        })?;
+
+        if let Some(progress) = progress {
+            progress(HttpDownloadProgress {
+                state: HttpDownloadProgressState::Finished,
+                url: request.url.clone(),
+                path: path.to_path_buf(),
+                bytes_downloaded: bytes_written,
+                total_bytes: content_length,
+            });
+        }
+
+        Ok(HttpDownloadResponse {
+            status,
+            bytes_written,
+            content_length,
             content_type,
         })
     }

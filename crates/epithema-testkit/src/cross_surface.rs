@@ -56,30 +56,58 @@ pub struct CrossSurfaceFixtureCase {
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum CrossSurfaceExpected {
     /// Scalar count.
-    Count { count: usize },
+    Count {
+        /// Expected scalar count.
+        count: usize,
+    },
     /// One sequence record.
-    SequenceRecord { record: BridgeSequenceRecord },
+    SequenceRecord {
+        /// Expected bridge sequence record.
+        record: BridgeSequenceRecord,
+    },
     /// Ordered sequence records.
-    SequenceSet { records: Vec<BridgeSequenceRecord> },
+    SequenceSet {
+        /// Expected records in stable order.
+        records: Vec<BridgeSequenceRecord>,
+    },
     /// Long-form composition rows.
-    CompositionRows { rows: Vec<BridgeCompositionRow> },
+    CompositionRows {
+        /// Expected composition rows.
+        rows: Vec<BridgeCompositionRow>,
+    },
     /// Long-form GC summary rows.
-    GcRows { rows: Vec<BridgeGcRow> },
+    GcRows {
+        /// Expected GC summary rows.
+        rows: Vec<BridgeGcRow>,
+    },
     /// Pepstats summary and composition rows.
     Pepstats {
+        /// Expected pepstats summary rows.
         summary_rows: Vec<BridgePepstatsSummaryRow>,
+        /// Expected pepstats composition rows.
         composition_rows: Vec<BridgeCompositionRow>,
     },
     /// Matcher summary row.
-    MatcherSummary { summary: BridgeMatcherSummary },
+    MatcherSummary {
+        /// Expected matcher summary.
+        summary: BridgeMatcherSummary,
+    },
     /// Equal-length distance matrix.
-    DistanceMatrix { matrix: BridgeDistanceMatrix },
+    DistanceMatrix {
+        /// Expected distance matrix.
+        matrix: BridgeDistanceMatrix,
+    },
     /// Charge-profile analytical rows only.
     ChargeProfile {
+        /// Identifier for the profiled sequence.
         identifier: String,
+        /// Length of the profiled sequence.
         sequence_length: usize,
+        /// Charge-profile window size.
         window: usize,
+        /// Charge-profile window step.
         step: usize,
+        /// Expected charge-profile windows.
         windows: Vec<BridgeChargeWindow>,
     },
 }

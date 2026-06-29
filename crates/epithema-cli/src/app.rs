@@ -1,11 +1,17 @@
 //! Top-level CLI application orchestration for `epithema`.
 
+use std::collections::HashMap;
 use std::ffi::OsString;
 use std::path::PathBuf;
 use std::process::ExitCode;
+use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 use clap::{CommandFactory, Parser, Subcommand};
-use epithema_service::{EpithemaService, InvocationRequest, ServiceRegistry, ToolName};
+use epithema_service::{
+    EpithemaService, HttpDownloadProgress, HttpDownloadProgressState, InvocationRequest,
+    NgsDownloadProgressCallback, ServiceRegistry, ToolName,
+};
 use epithema_tools::governed_tool_descriptors;
 
 use crate::commands;
@@ -101,7 +107,90 @@ fn build_service() -> EpithemaService {
             .register(*descriptor)
             .expect("built-in tool registration should succeed");
     }
-    EpithemaService::new(registry)
+    EpithemaService::new(registry).with_ngs_download_progress(ngs_download_progress_callback())
+}
+
+fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
+    let state = Arc::new(Mutex::new(HashMap::<String, Instant>::new()));
+    Arc::new(move |progress: HttpDownloadProgress| {
+        let key = progress.path.display().to_string();
+        let now = Instant::now();
+        let mut state = match state.lock() {
+            Ok(state) => state,
+            Err(_) => return,
+        };
+        let should_render = match progress.state {
+            HttpDownloadProgressState::Started | HttpDownloadProgressState::Finished => true,
+            HttpDownloadProgressState::Advanced => state
+                .get(&key)
+                .is_none_or(|last| now.duration_since(*last) >= Duration::from_millis(500)),
+        };
+        if !should_render {
+            return;
+        }
+        state.insert(key, now);
+        let label = progress
+            .path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .unwrap_or("download");
+        eprint!("\r{}", render_ngs_download_progress(label, &progress));
+        if progress.state == HttpDownloadProgressState::Finished {
+            eprintln!();
+        }
+    })
+}
+
+fn render_ngs_download_progress(label: &str, progress: &HttpDownloadProgress) -> String {
+    const BAR_WIDTH: usize = 24;
+    let short_label = if label.chars().count() > 36 {
+        let suffix: String = label
+            .chars()
+            .rev()
+            .take(33)
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect();
+        format!("...{suffix}")
+    } else {
+        label.to_owned()
+    };
+
+    if let Some(total) = progress.total_bytes.filter(|total| *total > 0) {
+        let ratio = (progress.bytes_downloaded as f64 / total as f64).clamp(0.0, 1.0);
+        let filled = (ratio * BAR_WIDTH as f64).round() as usize;
+        let empty = BAR_WIDTH.saturating_sub(filled);
+        let percent = ratio * 100.0;
+        format!(
+            "ngsget {short_label:<36} [{}{}] {:>6.2}% {}/{}",
+            "=".repeat(filled),
+            " ".repeat(empty),
+            percent,
+            format_bytes(progress.bytes_downloaded),
+            format_bytes(total),
+        )
+    } else {
+        format!(
+            "ngsget {short_label:<36} {} downloaded",
+            format_bytes(progress.bytes_downloaded),
+        )
+    }
+}
+
+fn format_bytes(bytes: u64) -> String {
+    const UNITS: &[&str] = &["B", "KiB", "MiB", "GiB", "TiB"];
+    let mut value = bytes as f64;
+    let mut unit_index = 0usize;
+    while value >= 1024.0 && unit_index + 1 < UNITS.len() {
+        value /= 1024.0;
+        unit_index += 1;
+    }
+    if unit_index == 0 {
+        format!("{bytes} {}", UNITS[unit_index])
+    } else {
+        format!("{value:.2} {}", UNITS[unit_index])
+    }
 }
 
 #[derive(Debug, Parser)]
@@ -260,6 +349,41 @@ mod tests {
             .expect("tool should parse");
         assert!(format!("{cli:?}").contains("Tool"));
         assert!(format!("{cli:?}").contains("runget"));
+    }
+
+    #[test]
+    fn routes_ngslist_to_tool_path() {
+        let cli = Cli::try_parse_from([
+            "epithema",
+            "ngslist",
+            "PRJNA1011899",
+            "--provider",
+            "ena",
+            "--format",
+            "json",
+        ])
+        .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("ngslist"));
+    }
+
+    #[test]
+    fn routes_ngsget_to_tool_path() {
+        let cli = Cli::try_parse_from([
+            "epithema",
+            "ngsget",
+            "PRJNA1011899",
+            "--provider",
+            "ena",
+            "--out",
+            "ngs-output",
+            "--raw",
+            "--check-downloads",
+            "existing-downloads",
+        ])
+        .expect("tool should parse");
+        assert!(format!("{cli:?}").contains("Tool"));
+        assert!(format!("{cli:?}").contains("ngsget"));
     }
 
     #[test]

@@ -80,6 +80,8 @@ tools/msbar
 tools/needle
 tools/needleall
 tools/newseq
+tools/ngsget
+tools/ngslist
 tools/notseq
 tools/nthseq
 tools/nthseqset

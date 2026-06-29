@@ -11,6 +11,7 @@ pub mod context;
 pub mod error;
 pub mod input;
 pub mod input_resolution;
+pub mod ngs_retrieval;
 pub mod registry;
 pub mod request;
 pub mod response;
@@ -31,13 +32,16 @@ pub use epithema_providers::{
     AcquisitionRequest, ArchiveFile, ArchiveObjectClass, ArchiveProviderResolution, ArchiveRoute,
     DocumentationAcquisitionGateway, DocumentationAcquisitionRecord,
     DocumentationAcquisitionRequest, DocumentationAcquisitionRoute, DocumentationAssetRequest,
-    InputReference as ProviderInputReference, InputReferenceKind, MetadataLookupRequest,
-    ProviderCapability, ProviderDescriptor, ProviderId, ProviderRegistry, ResolutionIntent,
-    RetrievalFormat, RetrievalRoute, RetrievedArchiveManifest, RetrievedArchiveMetadata,
-    RetrievedSequence, SequenceProviderResolution, SequenceRequest,
+    HttpDownloadProgress, HttpDownloadProgressState, InputReference as ProviderInputReference,
+    InputReferenceKind, MetadataLookupRequest, NgsAsset, NgsAssetRole, NgsDownloadPlan,
+    NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsObjectClass, NgsProvenance, NgsQuery,
+    NgsRunMetadata, NgsVerificationStatus, ProviderCapability, ProviderDescriptor, ProviderId,
+    ProviderRegistry, ResolutionIntent, RetrievalFormat, RetrievalRoute, RetrievedArchiveManifest,
+    RetrievedArchiveMetadata, RetrievedSequence, SequenceProviderResolution, SequenceRequest,
 };
 pub use error::ServiceError;
 pub use input::{ToolInputKind, ToolInputReference, ToolInputResolution, ToolInputResolver};
+pub use ngs_retrieval::{NgsDownloadProgressCallback, ServiceNgsRetrieval};
 pub use registry::{ServiceRegistry, ToolCatalog};
 pub use request::InvocationRequest;
 pub use response::{InvocationResponse, InvocationStatus};

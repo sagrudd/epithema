@@ -267,6 +267,9 @@ Additional documentation-oriented targets currently available are:
 - `make lint` for workspace-wide Clippy validation
 - `make test` for workspace-wide Rust tests
 - `make lint-docs` for strict Sphinx structure and cross-reference checks
+- `make docs-name-check` to reject retired project names in documentation,
+  workflow source, or built Sphinx HTML while preserving legitimate EMBOSS
+  provenance references
 - `make lint-repo` for lightweight repository-structure and governance-entry checks
 - `make check-sister-repo` for a read-only compatibility-awareness check against
   `../epithemaR` when that sibling repository is present locally
@@ -301,6 +304,7 @@ At present CI enforces:
 - read-only awareness of the sister `epithemaR` repository when available
 - strict Sphinx validation
 - full Sphinx HTML build
+- retired project-name checks for checked documentation and built Sphinx HTML
 - Linux-first container smoke build verification
 
 ## GitHub Pages Publication
@@ -319,6 +323,8 @@ The workflow:
 - rebuilds the Sphinx site from `docs/requirements.txt`
 - runs the release-oriented docs target so the published site stays aligned
   with release metadata
+- verifies the checked source and built HTML do not carry retired project-brand
+  names before publication
 - uploads `docs/_build/html/` as the Pages artifact and deploys it through the
   standard GitHub Pages deployment actions
 
