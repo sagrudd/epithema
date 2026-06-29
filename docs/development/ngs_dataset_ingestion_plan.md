@@ -346,9 +346,14 @@ The provenance document should use schema label
    seconds, measures Aspera progress from live filesystem artifacts in the
    target run directory, labels external-transfer finalization and MD5
    verification as distinct post-transfer phases with elapsed timers, verifies
-   size and MD5 evidence from disk, and promotes only after available byte-count
-   and checksum evidence passes. It writes selected assets to the documented
-   `runs/<run>/fastq`,
+   size and MD5 evidence from disk unless `--no-checksum` is requested, and
+   promotes only after available byte-count and checksum evidence passes.
+   `--no-checksum` stores provider-expected MD5 values in the manifest and
+   provenance but skips local MD5 reads during materialization, using byte-count
+   evidence where available and marking records unverified. `--verify-only`
+   performs later local verification of extant selected files under `--out` and
+   writes fresh observed checksum evidence and per-file verification markers. It
+   writes selected assets to the documented `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification
    artifacts in place for inspection, resumes existing `.partial` files when
    the provider honors byte-range requests, skips already verified local files,
@@ -452,9 +457,10 @@ The provenance document should use schema label
     partial artifacts, selected asset completion, completed run/sample counters,
     roughly two-second active-transfer heartbeat repaints, live filesystem
     artifact measurement for Aspera transfers, elapsed post-transfer phase
-    timers, visible MD5 progress, and resumable `.partial` files, SRA conversion
-    through the pinned default container, provenance JSON, and stable handoff
-    manifest behavior.
+    timers, visible MD5 progress, fast `--no-checksum` materialization,
+    `--verify-only` local verification of existing outputs, and resumable
+    `.partial` files, SRA conversion through the pinned default container,
+    provenance JSON, and stable handoff manifest behavior.
     Release-facing scope and notes now explicitly keep protected-access,
     dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and

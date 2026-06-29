@@ -136,7 +136,7 @@ use crate::error::{ServiceError, unknown_tool};
 use crate::input::{ToolInputReference, ToolInputResolution, ToolInputResolver};
 use crate::ngs_retrieval::{
     NgsDownloadProgressCallback, NgsDownloadTransport, NgsDownloadTransportConfig,
-    ServiceNgsRetrieval,
+    NgsMaterializationPolicy, ServiceNgsRetrieval,
 };
 use crate::registry::{ServiceRegistry, ToolCatalog};
 use crate::request::InvocationRequest;
@@ -1548,12 +1548,17 @@ impl EpithemaService {
     ) -> Result<InvocationResponse, ServiceError> {
         let manifest = gateway.retrieve_manifest(query)?;
         let plan = gateway.plan_downloads(&manifest, &params.output_root, params.include_raw)?;
+        let policy = NgsMaterializationPolicy {
+            verify_checksums: params.verify_checksums,
+            verify_only: params.verify_only,
+        };
         let records = gateway
-            .materialize_download_plan_with_existing_downloads_transport_and_threads(
+            .materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
                 &plan,
                 &params.existing_download_roots,
                 params.download_threads,
                 &params.transport_config,
+                policy,
             )?;
         let selected_asset_count = plan.selected_assets.len();
         let failed_record_count = records
@@ -1574,6 +1579,8 @@ impl EpithemaService {
             existing_download_roots: params.existing_download_roots.clone(),
             download_threads: params.download_threads,
             download_transport: params.transport_config.mode.as_str().to_owned(),
+            verify_checksums: params.verify_checksums,
+            verify_only: params.verify_only,
             run_count: manifest.runs.len(),
             selected_asset_count,
             failed_record_count,
@@ -1610,6 +1617,8 @@ impl EpithemaService {
                 outcome.download_transport
             ))
             .with_line(format!("Download threads: {}", outcome.download_threads))
+            .with_line(format!("Verify checksums: {}", outcome.verify_checksums))
+            .with_line(format!("Verify only: {}", outcome.verify_only))
             .with_line(format!("Output root: {}", outcome.output_root.display()))
             .with_line(format!("Manifest: {}", manifest_path.display()))
             .with_line(format!("Provenance: {}", provenance_path.display()));
@@ -12061,6 +12070,8 @@ struct NgsgetCliParams {
     existing_download_roots: Vec<PathBuf>,
     download_threads: usize,
     transport_config: NgsDownloadTransportConfig,
+    verify_checksums: bool,
+    verify_only: bool,
 }
 
 const ASPERA_KEY_FILENAMES: &[&str] = &[
@@ -12201,6 +12212,8 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut existing_download_roots = Vec::new();
     let mut download_threads = 1usize;
     let mut transport_config = NgsDownloadTransportConfig::default();
+    let mut verify_checksums = true;
+    let mut verify_only = false;
     let mut explicit_ascp = false;
     let mut explicit_aspera_key = false;
     let mut index = 0usize;
@@ -12257,6 +12270,16 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
         if argument == "--raw" {
             include_raw = true;
+            index += 1;
+            continue;
+        }
+        if argument == "--no-checksum" {
+            verify_checksums = false;
+            index += 1;
+            continue;
+        }
+        if argument == "--verify-only" {
+            verify_only = true;
             index += 1;
             continue;
         }
@@ -12368,19 +12391,29 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
     }
 
-    if !explicit_aspera_key {
+    if !verify_only && transport_config.mode != NgsDownloadTransport::Https && !explicit_aspera_key
+    {
         transport_config.aspera.key_path =
             ensure_managed_aspera_key(&transport_config.aspera.ascp_path)?;
     }
-    if transport_config.mode != NgsDownloadTransport::Https
+    if !verify_only
+        && transport_config.mode != NgsDownloadTransport::Https
         && transport_config.aspera.key_passphrase.is_none()
         && env::var_os("ASPERA_SCP_PASS").is_none()
     {
         transport_config.aspera.key_passphrase = ascli_aspera_key_passphrase();
     }
 
-    if transport_config.mode == NgsDownloadTransport::Aspera {
+    if !verify_only && transport_config.mode == NgsDownloadTransport::Aspera {
         validate_ngsget_aspera_transport(&transport_config)?;
+    }
+    if verify_only && !verify_checksums {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --verify-only cannot be combined with --no-checksum",
+        )
+        .with_code("service.ngsget.verify_checksum_conflict")
+        .with_detail(ngsget_help()));
     }
 
     let accession = accession.ok_or_else(|| tool_usage_error("ngsget", ngsget_help()))?;
@@ -12392,6 +12425,8 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         existing_download_roots,
         download_threads,
         transport_config,
+        verify_checksums,
+        verify_only,
     })
 }
 
@@ -13035,6 +13070,8 @@ fn render_ngsget_report(
         outcome.download_transport
     ));
     rendered.push_str(&format!("download_threads\t{}\n", outcome.download_threads));
+    rendered.push_str(&format!("verify_checksums\t{}\n", outcome.verify_checksums));
+    rendered.push_str(&format!("verify_only\t{}\n", outcome.verify_only));
     rendered.push_str(&format!("runs\t{}\n", outcome.run_count));
     rendered.push_str(&format!(
         "selected_assets\t{}\n",

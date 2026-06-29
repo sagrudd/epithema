@@ -29,6 +29,7 @@ const DEFAULT_SRA_TOOLKIT_CONTAINER: &str = "docker.io/ncbi/sra-tools:3.1.1";
 const DEFAULT_SRA_TOOLKIT_VERSION: &str = "3.1.1";
 const MAX_NGS_DOWNLOAD_THREADS: usize = 20;
 const DEFAULT_ASPERA_TARGET_RATE: &str = "300m";
+const NGS_ASSET_VERIFICATION_SCHEMA: &str = "epithema.ngs-asset-verification/v1";
 const ASPERA_KEY_FILENAMES: &[&str] = &[
     "aspera_bypass_rsa.pem",
     "aspera_bypass_dsa.pem",
@@ -169,6 +170,24 @@ pub struct SraFastqConversionRequest {
 pub struct SraFastqConversionResult {
     /// External command exit status.
     pub exit_status: i32,
+}
+
+/// Integrity and materialization mode for NGS asset handling.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct NgsMaterializationPolicy {
+    /// Whether local files must be read for MD5 verification before completion.
+    pub verify_checksums: bool,
+    /// Whether to verify existing output files without performing network downloads.
+    pub verify_only: bool,
+}
+
+impl Default for NgsMaterializationPolicy {
+    fn default() -> Self {
+        Self {
+            verify_checksums: true,
+            verify_only: false,
+        }
+    }
 }
 
 /// Executes a planned SRA FASTQ conversion.
@@ -403,6 +422,28 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         )
     }
 
+    /// Materializes selected assets with existing roots, thread cap, transport, and verification policy.
+    pub fn materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
+        &self,
+        plan: &NgsDownloadPlan,
+        existing_download_roots: &[PathBuf],
+        download_threads: usize,
+        transport_config: &NgsDownloadTransportConfig,
+        policy: NgsMaterializationPolicy,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
+        self.materialize_download_plan_with_sra_runner_existing_downloads_threads_and_policy(
+            plan,
+            &DockerSraFastqRunner,
+            existing_download_roots,
+            download_threads,
+            transport_config,
+            policy,
+        )
+    }
+
     /// Materializes selected assets with an explicit SRA FASTQ conversion runner.
     pub fn materialize_download_plan_with_sra_runner<R: SraFastqRunner>(
         &self,
@@ -463,7 +504,8 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
         match plan.manifest.provider.as_str() {
             "ena" => {
-                emit_existing_ngs_download_baseline_progress(self.progress_callback, plan)?;
+                let policy = NgsMaterializationPolicy::default();
+                emit_existing_ngs_download_baseline_progress(self.progress_callback, plan, policy)?;
                 plan.selected_assets
                     .iter()
                     .map(|asset| {
@@ -474,6 +516,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                             existing_download_roots,
                             self.progress_callback,
                             transport_config,
+                            policy,
                         )
                     })
                     .collect()
@@ -490,6 +533,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         existing_download_roots,
                         self.progress_callback,
                         transport_config,
+                        NgsMaterializationPolicy::default(),
                     )
                 })
                 .collect(),
@@ -514,6 +558,30 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
     where
         C: Sync,
     {
+        self.materialize_download_plan_with_sra_runner_existing_downloads_threads_and_policy(
+            plan,
+            runner,
+            existing_download_roots,
+            download_threads,
+            transport_config,
+            NgsMaterializationPolicy::default(),
+        )
+    }
+
+    fn materialize_download_plan_with_sra_runner_existing_downloads_threads_and_policy<
+        R: SraFastqRunner,
+    >(
+        &self,
+        plan: &NgsDownloadPlan,
+        runner: &R,
+        existing_download_roots: &[PathBuf],
+        download_threads: usize,
+        transport_config: &NgsDownloadTransportConfig,
+        policy: NgsMaterializationPolicy,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError>
+    where
+        C: Sync,
+    {
         let download_threads = validate_ngs_download_thread_count(download_threads)?;
         match plan.manifest.provider.as_str() {
             "ena" => materialize_ena_assets_with_threads(
@@ -523,6 +591,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                 self.progress_callback,
                 download_threads,
                 transport_config,
+                policy,
             ),
             "sra" => plan
                 .selected_assets
@@ -536,6 +605,7 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
                         existing_download_roots,
                         self.progress_callback,
                         transport_config,
+                        policy,
                     )
                 })
                 .collect(),
@@ -710,8 +780,11 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
     progress_callback: Option<&NgsDownloadProgressCallback>,
     download_threads: usize,
     transport_config: &NgsDownloadTransportConfig,
+    policy: NgsMaterializationPolicy,
 ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
-    emit_existing_ngs_download_baseline_progress(progress_callback, plan)?;
+    if !policy.verify_only {
+        emit_existing_ngs_download_baseline_progress(progress_callback, plan, policy)?;
+    }
 
     if download_threads == 1 || plan.selected_assets.len() <= 1 {
         return plan
@@ -725,6 +798,7 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
                     existing_download_roots,
                     progress_callback,
                     transport_config,
+                    policy,
                 )
             })
             .collect();
@@ -760,6 +834,7 @@ fn materialize_ena_assets_with_threads<C: ProviderHttpClient + Sync>(
                         existing_download_roots,
                         progress_callback,
                         transport_config,
+                        policy,
                     ) {
                         Ok(record) => {
                             *records[index]
@@ -831,10 +906,15 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     existing_download_roots: &[PathBuf],
     progress_callback: Option<&NgsDownloadProgressCallback>,
     transport_config: &NgsDownloadTransportConfig,
+    policy: NgsMaterializationPolicy,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let local_path = local_ngs_asset_path(&plan.output_root, asset);
+    if policy.verify_only {
+        return verify_local_ngs_asset(plan, asset, progress_callback);
+    }
+
     if let Some((observed_size, observed_checksum)) =
-        verified_existing_asset_evidence(&local_path, asset)?
+        existing_asset_evidence(&local_path, asset, policy)?
     {
         emit_ngs_asset_finished_progress(
             progress_callback,
@@ -843,15 +923,27 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             &local_path,
             observed_size,
         );
+        let status = if observed_checksum.is_some() {
+            NgsVerificationStatus::SkippedVerified
+        } else {
+            NgsVerificationStatus::Unverified
+        };
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
-            .with_observed_evidence(Some(observed_size), Some(observed_checksum))
-            .with_verification_status(NgsVerificationStatus::SkippedVerified)
-            .with_materialization_method("direct_download"));
+            .with_observed_evidence(Some(observed_size), observed_checksum)
+            .with_verification_status(status)
+            .with_materialization_method(if policy.verify_checksums {
+                "direct_download"
+            } else {
+                "direct_download_no_checksum"
+            }));
     }
 
-    if let Some(record) =
-        materialize_existing_download_candidate(asset, &local_path, existing_download_roots)?
-    {
+    if let Some(record) = materialize_existing_download_candidate(
+        asset,
+        &local_path,
+        existing_download_roots,
+        policy,
+    )? {
         if record.verification_status != NgsVerificationStatus::Failed {
             if let Some(observed_size) = record.observed_size_bytes {
                 emit_ngs_asset_finished_progress(
@@ -867,7 +959,13 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     }
 
     if should_use_aspera_transport(&asset.source_url, transport_config) {
-        return materialize_aspera_ngs_asset(plan, asset, progress_callback, transport_config);
+        return materialize_aspera_ngs_asset(
+            plan,
+            asset,
+            progress_callback,
+            transport_config,
+            policy,
+        );
     }
 
     let Some(download_url) = direct_download_url(&asset.source_url) else {
@@ -878,7 +976,7 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
 
     let partial_path = partial_ngs_asset_path(&local_path);
     if let Some((observed_size, observed_checksum)) =
-        verified_existing_asset_evidence(&partial_path, asset)?
+        existing_partial_asset_evidence(&partial_path, asset, policy)?
     {
         if local_path.exists() {
             fs::remove_file(&local_path)
@@ -886,6 +984,14 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
         }
         fs::rename(&partial_path, &local_path)
             .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        if let Some(observed_checksum) = observed_checksum.as_deref() {
+            write_ngs_asset_verification_marker(
+                &local_path,
+                asset,
+                observed_size,
+                observed_checksum,
+            )?;
+        }
         emit_ngs_asset_finished_progress(
             progress_callback,
             plan,
@@ -894,9 +1000,17 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             observed_size,
         );
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
-            .with_observed_evidence(Some(observed_size), Some(observed_checksum))
-            .with_verification_status(NgsVerificationStatus::Verified)
-            .with_materialization_method("direct_download_resume"));
+            .with_observed_evidence(Some(observed_size), observed_checksum)
+            .with_verification_status(if policy.verify_checksums {
+                NgsVerificationStatus::Verified
+            } else {
+                NgsVerificationStatus::Unverified
+            })
+            .with_materialization_method(if policy.verify_checksums {
+                "direct_download_resume"
+            } else {
+                "direct_download_resume_no_checksum"
+            }));
     }
 
     let resume_offset = resumable_partial_size(&partial_path, asset)?;
@@ -929,15 +1043,15 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
             .with_failure_reason(format!("download returned HTTP status {}", response.status)));
     }
 
-    let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+    let (observed_size, observed_checksum) = ngs_file_evidence_for_policy(
         &partial_path,
+        asset,
+        policy,
         progress_callback,
-        &asset.source_url,
-        asset.size_bytes,
         Some(progress_context.clone()),
     )?;
     let observed_size = Some(observed_size);
-    let observed_checksum = Some(observed_checksum);
+    let observed_checksum = observed_checksum;
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
     let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
         .with_observed_evidence(observed_size, observed_checksum.clone())
@@ -959,6 +1073,16 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     }
     fs::rename(&partial_path, &local_path)
         .map_err(|error| ngs_io_error("promote verified NGS download", error))?;
+    if let Some(observed_size) = observed_size {
+        if let Some(observed_checksum) = observed_checksum.as_deref() {
+            write_ngs_asset_verification_marker(
+                &local_path,
+                asset,
+                observed_size,
+                observed_checksum,
+            )?;
+        }
+    }
     emit_ngs_asset_finished_progress(
         progress_callback,
         plan,
@@ -967,7 +1091,9 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
         observed_size.unwrap_or(0),
     );
 
-    let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
+    let status = if !policy.verify_checksums {
+        NgsVerificationStatus::Unverified
+    } else if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
         NgsVerificationStatus::Verified
     } else {
         NgsVerificationStatus::Unverified
@@ -988,6 +1114,7 @@ fn materialize_aspera_ngs_asset(
     asset: &NgsAsset,
     progress_callback: Option<&NgsDownloadProgressCallback>,
     transport_config: &NgsDownloadTransportConfig,
+    policy: NgsMaterializationPolicy,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let local_path = local_ngs_asset_path(&plan.output_root, asset);
     let partial_path = partial_ngs_asset_path(&local_path);
@@ -1016,7 +1143,7 @@ fn materialize_aspera_ngs_asset(
     }
 
     if let Some((observed_size, observed_checksum)) =
-        verified_existing_asset_evidence(&partial_path, asset)?
+        existing_partial_asset_evidence(&partial_path, asset, policy)?
     {
         if local_path.exists() {
             fs::remove_file(&local_path)
@@ -1024,6 +1151,14 @@ fn materialize_aspera_ngs_asset(
         }
         fs::rename(&partial_path, &local_path)
             .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+        if let Some(observed_checksum) = observed_checksum.as_deref() {
+            write_ngs_asset_verification_marker(
+                &local_path,
+                asset,
+                observed_size,
+                observed_checksum,
+            )?;
+        }
         emit_ngs_asset_finished_progress(
             progress_callback,
             plan,
@@ -1032,9 +1167,17 @@ fn materialize_aspera_ngs_asset(
             observed_size,
         );
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
-            .with_observed_evidence(Some(observed_size), Some(observed_checksum))
-            .with_verification_status(NgsVerificationStatus::Verified)
-            .with_materialization_method("aspera_download_resume"));
+            .with_observed_evidence(Some(observed_size), observed_checksum)
+            .with_verification_status(if policy.verify_checksums {
+                NgsVerificationStatus::Verified
+            } else {
+                NgsVerificationStatus::Unverified
+            })
+            .with_materialization_method(if policy.verify_checksums {
+                "aspera_download_resume"
+            } else {
+                "aspera_download_resume_no_checksum"
+            }));
     }
 
     if let Some(parent) = partial_path.parent() {
@@ -1156,11 +1299,11 @@ fn materialize_aspera_ngs_asset(
 
     let completed_path =
         largest_aspera_download_artifact(&local_path, &partial_path).unwrap_or(partial_path);
-    let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+    let (observed_size, observed_checksum) = ngs_file_evidence_for_policy(
         &completed_path,
+        asset,
+        policy,
         progress_callback,
-        &asset.source_url,
-        asset.size_bytes,
         Some(progress_context.clone()),
     )?;
     emit_ngs_download_progress(
@@ -1173,9 +1316,13 @@ fn materialize_aspera_ngs_asset(
         Some(progress_context),
     );
     let observed_size = Some(observed_size);
-    let observed_checksum = Some(observed_checksum);
+    let observed_checksum = observed_checksum;
     let verification_failure = ngs_verification_failure(asset, observed_size, &observed_checksum);
-    let method = if starting_size > 0 {
+    let method = if !policy.verify_checksums && starting_size > 0 {
+        "aspera_download_resume_no_checksum"
+    } else if !policy.verify_checksums {
+        "aspera_download_no_checksum"
+    } else if starting_size > 0 {
         "aspera_download_resume"
     } else {
         "aspera_download"
@@ -1200,8 +1347,20 @@ fn materialize_aspera_ngs_asset(
         fs::rename(&completed_path, &local_path)
             .map_err(|error| ngs_io_error("promote verified Aspera NGS download", error))?;
     }
+    if let Some(observed_size) = observed_size {
+        if let Some(observed_checksum) = observed_checksum.as_deref() {
+            write_ngs_asset_verification_marker(
+                &local_path,
+                asset,
+                observed_size,
+                observed_checksum,
+            )?;
+        }
+    }
 
-    let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
+    let status = if !policy.verify_checksums {
+        NgsVerificationStatus::Unverified
+    } else if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
         NgsVerificationStatus::Verified
     } else {
         NgsVerificationStatus::Unverified
@@ -1218,7 +1377,12 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
     existing_download_roots: &[PathBuf],
     progress_callback: Option<&NgsDownloadProgressCallback>,
     transport_config: &NgsDownloadTransportConfig,
+    policy: NgsMaterializationPolicy,
 ) -> Result<NgsDownloadRecord, PlatformError> {
+    if policy.verify_only {
+        return verify_local_ngs_asset(plan, asset, progress_callback);
+    }
+
     match asset.role {
         NgsAssetRole::SraArchive => materialize_direct_ngs_asset(
             client,
@@ -1227,6 +1391,7 @@ fn materialize_sra_ngs_asset<C: ProviderHttpClient>(
             existing_download_roots,
             progress_callback,
             transport_config,
+            policy,
         ),
         NgsAssetRole::GeneratedFastq if asset.source_url.starts_with("sra-convert://") => {
             execute_sra_fastq_conversion_with_runner(plan, asset, runner)
@@ -1782,6 +1947,7 @@ fn emit_ngs_asset_finished_progress(
 fn emit_existing_ngs_download_baseline_progress(
     progress_callback: Option<&NgsDownloadProgressCallback>,
     plan: &NgsDownloadPlan,
+    policy: NgsMaterializationPolicy,
 ) -> Result<(), PlatformError> {
     if progress_callback.is_none() {
         return Ok(());
@@ -1790,7 +1956,7 @@ fn emit_existing_ngs_download_baseline_progress(
     for asset in &plan.selected_assets {
         let local_path = local_ngs_asset_path(&plan.output_root, asset);
         if let Some((observed_size, _observed_checksum)) =
-            verified_existing_asset_evidence(&local_path, asset)?
+            existing_asset_evidence(&local_path, asset, policy)?
         {
             emit_ngs_download_progress_with_visibility(
                 progress_callback,
@@ -1990,7 +2156,10 @@ fn is_aspera_download_artifact_name(
     local_name: Option<&str>,
     partial_name: Option<&str>,
 ) -> bool {
-    if file_name.ends_with(".ascp.log") || file_name.ends_with(".log") {
+    if file_name.ends_with(".ascp.log")
+        || file_name.ends_with(".log")
+        || file_name.ends_with(".epithema-verified.json")
+    {
         return false;
     }
     local_name.is_some_and(|name| file_name == name || file_name.contains(name))
@@ -2212,6 +2381,7 @@ fn materialize_existing_download_candidate(
     asset: &NgsAsset,
     local_path: &Path,
     existing_download_roots: &[PathBuf],
+    policy: NgsMaterializationPolicy,
 ) -> Result<Option<NgsDownloadRecord>, PlatformError> {
     if existing_download_roots.is_empty() {
         return Ok(None);
@@ -2232,14 +2402,14 @@ fn materialize_existing_download_candidate(
         }
 
         for candidate in existing_download_candidates(root, file_name)? {
-            let (observed_size, observed_checksum) = ngs_file_evidence(&candidate)?;
-            let observed_checksum_option = Some(observed_checksum.clone());
-            if let Some(reason) =
-                ngs_verification_failure(asset, Some(observed_size), &observed_checksum_option)
-            {
+            let (observed_size, observed_checksum) =
+                ngs_file_evidence_for_policy(&candidate, asset, policy, None, None)?;
+            let verification_failure =
+                ngs_verification_failure(asset, Some(observed_size), &observed_checksum);
+            if let Some(reason) = verification_failure {
                 return Ok(Some(
                     NgsDownloadRecord::new(asset.clone(), local_path)
-                        .with_observed_evidence(Some(observed_size), Some(observed_checksum))
+                        .with_observed_evidence(Some(observed_size), observed_checksum)
                         .with_verification_status(NgsVerificationStatus::Failed)
                         .with_materialization_method("existing_download_copy")
                         .with_failure_reason(format!(
@@ -2255,6 +2425,7 @@ fn materialize_existing_download_candidate(
                 local_path,
                 observed_size,
                 observed_checksum,
+                policy,
             )
             .map(Some);
         }
@@ -2297,7 +2468,8 @@ fn copy_existing_download_candidate(
     candidate: &Path,
     local_path: &Path,
     observed_size: u64,
-    observed_checksum: String,
+    observed_checksum: Option<String>,
+    policy: NgsMaterializationPolicy,
 ) -> Result<NgsDownloadRecord, PlatformError> {
     let partial_path = partial_ngs_asset_path(local_path);
     if let Some(parent) = partial_path.parent() {
@@ -2307,15 +2479,17 @@ fn copy_existing_download_candidate(
 
     fs::copy(candidate, &partial_path)
         .map_err(|error| ngs_io_error("copy existing NGS download candidate", error))?;
-    let (copied_size, copied_checksum) = ngs_file_evidence(&partial_path)?;
-    let copied_checksum_option = Some(copied_checksum.clone());
+    let (copied_size, copied_checksum) =
+        ngs_file_evidence_for_policy(&partial_path, asset, policy, None, None)?;
     let mut record = NgsDownloadRecord::new(asset.clone(), local_path)
-        .with_observed_evidence(Some(copied_size), Some(copied_checksum.clone()))
-        .with_materialization_method("existing_download_copy");
+        .with_observed_evidence(Some(copied_size), copied_checksum.clone())
+        .with_materialization_method(if policy.verify_checksums {
+            "existing_download_copy"
+        } else {
+            "existing_download_copy_no_checksum"
+        });
 
-    if let Some(reason) =
-        ngs_verification_failure(asset, Some(copied_size), &copied_checksum_option)
-    {
+    if let Some(reason) = ngs_verification_failure(asset, Some(copied_size), &copied_checksum) {
         return Ok(record
             .with_verification_status(NgsVerificationStatus::Failed)
             .with_failure_reason(format!(
@@ -2324,7 +2498,11 @@ fn copy_existing_download_candidate(
             )));
     }
 
-    if observed_size != copied_size || !observed_checksum.eq_ignore_ascii_case(&copied_checksum) {
+    let checksum_changed = observed_checksum
+        .as_deref()
+        .zip(copied_checksum.as_deref())
+        .is_some_and(|(observed, copied)| !observed.eq_ignore_ascii_case(copied));
+    if observed_size != copied_size || checksum_changed {
         return Ok(record
             .with_verification_status(NgsVerificationStatus::Failed)
             .with_failure_reason(format!(
@@ -2339,7 +2517,128 @@ fn copy_existing_download_candidate(
     }
     fs::rename(&partial_path, local_path)
         .map_err(|error| ngs_io_error("promote copied existing NGS download", error))?;
+    if let Some(copied_checksum) = copied_checksum.as_deref() {
+        write_ngs_asset_verification_marker(local_path, asset, copied_size, copied_checksum)?;
+    }
 
+    let status = if !policy.verify_checksums {
+        NgsVerificationStatus::Unverified
+    } else if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
+        NgsVerificationStatus::Verified
+    } else {
+        NgsVerificationStatus::Unverified
+    };
+    record = record.with_verification_status(status);
+    Ok(record)
+}
+
+fn existing_asset_evidence(
+    local_path: &Path,
+    asset: &NgsAsset,
+    policy: NgsMaterializationPolicy,
+) -> Result<Option<(u64, Option<String>)>, PlatformError> {
+    if policy.verify_checksums {
+        return trusted_or_verified_existing_asset_evidence(local_path, asset)
+            .map(|evidence| evidence.map(|(size, checksum)| (size, Some(checksum))));
+    }
+    Ok(size_only_existing_asset_evidence(local_path, asset).map(|size| (size, None)))
+}
+
+fn existing_partial_asset_evidence(
+    partial_path: &Path,
+    asset: &NgsAsset,
+    policy: NgsMaterializationPolicy,
+) -> Result<Option<(u64, Option<String>)>, PlatformError> {
+    if policy.verify_checksums {
+        return verified_existing_asset_evidence(partial_path, asset)
+            .map(|evidence| evidence.map(|(size, checksum)| (size, Some(checksum))));
+    }
+    Ok(size_only_existing_asset_evidence(partial_path, asset).map(|size| (size, None)))
+}
+
+fn size_only_existing_asset_evidence(local_path: &Path, asset: &NgsAsset) -> Option<u64> {
+    let observed_size = file_size(local_path)?;
+    if let Some(expected_size) = asset.size_bytes {
+        if observed_size != expected_size {
+            return None;
+        }
+    }
+    Some(observed_size)
+}
+
+fn ngs_file_evidence_for_policy(
+    path: &Path,
+    asset: &NgsAsset,
+    policy: NgsMaterializationPolicy,
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+    context: Option<NgsDownloadProgressContext>,
+) -> Result<(u64, Option<String>), PlatformError> {
+    if policy.verify_checksums {
+        let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+            path,
+            progress_callback,
+            &asset.source_url,
+            asset.size_bytes,
+            context,
+        )?;
+        Ok((observed_size, Some(observed_checksum)))
+    } else {
+        let observed_size = file_size(path).ok_or_else(|| {
+            ngs_io_error(
+                "inspect NGS file size",
+                std::io::Error::new(std::io::ErrorKind::NotFound, "NGS file does not exist"),
+            )
+        })?;
+        Ok((observed_size, None))
+    }
+}
+
+fn verify_local_ngs_asset(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+    progress_callback: Option<&NgsDownloadProgressCallback>,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    let local_path = local_ngs_asset_path(&plan.output_root, asset);
+    let partial_path = partial_ngs_asset_path(&local_path);
+    let verification_path = if local_path.exists() {
+        local_path.clone()
+    } else if partial_path.exists() {
+        partial_path.clone()
+    } else {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_materialization_method("verify_only")
+            .with_failure_reason("local asset does not exist for --verify-only"));
+    };
+    let context = ngs_download_progress_context(plan, asset);
+    let (observed_size, observed_checksum) = ngs_file_evidence_with_progress(
+        &verification_path,
+        progress_callback,
+        &asset.source_url,
+        asset.size_bytes,
+        Some(context.clone()),
+    )?;
+    let observed_checksum_option = Some(observed_checksum.clone());
+    let mut record = NgsDownloadRecord::new(asset.clone(), local_path.clone())
+        .with_observed_evidence(Some(observed_size), Some(observed_checksum.clone()))
+        .with_materialization_method("verify_only");
+    if let Some(reason) =
+        ngs_verification_failure(asset, Some(observed_size), &observed_checksum_option)
+    {
+        return Ok(record
+            .with_verification_status(NgsVerificationStatus::Failed)
+            .with_failure_reason(reason));
+    }
+    if verification_path == partial_path {
+        if local_path.exists() {
+            fs::remove_file(&local_path)
+                .map_err(|error| ngs_io_error("replace existing NGS download", error))?;
+        }
+        fs::rename(&partial_path, &local_path)
+            .map_err(|error| ngs_io_error("promote verified partial NGS download", error))?;
+    }
+    write_ngs_asset_verification_marker(&local_path, asset, observed_size, &observed_checksum)?;
+    emit_ngs_asset_finished_progress(progress_callback, plan, asset, &local_path, observed_size);
     let status = if asset.size_bytes.is_some() || asset.checksum_md5.is_some() {
         NgsVerificationStatus::Verified
     } else {
@@ -2364,6 +2663,176 @@ fn verified_existing_asset_evidence(
     } else {
         Ok(None)
     }
+}
+
+fn trusted_or_verified_existing_asset_evidence(
+    local_path: &Path,
+    asset: &NgsAsset,
+) -> Result<Option<(u64, String)>, PlatformError> {
+    if let Some((observed_size, observed_checksum)) =
+        trusted_existing_asset_evidence(local_path, asset)
+    {
+        write_ngs_asset_verification_marker(local_path, asset, observed_size, &observed_checksum)?;
+        return Ok(Some((observed_size, observed_checksum)));
+    }
+
+    if let Some((observed_size, observed_checksum)) =
+        verified_existing_asset_evidence(local_path, asset)?
+    {
+        write_ngs_asset_verification_marker(local_path, asset, observed_size, &observed_checksum)?;
+        return Ok(Some((observed_size, observed_checksum)));
+    }
+
+    Ok(None)
+}
+
+fn trusted_existing_asset_evidence(local_path: &Path, asset: &NgsAsset) -> Option<(u64, String)> {
+    let observed_size = file_size(local_path)?;
+
+    if let Some(evidence) =
+        trusted_existing_asset_evidence_from_marker(local_path, asset, observed_size)
+    {
+        return Some(evidence);
+    }
+
+    trusted_existing_asset_evidence_from_provenance(local_path, asset, observed_size)
+}
+
+fn trusted_existing_asset_evidence_from_marker(
+    local_path: &Path,
+    asset: &NgsAsset,
+    observed_size: u64,
+) -> Option<(u64, String)> {
+    let marker_path = ngs_asset_verification_marker_path(local_path);
+    let value = serde_json::from_slice::<Value>(&fs::read(marker_path).ok()?).ok()?;
+    trusted_existing_asset_evidence_from_record_json(&value, local_path, asset, observed_size)
+}
+
+fn trusted_existing_asset_evidence_from_provenance(
+    local_path: &Path,
+    asset: &NgsAsset,
+    observed_size: u64,
+) -> Option<(u64, String)> {
+    let output_root = output_root_for_local_ngs_asset_path(local_path)?;
+    let provenance_path = output_root.join("provenance.json");
+    let value = serde_json::from_slice::<Value>(&fs::read(provenance_path).ok()?).ok()?;
+    value
+        .get("download_records")?
+        .as_array()?
+        .iter()
+        .find_map(|record| {
+            trusted_existing_asset_evidence_from_record_json(
+                record,
+                local_path,
+                asset,
+                observed_size,
+            )
+        })
+}
+
+fn trusted_existing_asset_evidence_from_record_json(
+    record: &Value,
+    local_path: &Path,
+    asset: &NgsAsset,
+    observed_file_size: u64,
+) -> Option<(u64, String)> {
+    let status = record.get("verification_status")?.as_str()?;
+    if status != NgsVerificationStatus::Verified.as_str()
+        && status != NgsVerificationStatus::SkippedVerified.as_str()
+    {
+        return None;
+    }
+
+    let record_asset = record.get("asset")?;
+    if record_asset.get("source_url")?.as_str()? != asset.source_url
+        || record_asset.get("run_accession")?.as_str()? != asset.run_accession
+        || record_asset.get("asset_role")?.as_str()? != asset.role.as_str()
+        || record_asset.get("asset_format")?.as_str()? != asset.format
+    {
+        return None;
+    }
+
+    if record.get("local_path")?.as_str()? != local_path.display().to_string() {
+        return None;
+    }
+
+    if record_asset
+        .get("expected_size_bytes")
+        .and_then(Value::as_u64)
+        != asset.size_bytes
+    {
+        return None;
+    }
+    if record_asset
+        .get("expected_checksum_md5")
+        .and_then(Value::as_str)
+        != asset.checksum_md5.as_deref()
+    {
+        return None;
+    }
+
+    let observed_size = record.get("observed_size_bytes")?.as_u64()?;
+    if observed_size != observed_file_size {
+        return None;
+    }
+    if let Some(expected_size) = asset.size_bytes {
+        if observed_size != expected_size {
+            return None;
+        }
+    }
+
+    let observed_checksum = record.get("observed_checksum_md5")?.as_str()?.to_owned();
+    if let Some(expected_checksum) = asset.checksum_md5.as_deref() {
+        if observed_checksum != expected_checksum {
+            return None;
+        }
+    }
+
+    Some((observed_size, observed_checksum))
+}
+
+fn write_ngs_asset_verification_marker(
+    local_path: &Path,
+    asset: &NgsAsset,
+    observed_size: u64,
+    observed_checksum: &str,
+) -> Result<(), PlatformError> {
+    let marker_path = ngs_asset_verification_marker_path(local_path);
+    let value = json!({
+        "schema": NGS_ASSET_VERIFICATION_SCHEMA,
+        "asset": asset_json(asset, "selected"),
+        "local_path": local_path.display().to_string(),
+        "observed_size_bytes": observed_size,
+        "observed_checksum_md5": observed_checksum,
+        "verification_status": NgsVerificationStatus::Verified.as_str(),
+    });
+    let body = serde_json::to_vec_pretty(&value).map_err(|error| {
+        PlatformError::new(
+            ErrorCategory::Invocation,
+            "failed to serialize NGS asset verification marker",
+        )
+        .with_code("service.ngs_retrieval.asset_marker_serialization_failed")
+        .with_detail(error.to_string())
+    })?;
+    fs::write(&marker_path, body)
+        .map_err(|error| ngs_io_error("write NGS asset verification marker", error))
+}
+
+fn ngs_asset_verification_marker_path(local_path: &Path) -> PathBuf {
+    let file_name = local_path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or("asset");
+    local_path.with_file_name(format!("{file_name}.epithema-verified.json"))
+}
+
+fn output_root_for_local_ngs_asset_path(local_path: &Path) -> Option<PathBuf> {
+    local_path
+        .parent()
+        .and_then(Path::parent)
+        .and_then(Path::parent)
+        .and_then(Path::parent)
+        .map(Path::to_path_buf)
 }
 
 fn resumable_partial_size(
@@ -2509,9 +2978,11 @@ mod tests {
 
     use super::{
         DEFAULT_SRA_TOOLKIT_CONTAINER, NgsAsperaConfig, NgsDownloadProgressCallback,
-        NgsDownloadTransport, NgsDownloadTransportConfig, ServiceNgsRetrieval,
-        SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner, aspera_command_line,
-        aspera_download_source, local_ngs_asset_path, partial_ngs_asset_path,
+        NgsDownloadTransport, NgsDownloadTransportConfig, NgsMaterializationPolicy,
+        ServiceNgsRetrieval, SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
+        aspera_command_line, aspera_download_source, local_ngs_asset_path,
+        ngs_asset_verification_marker_path, partial_ngs_asset_path,
+        write_ngs_asset_verification_marker,
     };
 
     #[derive(Clone, Debug, Default)]
@@ -2567,6 +3038,7 @@ mod tests {
     struct FakeSraFastqRunner {
         exit_status: i32,
         outputs: Vec<(&'static str, Vec<u8>)>,
+        panic_on_run: bool,
     }
 
     impl FakeSraFastqRunner {
@@ -2577,6 +3049,7 @@ mod tests {
                     ("SRR123456_1.fastq", b"@r1\nACGT\n+\n!!!!\n".to_vec()),
                     ("SRR123456_2.fastq", b"@r2\nTGCA\n+\n!!!!\n".to_vec()),
                 ],
+                panic_on_run: false,
             }
         }
 
@@ -2584,6 +3057,7 @@ mod tests {
             Self {
                 exit_status: 2,
                 outputs: Vec::new(),
+                panic_on_run: false,
             }
         }
 
@@ -2591,6 +3065,15 @@ mod tests {
             Self {
                 exit_status: -1,
                 outputs: Vec::new(),
+                panic_on_run: false,
+            }
+        }
+
+        fn panicking() -> Self {
+            Self {
+                exit_status: 0,
+                outputs: Vec::new(),
+                panic_on_run: true,
             }
         }
     }
@@ -2600,6 +3083,10 @@ mod tests {
             &self,
             request: &SraFastqConversionRequest,
         ) -> Result<SraFastqConversionResult, PlatformError> {
+            assert!(
+                !self.panic_on_run,
+                "fake SRA runner should not have been invoked"
+            );
             fs::create_dir_all(&request.fastq_dir)
                 .expect("fake SRA runner should create FASTQ directory");
             for (file_name, body) in &self.outputs {
@@ -2991,6 +3478,112 @@ mod tests {
                 .join("runs/ERR123456/fastq/ERR123456.fastq.gz.partial")
                 .exists()
         );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn materializes_direct_ena_download_without_checksum_verification() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let expected_checksum = format!("{:x}", md5::compute(b"TGCA\n"));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(body.len() as u64))
+        .with_checksum_md5(Some(expected_checksum));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("download-no-checksum");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let client = MockHttpClient::default().with_byte_response(
+            "https://example.invalid/ERR123456.fastq.gz",
+            HttpBytesResponse::new(200, body.clone()),
+        );
+        let gateway = ServiceNgsRetrieval::with_client(&config, &registry, client);
+
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
+                &plan,
+                &[],
+                1,
+                &NgsDownloadTransportConfig::default(),
+                NgsMaterializationPolicy {
+                    verify_checksums: false,
+                    verify_only: false,
+                },
+            )
+            .expect("direct ENA download should materialize without checksum verification");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Unverified
+        );
+        assert_eq!(records[0].observed_size_bytes, Some(body.len() as u64));
+        assert_eq!(records[0].observed_checksum_md5, None);
+        assert_eq!(
+            fs::read(&records[0].local_path).expect("downloaded file should be readable"),
+            body
+        );
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn verify_only_verifies_existing_ena_download() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let body = b"ACGT\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(body.len() as u64))
+        .with_checksum_md5(Some(checksum.clone()));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("verify-only");
+        let local_path = local_ngs_asset_path(&output_root, &asset);
+        fs::create_dir_all(
+            local_path
+                .parent()
+                .expect("download path should have parent"),
+        )
+        .expect("download directory should be created");
+        fs::write(&local_path, &body).expect("existing download should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
+                &plan,
+                &[],
+                1,
+                &NgsDownloadTransportConfig::default(),
+                NgsMaterializationPolicy {
+                    verify_checksums: true,
+                    verify_only: true,
+                },
+            )
+            .expect("verify-only should verify existing ENA download");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            records[0].observed_checksum_md5.as_deref(),
+            Some(checksum.as_str())
+        );
+        assert!(ngs_asset_verification_marker_path(&local_path).exists());
         fs::remove_dir_all(output_root).ok();
     }
 
@@ -3738,6 +4331,61 @@ mod tests {
     }
 
     #[test]
+    fn trusts_epithema_verified_marker_for_existing_ena_download() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let expected_body = b"ACGT\n".to_vec();
+        let same_size_different_body = b"TGCA\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&expected_body));
+        let asset = NgsAsset::new(
+            "ERR123456",
+            NgsAssetRole::GeneratedFastq,
+            "fastq.gz",
+            "ftp://example.invalid/ERR123456.fastq.gz",
+        )
+        .with_size_bytes(Some(expected_body.len() as u64))
+        .with_checksum_md5(Some(checksum.clone()));
+        let mut manifest = planned_manifest();
+        manifest.runs[0].assets = vec![asset.clone()];
+        let output_root = temp_ngs_output_root("trusted-marker-skip");
+        let local_path = output_root.join("runs/ERR123456/fastq/ERR123456.fastq.gz");
+        fs::create_dir_all(
+            local_path
+                .parent()
+                .expect("download path should have parent"),
+        )
+        .expect("download directory should be created");
+        fs::write(&local_path, same_size_different_body)
+            .expect("existing download should be written");
+        write_ngs_asset_verification_marker(
+            &local_path,
+            &asset,
+            expected_body.len() as u64,
+            &checksum,
+        )
+        .expect("trusted marker should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan(&plan)
+            .expect("trusted existing file should be skipped without rehashing");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::SkippedVerified
+        );
+        assert_eq!(
+            records[0].observed_checksum_md5.as_deref(),
+            Some(checksum.as_str())
+        );
+        assert_eq!(records[0].local_path, local_path);
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
     fn leaves_partial_file_when_ena_download_fails_verification() {
         let config = PlatformConfig::default();
         let registry = ProviderRegistry::builtin_defaults();
@@ -3917,6 +4565,61 @@ mod tests {
             ]
         );
         assert_eq!(records[1].observed_size_bytes, Some(32));
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn verify_only_sra_generated_fastq_does_not_run_conversion() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let manifest = sra_planned_manifest();
+        let selected_assets = manifest.assets().into_iter().cloned().collect::<Vec<_>>();
+        let asset = selected_assets
+            .iter()
+            .find(|asset| asset.role == NgsAssetRole::GeneratedFastq)
+            .expect("SRA manifest should include generated FASTQ asset")
+            .clone();
+        let body = b"@r1\nACGT\n+\n!!!!\n".to_vec();
+        let checksum = format!("{:x}", md5::compute(&body));
+        let asset = asset
+            .with_size_bytes(Some(body.len() as u64))
+            .with_checksum_md5(Some(checksum));
+        let output_root = temp_ngs_output_root("sra-verify-only");
+        let local_path = local_ngs_asset_path(&output_root, &asset);
+        fs::create_dir_all(
+            local_path
+                .parent()
+                .expect("download path should have parent"),
+        )
+        .expect("download directory should be created");
+        fs::write(&local_path, &body).expect("existing generated FASTQ should be written");
+        let plan = NgsDownloadPlan::new(manifest, output_root.clone(), false, vec![asset]);
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+
+        let records = gateway
+            .materialize_download_plan_with_sra_runner_existing_downloads_threads_and_policy(
+                &plan,
+                &FakeSraFastqRunner::panicking(),
+                &[],
+                1,
+                &NgsDownloadTransportConfig::default(),
+                NgsMaterializationPolicy {
+                    verify_checksums: true,
+                    verify_only: true,
+                },
+            )
+            .expect("verify-only should verify existing generated FASTQ locally");
+
+        assert_eq!(records.len(), 1);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Verified
+        );
+        assert_eq!(
+            records[0].materialization_method.as_deref(),
+            Some("verify_only")
+        );
         fs::remove_dir_all(output_root).ok();
     }
 
