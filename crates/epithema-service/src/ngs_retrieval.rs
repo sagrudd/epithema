@@ -5,6 +5,7 @@
 //! and the future download/provenance method surface outside the CLI and tool
 //! implementations.
 
+use std::collections::HashSet;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
@@ -37,7 +38,43 @@ const ASPERA_KEY_FILENAMES: &[&str] = &[
 ];
 
 /// Callback used to report streamed NGS file download progress.
-pub type NgsDownloadProgressCallback = dyn Fn(HttpDownloadProgress) + Send + Sync + 'static;
+pub type NgsDownloadProgressCallback = dyn Fn(NgsDownloadProgress) + Send + Sync + 'static;
+
+/// NGS-specific progress event emitted while materializing one selected asset.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct NgsDownloadProgress {
+    /// File-level transfer progress.
+    pub transfer: HttpDownloadProgress,
+    /// Optional manifest-derived context for dashboard summaries.
+    pub context: Option<NgsDownloadProgressContext>,
+}
+
+/// Manifest-derived context attached to NGS download progress events.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct NgsDownloadProgressContext {
+    /// User-facing accession that produced this download plan.
+    pub accession: String,
+    /// Provider used for manifest expansion.
+    pub provider: String,
+    /// Study, sample, or experiment title when available.
+    pub title: Option<String>,
+    /// Number of runs in the resolved manifest.
+    pub run_count: usize,
+    /// Number of unique samples represented by selected assets.
+    pub sample_count: usize,
+    /// Number of selected assets to materialize.
+    pub selected_asset_count: usize,
+    /// Sum of known byte sizes across selected assets.
+    pub selected_total_bytes: Option<u64>,
+    /// Run accession for the asset represented by this event.
+    pub run_accession: String,
+    /// Sample accession for the asset represented by this event, when available.
+    pub sample_accession: Option<String>,
+    /// Number of selected assets for this run.
+    pub run_selected_asset_count: usize,
+    /// Number of selected assets for this sample, or this run when no sample is available.
+    pub sample_selected_asset_count: usize,
+}
 
 /// Direct-download transport mode for NGS assets.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -838,11 +875,19 @@ fn materialize_direct_ngs_asset<C: ProviderHttpClient>(
     } else {
         request
     };
-    let response = client.download_to_path(
-        &request,
-        &partial_path,
-        progress_callback.map(|callback| callback as &dyn Fn(HttpDownloadProgress)),
-    )?;
+    let progress_context = ngs_download_progress_context(plan, asset);
+    let response = if let Some(progress_callback) = progress_callback {
+        let progress_context = progress_context.clone();
+        let progress_adapter = |progress: HttpDownloadProgress| {
+            progress_callback(NgsDownloadProgress {
+                transfer: progress,
+                context: Some(progress_context.clone()),
+            });
+        };
+        client.download_to_path(&request, &partial_path, Some(&progress_adapter))?
+    } else {
+        client.download_to_path(&request, &partial_path, None)?
+    };
     if !(200..300).contains(&response.status) {
         return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
             .with_verification_status(NgsVerificationStatus::Failed)
@@ -941,6 +986,7 @@ fn materialize_aspera_ngs_asset(
         fs::create_dir_all(parent)
             .map_err(|error| ngs_io_error("create Aspera NGS download directory", error))?;
     }
+    let progress_context = ngs_download_progress_context(plan, asset);
     let starting_size = observed_aspera_download_size(&local_path, &partial_path);
     emit_ngs_download_progress(
         progress_callback,
@@ -949,6 +995,7 @@ fn materialize_aspera_ngs_asset(
         &partial_path,
         starting_size,
         asset.size_bytes,
+        Some(progress_context.clone()),
     );
 
     let remote = format!("{}@{}:{}", source.user, source.host, source.remote_path);
@@ -1006,6 +1053,7 @@ fn materialize_aspera_ngs_asset(
                     &partial_path,
                     current_size,
                     asset.size_bytes,
+                    Some(progress_context.clone()),
                 );
                 last_progress_bytes = current_size;
             }
@@ -1055,6 +1103,7 @@ fn materialize_aspera_ngs_asset(
         &completed_path,
         observed_size,
         asset.size_bytes.or(Some(observed_size)),
+        Some(progress_context),
     );
     let observed_size = Some(observed_size);
     let observed_checksum = Some(observed_checksum);
@@ -1606,16 +1655,104 @@ fn emit_ngs_download_progress(
     path: &Path,
     bytes_downloaded: u64,
     total_bytes: Option<u64>,
+    context: Option<NgsDownloadProgressContext>,
 ) {
     if let Some(progress_callback) = progress_callback {
-        progress_callback(HttpDownloadProgress {
-            state,
-            url: url.to_owned(),
-            path: path.to_path_buf(),
-            bytes_downloaded,
-            total_bytes,
+        progress_callback(NgsDownloadProgress {
+            transfer: HttpDownloadProgress {
+                state,
+                url: url.to_owned(),
+                path: path.to_path_buf(),
+                bytes_downloaded,
+                total_bytes,
+            },
+            context,
         });
     }
+}
+
+fn ngs_download_progress_context(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+) -> NgsDownloadProgressContext {
+    let sample_accession = sample_accession_for_run(&plan.manifest, &asset.run_accession);
+    let sample_key = sample_accession
+        .clone()
+        .unwrap_or_else(|| asset.run_accession.clone());
+    let sample_count = selected_sample_keys(plan).len();
+
+    NgsDownloadProgressContext {
+        accession: plan.manifest.query.accession.clone(),
+        provider: plan.manifest.provider.as_str().to_owned(),
+        title: ngs_manifest_title(&plan.manifest),
+        run_count: plan.manifest.runs.len(),
+        sample_count,
+        selected_asset_count: plan.selected_assets.len(),
+        selected_total_bytes: selected_total_bytes(&plan.selected_assets),
+        run_accession: asset.run_accession.clone(),
+        sample_accession,
+        run_selected_asset_count: plan
+            .selected_assets
+            .iter()
+            .filter(|selected| selected.run_accession == asset.run_accession)
+            .count(),
+        sample_selected_asset_count: plan
+            .selected_assets
+            .iter()
+            .filter(|selected| sample_key_for_asset(plan, selected) == sample_key)
+            .count(),
+    }
+}
+
+fn ngs_manifest_title(manifest: &NgsManifest) -> Option<String> {
+    manifest
+        .runs
+        .iter()
+        .find_map(|run| run.metadata.study_title.clone())
+        .or_else(|| {
+            manifest
+                .runs
+                .iter()
+                .find_map(|run| run.metadata.sample_title.clone())
+        })
+        .or_else(|| {
+            manifest
+                .runs
+                .iter()
+                .find_map(|run| run.metadata.experiment_title.clone())
+        })
+}
+
+fn selected_total_bytes(selected_assets: &[NgsAsset]) -> Option<u64> {
+    let mut saw_size = false;
+    let mut total = 0u64;
+    for asset in selected_assets {
+        if let Some(size) = asset.size_bytes {
+            saw_size = true;
+            total = total.saturating_add(size);
+        }
+    }
+    saw_size.then_some(total)
+}
+
+fn selected_sample_keys(plan: &NgsDownloadPlan) -> HashSet<String> {
+    plan.selected_assets
+        .iter()
+        .map(|asset| sample_key_for_asset(plan, asset))
+        .collect()
+}
+
+fn sample_key_for_asset(plan: &NgsDownloadPlan, asset: &NgsAsset) -> String {
+    sample_accession_for_run(&plan.manifest, &asset.run_accession)
+        .unwrap_or_else(|| asset.run_accession.clone())
+}
+
+fn sample_accession_for_run(manifest: &NgsManifest, run_accession: &str) -> Option<String> {
+    manifest
+        .runs
+        .iter()
+        .find(|run| run.metadata.run_accession == run_accession)
+        .and_then(|run| run.metadata.sample_accession.clone())
 }
 
 fn aspera_command_log_path(partial_path: &Path) -> PathBuf {
@@ -2726,14 +2863,24 @@ mod tests {
         );
         let events = events.lock().expect("progress events should be lockable");
         assert_eq!(
-            events.first().map(|event| event.state),
+            events.first().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Started)
         );
         assert_eq!(
-            events.last().map(|event| event.state),
+            events.last().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Finished)
         );
-        assert_eq!(events.last().map(|event| event.bytes_downloaded), Some(5));
+        assert_eq!(
+            events.last().map(|event| event.transfer.bytes_downloaded),
+            Some(5)
+        );
+        let context = events
+            .last()
+            .and_then(|event| event.context.as_ref())
+            .expect("NGS progress context should be attached");
+        assert_eq!(context.accession, "ERR123456");
+        assert_eq!(context.title, None);
+        assert_eq!(context.selected_asset_count, 1);
         fs::remove_dir_all(output_root).ok();
     }
 
@@ -2816,14 +2963,15 @@ mod tests {
         assert!(!partial_ngs_asset_path(&records[0].local_path).exists());
         let events = events.lock().expect("progress events should be lockable");
         assert_eq!(
-            events.first().map(|event| event.state),
+            events.first().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Started)
         );
         assert!(events.iter().any(|event| {
-            event.state == HttpDownloadProgressState::Advanced && event.bytes_downloaded == 2
+            event.transfer.state == HttpDownloadProgressState::Advanced
+                && event.transfer.bytes_downloaded == 2
         }));
         assert_eq!(
-            events.last().map(|event| event.state),
+            events.last().map(|event| event.transfer.state),
             Some(HttpDownloadProgressState::Finished)
         );
 

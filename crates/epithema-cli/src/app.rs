@@ -1,6 +1,6 @@
 //! Top-level CLI application orchestration for `epithema`.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ffi::OsString;
 use std::io::{self, IsTerminal, Write};
 use std::path::PathBuf;
@@ -11,7 +11,8 @@ use std::time::{Duration, Instant};
 use clap::{CommandFactory, Parser, Subcommand};
 use epithema_service::{
     EpithemaService, HttpDownloadProgress, HttpDownloadProgressState, InvocationRequest,
-    NgsDownloadProgressCallback, ServiceRegistry, ToolName,
+    NgsDownloadProgress, NgsDownloadProgressCallback, NgsDownloadProgressContext, ServiceRegistry,
+    ToolName,
 };
 use epithema_tools::governed_tool_descriptors;
 
@@ -115,7 +116,7 @@ fn ngs_download_progress_callback() -> Arc<NgsDownloadProgressCallback> {
     let state = Arc::new(Mutex::new(ProgressDashboardState::new(
         io::stderr().is_terminal(),
     )));
-    Arc::new(move |progress: HttpDownloadProgress| {
+    Arc::new(move |progress: NgsDownloadProgress| {
         let output = match state.lock() {
             Ok(mut state) => state.record(progress, Instant::now()),
             Err(_) => return,
@@ -135,6 +136,7 @@ struct ProgressDashboardState {
     rendered_lines: usize,
     dashboard_enabled: bool,
     activity_frame: usize,
+    summary: Option<ProgressSummaryState>,
 }
 
 impl ProgressDashboardState {
@@ -145,11 +147,15 @@ impl ProgressDashboardState {
             rendered_lines: 0,
             dashboard_enabled,
             activity_frame: 0,
+            summary: None,
         }
     }
 
-    fn record(&mut self, progress: HttpDownloadProgress, now: Instant) -> Option<String> {
-        let key = progress.path.display().to_string();
+    fn record(&mut self, progress: NgsDownloadProgress, now: Instant) -> Option<String> {
+        let key = progress.transfer.url.clone();
+        if let Some(context) = &progress.context {
+            self.record_summary(context, &key, progress.transfer.state);
+        }
         let previous = self.entries.get(&key);
         let speed_bytes_per_second = previous.and_then(|previous| {
             let elapsed = now.duration_since(previous.last_rendered);
@@ -158,13 +164,14 @@ impl ProgressDashboardState {
             } else {
                 Some(
                     progress
+                        .transfer
                         .bytes_downloaded
                         .saturating_sub(previous.bytes_downloaded) as f64
                         / elapsed.as_secs_f64(),
                 )
             }
         });
-        let should_render = match (progress.state, previous) {
+        let should_render = match (progress.transfer.state, previous) {
             (HttpDownloadProgressState::Started | HttpDownloadProgressState::Finished, _) => true,
             (HttpDownloadProgressState::Advanced, None) => true,
             (HttpDownloadProgressState::Advanced, Some(previous)) => {
@@ -179,24 +186,26 @@ impl ProgressDashboardState {
             self.order.push(key.clone());
         }
         let label = progress
+            .transfer
             .path
             .file_name()
             .and_then(|name| name.to_str())
             .unwrap_or("download")
             .to_owned();
         let entry_key = key.clone();
-        let finished_key =
-            (progress.state == HttpDownloadProgressState::Finished).then(|| entry_key.clone());
+        let finished_key = (progress.transfer.state == HttpDownloadProgressState::Finished)
+            .then(|| entry_key.clone());
         let activity_frame = self.activity_frame;
-        if progress.state != HttpDownloadProgressState::Finished {
+        if progress.transfer.state != HttpDownloadProgressState::Finished {
             self.activity_frame = self.activity_frame.wrapping_add(1);
         }
+        let transfer = progress.transfer;
         self.entries.insert(
             key,
             ProgressRenderState {
                 last_rendered: now,
-                bytes_downloaded: progress.bytes_downloaded,
-                latest_progress: progress,
+                bytes_downloaded: transfer.bytes_downloaded,
+                latest_progress: transfer,
                 speed_bytes_per_second,
                 label,
                 activity_frame,
@@ -227,18 +236,26 @@ impl ProgressDashboardState {
     }
 
     fn rendered_lines(&self) -> Vec<String> {
-        self.order
-            .iter()
-            .filter_map(|key| self.entries.get(key))
-            .map(|entry| {
-                render_ngs_download_progress(
-                    &entry.label,
-                    &entry.latest_progress,
-                    entry.speed_bytes_per_second,
-                    entry.activity_frame,
-                )
-            })
-            .collect()
+        let mut lines = self
+            .summary
+            .as_ref()
+            .map(render_ngs_download_summary)
+            .unwrap_or_default();
+        lines.extend(
+            self.order
+                .iter()
+                .filter_map(|key| self.entries.get(key))
+                .map(|entry| {
+                    render_ngs_download_progress(
+                        &entry.label,
+                        &entry.latest_progress,
+                        entry.speed_bytes_per_second,
+                        entry.activity_frame,
+                    )
+                })
+                .collect::<Vec<_>>(),
+        );
+        lines
     }
 
     fn retire_finished(&mut self, finished_key: Option<String>) {
@@ -246,6 +263,19 @@ impl ProgressDashboardState {
             self.entries.remove(&finished_key);
             self.order.retain(|key| key != &finished_key);
         }
+    }
+
+    fn record_summary(
+        &mut self,
+        context: &NgsDownloadProgressContext,
+        asset_key: &str,
+        state: HttpDownloadProgressState,
+    ) {
+        let summary = self
+            .summary
+            .get_or_insert_with(|| ProgressSummaryState::from_context(context));
+        summary.merge_context(context);
+        summary.record_asset(asset_key, context, state);
     }
 }
 
@@ -257,6 +287,112 @@ struct ProgressRenderState {
     speed_bytes_per_second: Option<f64>,
     label: String,
     activity_frame: usize,
+}
+
+#[derive(Clone, Debug)]
+struct ProgressSummaryState {
+    accession: String,
+    provider: String,
+    title: Option<String>,
+    run_count: usize,
+    sample_count: usize,
+    selected_asset_count: usize,
+    selected_total_bytes: Option<u64>,
+    completed_assets: HashSet<String>,
+    runs: HashMap<String, ProgressGroupState>,
+    samples: HashMap<String, ProgressGroupState>,
+}
+
+impl ProgressSummaryState {
+    fn from_context(context: &NgsDownloadProgressContext) -> Self {
+        Self {
+            accession: context.accession.clone(),
+            provider: context.provider.clone(),
+            title: context.title.clone(),
+            run_count: context.run_count,
+            sample_count: context.sample_count,
+            selected_asset_count: context.selected_asset_count,
+            selected_total_bytes: context.selected_total_bytes,
+            completed_assets: HashSet::new(),
+            runs: HashMap::new(),
+            samples: HashMap::new(),
+        }
+    }
+
+    fn merge_context(&mut self, context: &NgsDownloadProgressContext) {
+        self.accession = context.accession.clone();
+        self.provider = context.provider.clone();
+        if self.title.is_none() {
+            self.title = context.title.clone();
+        }
+        self.run_count = context.run_count;
+        self.sample_count = context.sample_count;
+        self.selected_asset_count = context.selected_asset_count;
+        self.selected_total_bytes = context.selected_total_bytes;
+    }
+
+    fn record_asset(
+        &mut self,
+        asset_key: &str,
+        context: &NgsDownloadProgressContext,
+        state: HttpDownloadProgressState,
+    ) {
+        let run_group = self
+            .runs
+            .entry(context.run_accession.clone())
+            .or_insert_with(|| ProgressGroupState::new(context.run_selected_asset_count));
+        run_group.total_assets = context.run_selected_asset_count;
+
+        let sample_key = context
+            .sample_accession
+            .clone()
+            .unwrap_or_else(|| context.run_accession.clone());
+        let sample_group = self
+            .samples
+            .entry(sample_key)
+            .or_insert_with(|| ProgressGroupState::new(context.sample_selected_asset_count));
+        sample_group.total_assets = context.sample_selected_asset_count;
+
+        if state == HttpDownloadProgressState::Finished {
+            let asset_key = asset_key.to_owned();
+            self.completed_assets.insert(asset_key.clone());
+            run_group.completed_assets.insert(asset_key.clone());
+            sample_group.completed_assets.insert(asset_key);
+        }
+    }
+
+    fn completed_runs(&self) -> usize {
+        self.runs
+            .values()
+            .filter(|group| group.is_complete())
+            .count()
+    }
+
+    fn completed_samples(&self) -> usize {
+        self.samples
+            .values()
+            .filter(|group| group.is_complete())
+            .count()
+    }
+}
+
+#[derive(Clone, Debug)]
+struct ProgressGroupState {
+    total_assets: usize,
+    completed_assets: HashSet<String>,
+}
+
+impl ProgressGroupState {
+    fn new(total_assets: usize) -> Self {
+        Self {
+            total_assets,
+            completed_assets: HashSet::new(),
+        }
+    }
+
+    fn is_complete(&self) -> bool {
+        self.total_assets > 0 && self.completed_assets.len() >= self.total_assets
+    }
 }
 
 fn render_progress_dashboard(lines: &[String], previous_line_count: usize) -> String {
@@ -278,6 +414,51 @@ fn render_progress_dashboard(lines: &[String], previous_line_count: usize) -> St
     output
 }
 
+fn render_ngs_download_summary(summary: &ProgressSummaryState) -> Vec<String> {
+    const BAR_WIDTH: usize = 16;
+    let title = summary
+        .title
+        .as_deref()
+        .map(|title| format!("  title {}", shorten_text(title, 84)))
+        .unwrap_or_default();
+    let completed_assets = summary
+        .completed_assets
+        .len()
+        .min(summary.selected_asset_count);
+    let asset_ratio = if summary.selected_asset_count > 0 {
+        completed_assets as f64 / summary.selected_asset_count as f64
+    } else {
+        0.0
+    };
+    let filled = (asset_ratio * BAR_WIDTH as f64).round() as usize;
+    let empty = BAR_WIDTH.saturating_sub(filled);
+    let percent = asset_ratio * 100.0;
+    let size = summary
+        .selected_total_bytes
+        .map(|bytes| format!("  known_size {}", format_bytes(bytes)))
+        .unwrap_or_default();
+
+    vec![
+        format!(
+            "ngsget study {}  provider {}{}",
+            summary.accession, summary.provider, title
+        ),
+        format!(
+            "ngsget overall assets {}/{} [{}{}] {:>6.2}%  runs {}/{}  samples {}/{}{}",
+            completed_assets,
+            summary.selected_asset_count,
+            "=".repeat(filled),
+            " ".repeat(empty),
+            percent,
+            summary.completed_runs(),
+            summary.run_count,
+            summary.completed_samples(),
+            summary.sample_count,
+            size,
+        ),
+    ]
+}
+
 fn render_ngs_download_progress(
     label: &str,
     progress: &HttpDownloadProgress,
@@ -286,19 +467,7 @@ fn render_ngs_download_progress(
 ) -> String {
     const BAR_WIDTH: usize = 16;
     const SPINNER_FRAMES: &[&str] = &["|", "/", "-", "\\"];
-    let short_label = if label.chars().count() > 36 {
-        let suffix: String = label
-            .chars()
-            .rev()
-            .take(33)
-            .collect::<Vec<_>>()
-            .into_iter()
-            .rev()
-            .collect();
-        format!("...{suffix}")
-    } else {
-        label.to_owned()
-    };
+    let short_label = shorten_text(label, 36);
     let activity = if progress.state == HttpDownloadProgressState::Finished {
         "done"
     } else {
@@ -326,6 +495,22 @@ fn render_ngs_download_progress(
             format_speed(speed_bytes_per_second),
         )
     }
+}
+
+fn shorten_text(value: &str, max_chars: usize) -> String {
+    if value.chars().count() <= max_chars {
+        return value.to_owned();
+    }
+    let suffix_len = max_chars.saturating_sub(3);
+    let suffix: String = value
+        .chars()
+        .rev()
+        .take(suffix_len)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect();
+    format!("...{suffix}")
 }
 
 fn format_speed(bytes_per_second: Option<f64>) -> String {
@@ -397,9 +582,38 @@ mod tests {
     use clap::Parser;
 
     use super::{
-        Cli, HttpDownloadProgress, HttpDownloadProgressState, ProgressDashboardState,
-        render_ngs_download_progress, render_progress_dashboard,
+        Cli, HttpDownloadProgress, HttpDownloadProgressState, NgsDownloadProgress,
+        NgsDownloadProgressContext, ProgressDashboardState, render_ngs_download_progress,
+        render_progress_dashboard,
     };
+
+    fn ngs_progress(
+        transfer: HttpDownloadProgress,
+        context: Option<NgsDownloadProgressContext>,
+    ) -> NgsDownloadProgress {
+        NgsDownloadProgress { transfer, context }
+    }
+
+    fn summary_context(
+        run_accession: &str,
+        sample_accession: &str,
+        run_selected_asset_count: usize,
+        sample_selected_asset_count: usize,
+    ) -> NgsDownloadProgressContext {
+        NgsDownloadProgressContext {
+            accession: "PRJEB50706".to_owned(),
+            provider: "ena".to_owned(),
+            title: Some("Porkchop study".to_owned()),
+            run_count: 2,
+            sample_count: 2,
+            selected_asset_count: 3,
+            selected_total_bytes: Some(300),
+            run_accession: run_accession.to_owned(),
+            sample_accession: Some(sample_accession.to_owned()),
+            run_selected_asset_count,
+            sample_selected_asset_count,
+        }
+    }
 
     #[test]
     fn renders_ngs_download_progress_with_clear_size_and_speed_columns() {
@@ -436,12 +650,15 @@ mod tests {
         };
 
         let first_render = dashboard
-            .record(progress.clone(), started_at)
+            .record(ngs_progress(progress.clone(), None), started_at)
             .expect("started download should render");
         let mut heartbeat = progress;
         heartbeat.state = HttpDownloadProgressState::Advanced;
         let heartbeat_render = dashboard
-            .record(heartbeat, started_at + Duration::from_secs(2))
+            .record(
+                ngs_progress(heartbeat, None),
+                started_at + Duration::from_secs(2),
+            )
             .expect("heartbeat should repaint even without byte progress");
 
         assert!(first_render.contains("ngsget |"));
@@ -483,13 +700,19 @@ mod tests {
             total_bytes: Some(100),
         };
 
-        dashboard.record(file_a.clone(), started_at);
-        dashboard.record(file_b.clone(), started_at + Duration::from_millis(1));
+        dashboard.record(ngs_progress(file_a.clone(), None), started_at);
+        dashboard.record(
+            ngs_progress(file_b.clone(), None),
+            started_at + Duration::from_millis(1),
+        );
         let mut finished_a = file_a;
         finished_a.state = HttpDownloadProgressState::Finished;
         finished_a.bytes_downloaded = 100;
         let finished_render = dashboard
-            .record(finished_a, started_at + Duration::from_secs(1))
+            .record(
+                ngs_progress(finished_a, None),
+                started_at + Duration::from_secs(1),
+            )
             .expect("finished download should render once");
         assert!(finished_render.contains("a.fastq.gz.partial"));
 
@@ -497,10 +720,64 @@ mod tests {
         advanced_b.state = HttpDownloadProgressState::Advanced;
         advanced_b.bytes_downloaded = 50;
         let next_render = dashboard
-            .record(advanced_b, started_at + Duration::from_secs(3))
+            .record(
+                ngs_progress(advanced_b, None),
+                started_at + Duration::from_secs(3),
+            )
             .expect("remaining active download should render");
         assert!(!next_render.contains("a.fastq.gz.partial"));
         assert!(next_render.contains("b.fastq.gz.partial"));
+    }
+
+    #[test]
+    fn renders_ngs_download_dashboard_with_study_summary() {
+        let mut dashboard = ProgressDashboardState::new(true);
+        let started_at = Instant::now();
+        let file_a = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Started,
+            url: "https://example.invalid/a.fastq.gz".to_owned(),
+            path: PathBuf::from("a.fastq.gz.partial"),
+            bytes_downloaded: 0,
+            total_bytes: Some(100),
+        };
+        let mut file_b = HttpDownloadProgress {
+            state: HttpDownloadProgressState::Finished,
+            url: "https://example.invalid/b.fastq.gz".to_owned(),
+            path: PathBuf::from("b.fastq.gz.partial"),
+            bytes_downloaded: 100,
+            total_bytes: Some(100),
+        };
+
+        let first_render = dashboard
+            .record(
+                ngs_progress(file_a, Some(summary_context("ERR1", "ERS1", 2, 2))),
+                started_at,
+            )
+            .expect("started download should render");
+        let finished_render = dashboard
+            .record(
+                ngs_progress(file_b.clone(), Some(summary_context("ERR2", "ERS2", 1, 1))),
+                started_at + Duration::from_secs(1),
+            )
+            .expect("finished download should render");
+        file_b.url = "https://example.invalid/a.fastq.gz".to_owned();
+        let completed_render = dashboard
+            .record(
+                ngs_progress(file_b, Some(summary_context("ERR1", "ERS1", 2, 2))),
+                started_at + Duration::from_secs(2),
+            )
+            .expect("second finished download should render");
+
+        assert!(
+            first_render.contains("ngsget study PRJEB50706  provider ena  title Porkchop study")
+        );
+        assert!(first_render.contains("assets 0/3"));
+        assert!(finished_render.contains("assets 1/3"));
+        assert!(finished_render.contains("runs 1/2"));
+        assert!(finished_render.contains("samples 1/2"));
+        assert!(completed_render.contains("assets 2/3"));
+        assert!(completed_render.contains("runs 1/2"));
+        assert!(completed_render.contains("samples 1/2"));
     }
 
     #[test]

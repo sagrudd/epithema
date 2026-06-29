@@ -41,7 +41,10 @@ pub use epithema_providers::{
 };
 pub use error::ServiceError;
 pub use input::{ToolInputKind, ToolInputReference, ToolInputResolution, ToolInputResolver};
-pub use ngs_retrieval::{NgsDownloadProgressCallback, ServiceNgsRetrieval};
+pub use ngs_retrieval::{
+    NgsDownloadProgress, NgsDownloadProgressCallback, NgsDownloadProgressContext,
+    ServiceNgsRetrieval,
+};
 pub use registry::{ServiceRegistry, ToolCatalog};
 pub use request::InvocationRequest;
 pub use response::{InvocationResponse, InvocationStatus};
