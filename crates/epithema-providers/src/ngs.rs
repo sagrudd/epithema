@@ -404,6 +404,8 @@ pub struct NgsDownloadPlan {
     pub output_root: PathBuf,
     /// Whether raw/submitted assets were requested.
     pub include_raw: bool,
+    /// Optional study-level sample subsampling fraction requested by the user.
+    pub sample_subsample_fraction: Option<String>,
     /// Assets selected for materialization.
     pub selected_assets: Vec<NgsAsset>,
 }
@@ -421,8 +423,16 @@ impl NgsDownloadPlan {
             manifest,
             output_root: output_root.into(),
             include_raw,
+            sample_subsample_fraction: None,
             selected_assets,
         }
+    }
+
+    /// Attaches the user-requested study-level sample subsampling fraction.
+    #[must_use]
+    pub fn with_sample_subsample_fraction(mut self, fraction: Option<String>) -> Self {
+        self.sample_subsample_fraction = fraction;
+        self
     }
 }
 

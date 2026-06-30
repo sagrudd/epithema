@@ -352,8 +352,17 @@ The provenance document should use schema label
    provenance but skips local MD5 reads during materialization, using byte-count
    evidence where available and marking records unverified. `--verify-only`
    performs later local verification of extant selected files under `--out` and
-   writes fresh observed checksum evidence and per-file verification markers. It
-   writes selected assets to the documented `runs/<run>/fastq`,
+   writes fresh observed checksum evidence and per-file verification markers.
+   `--cleanup` performs a no-network sanitization pass over the selected output
+   tree: it removes `.partial` files, known Aspera transient artifacts, and
+   empty run directories; preserves complete local assets; and rewrites
+   provenance so absent assets are represented as planned `cleanup_unstarted`
+   records rather than stale incomplete failures. Study-level `--subsample`
+   applies a deterministic sample-level fraction before asset materialization;
+   all selected assets for chosen samples are retained, sample/experiment/run
+   queries remain complete, and larger fractions monotonically include the
+   smaller deterministic sample subset. It writes selected assets to the
+   documented `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification
    artifacts in place for inspection, resumes existing `.partial` files when
    the provider honors byte-range requests, skips already verified local files,
@@ -458,9 +467,11 @@ The provenance document should use schema label
     roughly two-second active-transfer heartbeat repaints, live filesystem
     artifact measurement for Aspera transfers, elapsed post-transfer phase
     timers, visible MD5 progress, fast `--no-checksum` materialization,
-    `--verify-only` local verification of existing outputs, and resumable
-    `.partial` files, SRA conversion through the pinned default container,
-    provenance JSON, and stable handoff manifest behavior.
+    `--verify-only` local verification of existing outputs, no-network
+    `--cleanup` sanitization of incomplete local transfer artifacts,
+    deterministic study-level sample subsampling through `--subsample`, and
+    resumable `.partial` files, SRA conversion through the pinned default
+    container, provenance JSON, and stable handoff manifest behavior.
     Release-facing scope and notes now explicitly keep protected-access,
     dbGaP-controlled, credentialed,
     requester-pays, object-store publication, custom container selection, and

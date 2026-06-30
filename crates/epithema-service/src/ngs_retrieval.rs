@@ -19,9 +19,9 @@ use epithema_config::PlatformConfig;
 use epithema_diagnostics::{ArtifactOriginKind, ArtifactProvenance, ErrorCategory, PlatformError};
 use epithema_providers::{
     EnaNgsAdapter, HttpDownloadProgress, HttpDownloadProgressState, HttpRequest, NgsAsset,
-    NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsProvenance,
-    NgsQuery, NgsRunMetadata, NgsVerificationStatus, ProviderCapability, ProviderHttpClient,
-    ProviderId, ProviderRegistry, ReqwestHttpClient, SraNgsAdapter,
+    NgsAssetRole, NgsDownloadPlan, NgsDownloadRecord, NgsManifest, NgsManifestRun, NgsObjectClass,
+    NgsProvenance, NgsQuery, NgsRunMetadata, NgsVerificationStatus, ProviderCapability,
+    ProviderHttpClient, ProviderId, ProviderRegistry, ReqwestHttpClient, SraNgsAdapter,
 };
 use serde_json::{Value, json};
 
@@ -331,12 +331,39 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         output_root: impl Into<PathBuf>,
         include_raw: bool,
     ) -> Result<NgsDownloadPlan, PlatformError> {
-        Ok(NgsDownloadPlan::new(
-            manifest.clone(),
-            output_root,
-            include_raw,
-            select_ngs_assets_for_download(manifest, include_raw),
-        ))
+        self.plan_downloads_with_sample_subsample(manifest, output_root, include_raw, None)
+    }
+
+    /// Builds a deterministic materialization plan with optional study-level sample subsampling.
+    pub fn plan_downloads_with_sample_subsample(
+        &self,
+        manifest: &NgsManifest,
+        output_root: impl Into<PathBuf>,
+        include_raw: bool,
+        sample_subsample_fraction: Option<f64>,
+    ) -> Result<NgsDownloadPlan, PlatformError> {
+        let selected_assets =
+            select_ngs_assets_for_download(manifest, include_raw, sample_subsample_fraction)?;
+        let fraction_label = sample_subsample_fraction.map(format_ngs_subsample_fraction);
+        Ok(
+            NgsDownloadPlan::new(manifest.clone(), output_root, include_raw, selected_assets)
+                .with_sample_subsample_fraction(fraction_label),
+        )
+    }
+
+    /// Removes transient/incomplete artifacts and records local completion state without downloading.
+    pub fn cleanup_download_plan(
+        &self,
+        plan: &NgsDownloadPlan,
+        policy: NgsMaterializationPolicy,
+    ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        let records = plan
+            .selected_assets
+            .iter()
+            .map(|asset| cleanup_ngs_asset(plan, asset, policy))
+            .collect::<Result<Vec<_>, _>>()?;
+        remove_empty_ngs_directories(&plan.output_root)?;
+        Ok(records)
     }
 
     /// Materializes directly downloadable assets and plans SRA FASTQ conversion.
@@ -737,14 +764,29 @@ fn provider_enabled(config: &PlatformConfig, provider: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn select_ngs_assets_for_download(manifest: &NgsManifest, include_raw: bool) -> Vec<NgsAsset> {
-    manifest
+fn select_ngs_assets_for_download(
+    manifest: &NgsManifest,
+    include_raw: bool,
+    sample_subsample_fraction: Option<f64>,
+) -> Result<Vec<NgsAsset>, PlatformError> {
+    let mut selected_assets = manifest
         .runs
         .iter()
         .flat_map(|run| run.assets.iter())
         .filter(|asset| should_select_ngs_asset(asset.role, include_raw))
         .cloned()
-        .collect()
+        .collect::<Vec<_>>();
+
+    if manifest.query.object_class == Some(NgsObjectClass::Study) {
+        if let Some(fraction) = sample_subsample_fraction {
+            let selected_sample_keys = deterministic_ngs_sample_subsample(manifest, fraction)?;
+            selected_assets.retain(|asset| {
+                selected_sample_keys.contains(&sample_key_for_manifest_asset(manifest, asset))
+            });
+        }
+    }
+
+    Ok(selected_assets)
 }
 
 fn should_select_ngs_asset(role: NgsAssetRole, include_raw: bool) -> bool {
@@ -758,6 +800,72 @@ fn should_select_ngs_asset(role: NgsAssetRole, include_raw: bool) -> bool {
                     | NgsAssetRole::Index
                     | NgsAssetRole::UnknownSubmitted
             ))
+}
+
+fn deterministic_ngs_sample_subsample(
+    manifest: &NgsManifest,
+    fraction: f64,
+) -> Result<HashSet<String>, PlatformError> {
+    if !fraction.is_finite() || fraction <= 0.0 || fraction > 1.0 {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --subsample must be a fraction greater than 0 and no more than 1",
+        )
+        .with_code("service.ngs_retrieval.invalid_subsample_fraction")
+        .with_detail(format_ngs_subsample_fraction(fraction)));
+    }
+
+    let mut sample_keys = manifest
+        .runs
+        .iter()
+        .map(|run| sample_key_for_manifest_run(run))
+        .collect::<Vec<_>>();
+    sample_keys.sort();
+    sample_keys.dedup();
+    if sample_keys.is_empty() {
+        return Ok(HashSet::new());
+    }
+
+    let sample_count = ((sample_keys.len() as f64) * fraction).ceil() as usize;
+    let sample_count = sample_count.clamp(1, sample_keys.len());
+    sample_keys.sort_by(|left, right| {
+        let left_digest = deterministic_ngs_sample_digest(&manifest.query.accession, left);
+        let right_digest = deterministic_ngs_sample_digest(&manifest.query.accession, right);
+        left_digest.cmp(&right_digest).then_with(|| left.cmp(right))
+    });
+
+    Ok(sample_keys.into_iter().take(sample_count).collect())
+}
+
+fn deterministic_ngs_sample_digest(accession: &str, sample_key: &str) -> [u8; 16] {
+    md5::compute(format!("{accession}\0{sample_key}")).0
+}
+
+fn sample_key_for_manifest_asset(manifest: &NgsManifest, asset: &NgsAsset) -> String {
+    manifest
+        .runs
+        .iter()
+        .find(|run| run.metadata.run_accession == asset.run_accession)
+        .map(sample_key_for_manifest_run)
+        .unwrap_or_else(|| asset.run_accession.clone())
+}
+
+fn sample_key_for_manifest_run(run: &NgsManifestRun) -> String {
+    run.metadata
+        .sample_accession
+        .clone()
+        .unwrap_or_else(|| run.metadata.run_accession.clone())
+}
+
+fn format_ngs_subsample_fraction(fraction: f64) -> String {
+    let mut formatted = format!("{fraction:.12}");
+    while formatted.contains('.') && formatted.ends_with('0') {
+        formatted.pop();
+    }
+    if formatted.ends_with('.') {
+        formatted.pop();
+    }
+    formatted
 }
 
 fn validate_ngs_download_thread_count(download_threads: usize) -> Result<usize, PlatformError> {
@@ -1552,8 +1660,11 @@ fn ngs_provenance_json(provenance: &NgsProvenance) -> Value {
         "selection": {
             "output_root": provenance.download_plan.output_root.display().to_string(),
             "include_raw": provenance.download_plan.include_raw,
+            "sample_subsample_fraction": provenance.download_plan.sample_subsample_fraction.as_deref(),
             "selected_asset_count": provenance.download_plan.selected_assets.len(),
             "considered_asset_count": provenance.manifest.assets().len(),
+            "selected_sample_count": selected_sample_keys(&provenance.download_plan).len(),
+            "considered_sample_count": manifest_sample_keys(&provenance.manifest).len(),
         },
         "runs": provenance
             .manifest
@@ -2074,6 +2185,14 @@ fn selected_sample_keys(plan: &NgsDownloadPlan) -> HashSet<String> {
         .collect()
 }
 
+fn manifest_sample_keys(manifest: &NgsManifest) -> HashSet<String> {
+    manifest
+        .runs
+        .iter()
+        .map(sample_key_for_manifest_run)
+        .collect()
+}
+
 fn sample_key_for_asset(plan: &NgsDownloadPlan, asset: &NgsAsset) -> String {
     sample_accession_for_run(&plan.manifest, &asset.run_accession)
         .unwrap_or_else(|| asset.run_accession.clone())
@@ -2461,6 +2580,175 @@ fn existing_download_candidates(
 
     candidates.sort();
     Ok(candidates)
+}
+
+fn cleanup_ngs_asset(
+    plan: &NgsDownloadPlan,
+    asset: &NgsAsset,
+    policy: NgsMaterializationPolicy,
+) -> Result<NgsDownloadRecord, PlatformError> {
+    let local_path = local_ngs_asset_path(&plan.output_root, asset);
+    let partial_path = partial_ngs_asset_path(&local_path);
+    if remove_size_mismatched_final_ngs_asset(&local_path, asset)? {
+        remove_ngs_transient_artifacts(&local_path, &partial_path)?;
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_verification_status(NgsVerificationStatus::Planned)
+            .with_materialization_method("cleanup_unstarted"));
+    }
+    let evidence = existing_asset_evidence(&local_path, asset, policy)?;
+
+    if evidence.is_none() {
+        remove_checksum_mismatched_final_ngs_asset(&local_path, asset, policy)?;
+    }
+    remove_ngs_transient_artifacts(&local_path, &partial_path)?;
+
+    if let Some((observed_size, observed_checksum)) = evidence {
+        return Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+            .with_observed_evidence(Some(observed_size), observed_checksum.clone())
+            .with_verification_status(if observed_checksum.is_some() {
+                NgsVerificationStatus::SkippedVerified
+            } else {
+                NgsVerificationStatus::Unverified
+            })
+            .with_materialization_method("cleanup_existing"));
+    }
+
+    Ok(NgsDownloadRecord::new(asset.clone(), local_path)
+        .with_verification_status(NgsVerificationStatus::Planned)
+        .with_materialization_method("cleanup_unstarted"))
+}
+
+fn remove_size_mismatched_final_ngs_asset(
+    local_path: &Path,
+    asset: &NgsAsset,
+) -> Result<bool, PlatformError> {
+    let Some(observed_size) = file_size(local_path) else {
+        return Ok(false);
+    };
+    if let Some(expected_size) = asset.size_bytes {
+        if observed_size != expected_size {
+            fs::remove_file(local_path)
+                .map_err(|error| ngs_io_error("remove incomplete final NGS asset", error))?;
+            remove_file_if_exists(&ngs_asset_verification_marker_path(local_path))?;
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+fn remove_checksum_mismatched_final_ngs_asset(
+    local_path: &Path,
+    asset: &NgsAsset,
+    policy: NgsMaterializationPolicy,
+) -> Result<(), PlatformError> {
+    if !local_path.is_file() {
+        return Ok(());
+    }
+
+    if policy.verify_checksums {
+        let (_, observed_checksum) = ngs_file_evidence(local_path)?;
+        if let Some(expected_checksum) = asset.checksum_md5.as_deref() {
+            if !expected_checksum.eq_ignore_ascii_case(&observed_checksum) {
+                fs::remove_file(local_path).map_err(|error| {
+                    ngs_io_error("remove checksum-mismatched final NGS asset", error)
+                })?;
+                remove_file_if_exists(&ngs_asset_verification_marker_path(local_path))?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn remove_ngs_transient_artifacts(
+    local_path: &Path,
+    partial_path: &Path,
+) -> Result<(), PlatformError> {
+    let local_name = local_path.file_name().and_then(|value| value.to_str());
+    let partial_name = partial_path.file_name().and_then(|value| value.to_str());
+    let mut candidates = Vec::new();
+    push_unique_path(&mut candidates, partial_path.to_path_buf());
+    push_unique_path(&mut candidates, aspera_command_log_path(partial_path));
+
+    if let Some(parent) = local_path.parent() {
+        if let Ok(entries) = fs::read_dir(parent) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path == local_path || path == ngs_asset_verification_marker_path(local_path) {
+                    continue;
+                }
+                let Some(file_name) = path.file_name().and_then(|value| value.to_str()) else {
+                    continue;
+                };
+                if is_ngs_transient_artifact_name(file_name, local_name, partial_name) {
+                    push_unique_path(&mut candidates, path);
+                }
+            }
+        }
+    }
+
+    for candidate in candidates {
+        if candidate.is_file() {
+            fs::remove_file(&candidate)
+                .map_err(|error| ngs_io_error("remove transient NGS artifact", error))?;
+        } else if candidate.is_dir() {
+            fs::remove_dir_all(&candidate)
+                .map_err(|error| ngs_io_error("remove transient NGS directory", error))?;
+        }
+    }
+    Ok(())
+}
+
+fn is_ngs_transient_artifact_name(
+    file_name: &str,
+    local_name: Option<&str>,
+    partial_name: Option<&str>,
+) -> bool {
+    if file_name.ends_with(".epithema-verified.json") {
+        return false;
+    }
+    let related = local_name.is_some_and(|name| file_name.contains(name))
+        || partial_name.is_some_and(|name| file_name.contains(name));
+    related
+        && (file_name.contains(".partial")
+            || file_name.ends_with(".ascp.log")
+            || file_name.ends_with(".log"))
+}
+
+fn remove_file_if_exists(path: &Path) -> Result<(), PlatformError> {
+    if path.is_file() {
+        fs::remove_file(path).map_err(|error| ngs_io_error("remove NGS sidecar file", error))?;
+    }
+    Ok(())
+}
+
+fn remove_empty_ngs_directories(output_root: &Path) -> Result<(), PlatformError> {
+    let runs_root = output_root.join("runs");
+    if runs_root.exists() && remove_empty_directories_bottom_up(&runs_root)? {
+        fs::remove_dir(&runs_root)
+            .map_err(|error| ngs_io_error("remove empty NGS runs directory", error))?;
+    }
+    Ok(())
+}
+
+fn remove_empty_directories_bottom_up(path: &Path) -> Result<bool, PlatformError> {
+    if !path.is_dir() {
+        return Ok(false);
+    }
+    for entry in
+        fs::read_dir(path).map_err(|error| ngs_io_error("read NGS cleanup directory", error))?
+    {
+        let entry =
+            entry.map_err(|error| ngs_io_error("read NGS cleanup directory entry", error))?;
+        let child_path = entry.path();
+        if child_path.is_dir() && remove_empty_directories_bottom_up(&child_path)? {
+            fs::remove_dir(&child_path)
+                .map_err(|error| ngs_io_error("remove empty NGS cleanup directory", error))?;
+        }
+    }
+    let mut entries =
+        fs::read_dir(path).map_err(|error| ngs_io_error("read NGS cleanup directory", error))?;
+    Ok(entries.next().is_none())
 }
 
 fn copy_existing_download_candidate(
@@ -2980,8 +3268,8 @@ mod tests {
         DEFAULT_SRA_TOOLKIT_CONTAINER, NgsAsperaConfig, NgsDownloadProgressCallback,
         NgsDownloadTransport, NgsDownloadTransportConfig, NgsMaterializationPolicy,
         ServiceNgsRetrieval, SraFastqConversionRequest, SraFastqConversionResult, SraFastqRunner,
-        aspera_command_line, aspera_download_source, local_ngs_asset_path,
-        ngs_asset_verification_marker_path, partial_ngs_asset_path,
+        aspera_command_line, aspera_command_log_path, aspera_download_source, local_ngs_asset_path,
+        ngs_asset_verification_marker_path, partial_ngs_asset_path, selected_sample_keys,
         write_ngs_asset_verification_marker,
     };
 
@@ -3200,6 +3488,45 @@ mod tests {
             provider.clone(),
             ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
             vec![NgsManifestRun::new(metadata, assets)],
+        )
+    }
+
+    fn study_manifest_for_samples(sample_count: usize) -> NgsManifest {
+        let provider = ProviderId::new("ena").expect("static provider id should be valid");
+        let query = NgsQuery::classify("ena:PRJEB12345").expect("query should classify");
+        let runs = (0..sample_count)
+            .map(|index| {
+                let run_accession = format!("ERR{:06}", index + 1);
+                let sample_accession = format!("SAMEA{:06}", index + 1);
+                let metadata = NgsRunMetadata::new(run_accession.clone()).with_accessions(
+                    Some("PRJEB12345".to_owned()),
+                    Some(sample_accession),
+                    Some(format!("ERX{:06}", index + 1)),
+                );
+                let assets = vec![
+                    NgsAsset::new(
+                        run_accession.clone(),
+                        NgsAssetRole::GeneratedFastq,
+                        "fastq.gz",
+                        format!("ftp://example.invalid/{run_accession}.fastq.gz"),
+                    )
+                    .with_size_bytes(Some(5)),
+                    NgsAsset::new(
+                        run_accession.clone(),
+                        NgsAssetRole::SubmittedRaw,
+                        "pod5",
+                        format!("ftp://example.invalid/{run_accession}.pod5"),
+                    )
+                    .with_size_bytes(Some(7)),
+                ];
+                NgsManifestRun::new(metadata, assets)
+            })
+            .collect();
+        NgsManifest::new(
+            query,
+            provider.clone(),
+            ArchiveRoute::new(provider, "ena.portal.filereport.read_run", "tsv"),
+            runs,
         )
     }
 
@@ -3425,6 +3752,95 @@ mod tests {
                 "unknown_submitted",
             ]
         );
+    }
+
+    #[test]
+    fn subsamples_study_samples_deterministically_and_monotonically() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let manifest = study_manifest_for_samples(10);
+
+        let smaller = gateway
+            .plan_downloads_with_sample_subsample(&manifest, "ngs-out", true, Some(0.1))
+            .expect("study subsample planning should succeed");
+        let larger = gateway
+            .plan_downloads_with_sample_subsample(&manifest, "ngs-out", true, Some(0.3))
+            .expect("larger study subsample planning should succeed");
+
+        let smaller_samples = selected_sample_keys(&smaller);
+        let larger_samples = selected_sample_keys(&larger);
+        assert_eq!(smaller_samples.len(), 1);
+        assert_eq!(larger_samples.len(), 3);
+        assert!(smaller_samples.is_subset(&larger_samples));
+        assert_eq!(smaller.selected_assets.len(), 2);
+        assert_eq!(larger.selected_assets.len(), 6);
+        assert_eq!(smaller.sample_subsample_fraction.as_deref(), Some("0.1"));
+    }
+
+    #[test]
+    fn cleanup_removes_partial_artifacts_and_records_unstarted_assets() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let manifest = study_manifest_for_samples(2);
+        let output_root = temp_ngs_output_root("cleanup");
+        let plan = gateway
+            .plan_downloads(&manifest, &output_root, false)
+            .expect("cleanup planning should succeed");
+        let complete_asset = plan.selected_assets[0].clone();
+        let incomplete_asset = plan.selected_assets[1].clone();
+        let complete_path = local_ngs_asset_path(&output_root, &complete_asset);
+        let incomplete_path = local_ngs_asset_path(&output_root, &incomplete_asset);
+        let partial_path = partial_ngs_asset_path(&incomplete_path);
+        fs::create_dir_all(
+            complete_path
+                .parent()
+                .expect("complete asset should have a parent"),
+        )
+        .expect("complete asset parent should be created");
+        fs::write(&complete_path, b"12345").expect("complete asset should be written");
+        fs::create_dir_all(
+            partial_path
+                .parent()
+                .expect("partial asset should have a parent"),
+        )
+        .expect("partial asset parent should be created");
+        fs::write(&partial_path, b"12").expect("partial asset should be written");
+        fs::write(aspera_command_log_path(&partial_path), b"interrupted")
+            .expect("transient aspera log should be written");
+
+        let records = gateway
+            .cleanup_download_plan(
+                &plan,
+                NgsMaterializationPolicy {
+                    verify_checksums: false,
+                    verify_only: false,
+                },
+            )
+            .expect("cleanup should sanitize local NGS output");
+
+        assert_eq!(records.len(), 2);
+        assert_eq!(
+            records[0].verification_status,
+            NgsVerificationStatus::Unverified
+        );
+        assert_eq!(records[0].observed_size_bytes, Some(5));
+        assert_eq!(
+            records[1].verification_status,
+            NgsVerificationStatus::Planned
+        );
+        assert_eq!(
+            records[1].materialization_method.as_deref(),
+            Some("cleanup_unstarted")
+        );
+        assert!(complete_path.exists());
+        assert!(!partial_path.exists());
+        assert!(!aspera_command_log_path(&partial_path).exists());
+        assert!(!incomplete_path.parent().expect("partial parent").exists());
+        fs::remove_dir_all(output_root).ok();
     }
 
     #[test]

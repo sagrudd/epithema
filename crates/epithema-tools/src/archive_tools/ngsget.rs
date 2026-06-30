@@ -28,6 +28,10 @@ pub struct NgsgetParams {
     pub verify_checksums: bool,
     /// Whether the invocation only verified existing output files.
     pub verify_only: bool,
+    /// Whether the invocation cleaned incomplete local artifacts without downloading.
+    pub cleanup: bool,
+    /// Optional study-level sample subsampling fraction.
+    pub sample_subsample_fraction: Option<String>,
     /// Number of normalized runs in the manifest.
     pub run_count: usize,
     /// Number of selected assets.
@@ -61,12 +65,16 @@ pub struct NgsgetOutcome {
     pub verify_checksums: bool,
     /// Whether the invocation only verified existing output files.
     pub verify_only: bool,
+    /// Whether the invocation cleaned incomplete local artifacts without downloading.
+    pub cleanup: bool,
+    /// Optional study-level sample subsampling fraction.
+    pub sample_subsample_fraction: Option<String>,
 }
 
 /// Returns the bounded `ngsget` help text.
 #[must_use]
 pub fn ngsget_help() -> &'static str {
-    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--transport https|auto|aspera] [--ascp <path>] [--aspera-key <path>] [--aspera-rate <rate>] [--check-downloads <path>] [--no-checksum] [--verify-only]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --threads to allow 1 to 20 concurrent direct downloads; the default is 1. Use --transport aspera to download ENA-compatible public file URLs with IBM Aspera ascp, or --transport auto to use Aspera when ascp and an auth key are discoverable and otherwise fall back to HTTPS. When --ascp is omitted, ngsget resolves ascp from PATH; --transport aspera fails early if ascp cannot be found. Use --ascp to set the ascp executable, --aspera-key to set the ENA public Aspera auth key, and --aspera-rate to set the ascp target rate. When --aspera-key is omitted, ngsget creates and uses an epithema-managed copy of a discovered Aspera package key; it cannot synthesize a fresh key that ENA would trust. Use --no-checksum to skip MD5 reads during materialization while still recording expected provider MD5 values and checking byte counts when available. Use --verify-only to checksum existing files in --out without downloading. Use --check-downloads to recursively search an existing download tree before network retrieval. The service copies verified matches into the output tree, leaves originals intact, resumes partial downloads when possible, trusts epithema verification markers or prior provenance when provider evidence is unchanged, and reports same-name checksum mismatches as failed materialization records."
+    "Usage: epithema ngsget <accession> [--provider auto|ena|sra] [--out <dir>] [--raw] [--threads <n>] [--transport https|auto|aspera] [--ascp <path>] [--aspera-key <path>] [--aspera-rate <rate>] [--check-downloads <path>] [--no-checksum] [--verify-only] [--cleanup] [--subsample <fraction>]\n\nMaterialize generated FASTQ assets for one public ENA or SRA study, sample, experiment, or run accession. Use --raw to include submitted raw/alignment files and provider-native SRA archives. Use --threads to allow 1 to 20 concurrent direct downloads; the default is 1. Use --transport aspera to download ENA-compatible public file URLs with IBM Aspera ascp, or --transport auto to use Aspera when ascp and an auth key are discoverable and otherwise fall back to HTTPS. When --ascp is omitted, ngsget resolves ascp from PATH; --transport aspera fails early if ascp cannot be found. Use --ascp to set the ascp executable, --aspera-key to set the ENA public Aspera auth key, and --aspera-rate to set the ascp target rate. When --aspera-key is omitted, ngsget creates and uses an epithema-managed copy of a discovered Aspera package key; it cannot synthesize a fresh key that ENA would trust. Use --no-checksum to skip MD5 reads during materialization while still recording expected provider MD5 values and checking byte counts when available. Use --verify-only to checksum existing files in --out without downloading. Use --cleanup to remove incomplete local transfer artifacts and rewrite provenance with absent assets marked as cleanup_unstarted planned records. Use --subsample with a fraction greater than 0 and no more than 1 to deterministically select that fraction of samples from a study query; sample, experiment, and run queries are always acquired completely. Use --check-downloads to recursively search an existing download tree before network retrieval. The service copies verified matches into the output tree, leaves originals intact, resumes partial downloads when possible, trusts epithema verification markers or prior provenance when provider evidence is unchanged, and reports same-name checksum mismatches as failed materialization records."
 }
 
 /// Executes `ngsget`.
@@ -83,5 +91,7 @@ pub fn run_ngsget(params: NgsgetParams) -> Result<NgsgetOutcome, ToolExecutionEr
         download_transport: params.download_transport,
         verify_checksums: params.verify_checksums,
         verify_only: params.verify_only,
+        cleanup: params.cleanup,
+        sample_subsample_fraction: params.sample_subsample_fraction,
     })
 }

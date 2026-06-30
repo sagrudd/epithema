@@ -1547,24 +1547,33 @@ impl EpithemaService {
         gateway: ServiceNgsRetrieval<'_, C>,
     ) -> Result<InvocationResponse, ServiceError> {
         let manifest = gateway.retrieve_manifest(query)?;
-        let plan = gateway.plan_downloads(&manifest, &params.output_root, params.include_raw)?;
+        let plan = gateway.plan_downloads_with_sample_subsample(
+            &manifest,
+            &params.output_root,
+            params.include_raw,
+            params.sample_subsample_fraction,
+        )?;
         let policy = NgsMaterializationPolicy {
             verify_checksums: params.verify_checksums,
             verify_only: params.verify_only,
         };
-        let records = gateway
-            .materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
+        let records = if params.cleanup {
+            gateway.cleanup_download_plan(&plan, policy)?
+        } else {
+            gateway.materialize_download_plan_with_existing_downloads_transport_threads_and_policy(
                 &plan,
                 &params.existing_download_roots,
                 params.download_threads,
                 &params.transport_config,
                 policy,
-            )?;
+            )?
+        };
         let selected_asset_count = plan.selected_assets.len();
         let failed_record_count = records
             .iter()
             .filter(|record| record.verification_status == NgsVerificationStatus::Failed)
             .count();
+        let sample_subsample_fraction = plan.sample_subsample_fraction.clone();
         let provenance = NgsProvenance::new(manifest.clone(), plan, records.clone());
         let manifest_path = params.output_root.join("manifest.tsv");
         let provenance_path = params.output_root.join("provenance.json");
@@ -1581,6 +1590,8 @@ impl EpithemaService {
             download_transport: params.transport_config.mode.as_str().to_owned(),
             verify_checksums: params.verify_checksums,
             verify_only: params.verify_only,
+            cleanup: params.cleanup,
+            sample_subsample_fraction,
             run_count: manifest.runs.len(),
             selected_asset_count,
             failed_record_count,
@@ -1619,6 +1630,11 @@ impl EpithemaService {
             .with_line(format!("Download threads: {}", outcome.download_threads))
             .with_line(format!("Verify checksums: {}", outcome.verify_checksums))
             .with_line(format!("Verify only: {}", outcome.verify_only))
+            .with_line(format!("Cleanup: {}", outcome.cleanup))
+            .with_line(format!(
+                "Sample subsample: {}",
+                outcome.sample_subsample_fraction.as_deref().unwrap_or("-")
+            ))
             .with_line(format!("Output root: {}", outcome.output_root.display()))
             .with_line(format!("Manifest: {}", manifest_path.display()))
             .with_line(format!("Provenance: {}", provenance_path.display()));
@@ -12061,7 +12077,7 @@ struct NgslistCliParams {
     format: NgslistFormat,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 struct NgsgetCliParams {
     accession: String,
     provider: String,
@@ -12072,6 +12088,8 @@ struct NgsgetCliParams {
     transport_config: NgsDownloadTransportConfig,
     verify_checksums: bool,
     verify_only: bool,
+    cleanup: bool,
+    sample_subsample_fraction: Option<f64>,
 }
 
 const ASPERA_KEY_FILENAMES: &[&str] = &[
@@ -12214,6 +12232,8 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
     let mut transport_config = NgsDownloadTransportConfig::default();
     let mut verify_checksums = true;
     let mut verify_only = false;
+    let mut cleanup = false;
+    let mut sample_subsample_fraction = None;
     let mut explicit_ascp = false;
     let mut explicit_aspera_key = false;
     let mut index = 0usize;
@@ -12281,6 +12301,26 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         if argument == "--verify-only" {
             verify_only = true;
             index += 1;
+            continue;
+        }
+        if argument == "--cleanup" {
+            cleanup = true;
+            index += 1;
+            continue;
+        }
+        if let Some(value) = argument.strip_prefix("--subsample=") {
+            sample_subsample_fraction = Some(parse_ngsget_subsample(value)?);
+            index += 1;
+            continue;
+        }
+        if argument == "--subsample" {
+            let value = arguments.get(index + 1).ok_or_else(|| {
+                PlatformError::new(ErrorCategory::Validation, "missing value for --subsample")
+                    .with_code("service.ngsget.subsample_missing")
+                    .with_detail(ngsget_help())
+            })?;
+            sample_subsample_fraction = Some(parse_ngsget_subsample(value)?);
+            index += 2;
             continue;
         }
         if let Some(value) = argument.strip_prefix("--threads=") {
@@ -12391,12 +12431,16 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         }
     }
 
-    if !verify_only && transport_config.mode != NgsDownloadTransport::Https && !explicit_aspera_key
+    if !verify_only
+        && !cleanup
+        && transport_config.mode != NgsDownloadTransport::Https
+        && !explicit_aspera_key
     {
         transport_config.aspera.key_path =
             ensure_managed_aspera_key(&transport_config.aspera.ascp_path)?;
     }
     if !verify_only
+        && !cleanup
         && transport_config.mode != NgsDownloadTransport::Https
         && transport_config.aspera.key_passphrase.is_none()
         && env::var_os("ASPERA_SCP_PASS").is_none()
@@ -12404,7 +12448,7 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         transport_config.aspera.key_passphrase = ascli_aspera_key_passphrase();
     }
 
-    if !verify_only && transport_config.mode == NgsDownloadTransport::Aspera {
+    if !verify_only && !cleanup && transport_config.mode == NgsDownloadTransport::Aspera {
         validate_ngsget_aspera_transport(&transport_config)?;
     }
     if verify_only && !verify_checksums {
@@ -12413,6 +12457,14 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
             "ngsget --verify-only cannot be combined with --no-checksum",
         )
         .with_code("service.ngsget.verify_checksum_conflict")
+        .with_detail(ngsget_help()));
+    }
+    if cleanup && verify_only {
+        return Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --cleanup cannot be combined with --verify-only",
+        )
+        .with_code("service.ngsget.cleanup_verify_only_conflict")
         .with_detail(ngsget_help()));
     }
 
@@ -12427,6 +12479,8 @@ fn parse_ngsget_arguments(arguments: &[String]) -> Result<NgsgetCliParams, Servi
         transport_config,
         verify_checksums,
         verify_only,
+        cleanup,
+        sample_subsample_fraction,
     })
 }
 
@@ -12841,6 +12895,27 @@ fn parse_ngsget_aspera_rate(value: &str) -> Result<String, ServiceError> {
     }
 }
 
+fn parse_ngsget_subsample(value: &str) -> Result<f64, ServiceError> {
+    let parsed = value.trim().parse::<f64>().map_err(|_| {
+        PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --subsample must be a fraction greater than 0 and no more than 1",
+        )
+        .with_code("service.ngsget.subsample_invalid")
+        .with_detail(value.to_owned())
+    })?;
+    if parsed.is_finite() && parsed > 0.0 && parsed <= 1.0 {
+        Ok(parsed)
+    } else {
+        Err(PlatformError::new(
+            ErrorCategory::Validation,
+            "ngsget --subsample must be a fraction greater than 0 and no more than 1",
+        )
+        .with_code("service.ngsget.subsample_out_of_range")
+        .with_detail(value.to_owned()))
+    }
+}
+
 fn parse_ngsget_threads(value: &str) -> Result<usize, ServiceError> {
     let threads = value.parse::<usize>().map_err(|error| {
         PlatformError::new(
@@ -13072,6 +13147,11 @@ fn render_ngsget_report(
     rendered.push_str(&format!("download_threads\t{}\n", outcome.download_threads));
     rendered.push_str(&format!("verify_checksums\t{}\n", outcome.verify_checksums));
     rendered.push_str(&format!("verify_only\t{}\n", outcome.verify_only));
+    rendered.push_str(&format!("cleanup\t{}\n", outcome.cleanup));
+    rendered.push_str(&format!(
+        "sample_subsample_fraction\t{}\n",
+        outcome.sample_subsample_fraction.as_deref().unwrap_or("-")
+    ));
     rendered.push_str(&format!("runs\t{}\n", outcome.run_count));
     rendered.push_str(&format!(
         "selected_assets\t{}\n",
@@ -16281,6 +16361,55 @@ esac
             .expect_err("ngsget should reject thread counts above the cap");
 
         assert_eq!(error.code(), Some("service.ngsget.threads_out_of_range"));
+    }
+
+    #[test]
+    fn rejects_ngsget_subsample_out_of_range() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngsget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngsget should be registered");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "ena:PRJEB12345".to_owned(),
+                "--subsample".to_owned(),
+                "1.5".to_owned(),
+            ]);
+
+        let error = service
+            .invoke_ngsget_with_client(request, descriptor, None::<&MockHttpClient>)
+            .expect_err("ngsget should reject invalid subsample fractions");
+
+        assert_eq!(error.code(), Some("service.ngsget.subsample_out_of_range"));
+    }
+
+    #[test]
+    fn rejects_ngsget_cleanup_with_verify_only() {
+        let service = implemented_service();
+        let tool = ToolName::new("ngsget").expect("tool name should be valid");
+        let descriptor = service
+            .registry()
+            .find(&tool)
+            .copied()
+            .expect("ngsget should be registered");
+        let request =
+            InvocationRequest::new(ExecutionContext::default(), tool).with_arguments(vec![
+                "ena:ERR123456".to_owned(),
+                "--cleanup".to_owned(),
+                "--verify-only".to_owned(),
+            ]);
+
+        let error = service
+            .invoke_ngsget_with_client(request, descriptor, None::<&MockHttpClient>)
+            .expect_err("ngsget should reject conflicting local-only modes");
+
+        assert_eq!(
+            error.code(),
+            Some("service.ngsget.cleanup_verify_only_conflict")
+        );
     }
 
     #[test]
