@@ -357,6 +357,9 @@ impl<C: ProviderHttpClient> ServiceNgsRetrieval<'_, C> {
         plan: &NgsDownloadPlan,
         policy: NgsMaterializationPolicy,
     ) -> Result<Vec<NgsDownloadRecord>, PlatformError> {
+        if plan.sample_subsample_fraction.is_some() {
+            cleanup_deselected_ngs_assets(plan)?;
+        }
         let records = plan
             .selected_assets
             .iter()
@@ -2618,6 +2621,32 @@ fn cleanup_ngs_asset(
         .with_materialization_method("cleanup_unstarted"))
 }
 
+fn cleanup_deselected_ngs_assets(plan: &NgsDownloadPlan) -> Result<(), PlatformError> {
+    for run in &plan.manifest.runs {
+        for asset in &run.assets {
+            if !should_select_ngs_asset(asset.role, plan.include_raw)
+                || plan.selected_assets.contains(asset)
+            {
+                continue;
+            }
+            remove_ngs_asset_local_artifacts(&plan.output_root, asset)?;
+        }
+    }
+    Ok(())
+}
+
+fn remove_ngs_asset_local_artifacts(
+    output_root: &Path,
+    asset: &NgsAsset,
+) -> Result<(), PlatformError> {
+    let local_path = local_ngs_asset_path(output_root, asset);
+    let partial_path = partial_ngs_asset_path(&local_path);
+    remove_ngs_transient_artifacts(&local_path, &partial_path)?;
+    remove_file_if_exists(&local_path)?;
+    remove_file_if_exists(&ngs_asset_verification_marker_path(&local_path))?;
+    Ok(())
+}
+
 fn remove_size_mismatched_final_ngs_asset(
     local_path: &Path,
     asset: &NgsAsset,
@@ -3840,6 +3869,70 @@ mod tests {
         assert!(!partial_path.exists());
         assert!(!aspera_command_log_path(&partial_path).exists());
         assert!(!incomplete_path.parent().expect("partial parent").exists());
+        fs::remove_dir_all(output_root).ok();
+    }
+
+    #[test]
+    fn cleanup_with_subsample_prunes_deselected_sample_assets() {
+        let config = PlatformConfig::default();
+        let registry = ProviderRegistry::builtin_defaults();
+        let gateway =
+            ServiceNgsRetrieval::with_client(&config, &registry, MockHttpClient::default());
+        let manifest = study_manifest_for_samples(4);
+        let output_root = temp_ngs_output_root("cleanup-subsample");
+        let full_plan = gateway
+            .plan_downloads(&manifest, &output_root, true)
+            .expect("full study planning should succeed");
+        for asset in &full_plan.selected_assets {
+            let local_path = local_ngs_asset_path(&output_root, asset);
+            fs::create_dir_all(
+                local_path
+                    .parent()
+                    .expect("asset path should have a parent"),
+            )
+            .expect("asset parent should be created");
+            let body = if asset.size_bytes == Some(7) {
+                b"1234567".as_slice()
+            } else {
+                b"12345".as_slice()
+            };
+            fs::write(&local_path, body).expect("complete asset should be written");
+            fs::write(partial_ngs_asset_path(&local_path), b"old partial")
+                .expect("old partial should be written");
+        }
+
+        let subset_plan = gateway
+            .plan_downloads_with_sample_subsample(&manifest, &output_root, true, Some(0.5))
+            .expect("subsampled cleanup planning should succeed");
+        let retained_assets = subset_plan.selected_assets.clone();
+        let pruned_assets = full_plan
+            .selected_assets
+            .iter()
+            .filter(|asset| !retained_assets.contains(asset))
+            .cloned()
+            .collect::<Vec<_>>();
+
+        let records = gateway
+            .cleanup_download_plan(
+                &subset_plan,
+                NgsMaterializationPolicy {
+                    verify_checksums: false,
+                    verify_only: false,
+                },
+            )
+            .expect("subsample cleanup should prune deselected assets");
+
+        assert_eq!(records.len(), retained_assets.len());
+        for asset in &retained_assets {
+            let local_path = local_ngs_asset_path(&output_root, asset);
+            assert!(local_path.exists());
+            assert!(!partial_ngs_asset_path(&local_path).exists());
+        }
+        for asset in &pruned_assets {
+            let local_path = local_ngs_asset_path(&output_root, asset);
+            assert!(!local_path.exists());
+            assert!(!partial_ngs_asset_path(&local_path).exists());
+        }
         fs::remove_dir_all(output_root).ok();
     }
 

@@ -357,11 +357,15 @@ The provenance document should use schema label
    tree: it removes `.partial` files, known Aspera transient artifacts, and
    empty run directories; preserves complete local assets; and rewrites
    provenance so absent assets are represented as planned `cleanup_unstarted`
-   records rather than stale incomplete failures. Study-level `--subsample`
-   applies a deterministic sample-level fraction before asset materialization;
-   all selected assets for chosen samples are retained, sample/experiment/run
-   queries remain complete, and larger fractions monotonically include the
-   smaller deterministic sample subset. It writes selected assets to the
+   records rather than stale incomplete failures. When `--cleanup` is combined
+   with `--subsample`, manifest-known eligible local files for samples outside
+   the retained deterministic subset are pruned, including complete files, so a
+   large partial study can be reduced without hoarding unwanted assets.
+   Study-level `--subsample` applies a deterministic sample-level fraction
+   before asset materialization; all selected assets for chosen samples are
+   retained, sample/experiment/run queries remain complete, and larger
+   fractions monotonically include the smaller deterministic sample subset. It
+   writes selected assets to the
    documented `runs/<run>/fastq`,
    `runs/<run>/raw`, or `runs/<run>/sra` layout, leaves failed verification
    artifacts in place for inspection, resumes existing `.partial` files when
